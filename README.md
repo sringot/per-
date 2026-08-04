@@ -2,8 +2,9 @@
 
 Site vitrine statique pour **Marie Massage**, masseuse bien-être à Voisins-le-Bretonneux.
 
-> ⚠️ **Version de base.** Tous les textes sont en lorem ipsum, les photos sont des
-> placeholders gris et les tarifs sont notés `XX €`. Voir « À compléter » plus bas.
+> ⚠️ **Version de base.** Tous les textes sont en lorem ipsum et les tarifs sont
+> notés `XX €`. Les visuels, eux, sont définitifs : ce sont des illustrations
+> vectorielles, pas des placeholders. Voir « À compléter » plus bas.
 
 ## Lancer le site en local
 
