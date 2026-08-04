@@ -34,6 +34,7 @@ assets/
   img/favicon.svg     favicon
   img/illus/          19 illustrations plates (SVG)
 tools-illustrations.py  script qui régénère les illustrations
+tools-logo.py           trace le pictogramme et mesure l'écart avec la référence
 tools-build-pages.py    échafaudage ayant produit les 6 pages (déjà joué)
 ```
 
@@ -114,8 +115,14 @@ Le logo de référence fourni par la cliente est dans
 `assets/img/logo-reference.png`. Il n'est pas utilisé tel quel : c'est une
 capture d'écran de 149 × 184 px, qui serait floue sur écran haute densité et
 traînerait son fond crème. Le pictogramme est donc **redessiné en SVG**
-(`assets/img/logo.svg`, et inline dans les pages), aux couleurs relevées au
-pixel sur le fichier :
+(`assets/img/logo.svg`, et inline dans les pages).
+
+Le tracé n'est pas fait à l'œil : `tools-logo.py` relève la silhouette de la
+référence ligne par ligne, en déduit les coordonnées, puis **mesure le
+recouvrement** entre le rendu et l'original (92 % actuellement — le reste est
+le flou de la capture). Relancer le script après toute retouche du tracé.
+
+Couleurs, relevées au pixel :
 
 - pictogramme et nom « MARIE MASSAGE » : `#EC8448` (variable `--brand`)
 - sous-titre « Masseuse bien-être » : gris, comme dans l'original
