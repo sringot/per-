@@ -2,7 +2,7 @@
    MARIE MASSAGE
    Palette Pantone : Burnt Ochre / Burgundy / Dried Herb /
                      Desert Sage / Pastel Yellow
-   Typo : Poppins (titres et texte courant)
+   Typo : Plus Jakarta Sans (titres et texte courant)
    ========================================================= */
 
 /* ---------- 1. VARIABLES ---------- */
@@ -16,7 +16,11 @@
   --herb-d:      #7E7049;
   --sage:        #A7AE9B;  /* 16-0110 TCX Desert Sage  */
   --yellow:      #F2E7B3;  /* 11-0616 TCX Pastel Yellow*/
-  --yellow-soft: #FAF4DE;
+  --yellow-soft: #FCF6E4;
+  --gold:        #D9B871;  /* doré du logo fourni       */
+  --gold-ink:    #A8823A;  /* même doré, assombri : le doré clair
+                              sur fond crème est illisible en texte */
+  --frame-bg:    #FBF3DC;  /* cadre de page, jaune très dilué */
 
   /* Neutres */
   --card:        #FCFBF8;  /* fond du grand bloc arrondi */
@@ -51,15 +55,15 @@ html{
   /* `clip` plutôt que `hidden` : neutralise le débordement horizontal
      du menu hors-écran sans créer de conteneur de défilement. */
   overflow-x:clip;
-  background:var(--yellow);
+  background:var(--frame-bg);
 }
 body{
-  font-family:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
   font-weight:400;
   font-size:clamp(.94rem,.35vw + .86rem,1rem);
   line-height:1.7;
   color:var(--ink);
-  background:var(--yellow);
+  background:var(--frame-bg);
   overflow-x:clip;
   -webkit-font-smoothing:antialiased;
 }
@@ -97,7 +101,6 @@ h1,h2,h3,.h2,.h3{
 h1{ font-size:clamp(2.5rem,5.6vw,4.5rem); }
 .h2{ font-size:clamp(1.9rem,3.6vw,3rem); }
 .h3{ font-size:clamp(1.4rem,2.2vw,2rem); }
-.h2--light,.h3--light{ color:var(--white); }
 
 .eyebrow{
   display:inline-block;
@@ -105,15 +108,12 @@ h1{ font-size:clamp(2.5rem,5.6vw,4.5rem); }
   text-transform:uppercase; color:var(--ochre);
   margin-bottom:1rem;
 }
-.eyebrow--light{ color:var(--yellow); }
-/* Jaune pastel sur sauge = contraste insuffisant : on passe au burgundy. */
-.band--sage .eyebrow--light{ color:var(--burgundy); }
 
 .lead{ font-size:1.06rem; color:var(--ink); }
 p{ color:var(--ink-soft); }
 p + p{ margin-top:.9rem; }
 .section__intro{ max-width:46ch; }
-.band .section__intro,.giftcard p{ color:rgba(255,255,255,.8); }
+.section__intro{ color:var(--ink-soft); }
 
 /* ---------- 4. BOUTONS ---------- */
 .btn{
@@ -207,18 +207,21 @@ p + p{ margin-top:.9rem; }
   height:var(--header-h);
 }
 
-.brand{ display:flex; align-items:center; gap:.7rem; }
+.brand{ display:flex; flex-direction:column; align-items:center; gap:.3rem; }
 .brand__mark{
-  width:36px; height:36px; flex:none; color:var(--ochre);
+  width:32px; height:32px; flex:none; color:var(--gold);
   transition:transform .5s var(--ease-out);
 }
 .brand__mark svg{ width:100%; height:100%; fill:currentColor; }
-.brand:hover .brand__mark{ transform:rotate(-6deg) scale(1.08); }
-.brand__text{ display:flex; flex-direction:column; line-height:1.2; }
-.brand__text strong{ font-weight:600; font-size:1.02rem; letter-spacing:-.02em; color:var(--burgundy); }
+.brand:hover .brand__mark{ transform:scale(1.08); }
+.brand__text{ display:flex; flex-direction:column; align-items:center; line-height:1.25; }
+.brand__text strong{
+  font-weight:700; font-size:.82rem; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--gold-ink);
+}
 .brand__text em{
-  font-style:normal; font-size:.62rem; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--herb); font-weight:500;
+  font-style:normal; font-size:.62rem; letter-spacing:.02em;
+  color:var(--gold-ink); font-weight:400; opacity:.85;
 }
 
 .nav{ display:flex; align-items:center; gap:2.2rem; }
@@ -314,9 +317,10 @@ p + p{ margin-top:.9rem; }
 
 /* ---------- 9. MARQUEE ---------- */
 .marquee{
-  background:var(--burgundy); color:var(--yellow);
+  background:var(--card); color:var(--burgundy);
+  border-block:1px solid var(--line);
   padding:.85rem 0; overflow:hidden;
-  font-size:.94rem; font-weight:400; letter-spacing:.02em;
+  font-size:.9rem; font-weight:500; letter-spacing:.02em;
 }
 .marquee__track{ display:flex; width:max-content; animation:scrollX 38s linear infinite; }
 .marquee__track span{ display:flex; align-items:center; white-space:nowrap; }
@@ -332,11 +336,9 @@ p + p{ margin-top:.9rem; }
   gap:clamp(1.5rem,4vw,4rem); align-items:end;
 }
 
-/* Bandeaux de couleur pleine largeur */
-.band{ position:relative; }
-.band--sage{ background:var(--sage); }
-.band--burgundy{ background:var(--burgundy); }
-.band--sage .h2,.band--burgundy .h2{ color:var(--white); }
+/* Les sections restent sur le fond clair : la couleur ne sert plus
+   que pour les accents (boutons, icônes, petits détails). */
+.section--contact{ background:var(--yellow-soft); }
 
 /* --- À propos --- */
 .about{
@@ -394,14 +396,14 @@ p + p{ margin-top:.9rem; }
 .amenities{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.8rem; }
 .amenities li{
   padding:.45rem 1.05rem; border-radius:var(--pill);
-  border:1px solid rgba(255,255,255,.45); background:rgba(255,255,255,.14);
-  font-size:.8rem; color:var(--white);
-  transition:background-color .3s, transform .3s var(--ease);
+  border:1px solid var(--line); background:var(--white);
+  font-size:.8rem; color:var(--ink-soft);
+  transition:background-color .3s, border-color .3s, transform .3s var(--ease);
 }
-.amenities li:hover{ background:rgba(255,255,255,.26); transform:translateY(-2px); }
+.amenities li:hover{ background:var(--yellow-soft); border-color:var(--sage); transform:translateY(-2px); }
 
 /* --- Massages --- */
-.section--menu{ background:var(--yellow-soft); }
+.section--menu{ background:var(--yellow-soft); }  /* teinte crème très légère */
 .cards{
   display:grid; gap:1.3rem;
   /* 330px → 3 colonnes max : les 6 soins tombent sur 2 rangées pleines */
@@ -452,15 +454,15 @@ p + p{ margin-top:.9rem; }
   display:grid; grid-template-columns:1.1fr .9fr; align-items:center;
   gap:clamp(2rem,4vw,3.5rem);
   padding:clamp(2rem,4vw,3.2rem);
-  background:var(--herb); color:var(--white);
+  background:var(--yellow-soft); border:1px solid var(--line);
   border-radius:var(--r-lg); overflow:hidden; position:relative;
 }
 .giftcard::before{
   content:''; position:absolute; width:400px; height:400px; border-radius:50%;
-  right:-130px; top:-150px; background:rgba(255,255,255,.1); pointer-events:none;
+  right:-130px; top:-150px; background:rgba(167,174,155,.16); pointer-events:none;
 }
 .giftcard__text{ position:relative; z-index:1; }
-.giftcard .h3{ color:var(--white); margin-bottom:.7rem; }
+.giftcard .h3{ margin-bottom:.7rem; }
 .giftcard p{ max-width:44ch; margin-bottom:1.5rem; font-size:.92rem; }
 .giftcard__visual{ display:grid; place-items:center; }
 .giftcard__card{
@@ -478,7 +480,7 @@ p + p{ margin-top:.9rem; }
 .giftcard__card span{ font-size:.64rem; letter-spacing:.2em; text-transform:uppercase; opacity:.9; }
 
 /* --- Avis --- */
-.section--reviews{ background:var(--yellow-soft); }
+.section--reviews{ background:var(--card); }
 .reviews__viewport{ overflow:hidden; }
 .reviews__track{
   display:flex; gap:1.3rem;
@@ -529,28 +531,28 @@ p + p{ margin-top:.9rem; }
 .infos__ico{
   width:42px; height:42px; flex:none; border-radius:50%;
   display:grid; place-items:center;
-  background:rgba(255,255,255,.12); color:var(--yellow);
-  transition:background-color .35s, transform .35s var(--ease);
+  background:var(--white); border:1px solid var(--line); color:var(--ochre);
+  transition:background-color .35s, color .35s, transform .35s var(--ease);
 }
-.infos li:hover .infos__ico{ background:var(--ochre); color:var(--white); transform:scale(1.06); }
+.infos li:hover .infos__ico{ background:var(--ochre); color:var(--white); border-color:var(--ochre); transform:scale(1.06); }
 .infos__ico svg{ width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
-.infos b{ display:block; font-weight:500; color:var(--white); font-size:.9rem; }
-.infos span,.infos a{ font-size:.84rem; color:rgba(255,255,255,.72); line-height:1.6; }
-.infos a{ border-bottom:1px solid rgba(255,255,255,.3); transition:color .3s, border-color .3s; }
-.infos a:hover{ color:var(--yellow); border-color:var(--yellow); }
+.infos b{ display:block; font-weight:600; color:var(--burgundy); font-size:.9rem; }
+.infos span,.infos a{ font-size:.84rem; color:var(--ink-soft); line-height:1.6; }
+.infos a{ border-bottom:1px solid var(--line); transition:color .3s, border-color .3s; }
+.infos a:hover{ color:var(--ochre); border-color:var(--ochre); }
 
 .insta{
   display:inline-flex; align-items:center; gap:.6rem;
   padding:.65rem 1.25rem; border-radius:var(--pill);
-  border:1px solid rgba(255,255,255,.32); font-size:.86rem; color:var(--white);
+  border:1px solid var(--line); font-size:.86rem; color:var(--burgundy);
   transition:background-color .35s, border-color .35s, transform .35s var(--ease);
 }
 .insta svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.6; }
-.insta:hover{ background:rgba(255,255,255,.14); border-color:var(--yellow); transform:translateY(-2px); }
+.insta:hover{ background:var(--white); border-color:var(--ochre); color:var(--ochre); transform:translateY(-2px); }
 
 /* Formulaire */
 .form{
-  background:var(--card); color:var(--ink);
+  background:var(--white); color:var(--ink); border:1px solid var(--line);
   border-radius:var(--r-lg); padding:clamp(1.5rem,3vw,2.4rem);
   box-shadow:var(--sh-lg);
   display:grid; gap:1.05rem;
@@ -625,17 +627,14 @@ p + p{ margin-top:.9rem; }
 @keyframes spin{ to{ transform:rotate(360deg) } }
 
 /* ---------- 11. FOOTER ---------- */
-.footer{ background:var(--burgundy-d); color:rgba(255,255,255,.6); padding:2.4rem 0 2.2rem; }
+.footer{ background:var(--card); color:var(--ink-soft); padding:2.2rem 0 2rem; border-top:1px solid var(--line); }
 .footer__inner{
   display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1.5rem;
 }
-.brand--footer .brand__mark{ color:var(--ochre); }
-.brand--footer .brand__text strong{ color:var(--white); }
-.brand--footer .brand__text em{ color:var(--yellow); }
 .footer__nav{ display:flex; flex-wrap:wrap; gap:1.3rem; font-size:.85rem; }
-.footer__nav a{ color:rgba(255,255,255,.72); transition:color .3s; }
-.footer__nav a:hover{ color:var(--yellow); }
-.footer__legal{ font-size:.76rem; text-align:right; line-height:1.6; color:rgba(255,255,255,.6); }
+.footer__nav a{ color:var(--ink-soft); transition:color .3s; }
+.footer__nav a:hover{ color:var(--ochre); }
+.footer__legal{ font-size:.76rem; text-align:right; line-height:1.6; color:var(--ink-soft); }
 .footer__legal small{ font-size:.68rem; opacity:.7; }
 
 .totop{

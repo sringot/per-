@@ -23,7 +23,7 @@ assets/
   css/fonts.css       polices auto-hébergées (@font-face)
   css/style.css       styles + animations
   js/main.js          interactions
-  fonts/              Poppins 300–700 (woff2, sous-ensembles latin)
+  fonts/              Plus Jakarta Sans 300–800 (woff2, sous-ensembles latin)
   img/logo.svg        logo
   img/favicon.svg     favicon
 ```
@@ -33,16 +33,20 @@ les massages et tarifs → les avis → le contact.
 
 ## Charte graphique
 
-| Pantone            | Hex       | Usage                                        |
-| ------------------ | --------- | -------------------------------------------- |
-| 18-1354 Burnt Ochre| `#C15A32` | boutons principaux, CTA, logo, accents        |
-| 19-1617 Burgundy   | `#6B2E3A` | titres, section contact, footer               |
-| 17-0627 Dried Herb | `#9A8B5F` | encart carte cadeau, sous-titre de marque     |
-| 16-0110 Desert Sage| `#A7AE9B` | fond de la section « Le cabinet »             |
-| 11-0616 Pastel Yellow | `#F2E7B3` | cadre de page, fonds doux                  |
-| Blanc cassé        | `#FCFBF8` | fond du grand bloc arrondi                    |
+Le site est volontairement presque entièrement clair : la couleur ne sert que
+pour les accents, pas en grands aplats.
 
-Typographie : **Poppins** pour tout (titres en 600, texte courant en 400).
+| Pantone               | Hex       | Usage                                   |
+| --------------------- | --------- | --------------------------------------- |
+| 18-1354 Burnt Ochre   | `#C15A32` | boutons, CTA, icônes — **seul accent**  |
+| 19-1617 Burgundy      | `#6B2E3A` | titres                                  |
+| 17-0627 Dried Herb    | `#9A8B5F` | petits détails                          |
+| 16-0110 Desert Sage   | `#A7AE9B` | petits détails (survols)                |
+| 11-0616 Pastel Yellow | `#F2E7B3` | dérivés très dilués pour les fonds doux |
+| Blanc cassé           | `#FCFBF8` | fond du grand bloc arrondi              |
+| Doré du logo          | `#D9B871` | logo uniquement                         |
+
+Typographie : **Plus Jakarta Sans** pour tout (titres en 600, texte en 400).
 Toutes les valeurs sont des variables CSS en haut de `style.css` — les changer
 là suffit à répercuter partout.
 
@@ -62,6 +66,15 @@ CNIL considère comme non conforme au RGPD.
 - Formulaire de contact avec validation en direct
 - Accessibilité : navigation clavier, libellés ARIA, lien d'évitement,
   respect de `prefers-reduced-motion`
+
+## Point d'attention : lisibilité du logo
+
+Le logo fourni est doré clair. Posé sur le fond crème du site, ce doré ne
+passe pas le contraste minimum pour du texte. Le pictogramme garde donc la
+teinte d'origine (`#D9B871`), mais le nom « MARIE MASSAGE » et le sous-titre
+utilisent une version assombrie du même doré (`--gold-ink`, `#A8823A`).
+Pour revenir au doré exact, remplacer `--gold-ink` par `--gold` dans
+`style.css` — au prix de la lisibilité.
 
 ## À compléter
 
