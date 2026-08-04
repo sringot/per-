@@ -29,11 +29,13 @@
   /* ---------- 3. HEADER & BOUTON REMONTER ---------- */
   const header = $('#header');
   const totop  = $('#totop');
+  const cue    = $('#cue');
 
   function onScroll() {
     const y = window.scrollY;
     header.classList.toggle('scrolled', y > 20);
     totop.classList.toggle('show', y > 700);
+    if (cue) cue.classList.toggle('gone', y > 90);
   }
 
   /* ---------- 4. MENU MOBILE ---------- */
@@ -146,7 +148,128 @@
   window.addEventListener('resize', applyParallax);
   onScroll(); applyParallax();
 
-  /* ---------- 10. CARROUSEL D'AVIS ---------- */
+  /* ---------- 10. DÉFILEMENT INERTIEL ----------
+     Le scroll natif est remplacé par une position interpolée : la page
+     rattrape le geste au lieu de le suivre au pixel. Uniquement sur
+     pointeur fin — le tactile a déjà sa propre inertie, native et
+     meilleure que tout ce qu'on pourrait simuler. */
+  const fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  let scrollTo = null;
+
+  if (fine && !reduced) {
+    // `scroll-behavior:smooth` en CSS animerait aussi nos scrollTo :
+    // les deux moteurs se battraient. On rend la main au CSS seulement
+    // si ce module ne tourne pas.
+    document.documentElement.classList.add('js-smooth');
+
+    let target = window.scrollY, current = window.scrollY, running = false;
+    const max = () => document.documentElement.scrollHeight - window.innerHeight;
+
+    const step = () => {
+      const diff = target - current;
+      if (Math.abs(diff) < 0.4) {
+        current = target;
+        window.scrollTo(0, current);
+        running = false;
+        return;
+      }
+      current += diff * 0.11;                  // plus bas = plus glissant
+      window.scrollTo(0, current);
+      requestAnimationFrame(step);
+    };
+    const kick = () => { if (!running) { running = true; requestAnimationFrame(step); } };
+
+    scrollTo = y => { target = Math.max(0, Math.min(max(), y)); kick(); };
+
+    window.addEventListener('wheel', e => {
+      if (e.ctrlKey) return;                                   // zoom navigateur
+      if (document.body.classList.contains('nav-open')) return;
+      if (e.target.closest('textarea, select')) return;        // zones défilables
+      e.preventDefault();
+      target = Math.max(0, Math.min(max(), target + e.deltaY));
+      kick();
+    }, { passive: false });
+
+    // Clavier, barre de défilement, retour arrière : on se resynchronise
+    window.addEventListener('scroll', () => {
+      if (!running) { target = current = window.scrollY; }
+    }, { passive: true });
+
+    window.addEventListener('resize', () => { target = current = window.scrollY; });
+  }
+
+  // Les ancres passent par le même moteur, pour une arrivée amortie
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id.length < 2) return;
+      const dest = document.querySelector(id);
+      if (!dest) return;
+      e.preventDefault();
+      const headerH = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 86;
+      const top = dest.getBoundingClientRect().top + window.scrollY - headerH - 14;
+      if (scrollTo) scrollTo(top);
+      else window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
+    });
+  });
+
+  /* ---------- 11. BOUTONS MAGNÉTIQUES ----------
+     Le bouton se déporte légèrement vers le curseur puis revient :
+     ça donne l'impression qu'il vient à la rencontre du geste. */
+  if (fine && !reduced) {
+    $$('.magnetic').forEach(el => {
+      let raf = null, tx = 0, ty = 0, cx = 0, cy = 0;
+
+      const loop = () => {
+        cx += (tx - cx) * 0.16;
+        cy += (ty - cy) * 0.16;
+        el.style.translate = `${cx.toFixed(2)}px ${cy.toFixed(2)}px`;
+        raf = (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1)
+          ? requestAnimationFrame(loop) : null;
+      };
+      const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        tx = (e.clientX - (r.left + r.width / 2)) * 0.28;
+        ty = (e.clientY - (r.top + r.height / 2)) * 0.42;
+        kick();
+      });
+      el.addEventListener('pointerleave', () => { tx = ty = 0; kick(); });
+    });
+  }
+
+  /* ---------- 12. INCLINAISON DU VISUEL ---------- */
+  const tilt = $('#heroTilt');
+  const tiltZone = $('#heroVisual');
+  if (tilt && tiltZone && fine && !reduced) {
+    tiltZone.addEventListener('pointermove', e => {
+      const r = tiltZone.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width  - 0.5;
+      const py = (e.clientY - r.top)  / r.height - 0.5;
+      tilt.style.setProperty('--ry', (px * 7).toFixed(2) + 'deg');
+      tilt.style.setProperty('--rx', (-py * 7).toFixed(2) + 'deg');
+    });
+    tiltZone.addEventListener('pointerleave', () => {
+      tilt.style.setProperty('--ry', '0deg');
+      tilt.style.setProperty('--rx', '0deg');
+    });
+  }
+
+  /* ---------- 13. PASTILLE DE NAVIGATION ---------- */
+  const navList = $('#navList');
+  const navPill = $('#navPill');
+  if (navList && navPill) {
+    $$('.nav__link', navList).forEach(link => {
+      link.addEventListener('pointerenter', () => {
+        navPill.style.setProperty('--x', link.offsetLeft + 'px');
+        navPill.style.setProperty('--w', link.offsetWidth + 'px');
+      });
+    });
+  }
+
+  /* ---------- 14. CARROUSEL D'AVIS ---------- */
   const track = $('#revTrack');
   const prev  = $('#revPrev');
   const next  = $('#revNext');
@@ -218,7 +341,7 @@
     startAuto();
   }
 
-  /* ---------- 11. FORMULAIRE ---------- */
+  /* ---------- 15. FORMULAIRE ---------- */
   const form = $('#form');
   const note = $('#formNote');
   const submitBtn = $('#submit');

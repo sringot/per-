@@ -37,6 +37,7 @@
   <!-- ---------- HEADER ---------- -->
   <header class="header" id="header">
     <div class="shell header__inner">
+
       <a href="#accueil" class="brand" aria-label="Marie Massage — accueil">
         <span class="brand__mark">
           <svg viewBox="0 0 100 100" aria-hidden="true">
@@ -53,21 +54,27 @@
         </span>
       </a>
 
-
       <nav class="nav" id="nav" aria-label="Navigation principale">
-        <ul class="nav__list">
+        <ul class="nav__list" id="navList">
+          <span class="nav__pill" id="navPill" aria-hidden="true"></span>
           <li><a href="#apropos" class="nav__link">À propos</a></li>
           <li><a href="#lieu" class="nav__link">Le cabinet</a></li>
           <li><a href="#massages" class="nav__link">Massages</a></li>
           <li><a href="#avis" class="nav__link">Avis</a></li>
           <li><a href="#contact" class="nav__link">Contact</a></li>
         </ul>
-        <a href="#contact" class="btn btn--primary nav__cta">Prendre rendez-vous</a>
+        <a href="#contact" class="btn btn--primary nav__cta-m">Prendre rendez-vous</a>
       </nav>
 
-      <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="header__end">
+        <a href="#contact" class="btn btn--primary magnetic nav__cta">
+          <span>Prendre rendez-vous</span>
+        </a>
+        <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
     </div>
   </header>
 
@@ -75,26 +82,36 @@
 
   <!-- ---------- HERO ---------- -->
   <section class="hero" id="accueil">
+    <div class="hero__aura" aria-hidden="true">
+      <span class="orb orb--1"></span>
+      <span class="orb orb--2"></span>
+      <span class="orb orb--3"></span>
+    </div>
+
     <div class="shell hero__inner">
 
       <div class="hero__content">
+        <p class="hero__eyebrow reveal" style="--d:.05s">
+          <span class="pulse"></span> Voisins-le-Bretonneux
+        </p>
+
         <h1 class="hero__title">
-          <span class="ln"><span class="anim-up" style="--d:.15s">Retrouvez</span></span>
-          <span class="ln"><span class="anim-up" style="--d:.25s">votre équilibre</span></span>
-          <span class="ln"><span class="anim-up" style="--d:.35s">&amp; bien-être</span></span>
+          <span class="ln"><span style="--d:.10s">Retrouvez</span></span>
+          <span class="ln"><span style="--d:.19s">votre équilibre</span></span>
+          <span class="ln"><span style="--d:.28s">&amp; bien-être</span></span>
         </h1>
 
-        <p class="hero__text anim" style="--d:.5s">
+        <p class="hero__text reveal" style="--d:.42s">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Maecenas aliquam risus ut volutpat pretium.
         </p>
 
-        <div class="hero__actions anim" style="--d:.6s">
-          <a href="#contact" class="btn btn--primary btn--lg">Prendre rendez-vous</a>
-          <a href="#massages" class="btn btn--outline btn--lg">Mes massages</a>
+        <div class="hero__actions reveal" style="--d:.52s">
+          <a href="#contact" class="btn btn--primary btn--lg magnetic"><span>Prendre rendez-vous</span></a>
+          <a href="#massages" class="btn btn--outline btn--lg magnetic"><span>Mes massages</span></a>
         </div>
 
-        <div class="proof anim" style="--d:.7s">
+        <div class="proof reveal" style="--d:.62s">
           <span class="proof__avatars" aria-hidden="true">
             <i class="ill"><img src="assets/img/illus/avatar-1.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-2.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-3.svg" alt=""></i>
           </span>
@@ -102,20 +119,28 @@
         </div>
       </div>
 
-      <div class="hero__visual">
+      <div class="hero__visual" id="heroVisual">
+        <div class="hero__tilt" id="heroTilt">
+          <figure class="ill arch hero__photo">
+            <img src="assets/img/illus/hero.svg" alt="Marie masse le dos d'une cliente">
+          </figure>
 
-        <figure class="ill arch hero__photo anim-scale" style="--d:.35s"><img src="assets/img/illus/hero.svg" alt="Marie masse le dos d'une cliente"></figure>
-
-        <aside class="profile anim" style="--d:.95s">
-          <span class="ill profile__thumb"><img src="assets/img/illus/marie.svg" alt="Portrait de Marie"></span>
-          <div class="profile__body">
-            <b>Moi c'est Marie, masseuse bien-être</b>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, maecenas aliquam risus.</p>
-          </div>
-        </aside>
+          <aside class="profile reveal" style="--d:.9s">
+            <span class="ill profile__thumb"><img src="assets/img/illus/marie.svg" alt="Portrait de Marie"></span>
+            <div class="profile__body">
+              <b>Moi c'est Marie, masseuse bien-être</b>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+          </aside>
+        </div>
       </div>
 
     </div>
+
+    <a href="#apropos" class="cue" id="cue" aria-label="Descendre">
+      <span class="cue__line"><i></i></span>
+      <span class="cue__txt">Découvrir</span>
+    </a>
   </section>
 
   <!-- ---------- BANDEAU DÉFILANT ---------- -->
