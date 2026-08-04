@@ -83,8 +83,8 @@ CNIL considère comme non conforme au RGPD.
 ## Ce qui est déjà en place
 
 - Responsive (mobile, tablette, desktop) avec menu latéral sur mobile
-- Animations : apparition au scroll, parallaxe, compteur, pastilles flottantes,
-  bandeau défilant, préchargeur
+- Animations : apparition au scroll, parallaxe, compteur, défilement inertiel,
+  boutons magnétiques, préchargeur
 - Carrousel d'avis (flèches, points, lecture auto, swipe tactile)
 - Formulaire de contact avec validation en direct
 - Accessibilité : navigation clavier, libellés ARIA, lien d'évitement,

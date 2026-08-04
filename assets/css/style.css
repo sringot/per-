@@ -82,7 +82,10 @@ ul{ list-style:none; }
   display:flex; flex-direction:column;
   min-height:100svh;
 }
-.page > main{ flex:1 0 auto; }
+.page > main{ flex:1 0 auto; display:flex; flex-direction:column; }
+/* Le héros absorbe la hauteur restante au lieu de la laisser
+   en bande vide juste au-dessus du pied de page. */
+.hero{ flex:1; }
 .shell{ width:min(var(--shell),100% - var(--pad)*2); margin-inline:auto; }
 
 /* Le moteur de défilement inertiel pilote lui-même les ancres :
@@ -452,19 +455,6 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
   0%{ transform:translateY(-100%) } 60%,100%{ transform:translateY(100%) }
 }
 .cue:hover{ color:var(--green); }
-
-/* ---------- 9. MARQUEE ---------- */
-.marquee{
-  background:var(--card); color:var(--green);
-  border-block:1px solid var(--line);
-  padding:.85rem 0; overflow:hidden;
-  font-size:.9rem; font-weight:500; letter-spacing:.02em;
-}
-.marquee__track{ display:flex; width:max-content; animation:scrollX 38s linear infinite; }
-.marquee__track span{ display:flex; align-items:center; white-space:nowrap; }
-.marquee i{ font-style:normal; color:var(--ochre); margin:0 1.5rem; }
-@keyframes scrollX{ to{ transform:translateX(-50%) } }
-.marquee:hover .marquee__track{ animation-play-state:paused; }
 
 /* ---------- 10. SECTIONS ---------- */
 .section{ padding:clamp(3.5rem,7vw,7rem) 0; }
