@@ -15,35 +15,25 @@
     setTimeout(() => {
       preloader.classList.add('done');
       setTimeout(() => preloader.remove(), 700);
-    }, reduced ? 0 : 450);
+    }, reduced ? 0 : 400);
   };
   window.addEventListener('load', start);
   // Filet de sécurité si `load` traîne (polices, images lentes)
-  setTimeout(() => { if (preloader.isConnected && !document.body.classList.contains('ready')) start(); }, 2500);
+  setTimeout(() => {
+    if (preloader.isConnected && !document.body.classList.contains('ready')) start();
+  }, 2500);
 
   /* ---------- 2. ANNÉE COURANTE ---------- */
   $('#year').textContent = new Date().getFullYear();
 
-  /* ---------- 3. HEADER : fond, masquage, barre de progression ---------- */
-  const header   = $('#header');
-  const progress = $('#progress');
-  let lastY = window.scrollY;
+  /* ---------- 3. HEADER & BOUTON REMONTER ---------- */
+  const header = $('#header');
+  const totop  = $('#totop');
 
   function onScroll() {
     const y = window.scrollY;
-
     header.classList.toggle('scrolled', y > 20);
-
-    // Masque le header au scroll vers le bas, le révèle vers le haut
-    if (!document.body.classList.contains('nav-open')) {
-      header.classList.toggle('hidden', y > 400 && y > lastY);
-    }
-    lastY = y;
-
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
-
-    $('#totop').classList.toggle('show', y > 700);
+    totop.classList.toggle('show', y > 700);
   }
 
   /* ---------- 4. MENU MOBILE ---------- */
@@ -64,7 +54,6 @@
     burger.setAttribute('aria-expanded', String(open));
     burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
     document.body.classList.toggle('nav-open', open);
-    if (open) header.classList.remove('hidden');
   });
 
   $$('.nav a').forEach(a => a.addEventListener('click', closeNav));
@@ -92,8 +81,7 @@
     const target   = parseFloat(el.dataset.count);
     const decimals = parseInt(el.dataset.decimals || '0', 10);
     const suffix   = el.dataset.suffix || '';
-    const dur      = 1500;
-    const t0       = performance.now();
+    const dur = 1500, t0 = performance.now();
 
     (function step(now) {
       const p = Math.min((now - t0) / dur, 1);
@@ -139,11 +127,12 @@
     if (reduced) return;
     const vh = window.innerHeight;
     parallaxEls.forEach(el => {
-      const rect  = el.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
       if (rect.bottom < -200 || rect.top > vh + 200) return;
-      const speed = parseFloat(el.dataset.parallax);
+      const speed  = parseFloat(el.dataset.parallax);
       const offset = (rect.top + rect.height / 2 - vh / 2) * speed;
-      el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+      el.style.setProperty('--py', offset.toFixed(1) + 'px');
+      el.style.translate = `0 ${offset.toFixed(1)}px`;
     });
   }
 
@@ -157,31 +146,7 @@
   window.addEventListener('resize', applyParallax);
   onScroll(); applyParallax();
 
-  /* ---------- 10. CURSEUR PERSONNALISÉ ---------- */
-  const cursor = $('#cursor');
-  if (!reduced && window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
-    let cx = 0, cy = 0, tx = 0, ty = 0;
-
-    document.addEventListener('mousemove', e => {
-      tx = e.clientX; ty = e.clientY;
-      cursor.classList.add('on');
-    });
-    document.addEventListener('mouseleave', () => cursor.classList.remove('on'));
-
-    (function loop() {
-      cx += (tx - cx) * 0.18;
-      cy += (ty - cy) * 0.18;
-      cursor.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0)`;
-      requestAnimationFrame(loop);
-    })();
-
-    $$('a, button, .card, .gallery__item, input, select, textarea, label').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('hot'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('hot'));
-    });
-  }
-
-  /* ---------- 11. CARROUSEL D'AVIS ---------- */
+  /* ---------- 10. CARROUSEL D'AVIS ---------- */
   const track = $('#revTrack');
   const prev  = $('#revPrev');
   const next  = $('#revNext');
@@ -222,8 +187,6 @@
     if (!animate) requestAnimationFrame(() => { track.style.transition = ''; });
 
     $$('button', dots).forEach((d, n) => d.classList.toggle('active', n === index));
-    prev.disabled = false;
-    next.disabled = false;
   }
 
   function startAuto() {
@@ -255,7 +218,7 @@
     startAuto();
   }
 
-  /* ---------- 12. FORMULAIRE ---------- */
+  /* ---------- 11. FORMULAIRE ---------- */
   const form = $('#form');
   const note = $('#formNote');
   const submitBtn = $('#submit');

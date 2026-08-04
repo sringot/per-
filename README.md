@@ -23,7 +23,7 @@ assets/
   css/fonts.css       polices auto-hébergées (@font-face)
   css/style.css       styles + animations
   js/main.js          interactions
-  fonts/              Playfair Display + Poppins (woff2, sous-ensembles latin)
+  fonts/              Poppins 300–700 (woff2, sous-ensembles latin)
   img/logo.svg        logo
   img/favicon.svg     favicon
 ```
@@ -33,18 +33,21 @@ les massages et tarifs → les avis → le contact.
 
 ## Charte graphique
 
-| Couleur       | Hex       | Usage                                      |
-| ------------- | --------- | ------------------------------------------ |
-| Burgundy      | `#6B2E3A` | titres, textes importants, footer, contact |
-| Tangerine     | `#F28C52` | boutons principaux, CTA, icônes            |
-| Dusty Rose    | `#E98BA3` | accents, section avis                      |
-| Pastel Yellow | `#F2E7B3` | fonds doux, surlignages                    |
-| Desert Sage   | `#A7AE9B` | fond de la section « Le cabinet »          |
-| Blanc cassé   | `#FAF8F4` | fond principal                             |
+| Pantone            | Hex       | Usage                                        |
+| ------------------ | --------- | -------------------------------------------- |
+| 18-1354 Burnt Ochre| `#C15A32` | boutons principaux, CTA, logo, accents        |
+| 19-1617 Burgundy   | `#6B2E3A` | titres, section contact, footer               |
+| 17-0627 Dried Herb | `#9A8B5F` | encart carte cadeau, sous-titre de marque     |
+| 16-0110 Desert Sage| `#A7AE9B` | fond de la section « Le cabinet »             |
+| 11-0616 Pastel Yellow | `#F2E7B3` | cadre de page, fonds doux                  |
+| Blanc cassé        | `#FCFBF8` | fond du grand bloc arrondi                    |
 
-Typographie : **Playfair Display** (titres) + **Poppins** (texte courant).
+Typographie : **Poppins** pour tout (titres en 600, texte courant en 400).
 Toutes les valeurs sont des variables CSS en haut de `style.css` — les changer
 là suffit à répercuter partout.
+
+La mise en page reprend le principe d'un grand bloc blanc arrondi posé sur un
+fond jaune pastel, avec photo en arche et cartes flottantes.
 
 Les polices sont auto-hébergées plutôt que chargées depuis le CDN Google Fonts :
 c'est plus rapide, et cela évite le transfert d'adresses IP vers Google, que la
@@ -53,7 +56,7 @@ CNIL considère comme non conforme au RGPD.
 ## Ce qui est déjà en place
 
 - Responsive (mobile, tablette, desktop) avec menu latéral sur mobile
-- Animations : apparition au scroll, parallaxe, compteurs, curseur personnalisé,
+- Animations : apparition au scroll, parallaxe, compteur, pastilles flottantes,
   bandeau défilant, préchargeur
 - Carrousel d'avis (flèches, points, lecture auto, swipe tactile)
 - Formulaire de contact avec validation en direct
