@@ -65,7 +65,7 @@ Le burgundy a été retiré (il tirait vers le prune sur les grands titres).
 | Sauge          | `#A7AE9B` | petits détails, fond de section très dilué   |
 | Jaune pastel   | `#F2E7B3` | dérivés dilués pour les fonds doux           |
 | Blanc cassé    | `#FBF9F4` | fond principal                               |
-| Doré du logo   | `#D9B871` | logo uniquement                              |
+| Orange du logo | `#EC8448` | logo uniquement (relevé sur le fichier fourni) |
 
 Typographie : **Figtree** pour tout (titres en 600, texte en 400).
 Toutes les valeurs sont des variables CSS en haut de `style.css` — les changer
@@ -108,14 +108,17 @@ Si de vraies photos arrivent plus tard, il suffit de remplacer le `src` des
 balises `<img>` dans `index.html` : la mise en page ne bouge pas, `.ill img`
 applique déjà `object-fit: cover`.
 
-## Point d'attention : lisibilité du logo
+## Le logo
 
-Le logo fourni est doré clair. Posé sur le fond crème du site, ce doré ne
-passe pas le contraste minimum pour du texte. Le pictogramme garde donc la
-teinte d'origine (`#D9B871`), mais le nom « MARIE MASSAGE » et le sous-titre
-utilisent une version assombrie du même doré (`--gold-ink`, `#A8823A`).
-Pour revenir au doré exact, remplacer `--gold-ink` par `--gold` dans
-`style.css` — au prix de la lisibilité.
+Le logo de référence fourni par la cliente est dans
+`assets/img/logo-reference.png`. Il n'est pas utilisé tel quel : c'est une
+capture d'écran de 149 × 184 px, qui serait floue sur écran haute densité et
+traînerait son fond crème. Le pictogramme est donc **redessiné en SVG**
+(`assets/img/logo.svg`, et inline dans les pages), aux couleurs relevées au
+pixel sur le fichier :
+
+- pictogramme et nom « MARIE MASSAGE » : `#EC8448` (variable `--brand`)
+- sous-titre « Masseuse bien-être » : gris, comme dans l'original
 
 ## À compléter
 

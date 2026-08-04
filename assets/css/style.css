@@ -18,9 +18,8 @@
   --green-d:     #2F3829;
   --yellow:      #F2E7B3;  /* 11-0616 TCX Pastel Yellow*/
   --yellow-soft: #F8EDCD;
-  --gold:        #D9B871;  /* doré du logo fourni       */
-  --gold-ink:    #A8823A;  /* même doré, assombri : le doré clair
-                              sur fond crème est illisible en texte */
+  --brand:       #EC8448;  /* orange du logo, relevé au pixel sur
+                              le fichier fourni par la cliente */
   --frame-bg:    #EFEDE4;  /* cadre de page, blanc cassé plus soutenu */
 
   /* Neutres */
@@ -191,7 +190,7 @@ p + p{ margin-top:.9rem; }
   transition:opacity .6s var(--ease), visibility .6s;
 }
 .preloader.done{ opacity:0; visibility:hidden; }
-.preloader__logo{ width:60px; color:var(--ochre); animation:beat 1.6s var(--ease) infinite; }
+.preloader__logo{ width:60px; color:var(--brand); animation:beat 1.6s var(--ease) infinite; }
 .preloader__logo svg{ fill:currentColor; }
 @keyframes beat{ 0%,100%{ transform:scale(1); opacity:.85 } 50%{ transform:scale(1.12); opacity:1 } }
 .preloader__bar{
@@ -238,19 +237,23 @@ p + p{ margin-top:.9rem; }
 
 .brand{ justify-self:start; display:flex; align-items:center; gap:.68rem; }
 .brand__mark{
-  width:38px; height:38px; flex:none; color:var(--gold);
+  width:38px; height:38px; flex:none; color:var(--brand);
   transition:transform .6s var(--ease-out);
 }
 .brand__mark svg{ width:100%; height:100%; fill:currentColor; }
 .brand:hover .brand__mark{ transform:rotate(-7deg) scale(1.09); }
 .brand__text{ display:flex; flex-direction:column; gap:.12rem; line-height:1; }
+.brand__text strong,.brand__text em{ white-space:nowrap; }
 .brand__text strong{
   font-weight:700; font-size:.82rem; letter-spacing:.15em;
-  text-transform:uppercase; color:var(--gold-ink);
+  text-transform:uppercase; color:var(--brand);
 }
+/* Le sous-titre est gris dans le logo d'origine, pas orange —
+   ce qui tombe bien, c'est la seule ligne du bloc à devoir rester
+   lisible (un nom de marque, lui, échappe aux règles de contraste). */
 .brand__text em{
   font-style:normal; font-size:.63rem; letter-spacing:.03em;
-  color:var(--gold-ink); font-weight:400; opacity:.8;
+  color:var(--ink-soft); font-weight:400;
 }
 
 .nav{ justify-self:center; }
@@ -823,9 +826,9 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   .giftcard{ grid-template-columns:1fr; }
 }
 
-@media (max-width:860px){
-  :root{ --header-h:74px; --frame:0px; }
-  .page{ border-radius:0; margin:0; }
+/* Sous 1000px, logo + 5 onglets + bouton ne tiennent plus sur une ligne :
+   la navigation bascule en tiroir avant que le logo ne se coupe. */
+@media (max-width:1000px){
   .burger{ display:block; position:relative; z-index:960; }
   .header__inner{ grid-template-columns:auto 1fr; }
   .nav__cta{ display:none; }            /* le bouton passe dans le tiroir */
@@ -858,6 +861,11 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
      au-dessus du voile, sinon le menu passe dessous. */
   body.nav-open .header{ z-index:960; }
   @keyframes fadeIn{ to{ opacity:1 } }
+}
+
+@media (max-width:860px){
+  :root{ --header-h:74px; --frame:0px; }
+  .page{ border-radius:0; margin:0; }
 
   .gallery{ grid-template-columns:repeat(2,1fr); grid-auto-rows:155px; }
   .gallery__item--big,.gallery__item--wide{ grid-column:span 2; }
