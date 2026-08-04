@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Logo Marie Massage">
+  <g fill="currentColor">
+    <circle cx="21" cy="17" r="11.5"/>
+    <circle cx="79" cy="17" r="11.5"/>
+    <rect x="11.5" y="33" width="19" height="54" rx="9.5"/>
+    <rect x="69.5" y="33" width="19" height="54" rx="9.5"/>
+  </g>
+  <path d="M30 38 L50 68 L70 38"
+        fill="none" stroke="currentColor" stroke-width="18"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
