@@ -23,7 +23,7 @@ assets/
   css/fonts.css       polices auto-hébergées (@font-face)
   css/style.css       styles + animations
   js/main.js          interactions
-  fonts/              Plus Jakarta Sans 300–800 (woff2, sous-ensembles latin)
+  fonts/              Figtree 300–800 (woff2, sous-ensembles latin)
   img/logo.svg        logo
   img/favicon.svg     favicon
 ```
@@ -49,7 +49,7 @@ Le burgundy a été retiré (il tirait vers le prune sur les grands titres).
 | Blanc cassé    | `#FBF9F4` | fond principal                               |
 | Doré du logo   | `#D9B871` | logo uniquement                              |
 
-Typographie : **Plus Jakarta Sans** pour tout (titres en 600, texte en 400).
+Typographie : **Figtree** pour tout (titres en 600, texte en 400).
 Toutes les valeurs sont des variables CSS en haut de `style.css` — les changer
 là suffit à répercuter partout.
 

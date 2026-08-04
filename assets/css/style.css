@@ -2,7 +2,7 @@
    MARIE MASSAGE
    Palette : vert (sauge / kaki), orange (ocre brûlé), jaune
              pastel, sur fond blanc cassé.
-   Typo : Plus Jakarta Sans (titres et texte courant)
+   Typo : Figtree (titres et texte courant)
    ========================================================= */
 
 /* ---------- 1. VARIABLES ---------- */
@@ -13,11 +13,11 @@
   --herb:        #9A8B5F;  /* 17-0627 TCX Dried Herb   */
   --herb-d:      #7E7049;
   --sage:        #A7AE9B;  /* 16-0110 TCX Desert Sage  */
-  --sage-soft:   #F0F2EC;  /* sauge très dilué, fond de section */
+  --sage-soft:   #E7ECE1;  /* sauge dilué, fond de section */
   --green:       #3F4A38;  /* vert profond : titres et texte fort */
   --green-d:     #2F3829;
   --yellow:      #F2E7B3;  /* 11-0616 TCX Pastel Yellow*/
-  --yellow-soft: #FBF4DE;
+  --yellow-soft: #F8EDCD;
   --gold:        #D9B871;  /* doré du logo fourni       */
   --gold-ink:    #A8823A;  /* même doré, assombri : le doré clair
                               sur fond crème est illisible en texte */
@@ -59,7 +59,7 @@ html{
   background:var(--frame-bg);
 }
 body{
-  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-family:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
   font-weight:400;
   font-size:clamp(.94rem,.35vw + .86rem,1rem);
   line-height:1.7;
