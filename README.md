@@ -72,8 +72,9 @@ Typographie : **Figtree** pour tout (titres en 600, texte en 400).
 Toutes les valeurs sont des variables CSS en haut de `style.css` — les changer
 là suffit à répercuter partout.
 
-La mise en page reprend le principe d'un grand bloc blanc arrondi posé sur un
-fond jaune pastel, avec photo en arche et cartes flottantes.
+La page occupe toute la fenêtre, sans cadre ni bloc flottant. La largeur utile
+(`--shell`, 1460 px) suit l'écran : le titre et le texte du héros grandissent
+avec, pour ne pas laisser le contenu flotter au milieu d'un écran large.
 
 Les polices sont auto-hébergées plutôt que chargées depuis le CDN Google Fonts :
 c'est plus rapide, et cela évite le transfert d'adresses IP vers Google, que la

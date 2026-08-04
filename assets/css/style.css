@@ -20,7 +20,6 @@
   --yellow-soft: #F8EDCD;
   --brand:       #EC8448;  /* orange du logo, relevé au pixel sur
                               le fichier fourni par la cliente */
-  --frame-bg:    #EFEDE4;  /* cadre de page, blanc cassé plus soutenu */
 
   /* Neutres */
   --card:        #FBF9F4;  /* blanc cassé léger, bloc principal */
@@ -41,7 +40,6 @@
   --ease:        cubic-bezier(.22,.68,.28,1);
   --ease-out:    cubic-bezier(.16,1,.3,1);
   --header-h:    86px;
-  --frame:       clamp(0px, 1.6vw, 22px); /* marge jaune autour de la page */
   --pad:         clamp(1.25rem, 4vw, 5rem);
   /* Largeur utile : au-delà de ~1600px le contenu continue de grandir,
      sinon le site flotte au milieu d'un écran large. */
@@ -58,7 +56,7 @@ html{
   /* `clip` plutôt que `hidden` : neutralise le débordement horizontal
      du menu hors-écran sans créer de conteneur de défilement. */
   overflow-x:clip;
-  background:var(--frame-bg);
+  background:var(--card);
 }
 body{
   font-family:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -66,7 +64,7 @@ body{
   font-size:clamp(.94rem,.35vw + .86rem,1rem);
   line-height:1.7;
   color:var(--ink);
-  background:var(--frame-bg);
+  background:var(--card);
   overflow-x:clip;
   -webkit-font-smoothing:antialiased;
 }
@@ -77,14 +75,14 @@ a{ color:inherit; text-decoration:none; }
 ul{ list-style:none; }
 ::selection{ background:var(--ochre); color:var(--white); }
 
-/* Le grand bloc arrondi qui contient tout le site */
+/* La page occupe toute la fenêtre. La colonne flex garde le pied de page
+   en bas même quand le contenu est plus court que l'écran. */
 .page{
   background:var(--card);
-  border-radius:var(--r-xl);
-  margin:var(--frame);
-  overflow:hidden;
-  box-shadow:0 30px 90px -50px rgba(42,35,32,.5);
+  display:flex; flex-direction:column;
+  min-height:100svh;
 }
+.page > main{ flex:1 0 auto; }
 .shell{ width:min(var(--shell),100% - var(--pad)*2); margin-inline:auto; }
 
 /* Le moteur de défilement inertiel pilote lui-même les ancres :
@@ -305,7 +303,7 @@ p + p{ margin-top:.9rem; }
   position:relative;
   /* Assez haut pour occuper l'écran, mais plafonné : au-delà, le contenu
      serait centré dans le vide au lieu de remplir. */
-  min-height:min(calc(100svh - var(--frame)*2), 780px);
+  min-height:min(100svh, 780px);
   display:flex; align-items:center;
   padding:clamp(1.5rem,3vw,3rem) 0 clamp(3.5rem,6vw,5.5rem);
 }
@@ -876,8 +874,7 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
 }
 
 @media (max-width:860px){
-  :root{ --header-h:74px; --frame:0px; }
-  .page{ border-radius:0; margin:0; }
+  :root{ --header-h:74px; }
 
   .gallery{ grid-template-columns:repeat(2,1fr); grid-auto-rows:155px; }
   .gallery__item--big,.gallery__item--wide{ grid-column:span 2; }
