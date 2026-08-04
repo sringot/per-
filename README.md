@@ -26,6 +26,8 @@ assets/
   fonts/              Figtree 300–800 (woff2, sous-ensembles latin)
   img/logo.svg        logo
   img/favicon.svg     favicon
+  img/illus/          19 illustrations plates (SVG)
+tools-illustrations.py  script qui régénère les illustrations
 ```
 
 Les sections suivent le parcours client : présentation de Marie → le cabinet →
@@ -70,6 +72,26 @@ CNIL considère comme non conforme au RGPD.
 - Accessibilité : navigation clavier, libellés ARIA, lien d'évitement,
   respect de `prefers-reduced-motion`
 
+## Les illustrations
+
+Le site n'utilise pas de photos : chaque visuel est une **illustration
+vectorielle plate** aux couleurs de la marque (`assets/img/illus/`). C'est un
+choix, pas un pis-aller — le site est complet dès maintenant, sans attendre de
+séance photo, et l'univers visuel appartient à Marie Massage.
+
+Elles sont générées par `tools-illustrations.py`, qui partage une palette et des
+primitives communes (tête, main, feuille, bougie, flacon) pour que les 19 scènes
+restent cohérentes entre elles. Pour ajuster une couleur ou une scène, modifier
+le script puis le relancer :
+
+```bash
+python3 tools-illustrations.py
+```
+
+Si de vraies photos arrivent plus tard, il suffit de remplacer le `src` des
+balises `<img>` dans `index.html` : la mise en page ne bouge pas, `.ill img`
+applique déjà `object-fit: cover`.
+
 ## Point d'attention : lisibilité du logo
 
 Le logo fourni est doré clair. Posé sur le fond crème du site, ce doré ne
@@ -82,8 +104,8 @@ Pour revenir au doré exact, remplacer `--gold-ink` par `--gold` dans
 ## À compléter
 
 - [ ] **Textes** — remplacer tout le lorem ipsum (présentation, cabinet, soins)
-- [ ] **Photos** — remplacer les placeholders `.ph` par de vraies `<img>`
-      (dimensions indicatives affichées dans chaque placeholder)
+- [ ] **Photos** — optionnel : les illustrations peuvent rester telles quelles,
+      ou céder la place aux vraies photos (voir « Les illustrations »)
 - [ ] **Tarifs et durées** — les `XX €` dans la section massages
 - [ ] **Avis** — les témoignages sont des exemples, à remplacer par les vrais
 - [ ] **Coordonnées** — téléphone et email sont des valeurs fictives
