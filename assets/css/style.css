@@ -89,6 +89,39 @@ ul{ list-style:none; }
    le lissage CSS doit s'effacer pour ne pas animer par-dessus. */
 html.js-smooth{ scroll-behavior:auto; }
 
+/* Passage d'une page à l'autre : sortie en fondu, entrée en fondu.
+   L'entrée est une animation CSS pure — si le JS échoue, la page
+   reste visible au lieu de disparaître. */
+.page{ animation:pageIn .6s var(--ease-out) both; }
+@keyframes pageIn{ from{ opacity:0; transform:translateY(10px) } to{ opacity:1; transform:none } }
+body.leaving .page{
+  animation:none; opacity:0; transform:translateY(-10px);
+  transition:opacity .28s var(--ease), transform .28s var(--ease);
+}
+
+/* ---------- EN-TÊTE DE PAGE (pages intérieures) ---------- */
+.page-head{
+  position:relative; overflow:hidden;
+  padding:clamp(3rem,7vw,5.5rem) 0 clamp(2rem,4vw,3rem);
+}
+.page-head__aura{
+  position:absolute; top:-46%; right:-8%; width:44vw; height:44vw;
+  max-width:560px; max-height:560px; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle at 40% 40%,rgba(242,231,179,.9),rgba(242,231,179,0) 70%);
+  filter:blur(50px);
+  animation:drift1 24s ease-in-out infinite;
+}
+.page-head .shell{ position:relative; z-index:1; }
+.page-head__title{
+  font-size:clamp(2.3rem,5vw,3.9rem);
+  letter-spacing:-.035em; line-height:1.05;
+  margin-bottom:1.1rem;
+}
+.page-head__intro{ max-width:52ch; font-size:1.02rem; }
+/* L'en-tête de page porte déjà sa respiration : la section qui suit
+   ne doit pas y rajouter la sienne. */
+.page-head + .section{ padding-top:clamp(1.5rem,3vw,2.5rem); }
+
 .skip-link{
   position:fixed; top:.6rem; left:.6rem; z-index:999;
   background:var(--green); color:var(--white);
@@ -237,8 +270,8 @@ p + p{ margin-top:.9rem; }
   transition:color .35s var(--ease);
 }
 .nav__link:hover{ color:var(--green); }
-.nav__link.active{ color:var(--green); font-weight:500; }
-.nav__link.active::after{
+.nav__link[aria-current="page"]{ color:var(--green); font-weight:600; }
+.nav__link[aria-current="page"]::after{
   content:''; position:absolute; left:50%; bottom:.28rem;
   width:4px; height:4px; margin-left:-2px;
   border-radius:50%; background:var(--ochre);
@@ -323,14 +356,14 @@ p + p{ margin-top:.9rem; }
   letter-spacing:-.038em; line-height:1.02;
   margin-bottom:1.5rem;
 }
-/* Chaque ligne est un masque : le texte monte depuis dessous */
-.hero__title .ln{ display:block; overflow:hidden; padding-bottom:.07em; }
-.hero__title .ln > span{
+/* Masque de ligne réutilisable : le texte monte depuis dessous */
+.ln{ display:block; overflow:hidden; padding-bottom:.07em; }
+.ln > span{
   display:block;
   transform:translateY(105%);
   transition:transform 1.05s var(--ease-out) var(--d,0s);
 }
-body.ready .hero__title .ln > span{ transform:none; }
+body.ready .ln > span{ transform:none; }
 
 .hero__text{ max-width:40ch; font-size:1.02rem; }
 .hero__actions{ display:flex; flex-wrap:wrap; gap:.75rem; margin-top:2.1rem; }

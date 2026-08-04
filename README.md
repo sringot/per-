@@ -19,7 +19,12 @@ python3 -m http.server 8000
 ## Structure
 
 ```
-index.html            page unique, 5 sections
+index.html            Accueil (page d'atterrissage : le héros)
+a-propos.html         À propos
+le-cabinet.html       Le cabinet
+massages.html         Les massages & tarifs
+avis.html             Avis clientes
+contact.html          Contact & rendez-vous
 assets/
   css/fonts.css       polices auto-hébergées (@font-face)
   css/style.css       styles + animations
@@ -29,10 +34,20 @@ assets/
   img/favicon.svg     favicon
   img/illus/          19 illustrations plates (SVG)
 tools-illustrations.py  script qui régénère les illustrations
+tools-build-pages.py    échafaudage ayant produit les 6 pages (déjà joué)
 ```
 
-Les sections suivent le parcours client : présentation de Marie → le cabinet →
-les massages et tarifs → les avis → le contact.
+Le site est **multi-pages** : on atterrit sur l'accueil, et chaque onglet de la
+navigation est un fichier `.html` à part. C'est plus léger à charger sur mobile,
+et chaque page se travaille isolément.
+
+L'en-tête et le pied de page sont **dupliqués dans les 6 fichiers** — c'est le
+prix à payer pour un site statique sans outil de build. Si tu modifies la
+navigation ou le pied de page, répercute-le dans les 6.
+
+`tools-build-pages.py` a servi une seule fois à découper la page unique
+d'origine. **Ne le relance pas** : il écraserait tes modifications. Les fichiers
+`.html` sont désormais la source de vérité et s'éditent directement.
 
 ## Charte graphique
 

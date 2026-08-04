@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Les massages & tarifs — Marie Massage</title>
+  <meta name="description" content="Kobido, madérothérapie, relaxation, drainage lymphatique, massage bébé, dos & nuque : les soins et leurs tarifs.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-400-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-700-latin.woff2" crossorigin>
+
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="p-massages">
+
+<a class="skip-link" href="#main">Aller au contenu</a>
+
+<div class="page">
+
+  <!-- ---------- HEADER ---------- -->
+  <header class="header" id="header">
+    <div class="shell header__inner">
+
+      <a href="index.html" class="brand" aria-label="Marie Massage — accueil">
+        <span class="brand__mark">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="21" cy="17" r="11.5"/><circle cx="79" cy="17" r="11.5"/>
+            <rect x="11.5" y="33" width="19" height="54" rx="9.5"/>
+            <rect x="69.5" y="33" width="19" height="54" rx="9.5"/>
+            <path d="M30 38 L50 68 L70 38" fill="none" stroke="currentColor" stroke-width="18"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand__text">
+          <strong>Marie Massage</strong>
+          <em>Masseuse bien-être</em>
+        </span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Navigation principale">
+        <ul class="nav__list" id="navList">
+          <span class="nav__pill" id="navPill" aria-hidden="true"></span>
+          <li><a href="a-propos.html" class="nav__link">À propos</a></li>
+          <li><a href="le-cabinet.html" class="nav__link">Le cabinet</a></li>
+          <li><a href="massages.html" class="nav__link" aria-current="page">Massages</a></li>
+          <li><a href="avis.html" class="nav__link">Avis</a></li>
+          <li><a href="contact.html" class="nav__link">Contact</a></li>
+        </ul>
+        <a href="contact.html" class="btn btn--primary nav__cta-m">Prendre rendez-vous</a>
+      </nav>
+
+      <div class="header__end">
+        <a href="contact.html" class="btn btn--primary magnetic nav__cta">
+          <span>Prendre rendez-vous</span>
+        </a>
+        <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+<main id="main">
+
+  <header class="page-head">
+    <span class="page-head__aura" aria-hidden="true"></span>
+    <div class="shell">
+      <p class="eyebrow reveal" style="--d:.05s">Les massages</p>
+      <h1 class="page-head__title"><span class="ln"><span style="--d:.12s">Choisissez<br>votre soin</span></span></h1>
+      <div class="reveal" style="--d:.3s">
+      <p class="page-head__intro">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Chaque soin est adapté à vos besoins du moment.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--menu" id="massages">
+    <div class="shell">
+
+      <!-- TODO : remplacer durées et tarifs par les vrais -->
+      <div class="cards">
+        <article class="card" data-reveal="up" style="--d:0s">
+          <div class="card__media ill"><img src="assets/img/illus/kobido.svg" alt="Massage du visage Kobido"></div>
+          <div class="card__body">
+            <h3 class="card__title">Kobido</h3>
+            <p class="card__tag">Lifting japonais du visage</p>
+            <p class="card__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas aliquam risus ut volutpat.</p>
+            <div class="card__foot"><span class="card__time">60 min</span><span class="card__price">XX €</span></div>
+            <a href="contact.html" class="card__link" aria-label="Réserver un Kobido">Réserver
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-6-6m6 6-6 6"/></svg></a>
+          </div>
+        </article>
+
+        <article class="card" data-reveal="up" style="--d:.08s">
+          <div class="card__media ill"><img src="assets/img/illus/madero.svg" alt="Outils de madérothérapie"></div>
+          <div class="card__body">
+            <h3 class="card__title">Madérothérapie</h3>
+            <p class="card__tag">Soin corps remodelant</p>
+            <p class="card__text">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim.</p>
+            <div class="card__foot"><span class="card__time">75 min</span><span class="card__price">XX €</span></div>
+            <a href="contact.html" class="card__link" aria-label="Réserver une madérothérapie">Réserver
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-6-6m6 6-6 6"/></svg></a>
+          </div>
+        </article>
+
+        <article class="card card--feature" data-reveal="up" style="--d:.16s">
+          <span class="card__ribbon">Le plus demandé</span>
+          <div class="card__media ill"><img src="assets/img/illus/relaxation.svg" alt="Massage relaxation"></div>
+          <div class="card__body">
+            <h3 class="card__title">Relaxation</h3>
+            <p class="card__tag">Massage corps complet</p>
+            <p class="card__text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.</p>
+            <div class="card__foot"><span class="card__time">90 min</span><span class="card__price">XX €</span></div>
+            <a href="contact.html" class="card__link" aria-label="Réserver un massage relaxation">Réserver
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-6-6m6 6-6 6"/></svg></a>
+          </div>
+        </article>
+
+        <article class="card" data-reveal="up" style="--d:0s">
+          <div class="card__media ill"><img src="assets/img/illus/drainage.svg" alt="Drainage lymphatique"></div>
+          <div class="card__body">
+            <h3 class="card__title">Drainage lymphatique</h3>
+            <p class="card__tag">Jambes légères &amp; circulation</p>
+            <p class="card__text">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
+            <div class="card__foot"><span class="card__time">60 min</span><span class="card__price">XX €</span></div>
+            <a href="contact.html" class="card__link" aria-label="Réserver un drainage lymphatique">Réserver
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-6-6m6 6-6 6"/></svg></a>
+          </div>
+        </article>
+
+        <article class="card" data-reveal="up" style="--d:.08s">
+          <div class="card__media ill"><img src="assets/img/illus/bebe.svg" alt="Massage bébé"></div>
+          <div class="card__body">
+            <h3 class="card__title">Massage bébé</h3>
+            <p class="card__tag">Atelier parent — enfant</p>
+            <p class="card__text">Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci vitae dictum.</p>
+            <div class="card__foot"><span class="card__time">45 min</span><span class="card__price">XX €</span></div>
+            <a href="contact.html" class="card__link" aria-label="Réserver un massage bébé">Réserver
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-6-6m6 6-6 6"/></svg></a>
+          </div>
+        </article>
+
+        <article class="card" data-reveal="up" style="--d:.16s">
+          <div class="card__media ill"><img src="assets/img/illus/dos.svg" alt="Massage du dos et de la nuque"></div>
+          <div class="card__body">
+            <h3 class="card__title">Dos &amp; nuque</h3>
+            <p class="card__tag">Format express</p>
+            <p class="card__text">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
+            <div class="card__foot"><span class="card__time">30 min</span><span class="card__price">XX €</span></div>
+            <a href="contact.html" class="card__link" aria-label="Réserver un massage dos et nuque">Réserver
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-6-6m6 6-6 6"/></svg></a>
+          </div>
+        </article>
+      </div>
+
+      <!-- Carte cadeau : à activer plus tard -->
+      <aside class="giftcard" data-reveal="up">
+        <div class="giftcard__text">
+          <p class="eyebrow">Bientôt</p>
+          <h3 class="h3">Offrez une parenthèse</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Les cartes cadeaux arrivent très bientôt.</p>
+          <a href="contact.html" class="btn btn--primary">M'en parler</a>
+        </div>
+        <div class="giftcard__visual" aria-hidden="true">
+          <div class="giftcard__card">
+            <svg class="giftcard__logo" viewBox="0 0 100 100">
+              <circle cx="21" cy="17" r="11.5"/><circle cx="79" cy="17" r="11.5"/>
+              <rect x="11.5" y="33" width="19" height="54" rx="9.5"/>
+              <rect x="69.5" y="33" width="19" height="54" rx="9.5"/>
+              <path d="M30 38 L50 68 L70 38" fill="none" stroke="currentColor" stroke-width="18"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <b>Carte cadeau</b>
+            <span>Marie Massage</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+  <!-- ---------- FOOTER ---------- -->
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <a href="index.html" class="brand brand--footer">
+        <span class="brand__mark">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="21" cy="17" r="11.5"/><circle cx="79" cy="17" r="11.5"/>
+            <rect x="11.5" y="33" width="19" height="54" rx="9.5"/>
+            <rect x="69.5" y="33" width="19" height="54" rx="9.5"/>
+            <path d="M30 38 L50 68 L70 38" fill="none" stroke="currentColor" stroke-width="18"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand__text"><strong>Marie Massage</strong><em>Masseuse bien-être</em></span>
+      </a>
+
+      <nav class="footer__nav" aria-label="Navigation pied de page">
+        <a href="index.html">Accueil</a>
+        <a href="a-propos.html">À propos</a>
+        <a href="le-cabinet.html">Le cabinet</a>
+        <a href="massages.html" aria-current="page">Massages</a>
+        <a href="avis.html">Avis</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+      <p class="footer__legal">
+        © <span id="year">2026</span> Marie Massage · Voisins-le-Bretonneux<br>
+        <small>Les massages proposés sont des soins de bien-être, non thérapeutiques.</small>
+      </p>
+    </div>
+  </footer>
+
+</div><!-- /.page -->
+
+<a href="#main" class="totop" id="totop" aria-label="Remonter en haut">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg>
+</a>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,70 +1,37 @@
 /* =========================================================
    MARIE MASSAGE — Interactions & animations
+
+   Deux étages :
+     · initShell()  — une seule fois : en-tête, menu, moteur de
+                      défilement, transitions entre pages.
+     · initPage()   — à chaque contenu : révélations, compteurs,
+                      carrousel, formulaire, héros.
+
+   La séparation permet de rebrancher un contenu remplacé sans
+   réinstaller les écouteurs globaux, qui s'accumuleraient sinon.
    ========================================================= */
 (function () {
   'use strict';
 
-  const $  = (sel, ctx = document) => ctx.querySelector(sel);
-  const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+  const $  = (sel, ctx = document) => (ctx || document).querySelector(sel);
+  const $$ = (sel, ctx = document) => Array.from((ctx || document).querySelectorAll(sel));
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine    = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
 
-  /* ---------- 1. PRELOADER ---------- */
-  const preloader = $('#preloader');
-  const start = () => {
-    document.body.classList.add('ready');
-    setTimeout(() => {
-      preloader.classList.add('done');
-      setTimeout(() => preloader.remove(), 700);
-    }, reduced ? 0 : 400);
-  };
-  window.addEventListener('load', start);
-  // Filet de sécurité si `load` traîne (polices, images lentes)
-  setTimeout(() => {
-    if (preloader.isConnected && !document.body.classList.contains('ready')) start();
-  }, 2500);
+  /* état rafraîchi à chaque page */
+  let cue = null, parallaxEls = [], carousel = null;
 
-  /* ---------- 2. ANNÉE COURANTE ---------- */
-  $('#year').textContent = new Date().getFullYear();
+  /* =====================================================
+     BLOC CONTENU
+     ===================================================== */
 
-  /* ---------- 3. HEADER & BOUTON REMONTER ---------- */
-  const header = $('#header');
-  const totop  = $('#totop');
-  const cue    = $('#cue');
-
-  function onScroll() {
-    const y = window.scrollY;
-    header.classList.toggle('scrolled', y > 20);
-    totop.classList.toggle('show', y > 700);
-    if (cue) cue.classList.toggle('gone', y > 90);
-  }
-
-  /* ---------- 4. MENU MOBILE ---------- */
-  const burger = $('#burger');
-  const nav    = $('#nav');
-
-  function closeNav() {
-    nav.classList.remove('open');
-    burger.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-    burger.setAttribute('aria-label', 'Ouvrir le menu');
-    document.body.classList.remove('nav-open');
-  }
-
-  burger.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
-    burger.classList.toggle('open', open);
-    burger.setAttribute('aria-expanded', String(open));
-    burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
-    document.body.classList.toggle('nav-open', open);
-  });
-
-  $$('.nav a').forEach(a => a.addEventListener('click', closeNav));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
-  window.addEventListener('resize', () => { if (window.innerWidth > 860) closeNav(); });
-
-  /* ---------- 5. RÉVÉLATION AU SCROLL ---------- */
-  const revealables = $$('[data-reveal]');
-  if ('IntersectionObserver' in window && !reduced) {
+  /* ---------- Révélations au scroll ---------- */
+  function initReveals(root) {
+    const els = $$('[data-reveal]', root);
+    if (!('IntersectionObserver' in window) || reduced) {
+      els.forEach(el => el.classList.add('in'));
+      return;
+    }
     const io = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
@@ -72,13 +39,10 @@
         obs.unobserve(entry.target);
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-    revealables.forEach(el => io.observe(el));
-  } else {
-    revealables.forEach(el => el.classList.add('in'));
+    els.forEach(el => io.observe(el));
   }
 
-  /* ---------- 6. COMPTEURS ---------- */
-  const counters = $$('.count');
+  /* ---------- Compteurs ---------- */
   function runCounter(el) {
     const target   = parseFloat(el.dataset.count);
     const decimals = parseInt(el.dataset.decimals || '0', 10);
@@ -92,7 +56,17 @@
       if (p < 1) requestAnimationFrame(step);
     })(t0);
   }
-  if ('IntersectionObserver' in window && !reduced) {
+
+  function initCounters(root) {
+    const els = $$('.count', root);
+    if (!('IntersectionObserver' in window) || reduced) {
+      els.forEach(el => {
+        const d = parseInt(el.dataset.decimals || '0', 10);
+        el.textContent = parseFloat(el.dataset.count).toFixed(d).replace('.', ',')
+                       + (el.dataset.suffix || '');
+      });
+      return;
+    }
     const co = new IntersectionObserver((entries, obs) => {
       entries.forEach(e => {
         if (!e.isIntersecting) return;
@@ -100,125 +74,17 @@
         obs.unobserve(e.target);
       });
     }, { threshold: 0.6 });
-    counters.forEach(el => co.observe(el));
-  } else {
-    counters.forEach(el => {
-      const d = parseInt(el.dataset.decimals || '0', 10);
-      el.textContent = parseFloat(el.dataset.count).toFixed(d).replace('.', ',') + (el.dataset.suffix || '');
-    });
+    els.forEach(el => co.observe(el));
   }
 
-  /* ---------- 7. NAVIGATION ACTIVE (scrollspy) ---------- */
-  const sections = $$('main section[id]');
-  const navLinks = $$('.nav__link');
-  if ('IntersectionObserver' in window) {
-    const so = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        navLinks.forEach(l =>
-          l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id)
-        );
-      });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    sections.forEach(s => so.observe(s));
-  }
-
-  /* ---------- 8. PARALLAXE ---------- */
-  const parallaxEls = $$('[data-parallax]');
-  function applyParallax() {
-    if (reduced) return;
-    const vh = window.innerHeight;
-    parallaxEls.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.bottom < -200 || rect.top > vh + 200) return;
-      const speed  = parseFloat(el.dataset.parallax);
-      const offset = (rect.top + rect.height / 2 - vh / 2) * speed;
-      el.style.setProperty('--py', offset.toFixed(1) + 'px');
-      el.style.translate = `0 ${offset.toFixed(1)}px`;
-    });
-  }
-
-  /* ---------- 9. BOUCLE DE SCROLL (rAF) ---------- */
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => { onScroll(); applyParallax(); ticking = false; });
-  }, { passive: true });
-  window.addEventListener('resize', applyParallax);
-  onScroll(); applyParallax();
-
-  /* ---------- 10. DÉFILEMENT INERTIEL ----------
-     Le scroll natif est remplacé par une position interpolée : la page
-     rattrape le geste au lieu de le suivre au pixel. Uniquement sur
-     pointeur fin — le tactile a déjà sa propre inertie, native et
-     meilleure que tout ce qu'on pourrait simuler. */
-  const fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-  let scrollTo = null;
-
-  if (fine && !reduced) {
-    // `scroll-behavior:smooth` en CSS animerait aussi nos scrollTo :
-    // les deux moteurs se battraient. On rend la main au CSS seulement
-    // si ce module ne tourne pas.
-    document.documentElement.classList.add('js-smooth');
-
-    let target = window.scrollY, current = window.scrollY, running = false;
-    const max = () => document.documentElement.scrollHeight - window.innerHeight;
-
-    const step = () => {
-      const diff = target - current;
-      if (Math.abs(diff) < 0.4) {
-        current = target;
-        window.scrollTo(0, current);
-        running = false;
-        return;
-      }
-      current += diff * 0.11;                  // plus bas = plus glissant
-      window.scrollTo(0, current);
-      requestAnimationFrame(step);
-    };
-    const kick = () => { if (!running) { running = true; requestAnimationFrame(step); } };
-
-    scrollTo = y => { target = Math.max(0, Math.min(max(), y)); kick(); };
-
-    window.addEventListener('wheel', e => {
-      if (e.ctrlKey) return;                                   // zoom navigateur
-      if (document.body.classList.contains('nav-open')) return;
-      if (e.target.closest('textarea, select')) return;        // zones défilables
-      e.preventDefault();
-      target = Math.max(0, Math.min(max(), target + e.deltaY));
-      kick();
-    }, { passive: false });
-
-    // Clavier, barre de défilement, retour arrière : on se resynchronise
-    window.addEventListener('scroll', () => {
-      if (!running) { target = current = window.scrollY; }
-    }, { passive: true });
-
-    window.addEventListener('resize', () => { target = current = window.scrollY; });
-  }
-
-  // Les ancres passent par le même moteur, pour une arrivée amortie
-  $$('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const id = a.getAttribute('href');
-      if (id.length < 2) return;
-      const dest = document.querySelector(id);
-      if (!dest) return;
-      e.preventDefault();
-      const headerH = parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 86;
-      const top = dest.getBoundingClientRect().top + window.scrollY - headerH - 14;
-      if (scrollTo) scrollTo(top);
-      else window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
-    });
-  });
-
-  /* ---------- 11. BOUTONS MAGNÉTIQUES ----------
-     Le bouton se déporte légèrement vers le curseur puis revient :
-     ça donne l'impression qu'il vient à la rencontre du geste. */
-  if (fine && !reduced) {
-    $$('.magnetic').forEach(el => {
+  /* ---------- Boutons magnétiques ----------
+     Le bouton se déporte vers le curseur puis revient : il donne
+     l'impression de venir à la rencontre du geste. */
+  function initMagnetic(root) {
+    if (!fine || reduced) return;
+    $$('.magnetic', root).forEach(el => {
+      if (el.dataset.magnetic) return;               // déjà branché
+      el.dataset.magnetic = '1';
       let raf = null, tx = 0, ty = 0, cx = 0, cy = 0;
 
       const loop = () => {
@@ -240,92 +106,80 @@
     });
   }
 
-  /* ---------- 12. INCLINAISON DU VISUEL ---------- */
-  const tilt = $('#heroTilt');
-  const tiltZone = $('#heroVisual');
-  if (tilt && tiltZone && fine && !reduced) {
-    tiltZone.addEventListener('pointermove', e => {
-      const r = tiltZone.getBoundingClientRect();
+  /* ---------- Inclinaison du visuel du héros ---------- */
+  function initTilt(root) {
+    const tilt = $('#heroTilt', root);
+    const zone = $('#heroVisual', root);
+    if (!tilt || !zone || !fine || reduced) return;
+
+    zone.addEventListener('pointermove', e => {
+      const r = zone.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width  - 0.5;
       const py = (e.clientY - r.top)  / r.height - 0.5;
       tilt.style.setProperty('--ry', (px * 7).toFixed(2) + 'deg');
       tilt.style.setProperty('--rx', (-py * 7).toFixed(2) + 'deg');
     });
-    tiltZone.addEventListener('pointerleave', () => {
+    zone.addEventListener('pointerleave', () => {
       tilt.style.setProperty('--ry', '0deg');
       tilt.style.setProperty('--rx', '0deg');
     });
   }
 
-  /* ---------- 13. PASTILLE DE NAVIGATION ---------- */
-  const navList = $('#navList');
-  const navPill = $('#navPill');
-  if (navList && navPill) {
-    $$('.nav__link', navList).forEach(link => {
-      link.addEventListener('pointerenter', () => {
-        navPill.style.setProperty('--x', link.offsetLeft + 'px');
-        navPill.style.setProperty('--w', link.offsetWidth + 'px');
-      });
-    });
-  }
+  /* ---------- Carrousel d'avis ---------- */
+  function initCarousel(root) {
+    carousel = null;
+    const track = $('#revTrack', root);
+    if (!track) return;
 
-  /* ---------- 14. CARROUSEL D'AVIS ---------- */
-  const track = $('#revTrack');
-  const prev  = $('#revPrev');
-  const next  = $('#revNext');
-  const dots  = $('#revDots');
-  const slides = $$('.review', track);
+    const prev = $('#revPrev', root), next = $('#revNext', root), dots = $('#revDots', root);
+    const slides = $$('.review', track);
+    if (!slides.length || !dots) return;
 
-  let index = 0, perView = 3, pages = 1, autoplay;
+    let index = 0, pages = 1, autoplay = null;
 
-  function measure() {
-    const w = window.innerWidth;
-    perView = w <= 860 ? 1 : w <= 1080 ? 2 : 3;
-    pages = Math.max(1, slides.length - perView + 1);
-    index = Math.min(index, pages - 1);
-    buildDots();
-    goTo(index, false);
-  }
-
-  function buildDots() {
-    dots.innerHTML = '';
-    for (let i = 0; i < pages; i++) {
-      const b = document.createElement('button');
-      b.setAttribute('role', 'tab');
-      b.setAttribute('aria-label', `Avis ${i + 1}`);
-      b.addEventListener('click', () => { goTo(i); stopAuto(); });
-      dots.appendChild(b);
+    function goTo(i, animate = true) {
+      index = (i + pages) % pages;
+      const gap = parseFloat(getComputedStyle(track).columnGap
+                          || getComputedStyle(track).gap) || 0;
+      const stepPx = slides[0].getBoundingClientRect().width + gap;
+      track.style.transition = animate ? '' : 'none';
+      track.style.transform  = `translate3d(${-index * stepPx}px,0,0)`;
+      if (!animate) requestAnimationFrame(() => { track.style.transition = ''; });
+      $$('button', dots).forEach((d, n) => d.classList.toggle('active', n === index));
     }
-  }
 
-  function goTo(i, animate = true) {
-    index = (i + pages) % pages;
-    const slide = slides[0];
-    if (!slide) return;
-    const gap  = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 0;
-    const step = slide.getBoundingClientRect().width + gap;
+    function buildDots() {
+      dots.innerHTML = '';
+      for (let i = 0; i < pages; i++) {
+        const b = document.createElement('button');
+        b.setAttribute('role', 'tab');
+        b.setAttribute('aria-label', `Avis ${i + 1}`);
+        b.addEventListener('click', () => { goTo(i); stopAuto(); });
+        dots.appendChild(b);
+      }
+    }
 
-    track.style.transition = animate ? '' : 'none';
-    track.style.transform  = `translate3d(${-index * step}px,0,0)`;
-    if (!animate) requestAnimationFrame(() => { track.style.transition = ''; });
+    function measure() {
+      const w = window.innerWidth;
+      const perView = w <= 860 ? 1 : w <= 1080 ? 2 : 3;
+      pages = Math.max(1, slides.length - perView + 1);
+      index = Math.min(index, pages - 1);
+      buildDots();
+      goTo(index, false);
+    }
 
-    $$('button', dots).forEach((d, n) => d.classList.toggle('active', n === index));
-  }
+    function startAuto() {
+      if (reduced) return;
+      stopAuto();
+      autoplay = setInterval(() => goTo(index + 1), 5200);
+    }
+    function stopAuto() { clearInterval(autoplay); }
 
-  function startAuto() {
-    if (reduced) return;
-    stopAuto();
-    autoplay = setInterval(() => goTo(index + 1), 5200);
-  }
-  function stopAuto() { clearInterval(autoplay); }
-
-  if (track && slides.length) {
-    prev.addEventListener('click', () => { goTo(index - 1); stopAuto(); });
-    next.addEventListener('click', () => { goTo(index + 1); stopAuto(); });
+    if (prev) prev.addEventListener('click', () => { goTo(index - 1); stopAuto(); });
+    if (next) next.addEventListener('click', () => { goTo(index + 1); stopAuto(); });
     track.addEventListener('mouseenter', stopAuto);
     track.addEventListener('mouseleave', startAuto);
 
-    // Swipe tactile
     let x0 = null;
     track.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; stopAuto(); }, { passive: true });
     track.addEventListener('touchend', e => {
@@ -336,16 +190,12 @@
       startAuto();
     });
 
-    window.addEventListener('resize', measure);
     measure();
     startAuto();
+    carousel = { measure };
   }
 
-  /* ---------- 15. FORMULAIRE ---------- */
-  const form = $('#form');
-  const note = $('#formNote');
-  const submitBtn = $('#submit');
-
+  /* ---------- Formulaire ---------- */
   const rules = {
     nom:     v => v.trim().length >= 2                    || 'Merci d’indiquer votre nom.',
     email:   v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || 'Adresse email invalide.',
@@ -354,59 +204,262 @@
     message: v => v.trim().length >= 10                   || 'Votre message est un peu court.'
   };
 
-  function validateField(el) {
-    const rule = rules[el.name];
-    if (!rule) return true;
-    const res = rule(el.value);
-    const field = el.closest('.field');
-    field.classList.toggle('err', res !== true);
-    $('.field__err', field).textContent = res === true ? '' : res;
-    return res === true;
+  function initForm(root) {
+    const form = $('#form', root);
+    if (!form) return;
+    const note = $('#formNote', root);
+    const submitBtn = $('#submit', root);
+
+    const validate = el => {
+      const rule = rules[el.name];
+      if (!rule) return true;
+      const res = rule(el.value);
+      const field = el.closest('.field');
+      field.classList.toggle('err', res !== true);
+      $('.field__err', field).textContent = res === true ? '' : res;
+      return res === true;
+    };
+
+    $$('.field input, .field select, .field textarea', form).forEach(el => {
+      el.addEventListener('blur', () => validate(el));
+      el.addEventListener('input', () => {
+        if (el.closest('.field').classList.contains('err')) validate(el);
+      });
+    });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      note.className = 'form__note';
+      note.textContent = '';
+
+      // On valide toujours les champs d'abord, pour que les erreurs
+      // soient visibles même si la case RGPD est décochée.
+      const fields = $$('.field input, .field select, .field textarea', form);
+      const fieldsOk = fields.map(validate).every(Boolean);
+      const rgpdOk = $('#rgpd', form).checked;
+
+      if (!fieldsOk || !rgpdOk) {
+        note.classList.add('ko');
+        note.textContent = !fieldsOk && !rgpdOk
+          ? 'Quelques champs sont à corriger, et il faut accepter d’être recontactée.'
+          : !fieldsOk
+            ? 'Quelques champs sont à corriger.'
+            : 'Merci d’accepter d’être recontactée.';
+        const first = $('.field.err input, .field.err select, .field.err textarea', form);
+        (first || (rgpdOk ? null : $('#rgpd', form)))?.focus();
+        return;
+      }
+
+      // TODO : brancher un service d'envoi (Formspree, Netlify Forms, EmailJS…)
+      // Pour l'instant : simulation locale, aucun email n'est réellement envoyé.
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+
+      setTimeout(() => {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+        note.classList.add('ok');
+        note.textContent = 'Merci ! Votre demande a bien été prise en compte, je vous réponds très vite.';
+        form.reset();
+        $$('.field', form).forEach(f => f.classList.remove('err'));
+      }, 1100);
+    });
   }
 
-  $$('.field input, .field select, .field textarea', form).forEach(el => {
-    el.addEventListener('blur', () => validateField(el));
-    el.addEventListener('input', () => {
-      if (el.closest('.field').classList.contains('err')) validateField(el);
+  /* ---------- Point d'entrée « contenu » ---------- */
+  function initPage(root) {
+    root = root || document;
+    cue = $('#cue', root);
+    parallaxEls = $$('[data-parallax]', root);
+    initReveals(root);
+    initCounters(root);
+    initMagnetic(root);
+    initTilt(root);
+    initCarousel(root);
+    initForm(root);
+    applyParallax();
+    onScroll();
+  }
+
+  /* =====================================================
+     BLOC COQUILLE — installé une seule fois
+     ===================================================== */
+
+  const header = $('#header');
+  const totop  = $('#totop');
+
+  function onScroll() {
+    const y = window.scrollY;
+    if (header) header.classList.toggle('scrolled', y > 20);
+    if (totop)  totop.classList.toggle('show', y > 700);
+    if (cue)    cue.classList.toggle('gone', y > 90);
+  }
+
+  function applyParallax() {
+    if (reduced) return;
+    const vh = window.innerHeight;
+    parallaxEls.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.bottom < -200 || rect.top > vh + 200) return;
+      const offset = (rect.top + rect.height / 2 - vh / 2) * parseFloat(el.dataset.parallax);
+      el.style.translate = `0 ${offset.toFixed(1)}px`;
     });
-  });
+  }
 
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    note.className = 'form__note';
-    note.textContent = '';
-
-    // On valide toujours les champs d'abord, pour que les erreurs
-    // soient visibles même si la case RGPD est décochée.
-    const fields = $$('.field input, .field select, .field textarea', form);
-    const fieldsOk = fields.map(validateField).every(Boolean);
-    const rgpdOk = $('#rgpd').checked;
-
-    if (!fieldsOk || !rgpdOk) {
-      note.classList.add('ko');
-      note.textContent = !fieldsOk && !rgpdOk
-        ? 'Quelques champs sont à corriger, et il faut accepter d’être recontactée.'
-        : !fieldsOk
-          ? 'Quelques champs sont à corriger.'
-          : 'Merci d’accepter d’être recontactée.';
-      const first = $('.field.err input, .field.err select, .field.err textarea');
-      (first || (rgpdOk ? null : $('#rgpd')))?.focus();
-      return;
+  function initShell() {
+    /* --- Préchargeur : accueil uniquement --- */
+    const preloader = $('#preloader');
+    const ready = () => document.body.classList.add('ready');
+    if (preloader) {
+      const start = () => {
+        ready();
+        setTimeout(() => {
+          preloader.classList.add('done');
+          setTimeout(() => preloader.remove(), 700);
+        }, reduced ? 0 : 400);
+      };
+      window.addEventListener('load', start);
+      // Filet de sécurité si `load` traîne (polices, images lentes)
+      setTimeout(() => {
+        if (preloader.isConnected && !document.body.classList.contains('ready')) start();
+      }, 2500);
+    } else {
+      requestAnimationFrame(ready);
     }
 
-    // TODO : brancher un service d'envoi (Formspree, Netlify Forms, EmailJS…)
-    // Pour l'instant : simulation locale, aucun email n'est réellement envoyé.
-    submitBtn.classList.add('loading');
-    submitBtn.disabled = true;
+    const year = $('#year');
+    if (year) year.textContent = new Date().getFullYear();
 
-    setTimeout(() => {
-      submitBtn.classList.remove('loading');
-      submitBtn.disabled = false;
-      note.classList.add('ok');
-      note.textContent = 'Merci ! Votre demande a bien été prise en compte, je vous réponds très vite.';
-      form.reset();
-      $$('.field', form).forEach(f => f.classList.remove('err'));
-    }, 1100);
-  });
+    /* --- Menu mobile --- */
+    const burger = $('#burger'), nav = $('#nav');
+    if (burger && nav) {
+      const closeNav = () => {
+        nav.classList.remove('open');
+        burger.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.setAttribute('aria-label', 'Ouvrir le menu');
+        document.body.classList.remove('nav-open');
+      };
+      burger.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        burger.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', String(open));
+        burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+        document.body.classList.toggle('nav-open', open);
+      });
+      $$('.nav a').forEach(a => a.addEventListener('click', closeNav));
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
+      window.addEventListener('resize', () => { if (window.innerWidth > 860) closeNav(); });
+    }
 
+    /* --- Pastille de navigation --- */
+    const navList = $('#navList'), navPill = $('#navPill');
+    if (navList && navPill) {
+      $$('.nav__link', navList).forEach(link => {
+        link.addEventListener('pointerenter', () => {
+          navPill.style.setProperty('--x', link.offsetLeft + 'px');
+          navPill.style.setProperty('--w', link.offsetWidth + 'px');
+        });
+      });
+    }
+
+    initMagnetic(header);
+
+    /* --- Boucle de scroll --- */
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { onScroll(); applyParallax(); ticking = false; });
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+      applyParallax();
+      if (carousel) carousel.measure();
+    });
+
+    /* --- Défilement inertiel ----------------------------------------
+       La page rattrape le geste au lieu de le suivre au pixel.
+       Pointeur fin seulement : le tactile a déjà sa propre inertie,
+       native et meilleure que tout ce qu'on pourrait simuler. */
+    let scrollTo = null;
+    if (fine && !reduced) {
+      // `scroll-behavior:smooth` en CSS animerait aussi nos scrollTo :
+      // les deux moteurs se battraient.
+      document.documentElement.classList.add('js-smooth');
+
+      let target = window.scrollY, current = window.scrollY, running = false;
+      const max = () => document.documentElement.scrollHeight - window.innerHeight;
+
+      const step = () => {
+        const diff = target - current;
+        if (Math.abs(diff) < 0.4) {
+          current = target;
+          window.scrollTo(0, current);
+          running = false;
+          return;
+        }
+        current += diff * 0.11;                  // plus bas = plus glissant
+        window.scrollTo(0, current);
+        requestAnimationFrame(step);
+      };
+      const kick = () => { if (!running) { running = true; requestAnimationFrame(step); } };
+      scrollTo = y => { target = Math.max(0, Math.min(max(), y)); kick(); };
+
+      window.addEventListener('wheel', e => {
+        if (e.ctrlKey) return;                                   // zoom navigateur
+        if (document.body.classList.contains('nav-open')) return;
+        if (e.target.closest('textarea, select')) return;        // zones défilables
+        e.preventDefault();
+        target = Math.max(0, Math.min(max(), target + e.deltaY));
+        kick();
+      }, { passive: false });
+
+      window.addEventListener('scroll', () => {
+        if (!running) { target = current = window.scrollY; }
+      }, { passive: true });
+      window.addEventListener('resize', () => { target = current = window.scrollY; });
+    }
+
+    /* --- Ancres internes (délégué : survit au remplacement du contenu) --- */
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const id = a.getAttribute('href');
+      if (id.length < 2) return;
+      const dest = document.querySelector(id);
+      if (!dest) return;
+      e.preventDefault();
+      const headerH = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 86;
+      const top = dest.getBoundingClientRect().top + window.scrollY - headerH - 14;
+      if (scrollTo) scrollTo(top);
+      else window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
+    });
+
+    /* --- Transition entre pages ----------------------------------
+       La page sortante s'efface avant la navigation ; la page entrante
+       se révèle par une animation CSS pure, donc visible même sans JS. */
+    if (!reduced) {
+      document.addEventListener('click', e => {
+        const a = e.target.closest('a[href$=".html"]');
+        if (!a) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        if (a.target && a.target !== '_self') return;
+        const url = new URL(a.href, location.href);
+        if (url.origin !== location.origin) return;
+        if (url.pathname === location.pathname) return;      // page courante
+        e.preventDefault();
+        document.body.classList.add('leaving');
+        setTimeout(() => { location.href = a.href; }, 280);
+      });
+      // Retour arrière depuis le cache : la page doit réapparaître
+      window.addEventListener('pageshow', () => document.body.classList.remove('leaving'));
+    }
+  }
+
+  initShell();
+  initPage();
+
+  // Point d'entrée pour rebrancher un contenu remplacé (aperçu multi-pages)
+  window.marieMassage = { initPage };
 })();

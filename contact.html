@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact & rendez-vous — Marie Massage</title>
+  <meta name="description" content="Prendre rendez-vous avec Marie Massage à Voisins-le-Bretonneux.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-400-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-700-latin.woff2" crossorigin>
+
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="p-contact">
+
+<a class="skip-link" href="#main">Aller au contenu</a>
+
+<div class="page">
+
+  <!-- ---------- HEADER ---------- -->
+  <header class="header" id="header">
+    <div class="shell header__inner">
+
+      <a href="index.html" class="brand" aria-label="Marie Massage — accueil">
+        <span class="brand__mark">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="21" cy="17" r="11.5"/><circle cx="79" cy="17" r="11.5"/>
+            <rect x="11.5" y="33" width="19" height="54" rx="9.5"/>
+            <rect x="69.5" y="33" width="19" height="54" rx="9.5"/>
+            <path d="M30 38 L50 68 L70 38" fill="none" stroke="currentColor" stroke-width="18"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand__text">
+          <strong>Marie Massage</strong>
+          <em>Masseuse bien-être</em>
+        </span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Navigation principale">
+        <ul class="nav__list" id="navList">
+          <span class="nav__pill" id="navPill" aria-hidden="true"></span>
+          <li><a href="a-propos.html" class="nav__link">À propos</a></li>
+          <li><a href="le-cabinet.html" class="nav__link">Le cabinet</a></li>
+          <li><a href="massages.html" class="nav__link">Massages</a></li>
+          <li><a href="avis.html" class="nav__link">Avis</a></li>
+          <li><a href="contact.html" class="nav__link" aria-current="page">Contact</a></li>
+        </ul>
+        <a href="contact.html" class="btn btn--primary nav__cta-m">Prendre rendez-vous</a>
+      </nav>
+
+      <div class="header__end">
+        <a href="contact.html" class="btn btn--primary magnetic nav__cta">
+          <span>Prendre rendez-vous</span>
+        </a>
+        <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+<main id="main">
+
+  <section class="section section--contact" id="contact">
+    <div class="shell contact">
+      <div class="contact__intro" data-reveal="left">
+        <p class="eyebrow">Contact</p>
+        <h1 class="h2">Prenons<br>rendez-vous</h1>
+        <p class="section__intro">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Écrivez-moi et je
+          vous réponds sous 24 h.
+        </p>
+
+        <ul class="infos">
+          <li>
+            <span class="infos__ico">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            </span>
+            <div><b>Adresse</b><span>Voisins-le-Bretonneux (78960)<br>Adresse exacte communiquée au RDV</span></div>
+          </li>
+          <li>
+            <span class="infos__ico">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h3l2 5-2.4 1.4a12 12 0 0 0 5 5L15 13l5 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4 6.2 2 2 0 0 1 6 4Z"/></svg>
+            </span>
+            <div><b>Téléphone</b><a href="tel:+33600000000">06 00 00 00 00</a></div>
+          </li>
+          <li>
+            <span class="infos__ico">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>
+            </span>
+            <div><b>Email</b><a href="mailto:contact@mariemassage.fr">contact@mariemassage.fr</a></div>
+          </li>
+          <li>
+            <span class="infos__ico">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+            </span>
+            <div><b>Horaires</b><span>Lun – Sam · 9h – 20h<br>Sur rendez-vous uniquement</span></div>
+          </li>
+        </ul>
+
+        <a href="https://www.instagram.com/marieemassage/" target="_blank" rel="noopener" class="insta">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/>
+            <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/>
+          </svg>
+          @marieemassage
+        </a>
+      </div>
+
+      <form class="form" id="form" data-reveal="right" novalidate>
+        <div class="form__row">
+          <div class="field">
+            <input type="text" id="nom" name="nom" placeholder=" " required autocomplete="name">
+            <label for="nom">Nom &amp; prénom</label>
+            <small class="field__err"></small>
+          </div>
+          <div class="field">
+            <input type="tel" id="tel" name="tel" placeholder=" " autocomplete="tel">
+            <label for="tel">Téléphone</label>
+            <small class="field__err"></small>
+          </div>
+        </div>
+
+        <div class="field">
+          <input type="email" id="email" name="email" placeholder=" " required autocomplete="email">
+          <label for="email">Email</label>
+          <small class="field__err"></small>
+        </div>
+
+        <div class="field">
+          <select id="soin" name="soin" required>
+            <option value="" selected disabled>Choisissez un soin…</option>
+            <option>Kobido</option>
+            <option>Madérothérapie</option>
+            <option>Relaxation</option>
+            <option>Drainage lymphatique</option>
+            <option>Massage bébé</option>
+            <option>Dos &amp; nuque</option>
+            <option>Je ne sais pas encore</option>
+          </select>
+          <label for="soin" class="field__label--static">Soin souhaité</label>
+          <small class="field__err"></small>
+        </div>
+
+        <div class="field">
+          <textarea id="message" name="message" rows="5" placeholder=" " required></textarea>
+          <label for="message">Votre message</label>
+          <small class="field__err"></small>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="rgpd" required>
+          <span class="check__box" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+          </span>
+          <span>J'accepte que mes informations soient utilisées pour me recontacter.</span>
+        </label>
+
+        <button type="submit" class="btn btn--primary btn--lg btn--block" id="submit">
+          <span class="btn__label">Envoyer ma demande</span>
+          <span class="btn__spin" aria-hidden="true"></span>
+        </button>
+
+        <p class="form__note" id="formNote" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+  <!-- ---------- FOOTER ---------- -->
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <a href="index.html" class="brand brand--footer">
+        <span class="brand__mark">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="21" cy="17" r="11.5"/><circle cx="79" cy="17" r="11.5"/>
+            <rect x="11.5" y="33" width="19" height="54" rx="9.5"/>
+            <rect x="69.5" y="33" width="19" height="54" rx="9.5"/>
+            <path d="M30 38 L50 68 L70 38" fill="none" stroke="currentColor" stroke-width="18"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand__text"><strong>Marie Massage</strong><em>Masseuse bien-être</em></span>
+      </a>
+
+      <nav class="footer__nav" aria-label="Navigation pied de page">
+        <a href="index.html">Accueil</a>
+        <a href="a-propos.html">À propos</a>
+        <a href="le-cabinet.html">Le cabinet</a>
+        <a href="massages.html">Massages</a>
+        <a href="avis.html">Avis</a>
+        <a href="contact.html" aria-current="page">Contact</a>
+      </nav>
+
+      <p class="footer__legal">
+        © <span id="year">2026</span> Marie Massage · Voisins-le-Bretonneux<br>
+        <small>Les massages proposés sont des soins de bien-être, non thérapeutiques.</small>
+      </p>
+    </div>
+  </footer>
+
+</div><!-- /.page -->
+
+<a href="#main" class="totop" id="totop" aria-label="Remonter en haut">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg>
+</a>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

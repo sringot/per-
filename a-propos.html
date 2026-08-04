@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marie Massage — Masseuse bien-être à Voisins-le-Bretonneux</title>
-  <meta name="description" content="Marie Massage, masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, massage bébé et relaxation.">
+  <title>À propos — Marie Massage</title>
+  <meta name="description" content="Marie, masseuse bien-être à Voisins-le-Bretonneux : son parcours et sa façon de travailler.">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-400-latin.woff2" crossorigin>
@@ -13,21 +13,7 @@
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="p-index">
-
-<!-- ============ PRELOADER (accueil uniquement) ============ -->
-<div class="preloader" id="preloader">
-  <div class="preloader__logo">
-    <svg viewBox="0 0 100 100" aria-hidden="true">
-      <circle cx="21" cy="17" r="11.5"/><circle cx="79" cy="17" r="11.5"/>
-      <rect x="11.5" y="33" width="19" height="54" rx="9.5"/>
-      <rect x="69.5" y="33" width="19" height="54" rx="9.5"/>
-      <path d="M30 38 L50 68 L70 38" fill="none" stroke="currentColor" stroke-width="18"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <span class="preloader__bar"><i></i></span>
-</div>
+<body class="p-a-propos">
 
 <a class="skip-link" href="#main">Aller au contenu</a>
 
@@ -56,7 +42,7 @@
       <nav class="nav" id="nav" aria-label="Navigation principale">
         <ul class="nav__list" id="navList">
           <span class="nav__pill" id="navPill" aria-hidden="true"></span>
-          <li><a href="a-propos.html" class="nav__link">À propos</a></li>
+          <li><a href="a-propos.html" class="nav__link" aria-current="page">À propos</a></li>
           <li><a href="le-cabinet.html" class="nav__link">Le cabinet</a></li>
           <li><a href="massages.html" class="nav__link">Massages</a></li>
           <li><a href="avis.html" class="nav__link">Avis</a></li>
@@ -79,75 +65,60 @@
 
 <main id="main">
 
-  <section class="hero" id="accueil">
-    <div class="hero__aura" aria-hidden="true">
-      <span class="orb orb--1"></span>
-      <span class="orb orb--2"></span>
-      <span class="orb orb--3"></span>
+  <header class="page-head">
+    <span class="page-head__aura" aria-hidden="true"></span>
+    <div class="shell">
+      <p class="eyebrow reveal" style="--d:.05s">À propos</p>
+      <h1 class="page-head__title"><span class="ln"><span style="--d:.12s">Prendre soin de vous,<br>c'est mon métier</span></span></h1>
+      <div class="reveal" style="--d:.3s">
+      <p class="page-head__intro">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas aliquam risus ut volutpat pretium.</p>
+      </div>
     </div>
+  </header>
 
-    <div class="shell hero__inner">
-
-      <div class="hero__content">
-        <p class="hero__eyebrow reveal" style="--d:.05s">
-          <span class="pulse"></span> Voisins-le-Bretonneux
-        </p>
-
-        <h1 class="hero__title">
-          <span class="ln"><span style="--d:.10s">Retrouvez</span></span>
-          <span class="ln"><span style="--d:.19s">votre équilibre</span></span>
-          <span class="ln"><span style="--d:.28s">&amp; bien-être</span></span>
-        </h1>
-
-        <p class="hero__text reveal" style="--d:.42s">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Maecenas aliquam risus ut volutpat pretium.
-        </p>
-
-        <div class="hero__actions reveal" style="--d:.52s">
-          <a href="contact.html" class="btn btn--primary btn--lg magnetic"><span>Prendre rendez-vous</span></a>
-          <a href="massages.html" class="btn btn--outline btn--lg magnetic"><span>Mes massages</span></a>
-        </div>
-
-        <div class="proof reveal" style="--d:.62s">
-          <span class="proof__avatars" aria-hidden="true">
-            <i class="ill"><img src="assets/img/illus/avatar-1.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-2.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-3.svg" alt=""></i>
-          </span>
-          <b><span class="count" data-count="450" data-suffix="+">0</span> clientes conquises</b>
-        </div>
+  <section class="section" id="apropos">
+    <div class="shell about">
+      <div class="about__media" data-reveal="left">
+        <figure class="ill about__main"><img src="assets/img/illus/marie.svg" alt="Portrait de Marie"></figure>
+        <figure class="ill about__sub" data-parallax="0.07"><img src="assets/img/illus/mains.svg" alt="Gros plan sur des mains"></figure>
       </div>
 
-      <div class="hero__visual" id="heroVisual">
-        <div class="hero__tilt" id="heroTilt">
-          <figure class="ill arch hero__photo">
-            <img src="assets/img/illus/hero.svg" alt="Marie masse le dos d'une cliente">
-          </figure>
+      <div class="about__body" data-reveal="right">
+        <p class="lead">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas aliquam,
+          risus ut volutpat pretium, nunc velit tincidunt orci.
+        </p>
+        <p>
+          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat.
+        </p>
 
-          <aside class="profile reveal" style="--d:.9s">
-            <span class="ill profile__thumb"><img src="assets/img/illus/marie.svg" alt="Portrait de Marie"></span>
-            <div class="profile__body">
-              <b>Moi c'est Marie, masseuse bien-être</b>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-          </aside>
-        </div>
+        <ul class="pillars">
+          <li class="pillar">
+            <span class="pillar__ico">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.4-7-9.2A3.9 3.9 0 0 1 12 9a3.9 3.9 0 0 1 7 2.8C19 16.6 12 21 12 21Z"/></svg>
+            </span>
+            <b>Écoute</b><span>Lorem ipsum dolor sit amet.</span>
+          </li>
+          <li class="pillar">
+            <span class="pillar__ico">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c4 3.4 6 6.4 6 9.2A6 6 0 0 1 6 12.2C6 9.4 8 6.4 12 3Z"/></svg>
+            </span>
+            <b>Douceur</b><span>Maecenas aliquam risus.</span>
+          </li>
+          <li class="pillar">
+            <span class="pillar__ico">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20C4 11 11 4 20 4c0 9-7 16-16 16Zm0 0c2-6 5-9 11-11"/></svg>
+            </span>
+            <b>Naturel</b><span>Nunc velit tincidunt orci.</span>
+          </li>
+        </ul>
+
+        <a href="contact.html" class="btn btn--dark">Me contacter</a>
       </div>
-
     </div>
-
-    <a href="a-propos.html" class="cue" id="cue" aria-label="Descendre">
-      <span class="cue__line"><i></i></span>
-      <span class="cue__txt">Découvrir</span>
-    </a>
   </section>
-
-  <!-- ---------- BANDEAU DÉFILANT ---------- -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee__track">
-      <span>Kobido<i>·</i>Madérothérapie<i>·</i>Drainage lymphatique<i>·</i>Massage bébé<i>·</i>Relaxation<i>·</i>Dos &amp; nuque<i>·</i></span>
-      <span>Kobido<i>·</i>Madérothérapie<i>·</i>Drainage lymphatique<i>·</i>Massage bébé<i>·</i>Relaxation<i>·</i>Dos &amp; nuque<i>·</i></span>
-    </div>
-  </div>
 
 </main>
 
@@ -168,8 +139,8 @@
       </a>
 
       <nav class="footer__nav" aria-label="Navigation pied de page">
-        <a href="index.html" aria-current="page">Accueil</a>
-        <a href="a-propos.html">À propos</a>
+        <a href="index.html">Accueil</a>
+        <a href="a-propos.html" aria-current="page">À propos</a>
         <a href="le-cabinet.html">Le cabinet</a>
         <a href="massages.html">Massages</a>
         <a href="avis.html">Avis</a>
