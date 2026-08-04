@@ -1,7 +1,7 @@
 /* =========================================================
    MARIE MASSAGE
-   Palette Pantone : Burnt Ochre / Burgundy / Dried Herb /
-                     Desert Sage / Pastel Yellow
+   Palette : vert (sauge / kaki), orange (ocre brûlé), jaune
+             pastel, sur fond blanc cassé.
    Typo : Plus Jakarta Sans (titres et texte courant)
    ========================================================= */
 
@@ -10,20 +10,21 @@
   /* Palette Pantone */
   --ochre:       #C15A32;  /* 18-1354 TCX Burnt Ochre  */
   --ochre-d:     #A64623;
-  --burgundy:    #6B2E3A;  /* 19-1617 TCX Burgundy     */
-  --burgundy-d:  #52222C;
   --herb:        #9A8B5F;  /* 17-0627 TCX Dried Herb   */
   --herb-d:      #7E7049;
   --sage:        #A7AE9B;  /* 16-0110 TCX Desert Sage  */
+  --sage-soft:   #F0F2EC;  /* sauge très dilué, fond de section */
+  --green:       #3F4A38;  /* vert profond : titres et texte fort */
+  --green-d:     #2F3829;
   --yellow:      #F2E7B3;  /* 11-0616 TCX Pastel Yellow*/
-  --yellow-soft: #FCF6E4;
+  --yellow-soft: #FBF4DE;
   --gold:        #D9B871;  /* doré du logo fourni       */
   --gold-ink:    #A8823A;  /* même doré, assombri : le doré clair
                               sur fond crème est illisible en texte */
-  --frame-bg:    #FBF3DC;  /* cadre de page, jaune très dilué */
+  --frame-bg:    #EFEDE4;  /* cadre de page, blanc cassé plus soutenu */
 
   /* Neutres */
-  --card:        #FCFBF8;  /* fond du grand bloc arrondi */
+  --card:        #FBF9F4;  /* blanc cassé léger, bloc principal */
   --ink:         #2A2320;
   --ink-soft:    #6F6862;
   --line:        rgba(42,35,32,.10);
@@ -86,7 +87,7 @@ ul{ list-style:none; }
 
 .skip-link{
   position:fixed; top:.6rem; left:.6rem; z-index:999;
-  background:var(--burgundy); color:var(--white);
+  background:var(--green); color:var(--white);
   padding:.6rem 1rem; border-radius:var(--pill);
   transform:translateY(-200%); transition:transform .3s var(--ease);
 }
@@ -96,7 +97,7 @@ ul{ list-style:none; }
 /* ---------- 3. TYPOGRAPHIE ---------- */
 h1,h2,h3,.h2,.h3{
   font-weight:600; line-height:1.08;
-  letter-spacing:-.03em; color:var(--burgundy);
+  letter-spacing:-.03em; color:var(--green);
 }
 h1{ font-size:clamp(2.5rem,5.6vw,4.5rem); }
 .h2{ font-size:clamp(1.9rem,3.6vw,3rem); }
@@ -117,7 +118,7 @@ p + p{ margin-top:.9rem; }
 
 /* ---------- 4. BOUTONS ---------- */
 .btn{
-  --bg:var(--ochre); --fg:var(--white); --bd:transparent; --hov:var(--burgundy);
+  --bg:var(--ochre); --fg:var(--white); --bd:transparent; --hov:var(--green);
   position:relative; isolation:isolate; overflow:hidden;
   display:inline-flex; align-items:center; justify-content:center; gap:.6rem;
   padding:.88rem 1.7rem; border-radius:var(--pill);
@@ -137,9 +138,9 @@ p + p{ margin-top:.9rem; }
 .btn:hover{ color:var(--white); transform:translateY(-2px); box-shadow:var(--sh); }
 .btn:hover::before{ transform:translateY(0); }
 .btn:active{ transform:translateY(0); }
-.btn--outline{ --bg:transparent; --fg:var(--burgundy); --bd:var(--line); }
-.btn--dark{ --bg:var(--burgundy); --hov:var(--ochre); }
-.btn--light{ --bg:var(--white); --fg:var(--burgundy); --hov:var(--burgundy); }
+.btn--outline{ --bg:transparent; --fg:var(--green); --bd:var(--line); }
+.btn--dark{ --bg:var(--green); --hov:var(--ochre); }
+.btn--light{ --bg:var(--white); --fg:var(--green); --hov:var(--green); }
 .btn--lg{ padding:1.05rem 2.1rem; font-size:.95rem; }
 .btn--block{ width:100%; }
 .btn[disabled]{ opacity:.6; pointer-events:none; }
@@ -236,13 +237,13 @@ p + p{ margin-top:.9rem; }
   transform:scaleX(0); transform-origin:right;
   transition:transform .4s var(--ease-out);
 }
-.nav__link:hover,.nav__link.active{ color:var(--burgundy); }
+.nav__link:hover,.nav__link.active{ color:var(--green); }
 .nav__link:hover::after,.nav__link.active::after{ transform:scaleX(1); transform-origin:left; }
 
 .burger{ display:none; width:44px; height:44px; position:relative; }
 .burger span{
   position:absolute; left:11px; width:22px; height:1.8px;
-  background:var(--burgundy); border-radius:2px;
+  background:var(--green); border-radius:2px;
   transition:transform .4s var(--ease), opacity .25s, width .3s;
 }
 .burger span:nth-child(1){ top:16px; }
@@ -285,7 +286,7 @@ p + p{ margin-top:.9rem; }
   border:2.5px solid var(--card); margin-left:-12px;
 }
 .proof__avatars i:first-child{ margin-left:0; }
-.proof b{ font-size:.86rem; font-weight:500; color:var(--burgundy); }
+.proof b{ font-size:.86rem; font-weight:500; color:var(--green); }
 
 .hero__visual{ position:relative; }
 .arch{ border-radius:min(50vw,300px) min(50vw,300px) var(--r-lg) var(--r-lg); }
@@ -312,12 +313,12 @@ p + p{ margin-top:.9rem; }
 }
 .profile__thumb{ width:76px; height:76px; flex:none; border-radius:var(--r-sm); }
 .profile__thumb .ph__label{ font-size:.58rem; padding:0; }
-.profile__body b{ display:block; font-size:.9rem; font-weight:600; color:var(--burgundy); line-height:1.35; }
+.profile__body b{ display:block; font-size:.9rem; font-weight:600; color:var(--green); line-height:1.35; }
 .profile__body p{ font-size:.76rem; line-height:1.55; margin-top:.3rem; }
 
 /* ---------- 9. MARQUEE ---------- */
 .marquee{
-  background:var(--card); color:var(--burgundy);
+  background:var(--card); color:var(--green);
   border-block:1px solid var(--line);
   padding:.85rem 0; overflow:hidden;
   font-size:.9rem; font-weight:500; letter-spacing:.02em;
@@ -338,7 +339,7 @@ p + p{ margin-top:.9rem; }
 
 /* Les sections restent sur le fond clair : la couleur ne sert plus
    que pour les accents (boutons, icônes, petits détails). */
-.section--contact{ background:var(--yellow-soft); }
+.section--contact{ background:var(--sage-soft); }
 
 /* --- À propos --- */
 .about{
@@ -364,10 +365,10 @@ p + p{ margin-top:.9rem; }
 .pillar:hover{ transform:translateX(6px); box-shadow:var(--sh); }
 .pillar__ico{
   grid-row:span 2; width:42px; height:42px; border-radius:50%;
-  display:grid; place-items:center; background:var(--yellow); color:var(--burgundy);
+  display:grid; place-items:center; background:var(--yellow); color:var(--green);
 }
 .pillar__ico svg{ width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linejoin:round; stroke-linecap:round; }
-.pillar b{ font-weight:500; color:var(--burgundy); font-size:.94rem; }
+.pillar b{ font-weight:500; color:var(--green); font-size:.94rem; }
 .pillar > span:last-child{ font-size:.82rem; color:var(--ink-soft); line-height:1.5; }
 
 /* --- Le cabinet --- */
@@ -429,10 +430,10 @@ p + p{ margin-top:.9rem; }
   padding-top:1rem; border-top:1px solid var(--line);
 }
 .card__time{ font-size:.8rem; color:var(--ink-soft); }
-.card__price{ font-size:1.35rem; font-weight:600; color:var(--burgundy); letter-spacing:-.02em; }
+.card__price{ font-size:1.35rem; font-weight:600; color:var(--green); letter-spacing:-.02em; }
 .card__link{
   display:inline-flex; align-items:center; gap:.45rem;
-  font-size:.84rem; font-weight:500; color:var(--burgundy); align-self:flex-start;
+  font-size:.84rem; font-weight:500; color:var(--green); align-self:flex-start;
 }
 .card__link svg{
   width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8;
@@ -468,7 +469,7 @@ p + p{ margin-top:.9rem; }
 .giftcard__card{
   position:relative; width:min(300px,100%); aspect-ratio:1.6/1;
   border-radius:var(--r); padding:1.4rem;
-  background:linear-gradient(135deg,var(--ochre),var(--burgundy));
+  background:linear-gradient(135deg,var(--ochre),var(--herb));
   color:var(--white); box-shadow:var(--sh-lg);
   display:flex; flex-direction:column; justify-content:flex-end; gap:.1rem;
   transform:rotate(-6deg); transition:transform .6s var(--ease-out);
@@ -496,7 +497,7 @@ p + p{ margin-top:.9rem; }
 .review blockquote{ font-size:.92rem; line-height:1.65; color:var(--ink); flex:1; }
 .review footer{ display:flex; align-items:center; gap:.65rem; font-size:.82rem; }
 .review__av{ width:38px; height:38px; border-radius:50%; flex:none; }
-.review footer b{ font-weight:500; color:var(--burgundy); }
+.review footer b{ font-weight:500; color:var(--green); }
 .review footer i{ font-style:normal; color:var(--ink-soft); font-size:.76rem; }
 .review footer i::before{ content:'· '; }
 
@@ -514,11 +515,11 @@ p + p{ margin-top:.9rem; }
 .reviews__nav{
   width:46px; height:46px; border-radius:50%;
   display:grid; place-items:center;
-  background:var(--white); border:1px solid var(--line); color:var(--burgundy);
+  background:var(--white); border:1px solid var(--line); color:var(--green);
   transition:background-color .3s, color .3s, transform .3s var(--ease);
 }
 .reviews__nav svg{ width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-.reviews__nav:hover{ background:var(--burgundy); color:var(--white); border-color:var(--burgundy); transform:scale(1.06); }
+.reviews__nav:hover{ background:var(--green); color:var(--white); border-color:var(--green); transform:scale(1.06); }
 
 /* --- Contact --- */
 .contact{
@@ -536,7 +537,7 @@ p + p{ margin-top:.9rem; }
 }
 .infos li:hover .infos__ico{ background:var(--ochre); color:var(--white); border-color:var(--ochre); transform:scale(1.06); }
 .infos__ico svg{ width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
-.infos b{ display:block; font-weight:600; color:var(--burgundy); font-size:.9rem; }
+.infos b{ display:block; font-weight:600; color:var(--green); font-size:.9rem; }
 .infos span,.infos a{ font-size:.84rem; color:var(--ink-soft); line-height:1.6; }
 .infos a{ border-bottom:1px solid var(--line); transition:color .3s, border-color .3s; }
 .infos a:hover{ color:var(--ochre); border-color:var(--ochre); }
@@ -544,7 +545,7 @@ p + p{ margin-top:.9rem; }
 .insta{
   display:inline-flex; align-items:center; gap:.6rem;
   padding:.65rem 1.25rem; border-radius:var(--pill);
-  border:1px solid var(--line); font-size:.86rem; color:var(--burgundy);
+  border:1px solid var(--line); font-size:.86rem; color:var(--green);
   transition:background-color .35s, border-color .35s, transform .35s var(--ease);
 }
 .insta svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.6; }
@@ -567,7 +568,7 @@ p + p{ margin-top:.9rem; }
 }
 .field textarea{ resize:vertical; min-height:118px; }
 .field select{ padding-top:1.45rem; appearance:none; cursor:pointer;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B2E3A' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233F4A38' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat:no-repeat; background-position:right 1rem center; background-size:17px;
 }
 .field label{
@@ -646,7 +647,7 @@ p + p{ margin-top:.9rem; }
   transition:all .4s var(--ease);
 }
 .totop.show{ opacity:1; visibility:visible; transform:none; }
-.totop:hover{ background:var(--burgundy); transform:translateY(-3px); }
+.totop:hover{ background:var(--green); transform:translateY(-3px); }
 .totop svg{ width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
 
 /* ---------- 12. ANIMATIONS D'APPARITION ---------- */
@@ -698,7 +699,7 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   }
   .nav.open{ transform:none; }
   .nav__list{ flex-direction:column; gap:1.1rem; width:100%; }
-  .nav__link{ font-size:1.2rem; font-weight:500; color:var(--burgundy); }
+  .nav__link{ font-size:1.2rem; font-weight:500; color:var(--green); }
   .nav.open .nav__list li{ opacity:0; animation:fadeUp .5s var(--ease-out) forwards; }
   .nav.open .nav__list li:nth-child(1){ animation-delay:.12s }
   .nav.open .nav__list li:nth-child(2){ animation-delay:.18s }

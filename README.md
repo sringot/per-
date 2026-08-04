@@ -36,15 +36,18 @@ les massages et tarifs → les avis → le contact.
 Le site est volontairement presque entièrement clair : la couleur ne sert que
 pour les accents, pas en grands aplats.
 
-| Pantone               | Hex       | Usage                                   |
-| --------------------- | --------- | --------------------------------------- |
-| 18-1354 Burnt Ochre   | `#C15A32` | boutons, CTA, icônes — **seul accent**  |
-| 19-1617 Burgundy      | `#6B2E3A` | titres                                  |
-| 17-0627 Dried Herb    | `#9A8B5F` | petits détails                          |
-| 16-0110 Desert Sage   | `#A7AE9B` | petits détails (survols)                |
-| 11-0616 Pastel Yellow | `#F2E7B3` | dérivés très dilués pour les fonds doux |
-| Blanc cassé           | `#FCFBF8` | fond du grand bloc arrondi              |
-| Doré du logo          | `#D9B871` | logo uniquement                         |
+Trois familles seulement : **vert, orange, jaune**, sur blanc cassé.
+Le burgundy a été retiré (il tirait vers le prune sur les grands titres).
+
+| Rôle           | Hex       | Usage                                        |
+| -------------- | --------- | -------------------------------------------- |
+| Vert profond   | `#3F4A38` | titres, textes forts, survols                |
+| Orange (ocre)  | `#C15A32` | boutons, CTA, icônes — **seul accent vif**   |
+| Kaki           | `#9A8B5F` | petits détails, carte cadeau                 |
+| Sauge          | `#A7AE9B` | petits détails, fond de section très dilué   |
+| Jaune pastel   | `#F2E7B3` | dérivés dilués pour les fonds doux           |
+| Blanc cassé    | `#FBF9F4` | fond principal                               |
+| Doré du logo   | `#D9B871` | logo uniquement                              |
 
 Typographie : **Plus Jakarta Sans** pour tout (titres en 600, texte en 400).
 Toutes les valeurs sont des variables CSS en haut de `style.css` — les changer
