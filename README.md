@@ -52,20 +52,31 @@ d'origine. **Ne le relance pas** : il écraserait tes modifications. Les fichier
 
 ## Charte graphique
 
-Le site est volontairement presque entièrement clair : la couleur ne sert que
-pour les accents, pas en grands aplats.
+Langage visuel : **minimaliste + soft UI** (neumorphisme léger). Un seul fond
+sur tout le site ; la profondeur ne vient plus des contours ni des aplats, mais
+d'un relief discret — reflet clair en haut à gauche, ombre chaude en bas à
+droite. Les panneaux partagent la couleur du fond, les champs de formulaire sont
+creusés, les boutons s'enfoncent au clic.
 
-Trois familles seulement : **vert, orange, jaune**, sur blanc cassé.
+Le socle `#F4F1E9` est un ton moyen et non du blanc : sans cela les reflets
+clairs du relief ne se détachent pas.
+
+> Le neumorphisme *franc* est écarté volontairement : il repose sur des écarts
+> de luminosité trop faibles pour rester lisible. C'est sa variante accessible
+> qui est appliquée (ombres douces multi-couches, rayons 8-12 px, animations
+> 200-300 ms, contraste ≥ 4,5:1).
+
+Trois familles de couleur seulement : **vert, orange, jaune**.
 Le burgundy a été retiré (il tirait vers le prune sur les grands titres).
 
 | Rôle           | Hex       | Usage                                        |
 | -------------- | --------- | -------------------------------------------- |
 | Vert profond   | `#3F4A38` | titres, textes forts, survols                |
-| Orange (ocre)  | `#C15A32` | boutons, CTA, icônes — **seul accent vif**   |
+| Orange (ocre)  | `#AC4B28` | boutons, CTA, icônes — **seul accent vif**   |
 | Kaki           | `#9A8B5F` | petits détails, carte cadeau                 |
 | Sauge          | `#A7AE9B` | petits détails, fond de section très dilué   |
 | Jaune pastel   | `#F2E7B3` | dérivés dilués pour les fonds doux           |
-| Blanc cassé    | `#FBF9F4` | fond principal                               |
+| Socle          | `#F4F1E9` | fond unique, support du relief               |
 | Orange du logo | `#EC8448` | logo uniquement (relevé sur le fichier fourni) |
 
 Typographie : **Figtree** pour tout (titres en 600, texte en 400).
@@ -109,6 +120,26 @@ python3 tools-illustrations.py
 Si de vraies photos arrivent plus tard, il suffit de remplacer le `src` des
 balises `<img>` dans `index.html` : la mise en page ne bouge pas, `.ill img`
 applique déjà `object-fit: cover`.
+
+## Contraste
+
+Le Pantone Burnt Ochre à sa valeur exacte (`#C15A32`) tombe à 3,9:1 sur le socle
+et 4,4:1 sous du texte blanc — sous le minimum de 4,5:1 pour du petit texte. Il
+est donc approfondi d'un cran (`#AC4B28`), ce qui reste visuellement très proche.
+
+Rapports mesurés sur le socle `#F4F1E9` :
+
+| Rôle               | Rapport   |
+| ------------------ | --------- |
+| Texte courant      | 13,7:1    |
+| Texte secondaire   | 4,9:1     |
+| Titres (vert)      | 8,3:1     |
+| Intitulés (ocre)   | 4,9:1     |
+| Blanc sur bouton   | 5,5:1     |
+
+Seul le nom « MARIE MASSAGE » du logo reste en dessous (2,3:1) : un nom de marque
+échappe aux règles de contraste, et le sous-titre gris juste en dessous porte
+l'information lisible.
 
 ## Le logo
 
