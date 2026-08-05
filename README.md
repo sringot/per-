@@ -449,6 +449,31 @@ n'entre pas dans le site livré.
 python3 .claude/skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness" --design-system
 ```
 
+## Mettre le site en ligne (GitHub Pages)
+
+Le plus court chemin pour obtenir une adresse partageable, sans rien installer :
+
+1. Sur GitHub, dépôt **`sringot/per-`** → onglet **Settings** → **Pages**
+2. Sous *Build and deployment* → *Source*, choisir **Deploy from a branch**
+3. Branche : **`claude/git-repo-access-ea5z33`**, dossier **`/ (root)`** → **Save**
+
+Une minute plus tard, le site est servi sur :
+
+```
+https://sringot.github.io/per-/
+```
+
+Chaque `git push` sur cette branche met la page en ligne à jour.
+
+Le site n'utilise **aucun chemin absolu** : il fonctionne aussi bien à la racine
+d'un domaine que dans un sous-dossier comme `/per-/`. Vérifié page par page,
+navigation et menu mobile compris.
+
+Les URL absolues (`og:`, `canonical`, `sitemap.xml`, `robots.txt`) pointent sur
+cette adresse GitHub Pages, pour que les aperçus de lien fonctionnent pendant la
+phase de relecture. **À rebasculer sur le vrai domaine** le jour de la mise en
+ligne définitive — un `canonical` erroné fait disparaître le site des résultats.
+
 ## Hébergement
 
 Le site étant entièrement statique, il se déploie tel quel sur Netlify, Vercel,
