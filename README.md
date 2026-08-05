@@ -143,6 +143,18 @@ Couleurs, relevées au pixel :
 - [ ] **Mentions légales / politique de confidentialité** — obligatoires
 - [ ] **Carte cadeau** — actuellement un simple encart « bientôt »
 
+## Outillage
+
+`.claude/skills/ui-ux-pro-max/` est une base de règles UI/UX consultable hors ligne
+(styles, palettes, appariements de polices, garde-fous d'accessibilité), installée
+depuis [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill).
+Python 3, aucune dépendance externe. Elle ne sert qu'à la conception : elle
+n'entre pas dans le site livré.
+
+```bash
+python3 .claude/skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness" --design-system
+```
+
 ## Hébergement
 
 Le site étant entièrement statique, il se déploie tel quel sur Netlify, Vercel,
