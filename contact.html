@@ -60,10 +60,13 @@
         <p class="eyebrow">Contact</p>
         <h1 class="h2">Prenons<br>rendez-vous</h1>
         <p class="section__intro">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Écrivez-moi et je
-          vous réponds sous 24 h.
+          Les rendez-vous se prennent <b>uniquement par téléphone</b> : on convient
+          ensemble du soin et du créneau, c'est le plus simple. Lorem ipsum dolor
+          sit amet, consectetur adipiscing elit.
         </p>
 
+        <!-- Le téléphone ne figure pas dans cette liste : il est l'action
+             principale de la page, dans le bloc d'appel ci-contre. -->
         <ul class="infos">
           <li>
             <span class="infos__ico">
@@ -73,21 +76,15 @@
           </li>
           <li>
             <span class="infos__ico">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h3l2 5-2.4 1.4a12 12 0 0 0 5 5L15 13l5 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4 6.2 2 2 0 0 1 6 4Z"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
             </span>
-            <div><b>Téléphone</b><a href="tel:+33600000000">06 00 00 00 00</a></div>
+            <div><b>Horaires</b><span>Lun – Sam · 9h – 20h<br>Sur rendez-vous uniquement</span></div>
           </li>
           <li>
             <span class="infos__ico">
               <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>
             </span>
-            <div><b>Email</b><a href="mailto:contact@mariemassage.fr">contact@mariemassage.fr</a></div>
-          </li>
-          <li>
-            <span class="infos__ico">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
-            </span>
-            <div><b>Horaires</b><span>Lun – Sam · 9h – 20h<br>Sur rendez-vous uniquement</span></div>
+            <div><b>Une question&nbsp;?</b><a href="mailto:contact@mariemassage.fr">contact@mariemassage.fr</a></div>
           </li>
         </ul>
 
@@ -100,62 +97,21 @@
         </a>
       </div>
 
-      <form class="form" id="form" data-reveal="right" novalidate>
-        <div class="form__row">
-          <div class="field">
-            <input type="text" id="nom" name="nom" placeholder=" " required autocomplete="name">
-            <label for="nom">Nom &amp; prénom</label>
-            <small class="field__err"></small>
-          </div>
-          <div class="field">
-            <input type="tel" id="tel" name="tel" placeholder=" " autocomplete="tel">
-            <label for="tel">Téléphone</label>
-            <small class="field__err"></small>
-          </div>
-        </div>
+      <!-- TODO : numéro fictif — à remplacer ici ET dans le pied de page -->
+      <aside class="call" data-reveal="right">
+        <span class="call__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M6 4h3l2 5-2.4 1.4a12 12 0 0 0 5 5L15 13l5 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4 6.2 2 2 0 0 1 6 4Z"/></svg>
+        </span>
 
-        <div class="field">
-          <input type="email" id="email" name="email" placeholder=" " required autocomplete="email">
-          <label for="email">Email</label>
-          <small class="field__err"></small>
-        </div>
+        <p class="call__label">Appelez-moi, je vous réponds ou je vous rappelle</p>
+        <a class="call__num" href="tel:+33600000000">06&nbsp;00&nbsp;00&nbsp;00&nbsp;00</a>
 
-        <div class="field">
-          <select id="soin" name="soin" required>
-            <option value="" selected disabled>Choisissez un soin…</option>
-            <option>Kobido</option>
-            <option>Madérothérapie</option>
-            <option>Relaxation</option>
-            <option>Drainage lymphatique</option>
-            <option>Massage bébé</option>
-            <option>Dos &amp; nuque</option>
-            <option>Je ne sais pas encore</option>
-          </select>
-          <label for="soin" class="field__label--static">Soin souhaité</label>
-          <small class="field__err"></small>
-        </div>
+        <a href="tel:+33600000000" class="btn btn--primary btn--lg magnetic">
+          <span>Appeler Marie</span>
+        </a>
 
-        <div class="field">
-          <textarea id="message" name="message" rows="5" placeholder=" " required></textarea>
-          <label for="message">Votre message</label>
-          <small class="field__err"></small>
-        </div>
-
-        <label class="check">
-          <input type="checkbox" id="rgpd" required>
-          <span class="check__box" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
-          </span>
-          <span>J'accepte que mes informations soient utilisées pour me recontacter.</span>
-        </label>
-
-        <button type="submit" class="btn btn--primary btn--lg btn--block" id="submit">
-          <span class="btn__label">Envoyer ma demande</span>
-          <span class="btn__spin" aria-hidden="true"></span>
-        </button>
-
-        <p class="form__note" id="formNote" role="status" aria-live="polite"></p>
-      </form>
+        <p class="call__hours">Lun – Sam · 9h – 20h</p>
+      </aside>
     </div>
   </section>
 

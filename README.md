@@ -56,8 +56,8 @@ d'origine. **Ne le relance pas** : il écraserait tes modifications. Les fichier
 Langage visuel : **minimaliste + soft UI** (neumorphisme léger). Un seul fond
 sur tout le site ; la profondeur ne vient plus des contours ni des aplats, mais
 d'un relief discret — reflet clair en haut à gauche, ombre chaude en bas à
-droite. Les panneaux partagent la couleur du fond, les champs de formulaire sont
-creusés, les boutons s'enfoncent au clic.
+droite. Les panneaux partagent la couleur du fond, les creux servent aux blocs
+en retrait, et les boutons s'enfoncent au clic.
 
 Le socle `#F4F1E9` est un ton moyen et non du blanc : sans cela les reflets
 clairs du relief ne se détachent pas.
@@ -99,7 +99,7 @@ CNIL considère comme non conforme au RGPD.
 - Carrousel d'avis (flèches, points, lecture auto, swipe tactile)
 - Page avis : les 6 premiers témoignages affichés, les suivants repliés
   derrière « Voir tous les avis »
-- Formulaire de contact avec validation en direct
+- Page contact tournée vers l'appel : le numéro en grand, cliquable
 - Accessibilité : navigation clavier, libellés ARIA, lien d'évitement,
   respect de `prefers-reduced-motion`
 
@@ -122,6 +122,20 @@ python3 tools-illustrations.py
 Si de vraies photos arrivent plus tard, il suffit de remplacer le `src` des
 balises `<img>` dans `index.html` : la mise en page ne bouge pas, `.ill img`
 applique déjà `object-fit: cover`.
+
+## La prise de rendez-vous
+
+Les rendez-vous se prennent **uniquement par téléphone**. La page contact est
+donc bâtie autour de l'appel : le numéro en grand, en `tel:` — un appui suffit
+depuis un mobile — et les horaires juste dessous.
+
+Le formulaire de contact qui occupait cette place a été **retiré**, pas
+seulement masqué : il ne pouvait pas prendre de rendez-vous et laissait croire
+le contraire (sa soumission était simulée, aucun email n'était envoyé). Son
+CSS et son module JS sont partis avec lui.
+
+L'email reste affiché, mais présenté comme ce qu'il est — « une question ? »,
+pas un canal de réservation.
 
 ## Les chiffres affichés
 
@@ -154,9 +168,8 @@ Rapports mesurés sur le socle `#F4F1E9` :
 | Intitulés (ocre)   | 4,9:1     |
 | Blanc sur bouton   | 5,5:1     |
 
-Seul le nom « MARIE MASSAGE » du logo reste en dessous (2,3:1) : un nom de marque
-échappe aux règles de contraste, et le sous-titre gris juste en dessous porte
-l'information lisible.
+Le logo, lui, n'a plus de texte : c'est le pictogramme seul, à l'ocre — donc
+au même rapport que les intitulés.
 
 ## Le logo
 
@@ -218,10 +231,6 @@ transparence, se perdrait sur une barre d'onglets sombre. L'ancien
 - [ ] **Avis** — les témoignages sont des exemples, à remplacer par les vrais
 - [ ] **Coordonnées** — téléphone et email sont des valeurs fictives, à
       remplacer dans `contact.html` **et dans le pied de page des 6 pages**
-- [ ] **Envoi du formulaire** — aujourd'hui la soumission est simulée côté
-      navigateur : **aucun email n'est réellement envoyé**. Il faut brancher un
-      service (Formspree, Netlify Forms, EmailJS…) à l'endroit marqué `TODO`
-      dans `assets/js/main.js`.
 - [ ] **Mentions légales / politique de confidentialité** — obligatoires
 - [ ] **Carte cadeau** — actuellement un simple encart « bientôt »
 

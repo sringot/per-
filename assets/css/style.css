@@ -815,82 +815,36 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
 .insta:hover{ box-shadow:var(--nm-out-lg); color:var(--ochre); transform:translateY(-2px); }
 
 /* Formulaire */
-.form{
-  background:var(--surface); color:var(--ink);
-  border-radius:var(--r-lg); padding:clamp(1.5rem,3vw,2.4rem);
-  box-shadow:var(--nm-out-lg);
-  display:grid; gap:1.05rem;
+/* --- Bloc d'appel ---
+   Les rendez-vous se prennent par téléphone : le numéro est l'action
+   principale de la page, pas une ligne dans une liste de coordonnées.
+   Le formulaire qui occupait cette place a été retiré — il ne pouvait
+   pas prendre de rendez-vous, et laissait croire le contraire. */
+.call{
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center; gap:1rem;
+  padding:clamp(2.2rem,4vw,3.2rem) clamp(1.5rem,3vw,2.6rem);
+  border-radius:var(--r-xl);
+  background:var(--surface); box-shadow:var(--nm-out-lg);
 }
-.form__row{ display:grid; grid-template-columns:1fr 1fr; gap:1.05rem; }
-.field{ position:relative; }
-.field input,.field select,.field textarea{
-  width:100%; padding:1.3rem 1rem .55rem;
-  background:var(--surface); border:0;
-  border-radius:var(--r-sm); font-size:.9rem;
-  box-shadow:var(--nm-in);
-  transition:box-shadow .25s var(--ease);
-}
-.field textarea{ resize:vertical; min-height:118px; }
-.field select{ padding-top:1.45rem; appearance:none; cursor:pointer;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233F4A38' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 1rem center; background-size:17px;
-}
-.field label{
-  position:absolute; left:1rem; top:.95rem;
-  font-size:.9rem; color:var(--ink-soft); pointer-events:none;
-  transform-origin:left top; transition:transform .28s var(--ease), color .28s;
-}
-.field input:focus + label,
-.field input:not(:placeholder-shown) + label,
-.field textarea:focus + label,
-.field textarea:not(:placeholder-shown) + label,
-.field__label--static{
-  transform:translateY(-.6rem) scale(.76); color:var(--ochre);
-}
-.field__label--static{ top:.85rem; }
-.field input:focus,.field select:focus,.field textarea:focus{
-  outline:none;
-  box-shadow:var(--nm-in-deep), 0 0 0 3px rgba(193,90,50,.22);
-}
-.field.err input,.field.err select,.field.err textarea{ box-shadow:var(--nm-in), 0 0 0 2px #C0392B; }
-.field__err{
-  display:block; font-size:.73rem; color:#C0392B;
-  max-height:0; overflow:hidden; transition:max-height .3s var(--ease), padding .3s;
-}
-.field.err .field__err{ max-height:3em; padding-top:.3rem; }
-.field.err{ animation:shake .4s var(--ease); }
-@keyframes shake{ 0%,100%{ transform:translateX(0) } 25%{ transform:translateX(-5px) } 75%{ transform:translateX(5px) } }
-
-.check{ display:flex; align-items:flex-start; gap:.7rem; font-size:.78rem; color:var(--ink-soft); cursor:pointer; }
-.check input{ position:absolute; opacity:0; width:0; height:0; }
-.check__box{
-  width:21px; height:21px; flex:none; border-radius:6px;
-  border:0; background:var(--surface);
-  box-shadow:var(--nm-in);
+.call__ico{
+  width:64px; height:64px; border-radius:50%;
   display:grid; place-items:center;
-  transition:background-color .25s, box-shadow .25s;
+  background:var(--surface); box-shadow:var(--nm-in);
+  color:var(--ochre);
 }
-.check__box svg{
-  width:14px; height:14px; fill:none; stroke:var(--white);
-  stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round;
-  stroke-dasharray:24; stroke-dashoffset:24;
-  transition:stroke-dashoffset .35s var(--ease);
+.call__ico svg{
+  width:26px; height:26px; fill:none; stroke:currentColor;
+  stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round;
 }
-.check input:checked + .check__box{ background:var(--ochre); border-color:var(--ochre); }
-.check input:checked + .check__box svg{ stroke-dashoffset:0; }
-.check input:focus-visible + .check__box{ outline:2.5px solid var(--ochre); outline-offset:3px; }
-
-.form__note{ font-size:.83rem; text-align:center; min-height:1.4em; }
-.form__note.ok{ color:#2E7D5B; }
-.form__note.ko{ color:#C0392B; }
-.btn__spin{ display:none; width:17px; height:17px; }
-.btn.loading .btn__label{ opacity:.65; }
-.btn.loading .btn__spin{
-  display:block; border:2px solid rgba(255,255,255,.4);
-  border-top-color:var(--white); border-radius:50%;
-  animation:spin .7s linear infinite;
+.call__label{ max-width:30ch; font-size:.88rem; text-wrap:balance; }
+.call__num{
+  font-size:clamp(1.8rem,3.4vw,2.6rem); font-weight:600;
+  letter-spacing:-.02em; line-height:1.1; color:var(--green);
+  transition:color .25s var(--ease);
 }
-@keyframes spin{ to{ transform:rotate(360deg) } }
+.call__num:hover{ color:var(--ochre); }
+.call__hours{ font-size:.78rem; opacity:.75; }
 
 /* ---------- 11. FOOTER ---------- */
 /* Déployé sur la largeur, pas empilé : le logo et l'accroche à gauche,
@@ -1047,7 +1001,6 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
 }
 
 @media (max-width:560px){
-  .form__row{ grid-template-columns:1fr; }
   .hero__actions .btn{ width:100%; }
   .profile{ position:static; width:100%; margin-top:1rem; transform:none; }
   .hero__title .ln{ gap:.4rem; }

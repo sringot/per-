@@ -5,7 +5,7 @@
      · initShell()  — une seule fois : en-tête, menu, moteur de
                       défilement, transitions entre pages.
      · initPage()   — à chaque contenu : révélations, compteurs,
-                      synthèse des avis, carrousel, formulaire, héros.
+                      synthèse des avis, carrousel, héros.
 
    La séparation permet de rebrancher un contenu remplacé sans
    réinstaller les écouteurs globaux, qui s'accumuleraient sinon.
@@ -195,77 +195,6 @@
     carousel = { measure };
   }
 
-  /* ---------- Formulaire ---------- */
-  const rules = {
-    nom:     v => v.trim().length >= 2                    || 'Merci d’indiquer votre nom.',
-    email:   v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || 'Adresse email invalide.',
-    tel:     v => v === '' || /^[\d\s+().-]{8,}$/.test(v) || 'Numéro de téléphone invalide.',
-    soin:    v => v !== ''                                || 'Choisissez un soin.',
-    message: v => v.trim().length >= 10                   || 'Votre message est un peu court.'
-  };
-
-  function initForm(root) {
-    const form = $('#form', root);
-    if (!form) return;
-    const note = $('#formNote', root);
-    const submitBtn = $('#submit', root);
-
-    const validate = el => {
-      const rule = rules[el.name];
-      if (!rule) return true;
-      const res = rule(el.value);
-      const field = el.closest('.field');
-      field.classList.toggle('err', res !== true);
-      $('.field__err', field).textContent = res === true ? '' : res;
-      return res === true;
-    };
-
-    $$('.field input, .field select, .field textarea', form).forEach(el => {
-      el.addEventListener('blur', () => validate(el));
-      el.addEventListener('input', () => {
-        if (el.closest('.field').classList.contains('err')) validate(el);
-      });
-    });
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      note.className = 'form__note';
-      note.textContent = '';
-
-      // On valide toujours les champs d'abord, pour que les erreurs
-      // soient visibles même si la case RGPD est décochée.
-      const fields = $$('.field input, .field select, .field textarea', form);
-      const fieldsOk = fields.map(validate).every(Boolean);
-      const rgpdOk = $('#rgpd', form).checked;
-
-      if (!fieldsOk || !rgpdOk) {
-        note.classList.add('ko');
-        note.textContent = !fieldsOk && !rgpdOk
-          ? 'Quelques champs sont à corriger, et il faut accepter d’être recontactée.'
-          : !fieldsOk
-            ? 'Quelques champs sont à corriger.'
-            : 'Merci d’accepter d’être recontactée.';
-        const first = $('.field.err input, .field.err select, .field.err textarea', form);
-        (first || (rgpdOk ? null : $('#rgpd', form)))?.focus();
-        return;
-      }
-
-      // TODO : brancher un service d'envoi (Formspree, Netlify Forms, EmailJS…)
-      // Pour l'instant : simulation locale, aucun email n'est réellement envoyé.
-      submitBtn.classList.add('loading');
-      submitBtn.disabled = true;
-
-      setTimeout(() => {
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        note.classList.add('ok');
-        note.textContent = 'Merci ! Votre demande a bien été prise en compte, je vous réponds très vite.';
-        form.reset();
-        $$('.field', form).forEach(f => f.classList.remove('err'));
-      }, 1100);
-    });
-  }
-
   /* ---------- Page avis : synthèse + « voir tous les avis » ----------
      La moyenne et le nombre ne sont jamais écrits en dur : ils sont
      recalculés à partir des avis réellement présents dans la page.
@@ -367,7 +296,6 @@
     initMagnetic(root);
     initTilt(root);
     initCarousel(root);
-    initForm(root);
     initTicker(root);
     applyParallax();
     onScroll();
