@@ -25,6 +25,10 @@ le-cabinet.html       Le cabinet
 massages.html         Les massages & tarifs
 avis.html             Avis clientes
 contact.html          Contact & rendez-vous
+mentions-legales.html Mentions légales (squelette — voir « À compléter »)
+404.html              Page introuvable
+robots.txt            indexation
+sitemap.xml           plan du site
 assets/
   css/fonts.css       polices auto-hébergées (@font-face)
   css/style.css       styles + animations
@@ -146,6 +150,37 @@ retirée : un dessin plat à côté d'une vraie photo faisait cohabiter deux
 langages visuels. À remettre le jour où une deuxième photo arrive.
 
 Les 19 illustrations restent en place sur les autres pages.
+
+## Mise en ligne
+
+Ce qu'un site publié doit porter, et qui est en place :
+
+- **Aperçu des liens partagés** (`og:` / `twitter:`) sur les 8 pages, avec une
+  image dédiée `assets/img/partage.jpg` (1200 × 630). Sans elle, un lien envoyé
+  sur WhatsApp ou Instagram s'affiche sans visuel.
+- **Données structurées** `HealthAndBeautyBusiness` sur l'accueil : nom,
+  téléphone, adresse, horaires, Instagram. C'est ce qui alimente la fiche locale
+  dans les résultats de recherche — le premier levier pour une praticienne.
+- **`robots.txt` et `sitemap.xml`**, **`canonical`** sur chaque page.
+- **Page 404** et **mentions légales**, liées depuis le pied de page.
+
+> ⚠️ Les URL absolues (`og:url`, `canonical`, sitemap, robots) pointent vers
+> `https://www.mariemassage.fr`. **À remplacer par le vrai domaine** avant la
+> mise en ligne — un `canonical` faux fait disparaître le site des résultats.
+
+## Les photos et leur enregistrement
+
+Le portrait de Marie est protégé contre l'enregistrement **occasionnel** :
+`pointer-events:none` sur les images fait porter le clic droit au conteneur,
+qui n'a pas d'image à proposer au menu contextuel ; le glisser-déposer et la
+sélection sont désactivés ; le menu contextuel est bloqué sur les cadres de
+visuels. Les liens parents continuent de fonctionner, l'événement leur revenant.
+
+**Cela décourage, cela n'empêche pas.** Une capture d'écran, l'inspecteur du
+navigateur ou un simple `curl` sur l'URL de l'image restent hors de portée de
+toute page web — c'est vrai de n'importe quel site. La seule protection réelle
+est juridique : c'est l'objet du paragraphe « Propriété intellectuelle » des
+mentions légales.
 
 ## Le téléphone d'abord
 
@@ -380,7 +415,10 @@ transparence, se perdrait sur une barre d'onglets sombre. L'ancien
 - [ ] **Avis** — les témoignages sont des exemples, à remplacer par les vrais
 - [ ] **Coordonnées** — téléphone et email sont des valeurs fictives, à
       remplacer dans `contact.html` **et dans le pied de page des 6 pages**
-- [ ] **Mentions légales / politique de confidentialité** — obligatoires
+- [ ] **Mentions légales** — la page existe, chaque `[À COMPLÉTER]` doit être
+      renseigné : nom de famille, SIRET, adresse, hébergeur
+- [ ] **Nom de domaine** — remplacer `www.mariemassage.fr` dans les balises
+      `og:`/`canonical` des 8 pages, `robots.txt` et `sitemap.xml`
 - [ ] **Carte cadeau** — actuellement un simple encart « bientôt »
 
 ## Outillage

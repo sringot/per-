@@ -84,6 +84,16 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 img,svg{ display:block; max-width:100%; }
+/* Photos : on décourage l'enregistrement d'un clic droit ou d'un
+   glisser-déposer. `pointer-events:none` fait porter le clic droit au
+   conteneur, qui n'a pas d'image à proposer au menu contextuel ; les liens
+   parents continuent de fonctionner, l'événement leur revenant.
+   À noter : cela décourage, cela n'empêche pas — une capture d'écran ou
+   l'inspecteur du navigateur restent possibles, quoi qu'on fasse. */
+img{
+  -webkit-user-drag:none; user-select:none; -webkit-user-select:none;
+  pointer-events:none;
+}
 button,input,select,textarea{ font:inherit; color:inherit; }
 button{ background:none; border:0; cursor:pointer; }
 a{ color:inherit; text-decoration:none; }
@@ -924,6 +934,8 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
   font-size:.75rem; line-height:1.6;
 }
 .footer__mention{ opacity:.72; }
+.footer__bottom a{ border-bottom:1px solid var(--line); transition:color .25s var(--ease), border-color .25s var(--ease); }
+.footer__bottom a:hover{ color:var(--ochre); border-bottom-color:var(--ochre); }
 
 @media (max-width:760px){
   /* Sur une seule colonne, aligné à gauche : centrer trois blocs de
@@ -999,6 +1011,30 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   /* En haut à droite, l'étiquette tombait sur le titre une fois la carte
      couchée. Elle descend au niveau de « Réserver », dont la droite est libre. */
   .card__ribbon{ top:auto; bottom:.85rem; right:1.1rem; }
+}
+
+/* ---------- PAGES ANNEXES (404, mentions légales) ---------- */
+/* La largeur est posée sur les enfants, pas sur `.shell` : le réduire
+   lui aurait fait perdre ses marges latérales (elles viennent de
+   `margin-inline:auto`), et le contenu serait allé coller au bord. */
+.erreur{ padding:clamp(2rem,6vw,5rem) 0; }
+.erreur > *{ max-width:46rem; }
+.erreur .h2{ margin:.4rem 0 1rem; }
+.erreur__actions{ display:flex; flex-wrap:wrap; gap:.75rem; margin-top:2rem; }
+
+.legal > *{ max-width:44rem; }
+.legal h2{ margin:2.2rem 0 .7rem; }
+.legal h2:first-of-type{ margin-top:0; }
+.legal p + p{ margin-top:.9rem; }
+.legal__avis{
+  padding:1rem 1.2rem; margin-bottom:2.4rem;
+  border-radius:var(--r); box-shadow:var(--nm-in);
+  font-size:.88rem;
+}
+.legal__avis b{ color:var(--ochre); }
+.legal code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.85em; color:var(--ochre);
 }
 
 /* ---------- BARRE D'APPEL (téléphone) ----------

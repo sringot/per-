@@ -1,0 +1,6 @@
+# Marie Massage
+# TODO : remplacer le domaine par le vrai à la mise en ligne.
+User-agent: *
+Allow: /
+
+Sitemap: https://www.mariemassage.fr/sitemap.xml

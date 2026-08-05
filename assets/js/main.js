@@ -20,6 +20,8 @@
 
   /* état rafraîchi à chaque page */
   let cue = null, parallaxEls = [], carousel = null;
+  /* posé par initShell, consommé par l'aperçu (voir plus bas) */
+  let fermerMenu = () => {};
 
   /* =====================================================
      BLOC CONTENU
@@ -359,6 +361,19 @@
     const year = $('#year');
     if (year) year.textContent = new Date().getFullYear();
 
+    /* --- Photos : décourager l'enregistrement ---
+       Le CSS écarte déjà le glisser-déposer et le clic droit sur l'image
+       elle-même ; ici on bloque le menu contextuel sur les conteneurs de
+       visuels, pour couvrir le cas où le clic droit vise le cadre.
+       Cela décourage — cela n'empêche pas : capture d'écran et inspecteur
+       restent hors de portée de toute page web. */
+    document.addEventListener('contextmenu', e => {
+      if (e.target.closest('.ill, .hero__photo, .about__main, .card__media')) e.preventDefault();
+    });
+    document.addEventListener('dragstart', e => {
+      if (e.target.tagName === 'IMG') e.preventDefault();
+    });
+
     /* --- Menu mobile --- */
     const burger = $('#burger'), nav = $('#nav');
     if (burger && nav) {
@@ -387,6 +402,10 @@
         }
       };
       const closeNav = () => setNav(false);
+      // Exposé : l'aperçu en fichier unique intercepte les clics en phase
+      // de capture et les stoppe net, si bien que le gestionnaire ci-dessous
+      // n'est jamais atteint. Son routeur ferme donc le tiroir lui-même.
+      fermerMenu = closeNav;
 
       burger.addEventListener('click', () => setNav(!nav.classList.contains('open')));
 
@@ -512,5 +531,5 @@
   initPage();
 
   // Point d'entrée pour rebrancher un contenu remplacé (aperçu multi-pages)
-  window.marieMassage = { initPage };
+  window.marieMassage = { initPage, fermerMenu: () => fermerMenu() };
 })();

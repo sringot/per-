@@ -92,8 +92,15 @@ router = '''
     const a = e.target.closest('a[href$=".html"]');
     if (!a || !tpl[a.getAttribute('href')]) return;
     e.preventDefault();
+    // Capture + arrêt immédiat : le clic n'atteint jamais les gestionnaires
+    // posés sur le lien lui-même, dont celui qui referme le tiroir. C'est
+    // donc au routeur de le faire — sinon le menu reste ouvert par-dessus
+    // la page suivante, alors que le vrai site, lui, le referme.
     e.stopImmediatePropagation();
-    show(a.getAttribute('href'));
+    const ouvert = document.body.classList.contains('nav-open');
+    if (ouvert) window.marieMassage.fermerMenu();
+    // Même délai que le site : on voit le tiroir sortir avant l'échange.
+    setTimeout(() => show(a.getAttribute('href')), ouvert ? 200 : 0);
   }, true);
 
   show('index.html');
