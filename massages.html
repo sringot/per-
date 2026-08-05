@@ -9,7 +9,7 @@
   <link rel="apple-touch-icon" href="assets/img/favicon-180.png">
 
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-400-latin.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-700-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-600-latin.woff2" crossorigin>
 
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/style.css">
@@ -25,7 +25,7 @@
     <div class="shell header__inner">
 
       <a href="index.html" class="brand" aria-label="Marie Massage — accueil">
-        <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300">
+        <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
       </a>
 
       <nav class="nav" id="nav" aria-label="Navigation principale">
@@ -71,7 +71,7 @@
       <!-- TODO : remplacer durées et tarifs par les vrais -->
       <div class="cards">
         <article class="card" data-reveal="up" style="--d:0s">
-          <div class="card__media ill"><img src="assets/img/illus/kobido.svg" alt="Massage du visage Kobido"></div>
+          <div class="card__media ill"><img src="assets/img/illus/kobido.svg" alt="Massage du visage Kobido" loading="lazy" decoding="async"></div>
           <div class="card__body">
             <h3 class="card__title">Kobido</h3>
             <p class="card__tag">Lifting japonais du visage</p>
@@ -83,7 +83,7 @@
         </article>
 
         <article class="card" data-reveal="up" style="--d:.08s">
-          <div class="card__media ill"><img src="assets/img/illus/madero.svg" alt="Outils de madérothérapie"></div>
+          <div class="card__media ill"><img src="assets/img/illus/madero.svg" alt="Outils de madérothérapie" loading="lazy" decoding="async"></div>
           <div class="card__body">
             <h3 class="card__title">Madérothérapie</h3>
             <p class="card__tag">Soin corps remodelant</p>
@@ -96,7 +96,7 @@
 
         <article class="card card--feature" data-reveal="up" style="--d:.16s">
           <span class="card__ribbon">Le plus demandé</span>
-          <div class="card__media ill"><img src="assets/img/illus/relaxation.svg" alt="Massage relaxation"></div>
+          <div class="card__media ill"><img src="assets/img/illus/relaxation.svg" alt="Massage relaxation" loading="lazy" decoding="async"></div>
           <div class="card__body">
             <h3 class="card__title">Relaxation</h3>
             <p class="card__tag">Massage corps complet</p>
@@ -108,7 +108,7 @@
         </article>
 
         <article class="card" data-reveal="up" style="--d:0s">
-          <div class="card__media ill"><img src="assets/img/illus/drainage.svg" alt="Drainage lymphatique"></div>
+          <div class="card__media ill"><img src="assets/img/illus/drainage.svg" alt="Drainage lymphatique" loading="lazy" decoding="async"></div>
           <div class="card__body">
             <h3 class="card__title">Drainage lymphatique</h3>
             <p class="card__tag">Jambes légères &amp; circulation</p>
@@ -120,7 +120,7 @@
         </article>
 
         <article class="card" data-reveal="up" style="--d:.08s">
-          <div class="card__media ill"><img src="assets/img/illus/bebe.svg" alt="Massage bébé"></div>
+          <div class="card__media ill"><img src="assets/img/illus/bebe.svg" alt="Massage bébé" loading="lazy" decoding="async"></div>
           <div class="card__body">
             <h3 class="card__title">Massage bébé</h3>
             <p class="card__tag">Atelier parent — enfant</p>
@@ -132,7 +132,7 @@
         </article>
 
         <article class="card" data-reveal="up" style="--d:.16s">
-          <div class="card__media ill"><img src="assets/img/illus/dos.svg" alt="Massage du dos et de la nuque"></div>
+          <div class="card__media ill"><img src="assets/img/illus/dos.svg" alt="Massage du dos et de la nuque" loading="lazy" decoding="async"></div>
           <div class="card__body">
             <h3 class="card__title">Dos &amp; nuque</h3>
             <p class="card__tag">Format express</p>
@@ -154,7 +154,7 @@
         </div>
         <div class="giftcard__visual" aria-hidden="true">
           <div class="giftcard__card">
-            <img class="giftcard__logo" src="assets/img/logo-mark.png" alt="">
+            <img class="giftcard__logo" src="assets/img/logo-mark.png" alt="" fetchpriority="high" decoding="async">
             <b>Carte cadeau</b>
             <span>Marie Massage</span>
           </div>
@@ -171,7 +171,7 @@
 
       <div class="footer__top">
         <a href="index.html" class="brand brand--footer" aria-label="Marie Massage — accueil">
-          <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300">
+          <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
         </a>
         <p class="footer__tag">Masseuse bien-être · Voisins-le-Bretonneux</p>
 

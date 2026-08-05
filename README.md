@@ -29,7 +29,7 @@ assets/
   css/fonts.css       polices auto-hébergées (@font-face)
   css/style.css       styles + animations
   js/main.js          interactions
-  fonts/              Figtree 300–800 (woff2, sous-ensembles latin)
+  fonts/              Figtree 400/500/600 (woff2, sous-ensembles latin)
   img/logo-mark.png   pictogramme (découpé dans le logo fourni) — le logo
   img/logo-text.png   nom + sous-titre — plus inséré, tenu à jour au cas où
   img/favicon*.png    favicons (onglet + écran d'accueil iOS)
@@ -159,6 +159,32 @@ L'onglet courant se signale par une **pastille sur desktop** et un
 **souligné dans le tiroir**. Le lien y passe en `inline-block` pour épouser
 son texte : en bloc, il occupait toute la largeur du tiroir et le repère se
 posait au milieu du vide, à droite du mot.
+
+## Fluidité
+
+Le défilement tient **60 images par seconde** sur les trois formats, y compris
+avec le processeur bridé ×4 pour approcher un vrai téléphone : aucune image au
+delà de 20 ms sur 118 mesurées par page. Il n'y a donc pas de saccade à
+corriger — le confort se joue ailleurs, sur ce qui se charge et sur la réponse
+au doigt.
+
+**Polices.** Le site n'emploie que trois graisses (400, 500, 600). Il en
+déclarait six et préchargeait la 700, jamais utilisée, tandis que la 600 —
+celle de tous les titres — ne l'était pas : les titres s'affichaient en police
+de secours puis basculaient. Préchargements corrigés, graisses inutiles
+supprimées (89 Ko de moins dans le dépôt).
+
+**Visuels.** Le logo et l'illustration du héros passent en `fetchpriority=high`,
+tout le reste en `loading=lazy` : la page d'accueil descend de 91 à 73 Ko et de
+6 à 3 visuels au premier rendu.
+
+**Au toucher.** `touch-action: manipulation` écarte le double-appui pour zoomer,
+et avec lui le délai que le navigateur garde en réserve avant de valider un
+appui. Le voile gris d'iOS est retiré au profit d'états `:active` conformes à la
+charte — sur un écran tactile `:hover` ne se déclenche jamais, donc appuyer sur
+une carte ne renvoyait aucun retour. Le tiroir porte `overscroll-behavior:
+contain`, la page `overscroll-behavior-y: none` : le rebond de fin de course ne
+se propage plus au fond.
 
 ## Le passage d'une page à l'autre
 

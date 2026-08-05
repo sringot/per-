@@ -389,7 +389,19 @@
       const closeNav = () => setNav(false);
 
       burger.addEventListener('click', () => setNav(!nav.classList.contains('open')));
-      $$('.nav a').forEach(a => a.addEventListener('click', closeNav));
+
+      // Depuis le tiroir ouvert, on referme *puis* on navigue. Sans cela la
+      // navigation part si vite que le tiroir n'a pas une image pour sortir :
+      // il reste figé ouvert pendant tout le chargement. L'attente est courte
+      // et couvre le début du chargement, qui se fait pendant la sortie.
+      $$('.nav a').forEach(a => a.addEventListener('click', e => {
+        if (!nav.classList.contains('open')) return;
+        const url = a.getAttribute('href');
+        closeNav();
+        if (!url || url.startsWith('#') || a.target) return;
+        e.preventDefault();
+        setTimeout(() => { location.href = a.href; }, 200);
+      }));
       document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
 
       // Le voile est un pseudo-élément de <body> : un appui dessus vise

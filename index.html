@@ -9,7 +9,7 @@
   <link rel="apple-touch-icon" href="assets/img/favicon-180.png">
 
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-400-latin.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-700-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-600-latin.woff2" crossorigin>
 
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/style.css">
@@ -19,7 +19,7 @@
 <!-- ============ PRELOADER (accueil uniquement) ============ -->
 <div class="preloader" id="preloader">
   <div class="preloader__logo">
-    <img src="assets/img/logo-mark.png" alt="" width="281" height="300">
+    <img src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
   </div>
   <span class="preloader__bar"><i></i></span>
 </div>
@@ -33,7 +33,7 @@
     <div class="shell header__inner">
 
       <a href="index.html" class="brand" aria-label="Marie Massage — accueil">
-        <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300">
+        <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
       </a>
 
       <nav class="nav" id="nav" aria-label="Navigation principale">
@@ -97,7 +97,7 @@
         <a class="proof reveal" href="avis.html" style="--d:.62s" aria-label="Avis de clientes">
           <span class="proof__top">
             <span class="proof__avatars" aria-hidden="true">
-              <i class="ill"><img src="assets/img/illus/avatar-1.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-2.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-3.svg" alt=""></i>
+              <i class="ill"><img src="assets/img/illus/avatar-1.svg" alt="" loading="lazy" decoding="async"></i><i class="ill"><img src="assets/img/illus/avatar-2.svg" alt="" loading="lazy" decoding="async"></i><i class="ill"><img src="assets/img/illus/avatar-3.svg" alt="" loading="lazy" decoding="async"></i>
             </span>
             <b>Ce qu'en disent mes clientes</b>
             <span class="proof__more" aria-hidden="true">Tous les avis</span>
@@ -119,11 +119,11 @@
       <div class="hero__visual" id="heroVisual">
         <div class="hero__tilt" id="heroTilt">
           <figure class="ill arch hero__photo">
-            <img src="assets/img/illus/hero.svg" alt="Marie masse le dos d'une cliente">
+            <img src="assets/img/illus/hero.svg" alt="Marie masse le dos d'une cliente" fetchpriority="high" decoding="async">
           </figure>
 
           <aside class="profile reveal" style="--d:.9s">
-            <span class="ill profile__thumb"><img src="assets/img/illus/marie.svg" alt="Portrait de Marie"></span>
+            <span class="ill profile__thumb"><img src="assets/img/illus/marie.svg" alt="Portrait de Marie" fetchpriority="high" decoding="async"></span>
             <div class="profile__body">
               <b>Moi c'est Marie, masseuse bien-être</b>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -149,7 +149,7 @@
 
       <div class="footer__top">
         <a href="index.html" class="brand brand--footer" aria-label="Marie Massage — accueil">
-          <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300">
+          <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
         </a>
         <p class="footer__tag">Masseuse bien-être · Voisins-le-Bretonneux</p>
 

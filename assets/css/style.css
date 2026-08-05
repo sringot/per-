@@ -88,6 +88,35 @@ button,input,select,textarea{ font:inherit; color:inherit; }
 button{ background:none; border:0; cursor:pointer; }
 a{ color:inherit; text-decoration:none; }
 ul{ list-style:none; }
+
+/* ---------- Confort au toucher ----------
+   `manipulation` écarte le double-appui pour zoomer, et avec lui le délai
+   de ~300 ms que le navigateur garde en réserve avant de valider un appui.
+   Le voile gris d'iOS est retiré : le retour visuel est donné plus bas,
+   par les états `:active`, qui eux respectent la charte. */
+a, button, .btn, summary, [role="button"]{
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+/* Le rebond de fin de page ne doit pas entraîner la page derrière un
+   panneau défilable. */
+body{ overscroll-behavior-y:none; }
+
+/* Sur un écran tactile, `:hover` ne se déclenche jamais : appuyer sur une
+   carte ne renvoyait rien. On rend l'enfoncement au doigt, avec le même
+   vocabulaire que les boutons — le relief se creuse. */
+@media (hover:none){
+  .card, .rev, .insta, .call, .proof, .infos li{
+    transition:transform .18s var(--ease), box-shadow .18s var(--ease);
+  }
+  .card:active, .rev:active, .insta:active{
+    transform:scale(.985); box-shadow:var(--nm-in);
+  }
+  .proof:active .proof__quote{ box-shadow:var(--nm-in-deep); }
+  .call__num:active{ color:var(--ochre); }
+  .nav__link:active{ color:var(--ochre); }
+  .footer__contact a:active{ color:var(--ochre); }
+}
 ::selection{ background:var(--ochre); color:var(--white); }
 
 /* La page occupe toute la fenêtre. La colonne flex garde le pied de page
@@ -968,13 +997,16 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
     /* `display:flex` manquait : en bloc, `flex-direction`, `justify-content`
        et surtout `gap` étaient inertes — le bouton se retrouvait collé sous
        « Contact », et la liste bloquée en haut du tiroir. */
-    display:flex; overflow-y:auto;
+    /* `contain` : arrivé en bout de tiroir, le geste s'arrête là au lieu
+       de se propager à la page derrière. */
+    display:flex; overflow-y:auto; overscroll-behavior:contain;
     flex-direction:column; align-items:flex-start; justify-content:center;
     /* Le bouton se détache nettement de la liste : à 2 rem il se lisait
        comme un sixième onglet collé sous « Contact ». */
     gap:3.2rem; padding:2.5rem var(--pad);
     background:var(--card); box-shadow:-20px 0 60px -30px rgba(42,35,32,.5);
-    transform:translateX(101%); transition:transform .5s var(--ease-out);
+    transform:translateX(101%); transition:transform .38s var(--ease-out);
+    will-change:transform;
     z-index:950;
   }
   .nav.open{ transform:none; }

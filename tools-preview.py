@@ -14,7 +14,7 @@ PAGES = ['index', 'a-propos', 'le-cabinet', 'massages', 'avis', 'contact']
 
 # ---- polices ----
 faces = []
-for w in (400, 500, 600, 700):
+for w in (400, 500, 600):
     b64 = base64.b64encode((ROOT / f'assets/fonts/figtree-{w}-latin.woff2').read_bytes()).decode()
     faces.append("@font-face{font-family:'Figtree';font-style:normal;font-weight:%d;"
                  "font-display:swap;src:url(data:font/woff2;base64,%s) format('woff2');}" % (w, b64))
