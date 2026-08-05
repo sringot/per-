@@ -30,8 +30,8 @@ assets/
   css/style.css       styles + animations
   js/main.js          interactions
   fonts/              Figtree 300–800 (woff2, sous-ensembles latin)
-  img/logo-mark.png   pictogramme (découpé dans le logo fourni)
-  img/logo-text.png   nom + sous-titre
+  img/logo-mark.png   pictogramme (découpé dans le logo fourni) — le logo
+  img/logo-text.png   nom + sous-titre — plus inséré, tenu à jour au cas où
   img/favicon*.png    favicons (onglet + écran d'accueil iOS)
   img/illus/          19 illustrations plates (SVG)
 tools-illustrations.py  script qui régénère les illustrations
@@ -78,7 +78,6 @@ Le burgundy a été retiré (il tirait vers le prune sur les grands titres).
 | Sauge          | `#A7AE9B` | petits détails, fond de section très dilué   |
 | Jaune pastel   | `#F2E7B3` | dérivés dilués pour les fonds doux           |
 | Socle          | `#F4F1E9` | fond unique, support du relief               |
-| Orange du logo | `#FD5D28` | logo uniquement (relevé sur `logov2.png`)      |
 
 Typographie : **Figtree** pour tout (titres en 600, texte en 400).
 Toutes les valeurs sont des variables CSS en haut de `style.css` — les changer
@@ -196,14 +195,15 @@ n'a qu'une ou deux couleurs, tout le dégradé est dans la transparence : en RGB
 PNG dépense 4 octets par pixel et compresse mal ; indexé, il n'en dépense qu'un.
 Le pictogramme passe de 17,6 à 6,9 Ko, pour un écart d'opacité plafonné à 3/255.
 
-Le nouveau pictogramme est plus rouge (`#FD5D28`) que l'ancien. Le bloc texte,
-calé sur l'orange précédent, est donc **réaccordé** par le même script — seul
-l'orange bouge, le sous-titre gris ne bronche pas, et l'opération est
-idempotente.
+Seule la **silhouette** vient du fichier fourni : le pictogramme est reteinté
+sur l'ocre du site (`--ochre`, `#AC4B28`). L'orange d'origine (`#FD5D28`)
+jurait à côté des boutons, qui sont l'aplat le plus présent de la page.
 
-Le verrou d'origine est **vertical**. Une barre de navigation de 86 px ne peut
-pas l'accueillir à une taille lisible : le pictogramme et le bloc texte sont
-posés **côte à côte**.
+Le site n'insère **que le pictogramme** — pas le nom. `logo-text.png` reste
+généré et réaccordé sur la même teinte, pour qu'on puisse remettre le nom à
+côté du M sans se retrouver avec deux oranges différents ; il n'est
+aujourd'hui affiché nulle part. Le nom de la marque reste porté par le titre
+de l'onglet et la ligne légale du pied de page.
 
 Le favicon garde un fond crème arrondi : le pictogramme seul, tout en
 transparence, se perdrait sur une barre d'onglets sombre. L'ancien

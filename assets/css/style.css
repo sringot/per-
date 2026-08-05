@@ -21,8 +21,8 @@
   --green-d:     #2F3829;
   --yellow:      #F2E7B3;  /* 11-0616 TCX Pastel Yellow*/
   --yellow-soft: #F8EDCD;
-  --brand:       #FD5D28;  /* orange du logo, relevé au pixel sur
-                              le fichier fourni (logov2.png) */
+  /* Le logo n'a plus de couleur à lui : il est reteinté sur --ochre,
+     comme les boutons. */
 
   /* Neutres */
   --card:        #F4F1E9;  /* socle du relief : un ton moyen, sinon les
@@ -255,13 +255,15 @@ p + p{ margin-top:.9rem; }
 
 /* Le logo est inséré tel quel, découpé du fichier fourni : pictogramme
    et bloc texte, posés côte à côte pour tenir dans la barre. */
-.brand{ justify-self:start; display:flex; align-items:center; gap:.7rem; }
+/* Le pictogramme seul tient lieu de logo. Sans le nom à côté, il porte
+   toute l'identité de l'en-tête : il est monté à 46 px pour ne pas se
+   perdre dans une barre de 86 px. */
+.brand{ justify-self:start; display:flex; align-items:center; }
 .brand__mark{
-  width:auto; height:38px; flex:none;
+  width:auto; height:46px; flex:none;
   transition:transform .35s var(--ease-out);
 }
 .brand:hover .brand__mark{ transform:scale(1.06); }
-.brand__text{ width:auto; height:31px; flex:none; }
 
 .nav{ justify-self:center; }
 .nav__list{ position:relative; display:flex; gap:.2rem; }

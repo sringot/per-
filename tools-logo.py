@@ -31,6 +31,10 @@ IMG    = ROOT / 'assets/img'
 
 # Seuil du filet de contour, relevé sur le fichier (voir l'en-tête).
 B_MAX = 32
+# Le pictogramme est reteinté sur l'ocre du site (--ochre). Seule la
+# silhouette vient du fichier fourni ; l'orange d'origine (#FD5D28) jurait
+# à côté des boutons, qui sont l'aplat le plus présent de la page.
+TEINTE_SITE = (172, 75, 40)
 # Est « orange » tout pixel dont le rouge dépasse largement le bleu. Sert à
 # réaccorder le bloc texte sans toucher au sous-titre gris.
 ORANGE_MIN = 80
@@ -106,12 +110,14 @@ def main():
     if not box:
         raise SystemExit('aucun pictogramme détecté — seuil du filet à revoir')
 
-    couleur = teinte(src, m)
+    origine = '#%02X%02X%02X' % teinte(src, m)
+    couleur = TEINTE_SITE
     hexa = '#%02X%02X%02X' % couleur
     m = m.crop(box)
-    print(f'pictogramme : {m.size[0]}×{m.size[1]} px, teinte {hexa}')
+    print(f'pictogramme : {m.size[0]}×{m.size[1]} px, '
+          f'teinte {origine} du fichier → {hexa} (ocre du site)')
 
-    # Aplat de la teinte relevée, découpé par le masque : le filet de
+    # Aplat de la teinte du site, découpé par le masque : le filet de
     # contour s'en va avec le fond qu'il servait à délimiter.
     plein = Image.new('RGBA', m.size, couleur + (255,))
     plein.putalpha(m)
@@ -124,9 +130,11 @@ def main():
     print(f'  logo-mark.png     {mark.size[0]}×{mark.size[1]}  {poids("logo-mark.png")}')
 
     # ---- bloc texte réaccordé ----
-    # Le nom était calé sur l'orange de l'ancien logo ; à côté du nouveau M,
-    # plus rouge, l'écart se voyait. Seul l'orange bouge, le sous-titre gris
-    # ne bronche pas. L'opération est idempotente.
+    # Le site n'insère plus que le pictogramme : ce fichier n'est plus
+    # affiché nulle part. Il reste tenu à jour pour qu'on puisse remettre
+    # le nom à côté du M sans se retrouver avec deux oranges différents.
+    # Seul l'orange bouge, le sous-titre gris ne bronche pas ; l'opération
+    # est idempotente.
     txt = Image.open(IMG / 'logo-text.png').convert('RGBA')
     px = [(couleur + (a,)) if (r - b) > ORANGE_MIN else (r, g, b, a)
           for r, g, b, a in txt.get_flattened_data()]
