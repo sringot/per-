@@ -362,23 +362,47 @@
     /* --- Menu mobile --- */
     const burger = $('#burger'), nav = $('#nav');
     if (burger && nav) {
-      const closeNav = () => {
-        nav.classList.remove('open');
-        burger.classList.remove('open');
-        burger.setAttribute('aria-expanded', 'false');
-        burger.setAttribute('aria-label', 'Ouvrir le menu');
-        document.body.classList.remove('nav-open');
-      };
-      burger.addEventListener('click', () => {
-        const open = nav.classList.toggle('open');
+      // Le fond est figé en passant <body> en position fixe, décalé de la
+      // hauteur déjà défilée. `overflow:hidden` ne suffisait pas : c'est
+      // <html> qui défile. Il faut donc mémoriser la position et la rendre.
+      let scrollGele = 0;
+
+      const setNav = open => {
+        nav.classList.toggle('open', open);
         burger.classList.toggle('open', open);
         burger.setAttribute('aria-expanded', String(open));
         burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
-        document.body.classList.toggle('nav-open', open);
-      });
+
+        if (open) {
+          scrollGele = window.scrollY;
+          document.body.style.top = `-${scrollGele}px`;
+          document.body.classList.add('nav-open');
+        } else if (document.body.classList.contains('nav-open')) {
+          document.body.classList.remove('nav-open');
+          document.body.style.top = '';
+          // `instant` explicitement : `scroll-behavior:smooth` s'applique
+          // aussi aux défilements du script, et la page serait revenue à sa
+          // position en glissant, à vue.
+          window.scrollTo({ top: scrollGele, behavior: 'instant' });
+        }
+      };
+      const closeNav = () => setNav(false);
+
+      burger.addEventListener('click', () => setNav(!nav.classList.contains('open')));
       $$('.nav a').forEach(a => a.addEventListener('click', closeNav));
       document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
-      window.addEventListener('resize', () => { if (window.innerWidth > 860) closeNav(); });
+
+      // Le voile est un pseudo-élément de <body> : un appui dessus vise
+      // donc <body>. C'est le geste attendu pour refermer un tiroir.
+      document.addEventListener('click', e => {
+        if (!document.body.classList.contains('nav-open')) return;
+        if (e.target.closest('#nav, #burger')) return;
+        closeNav();
+      });
+
+      // Le tiroir n'existe qu'en dessous de 1000 px — le seuil du CSS.
+      // À 860, le menu se refermait tout seul entre 861 et 1000 px.
+      window.addEventListener('resize', () => { if (window.innerWidth > 1000) closeNav(); });
     }
 
     /* --- Pastille de navigation --- */

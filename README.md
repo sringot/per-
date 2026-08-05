@@ -125,6 +125,30 @@ Si de vraies photos arrivent plus tard, il suffit de remplacer le `src` des
 balises `<img>` dans `index.html` : la mise en page ne bouge pas, `.ill img`
 applique déjà `object-fit: cover`.
 
+## Le menu mobile
+
+En dessous de 1000 px, la navigation devient un tiroir latéral. Deux pièges
+s'y sont cachés longtemps — les noter évite de les réintroduire :
+
+**Le fond doit être figé en passant `<body>` en position fixe**, pas avec
+`overflow:hidden`. C'est `<html>` qui défile, pas `<body>` : la règle ne
+verrouillait rien. Pire, elle faisait de `<body>` un conteneur de défilement,
+et l'en-tête `sticky` s'y accrochait — il partait donc hors de l'écran avec le
+contenu, emportant le bouton qui sert à refermer le menu. Le JS mémorise la
+position défilée, la pose en `top` négatif, et la restitue à la fermeture
+(en `behavior:'instant'`, sinon `scroll-behavior:smooth` la fait glisser à vue).
+
+**`.page` ne doit pas rester un contexte d'empilement.** Son animation
+d'entrée était en `animation-fill-mode: both`, ce qui garde l'animation
+d'opacité appliquée une fois finie — et une opacité animée crée un contexte
+d'empilement permanent. L'en-tête et le tiroir s'y trouvaient enfermés au
+niveau 0, donc **sous** le voile du menu (`z-index:940`), quel que soit le
+`z-index` du header : on ne fait pas sortir un descendant du contexte de son
+ancêtre. `backwards` pose l'état de départ avant l'animation puis rend la main.
+
+L'ordre d'empilement attendu, une fois cela réglé : voile 940 < tiroir 950 <
+en-tête et bouton 960. Un appui sur le voile referme le tiroir.
+
 ## Le passage d'une page à l'autre
 
 Le site est multi-pages : chaque onglet est un vrai chargement. Trois délais

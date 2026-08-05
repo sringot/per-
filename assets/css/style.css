@@ -111,7 +111,12 @@ html.js-smooth{ scroll-behavior:auto; }
    avec un déplacement, il se lisait comme un temps de chargement — alors
    que la page était déjà là. Animation CSS pure : si le JS échoue, la
    page reste visible au lieu de disparaître. */
-.page{ animation:pageIn .2s linear both; }
+/* `backwards` et non `both` : avec `both`, l'animation d'opacité reste
+   appliquée une fois finie, ce qui fait de `.page` un contexte d'empilement
+   permanent — l'en-tête et le tiroir s'y trouvaient enfermés, sous le voile
+   du menu, et le bouton de fermeture devenait injoignable. `backwards` pose
+   l'état de départ avant l'animation, puis rend la main. */
+.page{ animation:pageIn .2s linear backwards; }
 @keyframes pageIn{ from{ opacity:0 } to{ opacity:1 } }
 
 /* ---------- EN-TÊTE DE PAGE (pages intérieures) ---------- */
@@ -976,7 +981,14 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   .nav.open .nav__list li:nth-child(3){ animation-delay:.24s }
   .nav.open .nav__list li:nth-child(4){ animation-delay:.30s }
   .nav.open .nav__list li:nth-child(5){ animation-delay:.36s }
-  body.nav-open{ overflow:hidden; }
+  /* Verrouillage du fond pendant que le tiroir est ouvert.
+     `overflow:hidden` seul ne verrouillait rien : c'est <html> qui défile,
+     pas <body>. Pire, il faisait de <body> un conteneur de défilement —
+     l'en-tête `sticky` s'y accrochait et partait donc hors de l'écran avec
+     le contenu, emportant le bouton qui sert à refermer le menu.
+     Le décalage est posé en `top` par le JS, qui le restitue à la
+     fermeture. */
+  body.nav-open{ position:fixed; left:0; right:0; width:100%; }
   body.nav-open::after{
     content:''; position:fixed; inset:0; z-index:940;
     background:rgba(42,35,32,.45); opacity:0; animation:fadeIn .35s forwards;
