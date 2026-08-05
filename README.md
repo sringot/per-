@@ -30,11 +30,12 @@ assets/
   css/style.css       styles + animations
   js/main.js          interactions
   fonts/              Figtree 300–800 (woff2, sous-ensembles latin)
-  img/logo.svg        logo
-  img/favicon.svg     favicon
+  img/logo-mark.png   pictogramme (découpé dans le logo fourni)
+  img/logo-text.png   nom + sous-titre
+  img/favicon*.png    favicons (onglet + écran d'accueil iOS)
   img/illus/          19 illustrations plates (SVG)
 tools-illustrations.py  script qui régénère les illustrations
-tools-logo.py           trace le pictogramme et mesure l'écart avec la référence
+tools-logo.py           découpe le pictogramme de logov2.png et fait les favicons
 tools-build-pages.py    échafaudage ayant produit les 6 pages (déjà joué)
 ```
 
@@ -77,7 +78,7 @@ Le burgundy a été retiré (il tirait vers le prune sur les grands titres).
 | Sauge          | `#A7AE9B` | petits détails, fond de section très dilué   |
 | Jaune pastel   | `#F2E7B3` | dérivés dilués pour les fonds doux           |
 | Socle          | `#F4F1E9` | fond unique, support du relief               |
-| Orange du logo | `#EC8448` | logo uniquement (relevé sur le fichier fourni) |
+| Orange du logo | `#FD5D28` | logo uniquement (relevé sur `logov2.png`)      |
 
 Typographie : **Figtree** pour tout (titres en 600, texte en 400).
 Toutes les valeurs sont des variables CSS en haut de `style.css` — les changer
@@ -160,27 +161,53 @@ l'information lisible.
 
 ## Le logo
 
-Le logo fourni (`assets/img/logo-source.png`, 1024 × 1536, fond transparent) est
-**inséré tel quel**, pas redessiné. Il est simplement découpé et optimisé pour
-le web :
+Le pictogramme vient de `logov2.png` (1024 × 1536). Il est **découpé dans le
+fichier fourni**, jamais redessiné.
 
-| Fichier           | Contenu                      | Poids   |
-| ----------------- | ---------------------------- | ------- |
-| `logo-mark.png`   | pictogramme seul             | 9,5 Ko  |
-| `logo-text.png`   | nom + sous-titre             | 9,8 Ko  |
-| `logo-full.png`   | verrou complet, à la verticale | 20,5 Ko |
+Ce fichier a un **fond opaque** : le M orange est posé sur un halo de la même
+couleur. Un détourage par couleur ne marche donc pas — juste au contact du M,
+le fond est aussi orange que lui :
 
-Le fichier d'origine pèse 2 Mo : recadrage sur le contenu, redimensionnement et
-quantification à 64 couleurs le ramènent à moins de 10 Ko sans perte visible —
-l'image n'a que deux teintes plus l'anticrénelage.
+| Zone              | Couleur         |
+| ----------------- | --------------- |
+| intérieur du M    | `(254, 93, 40)` |
+| halo au contact   | `(250, 101, 48)` |
+| fond lointain     | `(147, 113, 77)` |
 
-Le verrou d'origine est **vertical** (pictogramme au-dessus du nom). Une barre
-de navigation de 86 px ne peut pas l'accueillir à une taille lisible : le
-pictogramme et le bloc texte sont donc découpés puis posés **côte à côte**. Les
-pixels restent ceux du fichier fourni.
+La seule frontière est le **filet plus sombre** qui cerne le pictogramme, lui
+bien tranché : `(255, 69, 15)`, un bleu deux fois plus bas que partout ailleurs.
+`tools-logo.py` s'en sert comme d'une digue — un remplissage lancé depuis un
+coin de l'image inonde tout l'extérieur sans pouvoir la franchir, et ce que le
+remplissage n'atteint pas est le pictogramme.
 
-`tools-logo.py` (ancien tracé vectoriel) n'est plus utilisé par le site ; il est
-conservé pour mémoire.
+```bash
+python3 tools-logo.py
+```
+
+| Fichier             | Contenu                        | Poids   |
+| ------------------- | ------------------------------ | ------- |
+| `logo-mark.png`     | pictogramme seul, 281 × 300    | 6,9 Ko  |
+| `logo-text.png`     | nom + sous-titre, 460 × 97     | 8,7 Ko  |
+| `favicon.png`       | onglet, 32 × 32                | 1,4 Ko  |
+| `favicon-180.png`   | écran d'accueil iOS, 180 × 180 | 9,7 Ko  |
+
+Les fichiers sont écrits en PNG **à palette** (4 teintes × 64 opacités). Le logo
+n'a qu'une ou deux couleurs, tout le dégradé est dans la transparence : en RGBA,
+PNG dépense 4 octets par pixel et compresse mal ; indexé, il n'en dépense qu'un.
+Le pictogramme passe de 17,6 à 6,9 Ko, pour un écart d'opacité plafonné à 3/255.
+
+Le nouveau pictogramme est plus rouge (`#FD5D28`) que l'ancien. Le bloc texte,
+calé sur l'orange précédent, est donc **réaccordé** par le même script — seul
+l'orange bouge, le sous-titre gris ne bronche pas, et l'opération est
+idempotente.
+
+Le verrou d'origine est **vertical**. Une barre de navigation de 86 px ne peut
+pas l'accueillir à une taille lisible : le pictogramme et le bloc texte sont
+posés **côte à côte**.
+
+Le favicon garde un fond crème arrondi : le pictogramme seul, tout en
+transparence, se perdrait sur une barre d'onglets sombre. L'ancien
+`favicon.svg` était un *tracé* du logo, pas le logo — il est supprimé.
 
 ## À compléter
 
