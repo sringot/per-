@@ -143,21 +143,27 @@ l'information lisible.
 
 ## Le logo
 
-Le logo de référence fourni par la cliente est dans
-`assets/img/logo-reference.png`. Il n'est pas utilisé tel quel : c'est une
-capture d'écran de 149 × 184 px, qui serait floue sur écran haute densité et
-traînerait son fond crème. Le pictogramme est donc **redessiné en SVG**
-(`assets/img/logo.svg`, et inline dans les pages).
+Le logo fourni (`assets/img/logo-source.png`, 1024 × 1536, fond transparent) est
+**inséré tel quel**, pas redessiné. Il est simplement découpé et optimisé pour
+le web :
 
-Le tracé n'est pas fait à l'œil : `tools-logo.py` relève la silhouette de la
-référence ligne par ligne, en déduit les coordonnées, puis **mesure le
-recouvrement** entre le rendu et l'original (92 % actuellement — le reste est
-le flou de la capture). Relancer le script après toute retouche du tracé.
+| Fichier           | Contenu                      | Poids   |
+| ----------------- | ---------------------------- | ------- |
+| `logo-mark.png`   | pictogramme seul             | 9,5 Ko  |
+| `logo-text.png`   | nom + sous-titre             | 9,8 Ko  |
+| `logo-full.png`   | verrou complet, à la verticale | 20,5 Ko |
 
-Couleurs, relevées au pixel :
+Le fichier d'origine pèse 2 Mo : recadrage sur le contenu, redimensionnement et
+quantification à 64 couleurs le ramènent à moins de 10 Ko sans perte visible —
+l'image n'a que deux teintes plus l'anticrénelage.
 
-- pictogramme et nom « MARIE MASSAGE » : `#EC8448` (variable `--brand`)
-- sous-titre « Masseuse bien-être » : gris, comme dans l'original
+Le verrou d'origine est **vertical** (pictogramme au-dessus du nom). Une barre
+de navigation de 86 px ne peut pas l'accueillir à une taille lisible : le
+pictogramme et le bloc texte sont donc découpés puis posés **côte à côte**. Les
+pixels restent ceux du fichier fourni.
+
+`tools-logo.py` (ancien tracé vectoriel) n'est plus utilisé par le site ; il est
+conservé pour mémoire.
 
 ## À compléter
 

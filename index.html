@@ -18,7 +18,7 @@
 <!-- ============ PRELOADER (accueil uniquement) ============ -->
 <div class="preloader" id="preloader">
   <div class="preloader__logo">
-    <svg viewBox="0 0 100 103.2" aria-hidden="true"><circle cx="19.4" cy="12.9" r="13.7"/><circle cx="80.0" cy="12.9" r="12.9"/><path d="M 1.0 98.4 L 5.2 38.7 Q 5.3 33.2 11.0 33.2 L 30.6 33.2 Q 35.8 33.5 37.4 37.1 C 39.7 41.1 42.9 46.0 44.5 54.0 C 45.5 58.9 46.1 62.1 47.1 64.5 Q 49.0 68.5 50.6 64.5 C 51.6 62.1 52.6 58.9 54.2 54.0 C 55.8 46.0 58.4 41.1 60.3 37.1 Q 61.0 33.5 66.9 33.2 L 90.0 33.2 Q 95.6 33.2 95.8 38.7 L 99.5 98.4 Q 99.8 102.6 95.5 102.6 L 74.7 102.6 Q 70.3 102.6 70.3 97.6 L 70.6 67.7 Q 67.6 61.3 64.8 67.7 L 58.4 97.6 Q 57.9 102.6 53.5 102.6 L 44.8 102.6 Q 40.5 102.6 40.5 97.6 L 32.6 67.7 Q 30.0 61.3 27.6 67.7 L 28.4 97.6 Q 28.4 102.6 24.0 102.6 L 5.3 102.6 Q 0.6 102.6 1.0 98.4 Z"/></svg>
+    <img src="assets/img/logo-mark.png" alt="" width="300" height="305">
   </div>
   <span class="preloader__bar"><i></i></span>
 </div>
@@ -32,13 +32,8 @@
     <div class="shell header__inner">
 
       <a href="index.html" class="brand" aria-label="Marie Massage — accueil">
-        <span class="brand__mark">
-          <svg viewBox="0 0 100 103.2" aria-hidden="true"><circle cx="19.4" cy="12.9" r="13.7"/><circle cx="80.0" cy="12.9" r="12.9"/><path d="M 1.0 98.4 L 5.2 38.7 Q 5.3 33.2 11.0 33.2 L 30.6 33.2 Q 35.8 33.5 37.4 37.1 C 39.7 41.1 42.9 46.0 44.5 54.0 C 45.5 58.9 46.1 62.1 47.1 64.5 Q 49.0 68.5 50.6 64.5 C 51.6 62.1 52.6 58.9 54.2 54.0 C 55.8 46.0 58.4 41.1 60.3 37.1 Q 61.0 33.5 66.9 33.2 L 90.0 33.2 Q 95.6 33.2 95.8 38.7 L 99.5 98.4 Q 99.8 102.6 95.5 102.6 L 74.7 102.6 Q 70.3 102.6 70.3 97.6 L 70.6 67.7 Q 67.6 61.3 64.8 67.7 L 58.4 97.6 Q 57.9 102.6 53.5 102.6 L 44.8 102.6 Q 40.5 102.6 40.5 97.6 L 32.6 67.7 Q 30.0 61.3 27.6 67.7 L 28.4 97.6 Q 28.4 102.6 24.0 102.6 L 5.3 102.6 Q 0.6 102.6 1.0 98.4 Z"/></svg>
-        </span>
-        <span class="brand__text">
-          <strong>Marie Massage</strong>
-          <em>Masseuse bien-être</em>
-        </span>
+        <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="300" height="305">
+          <img class="brand__text" src="assets/img/logo-text.png" alt="" width="460" height="97">
       </a>
 
       <nav class="nav" id="nav" aria-label="Navigation principale">
@@ -123,11 +118,26 @@
     </div>
 
     <a href="a-propos.html" class="cue" id="cue" aria-label="Descendre">
-      <span class="cue__line"><i></i></span>
+      <span class="cue__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13m0 0-6-6m6 6 6-6"/></svg></span>
       <span class="cue__txt">Découvrir</span>
     </a>
   </section>
 
+
+  <!-- ---------- AVIS EN ROTATION ---------- -->
+  <aside class="ticker" aria-label="Avis de clientes">
+    <a class="ticker__link" href="avis.html">
+      <span class="ticker__stars" aria-hidden="true">★★★★★</span>
+      <div class="ticker__stage" id="tickerStage">
+        <p class="ticker__item is-on">« Lorem ipsum dolor sit amet, consectetur adipiscing elit. »<i>Prénom N. · Kobido</i></p>
+        <p class="ticker__item">« Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. »<i>Prénom N. · Relaxation</i></p>
+        <p class="ticker__item">« Duis aute irure dolor in reprehenderit in voluptate velit esse. »<i>Prénom N. · Drainage</i></p>
+        <p class="ticker__item">« Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia. »<i>Prénom N. · Madérothérapie</i></p>
+        <p class="ticker__item">« Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci. »<i>Prénom N. · Dos &amp; nuque</i></p>
+      </div>
+      <span class="ticker__more">Tous les avis</span>
+    </a>
+  </aside>
 
 </main>
 
@@ -135,20 +145,10 @@
   <footer class="footer">
     <div class="shell footer__inner">
       <a href="index.html" class="brand brand--footer">
-        <span class="brand__mark">
-          <svg viewBox="0 0 100 103.2" aria-hidden="true"><circle cx="19.4" cy="12.9" r="13.7"/><circle cx="80.0" cy="12.9" r="12.9"/><path d="M 1.0 98.4 L 5.2 38.7 Q 5.3 33.2 11.0 33.2 L 30.6 33.2 Q 35.8 33.5 37.4 37.1 C 39.7 41.1 42.9 46.0 44.5 54.0 C 45.5 58.9 46.1 62.1 47.1 64.5 Q 49.0 68.5 50.6 64.5 C 51.6 62.1 52.6 58.9 54.2 54.0 C 55.8 46.0 58.4 41.1 60.3 37.1 Q 61.0 33.5 66.9 33.2 L 90.0 33.2 Q 95.6 33.2 95.8 38.7 L 99.5 98.4 Q 99.8 102.6 95.5 102.6 L 74.7 102.6 Q 70.3 102.6 70.3 97.6 L 70.6 67.7 Q 67.6 61.3 64.8 67.7 L 58.4 97.6 Q 57.9 102.6 53.5 102.6 L 44.8 102.6 Q 40.5 102.6 40.5 97.6 L 32.6 67.7 Q 30.0 61.3 27.6 67.7 L 28.4 97.6 Q 28.4 102.6 24.0 102.6 L 5.3 102.6 Q 0.6 102.6 1.0 98.4 Z"/></svg>
-        </span>
-        <span class="brand__text"><strong>Marie Massage</strong><em>Masseuse bien-être</em></span>
+        <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="300" height="305">
+          <img class="brand__text" src="assets/img/logo-text.png" alt="" width="460" height="97">
       </a>
 
-      <nav class="footer__nav" aria-label="Navigation pied de page">
-        <a href="index.html" aria-current="page">Accueil</a>
-        <a href="a-propos.html">À propos</a>
-        <a href="le-cabinet.html">Le cabinet</a>
-        <a href="massages.html">Massages</a>
-        <a href="avis.html">Avis</a>
-        <a href="contact.html">Contact</a>
-      </nav>
 
       <p class="footer__legal">
         © <span id="year">2026</span> Marie Massage · Voisins-le-Bretonneux<br>

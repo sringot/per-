@@ -24,13 +24,8 @@
     <div class="shell header__inner">
 
       <a href="index.html" class="brand" aria-label="Marie Massage — accueil">
-        <span class="brand__mark">
-          <svg viewBox="0 0 100 103.2" aria-hidden="true"><circle cx="19.4" cy="12.9" r="13.7"/><circle cx="80.0" cy="12.9" r="12.9"/><path d="M 1.0 98.4 L 5.2 38.7 Q 5.3 33.2 11.0 33.2 L 30.6 33.2 Q 35.8 33.5 37.4 37.1 C 39.7 41.1 42.9 46.0 44.5 54.0 C 45.5 58.9 46.1 62.1 47.1 64.5 Q 49.0 68.5 50.6 64.5 C 51.6 62.1 52.6 58.9 54.2 54.0 C 55.8 46.0 58.4 41.1 60.3 37.1 Q 61.0 33.5 66.9 33.2 L 90.0 33.2 Q 95.6 33.2 95.8 38.7 L 99.5 98.4 Q 99.8 102.6 95.5 102.6 L 74.7 102.6 Q 70.3 102.6 70.3 97.6 L 70.6 67.7 Q 67.6 61.3 64.8 67.7 L 58.4 97.6 Q 57.9 102.6 53.5 102.6 L 44.8 102.6 Q 40.5 102.6 40.5 97.6 L 32.6 67.7 Q 30.0 61.3 27.6 67.7 L 28.4 97.6 Q 28.4 102.6 24.0 102.6 L 5.3 102.6 Q 0.6 102.6 1.0 98.4 Z"/></svg>
-        </span>
-        <span class="brand__text">
-          <strong>Marie Massage</strong>
-          <em>Masseuse bien-être</em>
-        </span>
+        <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="300" height="305">
+          <img class="brand__text" src="assets/img/logo-text.png" alt="" width="460" height="97">
       </a>
 
       <nav class="nav" id="nav" aria-label="Navigation principale">
@@ -69,53 +64,84 @@
     </div>
   </header>
 
-  <section class="section section--reviews" id="avis">
+  <section class="section" id="avis">
     <div class="shell">
 
-      <!-- TODO : remplacer par de vrais témoignages (textes d'exemple) -->
-      <div class="reviews" data-reveal="up">
-        <div class="reviews__viewport">
-          <ul class="reviews__track" id="revTrack">
-            <li class="review">
-              <span class="review__stars" aria-label="5 sur 5">★★★★★</span>
-              <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci vitae dictum lorem justo.</blockquote>
-              <footer><span class="review__av ill"><img src="assets/img/illus/avatar-1.svg" alt=""></span><b>Prénom N.</b><i>Kobido</i></footer>
-            </li>
-            <li class="review">
-              <span class="review__stars" aria-label="5 sur 5">★★★★★</span>
-              <blockquote>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</blockquote>
-              <footer><span class="review__av ill"><img src="assets/img/illus/avatar-2.svg" alt=""></span><b>Prénom N.</b><i>Relaxation</i></footer>
-            </li>
-            <li class="review">
-              <span class="review__stars" aria-label="5 sur 5">★★★★★</span>
-              <blockquote>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint.</blockquote>
-              <footer><span class="review__av ill"><img src="assets/img/illus/avatar-3.svg" alt=""></span><b>Prénom N.</b><i>Drainage</i></footer>
-            </li>
-            <li class="review">
-              <span class="review__stars" aria-label="5 sur 5">★★★★★</span>
-              <blockquote>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</blockquote>
-              <footer><span class="review__av ill"><img src="assets/img/illus/avatar-4.svg" alt=""></span><b>Prénom N.</b><i>Madérothérapie</i></footer>
-            </li>
-            <li class="review">
-              <span class="review__stars" aria-label="5 sur 5">★★★★★</span>
-              <blockquote>Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci vitae dictum lorem justo eget massa vitae.</blockquote>
-              <footer><span class="review__av ill"><img src="assets/img/illus/avatar-5.svg" alt=""></span><b>Prénom N.</b><i>Dos &amp; nuque</i></footer>
-            </li>
-          </ul>
+      <div class="rev-sum" data-reveal="up">
+        <div class="rev-sum__note">
+          <b><span class="count" data-count="5" data-decimals="1">0</span></b>
+          <span class="rev-sum__stars" aria-hidden="true">★★★★★</span>
+          <small>note moyenne</small>
         </div>
-
-        <div class="reviews__ctrl">
-          <div class="reviews__dots" id="revDots" role="tablist" aria-label="Choisir un avis"></div>
-          <div class="reviews__arrows">
-            <button class="reviews__nav" id="revPrev" aria-label="Avis précédent">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5m0 0 6-6m-6 6 6 6"/></svg>
-            </button>
-            <button class="reviews__nav" id="revNext" aria-label="Avis suivant">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-6-6m6 6-6 6"/></svg>
-            </button>
-          </div>
+        <div class="rev-sum__sep" aria-hidden="true"></div>
+        <div class="rev-sum__note">
+          <b><span class="count" data-count="450" data-suffix="+">0</span></b>
+          <small>clientes accompagnées</small>
+        </div>
+        <div class="rev-sum__sep" aria-hidden="true"></div>
+        <div class="rev-sum__note">
+          <b><span class="count" data-count="6">0</span></b>
+          <small>années d'expérience</small>
         </div>
       </div>
+
+      <!-- TODO : remplacer par de vrais témoignages (textes d'exemple) -->
+      <div class="rev-grid">
+        <figure class="rev" data-reveal="up" style="--d:0.00s">
+          <span class="rev__stars" aria-label="5 sur 5">★★★★★</span>
+          <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci vitae dictum lorem justo eget massa.</blockquote>
+          <figcaption>
+            <span class="rev__av ill"><img src="assets/img/illus/avatar-1.svg" alt=""></span>
+            <b>Prénom N.</b><i>Kobido</i>
+          </figcaption>
+        </figure>
+        <figure class="rev" data-reveal="up" style="--d:0.06s">
+          <span class="rev__stars" aria-label="5 sur 5">★★★★★</span>
+          <blockquote>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</blockquote>
+          <figcaption>
+            <span class="rev__av ill"><img src="assets/img/illus/avatar-2.svg" alt=""></span>
+            <b>Prénom N.</b><i>Relaxation</i>
+          </figcaption>
+        </figure>
+        <figure class="rev" data-reveal="up" style="--d:0.12s">
+          <span class="rev__stars" aria-label="5 sur 5">★★★★★</span>
+          <blockquote>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat.</blockquote>
+          <figcaption>
+            <span class="rev__av ill"><img src="assets/img/illus/avatar-3.svg" alt=""></span>
+            <b>Prénom N.</b><i>Drainage lymphatique</i>
+          </figcaption>
+        </figure>
+        <figure class="rev" data-reveal="up" style="--d:0.18s">
+          <span class="rev__stars" aria-label="5 sur 5">★★★★★</span>
+          <blockquote>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</blockquote>
+          <figcaption>
+            <span class="rev__av ill"><img src="assets/img/illus/avatar-4.svg" alt=""></span>
+            <b>Prénom N.</b><i>Madérothérapie</i>
+          </figcaption>
+        </figure>
+        <figure class="rev" data-reveal="up" style="--d:0.24s">
+          <span class="rev__stars" aria-label="5 sur 5">★★★★★</span>
+          <blockquote>Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci vitae dictum lorem justo eget massa vitae.</blockquote>
+          <figcaption>
+            <span class="rev__av ill"><img src="assets/img/illus/avatar-5.svg" alt=""></span>
+            <b>Prénom N.</b><i>Dos &amp; nuque</i>
+          </figcaption>
+        </figure>
+        <figure class="rev" data-reveal="up" style="--d:0.30s">
+          <span class="rev__stars" aria-label="5 sur 5">★★★★★</span>
+          <blockquote>Nunc velit tincidunt orci vitae dictum lorem justo eget massa. Sed do eiusmod tempor incididunt ut labore.</blockquote>
+          <figcaption>
+            <span class="rev__av ill"><img src="assets/img/illus/avatar-1.svg" alt=""></span>
+            <b>Prénom N.</b><i>Massage bébé</i>
+          </figcaption>
+        </figure>
+      </div>
+
+      <aside class="rev-cta" data-reveal="up">
+        <h2 class="h3">À votre tour&nbsp;?</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <a href="contact.html" class="btn btn--primary magnetic"><span>Prendre rendez-vous</span></a>
+      </aside>
     </div>
   </section>
 
@@ -125,20 +151,10 @@
   <footer class="footer">
     <div class="shell footer__inner">
       <a href="index.html" class="brand brand--footer">
-        <span class="brand__mark">
-          <svg viewBox="0 0 100 103.2" aria-hidden="true"><circle cx="19.4" cy="12.9" r="13.7"/><circle cx="80.0" cy="12.9" r="12.9"/><path d="M 1.0 98.4 L 5.2 38.7 Q 5.3 33.2 11.0 33.2 L 30.6 33.2 Q 35.8 33.5 37.4 37.1 C 39.7 41.1 42.9 46.0 44.5 54.0 C 45.5 58.9 46.1 62.1 47.1 64.5 Q 49.0 68.5 50.6 64.5 C 51.6 62.1 52.6 58.9 54.2 54.0 C 55.8 46.0 58.4 41.1 60.3 37.1 Q 61.0 33.5 66.9 33.2 L 90.0 33.2 Q 95.6 33.2 95.8 38.7 L 99.5 98.4 Q 99.8 102.6 95.5 102.6 L 74.7 102.6 Q 70.3 102.6 70.3 97.6 L 70.6 67.7 Q 67.6 61.3 64.8 67.7 L 58.4 97.6 Q 57.9 102.6 53.5 102.6 L 44.8 102.6 Q 40.5 102.6 40.5 97.6 L 32.6 67.7 Q 30.0 61.3 27.6 67.7 L 28.4 97.6 Q 28.4 102.6 24.0 102.6 L 5.3 102.6 Q 0.6 102.6 1.0 98.4 Z"/></svg>
-        </span>
-        <span class="brand__text"><strong>Marie Massage</strong><em>Masseuse bien-être</em></span>
+        <img class="brand__mark" src="assets/img/logo-mark.png" alt="" width="300" height="305">
+          <img class="brand__text" src="assets/img/logo-text.png" alt="" width="460" height="97">
       </a>
 
-      <nav class="footer__nav" aria-label="Navigation pied de page">
-        <a href="index.html">Accueil</a>
-        <a href="a-propos.html">À propos</a>
-        <a href="le-cabinet.html">Le cabinet</a>
-        <a href="massages.html">Massages</a>
-        <a href="avis.html" aria-current="page">Avis</a>
-        <a href="contact.html">Contact</a>
-      </nav>
 
       <p class="footer__legal">
         © <span id="year">2026</span> Marie Massage · Voisins-le-Bretonneux<br>

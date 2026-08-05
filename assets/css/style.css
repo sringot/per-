@@ -123,11 +123,8 @@ body.leaving .page{
   padding:clamp(3rem,7vw,5.5rem) 0 clamp(2rem,4vw,3rem);
 }
 .page-head__aura{
-  position:absolute; top:-46%; right:-8%; width:44vw; height:44vw;
-  max-width:560px; max-height:560px; border-radius:50%; pointer-events:none;
-  background:radial-gradient(circle at 40% 40%,rgba(242,231,179,.9),rgba(242,231,179,0) 70%);
-  filter:blur(50px);
-  animation:drift1 24s ease-in-out infinite;
+  position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(58% 78% at 84% 10%,rgba(242,231,179,.55) 0%,rgba(242,231,179,.2) 44%,transparent 74%);
 }
 .page-head .shell{ position:relative; z-index:1; }
 .page-head__title{
@@ -173,12 +170,12 @@ p + p{ margin-top:.9rem; }
 
 /* ---------- 4. BOUTONS ---------- */
 .btn{
-  --bg:var(--ochre); --fg:var(--white); --bd:transparent; --hov:var(--green);
+  --bg:var(--ochre); --fg:var(--white); --hov:var(--ochre-d);
   position:relative; isolation:isolate; overflow:hidden;
   display:inline-flex; align-items:center; justify-content:center; gap:.6rem;
   padding:.88rem 1.7rem; border-radius:var(--pill);
   background:var(--bg); color:var(--fg);
-  border:1.5px solid var(--bd);
+  border:0;
   font-size:.9rem; font-weight:500;
   cursor:pointer; white-space:nowrap;
   transition:color .25s var(--ease), border-color .25s var(--ease),
@@ -195,12 +192,9 @@ p + p{ margin-top:.9rem; }
 .btn:hover::before{ transform:translateY(0); }
 /* Enfoncé au clic : le relief s'inverse, c'est tout le principe. */
 .btn:active{ transform:translateY(1px); box-shadow:var(--nm-in); }
-.btn--outline{
-  --bg:var(--surface); --fg:var(--green); --bd:transparent;
-  box-shadow:var(--nm-out);
-}
-.btn--dark{ --bg:var(--green); --hov:var(--ochre); }
-.btn--light{ --bg:var(--white); --fg:var(--green); --hov:var(--green); }
+.btn--outline{ --bg:var(--surface); --fg:var(--green); --hov:var(--green); box-shadow:var(--nm-out); }
+.btn--dark{ --bg:var(--green); --hov:var(--green-d); }
+.btn--light{ --bg:var(--white); --fg:var(--green); --hov:var(--green-d); }
 .btn--lg{ padding:1.05rem 2.1rem; font-size:.95rem; }
 .btn--block{ width:100%; }
 .btn[disabled]{ opacity:.6; pointer-events:none; }
@@ -213,8 +207,8 @@ p + p{ margin-top:.9rem; }
   transition:opacity .6s var(--ease), visibility .6s;
 }
 .preloader.done{ opacity:0; visibility:hidden; }
-.preloader__logo{ width:60px; color:var(--brand); animation:beat 1.6s var(--ease) infinite; }
-.preloader__logo svg{ fill:currentColor; }
+.preloader__logo{ width:58px; animation:beat 1.6s var(--ease) infinite; }
+.preloader__logo img{ width:100%; height:auto; }
 @keyframes beat{ 0%,100%{ transform:scale(1); opacity:.85 } 50%{ transform:scale(1.12); opacity:1 } }
 .preloader__bar{
   display:block; width:140px; height:2px;
@@ -259,26 +253,15 @@ p + p{ margin-top:.9rem; }
   align-items:center; gap:1.5rem; height:var(--header-h);
 }
 
-.brand{ justify-self:start; display:flex; align-items:center; gap:.68rem; }
+/* Le logo est inséré tel quel, découpé du fichier fourni : pictogramme
+   et bloc texte, posés côte à côte pour tenir dans la barre. */
+.brand{ justify-self:start; display:flex; align-items:center; gap:.7rem; }
 .brand__mark{
-  width:38px; flex:none; color:var(--brand);
-  transition:transform .6s var(--ease-out);
+  width:auto; height:38px; flex:none;
+  transition:transform .35s var(--ease-out);
 }
-.brand__mark svg{ width:100%; height:auto; fill:currentColor; }
-.brand:hover .brand__mark{ transform:rotate(-7deg) scale(1.09); }
-.brand__text{ display:flex; flex-direction:column; gap:.12rem; line-height:1; }
-.brand__text strong,.brand__text em{ white-space:nowrap; }
-.brand__text strong{
-  font-weight:700; font-size:.82rem; letter-spacing:.15em;
-  text-transform:uppercase; color:var(--brand);
-}
-/* Le sous-titre est gris dans le logo d'origine, pas orange —
-   ce qui tombe bien, c'est la seule ligne du bloc à devoir rester
-   lisible (un nom de marque, lui, échappe aux règles de contraste). */
-.brand__text em{
-  font-style:normal; font-size:.63rem; letter-spacing:.03em;
-  color:var(--ink-soft); font-weight:400;
-}
+.brand:hover .brand__mark{ transform:scale(1.06); }
+.brand__text{ width:auto; height:31px; flex:none; }
 
 .nav{ justify-self:center; }
 .nav__list{ position:relative; display:flex; gap:.2rem; }
@@ -326,26 +309,20 @@ p + p{ margin-top:.9rem; }
   position:relative;
   /* Assez haut pour occuper l'écran, mais plafonné : au-delà, le contenu
      serait centré dans le vide au lieu de remplir. */
-  min-height:min(100svh, 780px);
+  min-height:min(100svh, 620px);   /* le bandeau d'avis prend le reste */
   display:flex; align-items:center;
-  padding:clamp(1.5rem,3vw,3rem) 0 clamp(3.5rem,6vw,5.5rem);
+  padding:clamp(1rem,2vw,2.2rem) 0 clamp(3rem,5vw,4.5rem);
 }
 
 /* Halos ambiants : dérive lente, uniquement en transform (GPU) */
 .hero__aura{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
-.orb{
-  position:absolute; border-radius:50%;
-  filter:blur(80px); will-change:transform;
-}
+/* Dégradé radial direct, sans filtre de flou : flouter un disque plein
+   crée des bandes et un aspect sale, un dégradé descend proprement. */
+.orb{ position:absolute; inset:0; }
 /* Rejetés hors du bloc de texte : posés derrière le contenu, ils se
    lisaient comme des salissures et non comme de la lumière. */
-.orb--1{ width:40vw; height:40vw; max-width:620px; max-height:620px;
-  top:-22%; right:-12%; background:radial-gradient(circle at 40% 40%,rgba(242,231,179,.7),rgba(242,231,179,0) 68%);
-  animation:drift1 22s ease-in-out infinite; }
-.orb--2{ width:32vw; height:32vw; max-width:480px; max-height:480px;
-  bottom:-26%; left:-14%; background:radial-gradient(circle at 55% 45%,rgba(167,174,155,.45),rgba(167,174,155,0) 68%);
-  animation:drift2 27s ease-in-out infinite; }
-.orb--3{ display:none; }   /* celui-ci tombait pile derrière le titre */
+.orb--1{ background:radial-gradient(58% 52% at 82% 14%,rgba(242,231,179,.60) 0%,rgba(242,231,179,.22) 42%,transparent 72%); }
+.orb--2{ background:radial-gradient(46% 44% at 6% 96%,rgba(167,174,155,.30) 0%,transparent 66%); }
 @keyframes drift1{
   0%,100%{ transform:translate3d(0,0,0) scale(1) }
   50%{ transform:translate3d(-4%,6%,0) scale(1.12) }
@@ -414,7 +391,7 @@ body.ready .ln > span{ transform:none; }
    pousse le reste hors de l'écran sur une fenêtre courte. */
 .hero__visual{
   position:relative; perspective:1100px;
-  width:100%; max-width:600px; justify-self:end;
+  width:100%; max-width:520px; justify-self:end;
 }
 .hero__tilt{
   position:relative;
@@ -458,20 +435,106 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
   transition:opacity .5s var(--ease), transform .5s var(--ease);
 }
 .cue.gone{ opacity:0; transform:translate(-50%,14px); pointer-events:none; }
-.cue__line{
-  position:relative; display:block; width:1px; height:44px;
-  background:linear-gradient(var(--line),transparent);
-  overflow:hidden;
+.cue__btn{
+  display:grid; place-items:center;
+  width:44px; height:44px; border-radius:50%;
+  background:var(--surface); box-shadow:var(--nm-out); color:var(--ochre);
+  transition:box-shadow .25s var(--ease), transform .25s var(--ease);
 }
-.cue__line i{
-  position:absolute; inset:0; display:block;
-  background:linear-gradient(transparent,var(--ochre));
-  animation:cueRun 2.2s var(--ease) infinite;
+.cue__btn svg{
+  width:18px; height:18px; fill:none; stroke:currentColor;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  animation:cueNod 2.4s var(--ease) infinite;
 }
-@keyframes cueRun{
-  0%{ transform:translateY(-100%) } 60%,100%{ transform:translateY(100%) }
-}
+@keyframes cueNod{ 0%,70%,100%{ transform:translateY(0) } 35%{ transform:translateY(3px) } }
+.cue:hover .cue__btn{ box-shadow:var(--nm-out-lg); transform:translateY(-2px); }
+.cue:active .cue__btn{ box-shadow:var(--nm-in); }
 .cue:hover{ color:var(--green); }
+
+/* ---------- PAGE AVIS ----------
+   Grille plutôt que carrousel : les avis sont le contenu de la page, les
+   cacher derrière des flèches laissait un grand vide sous le bloc. */
+.rev-sum{
+  display:flex; align-items:center; justify-content:center;
+  gap:clamp(1.5rem,4vw,3.5rem); flex-wrap:wrap;
+  padding:clamp(1.4rem,3vw,2rem) clamp(1.5rem,4vw,3rem);
+  margin-bottom:clamp(2rem,4vw,3rem);
+  border-radius:var(--r-lg);
+  background:var(--surface); box-shadow:var(--nm-out);
+}
+.rev-sum__note{ display:flex; flex-direction:column; align-items:center; gap:.15rem; }
+.rev-sum__note b{
+  font-size:clamp(1.7rem,3vw,2.3rem); font-weight:600;
+  color:var(--green); letter-spacing:-.03em; line-height:1;
+}
+.rev-sum__stars{ color:var(--ochre); font-size:.72rem; letter-spacing:.14em; }
+.rev-sum__note small{ font-size:.76rem; color:var(--ink-soft); }
+.rev-sum__sep{ width:1px; height:34px; background:var(--line); }
+
+.rev-grid{
+  display:grid; gap:1.2rem;
+  grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));
+  align-items:start;
+}
+@media (min-width:1081px){ .rev-grid{ grid-template-columns:repeat(3,1fr); } }
+.rev{
+  display:flex; flex-direction:column; gap:.9rem; margin:0;
+  padding:1.7rem 1.6rem; border-radius:var(--r-lg);
+  background:var(--surface); box-shadow:var(--nm-out);
+  transition:transform .25s var(--ease-out), box-shadow .25s var(--ease);
+}
+.rev:hover{ transform:translateY(-4px); box-shadow:var(--nm-out-lg); }
+.rev__stars{ color:var(--ochre); font-size:.86rem; letter-spacing:.12em; }
+.rev blockquote{ font-size:.92rem; line-height:1.65; color:var(--ink); flex:1; }
+.rev figcaption{ display:flex; align-items:center; gap:.65rem; font-size:.82rem; }
+.rev__av{ width:38px; height:38px; border-radius:50%; flex:none; }
+.rev figcaption b{ font-weight:500; color:var(--green); }
+.rev figcaption i{ font-style:normal; color:var(--ink-soft); font-size:.76rem; }
+.rev figcaption i::before{ content:'· '; }
+
+.rev-cta{
+  margin-top:clamp(2rem,4vw,3rem); text-align:center;
+  padding:clamp(2rem,4vw,3rem);
+  border-radius:var(--r-lg); background:var(--surface); box-shadow:var(--nm-in);
+}
+.rev-cta p{ margin:.4rem 0 1.3rem; }
+
+/* ---------- BANDEAU D'AVIS (accueil) ----------
+   Une seule ligne visible à la fois, relayée toutes les 12 s. Volontairement
+   sobre : c'est un signal de confiance, pas un bloc de contenu. */
+.ticker{ padding:0 0 clamp(1.2rem,3vw,2rem); }
+.ticker__link{
+  display:flex; align-items:center; gap:1rem;
+  width:min(var(--shell),100% - var(--pad)*2); margin-inline:auto;
+  padding:.85rem 1.3rem; border-radius:var(--pill);
+  background:var(--surface); box-shadow:var(--nm-out);
+  transition:box-shadow .25s var(--ease);
+}
+.ticker__link:hover{ box-shadow:var(--nm-out-lg); }
+.ticker__stars{ color:var(--ochre); font-size:.8rem; letter-spacing:.1em; flex:none; }
+/* Hauteur fixe : les lignes se superposent, sans quoi le bandeau
+   sauterait à chaque changement de longueur de texte. */
+.ticker__stage{ position:relative; flex:1; height:1.5rem; overflow:hidden; }
+.ticker__item{
+  position:absolute; inset:0; margin:0;
+  display:flex; align-items:center; gap:.6rem;
+  font-size:.86rem; color:var(--ink); white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+  opacity:0; transform:translateY(70%);
+  transition:opacity .6s var(--ease-out), transform .6s var(--ease-out);
+}
+.ticker__item.is-on{ opacity:1; transform:none; }
+.ticker__item.is-out{ opacity:0; transform:translateY(-70%); }
+.ticker__item i{ font-style:normal; font-size:.76rem; color:var(--ink-soft); flex:none; }
+.ticker__more{
+  flex:none; font-size:.78rem; font-weight:500; color:var(--ochre);
+  transition:transform .25s var(--ease);
+}
+.ticker__link:hover .ticker__more{ transform:translateX(3px); }
+@media (max-width:760px){
+  .ticker__more{ display:none; }
+  .ticker__item i{ display:none; }
+}
 
 /* ---------- 10. SECTIONS ---------- */
 .section{ padding:clamp(3.5rem,7vw,7rem) 0; }
@@ -487,13 +550,14 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
 
 /* --- À propos --- */
 .about{
-  display:grid; grid-template-columns:.95fr 1.05fr;
+  display:grid; grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);
   gap:clamp(2.5rem,5vw,5rem); align-items:center;
 }
-.about__media{ position:relative; padding-bottom:3rem; }
+/* Plafonné : au-delà le visuel écrasait la colonne de texte. */
+.about__media{ position:relative; padding-bottom:2.5rem; width:100%; max-width:400px; }
 .about__main{ aspect-ratio:4/5; border-radius:var(--r-lg); box-shadow:var(--sh); }
 .about__sub{
-  position:absolute; right:-5%; bottom:0; width:54%; aspect-ratio:4/3;
+  position:absolute; right:-8%; bottom:0; width:52%; aspect-ratio:4/3;
   border-radius:var(--r); border:8px solid var(--card);
   box-shadow:var(--sh); will-change:transform;
 }
@@ -627,7 +691,8 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
   animation:bob 6s ease-in-out infinite;
 }
 .giftcard__visual:hover .giftcard__card{ transform:rotate(0) scale(1.04); }
-.giftcard__logo{ position:absolute; top:1.2rem; right:1.2rem; width:34px; fill:currentColor; opacity:.9; }
+.giftcard__logo{ position:absolute; top:1.2rem; right:1.2rem; width:30px; height:auto;
+  filter:brightness(0) invert(1); opacity:.92; }
 .giftcard__card b{ font-size:1.3rem; font-weight:600; letter-spacing:-.02em; }
 .giftcard__card span{ font-size:.64rem; letter-spacing:.2em; text-transform:uppercase; opacity:.9; }
 
@@ -788,7 +853,7 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
 .footer{ background:var(--card); color:var(--ink-soft); padding:2.2rem 0 2rem;
   box-shadow:inset 0 7px 12px -12px var(--nm-dark); }
 .footer__inner{
-  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1.5rem;
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1.2rem;
 }
 .footer__nav{ display:flex; flex-wrap:wrap; gap:1.3rem; font-size:.85rem; }
 .footer__nav a{ color:var(--ink-soft); transition:color .3s; }

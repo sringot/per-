@@ -266,6 +266,28 @@
     });
   }
 
+  /* ---------- Bandeau d'avis (accueil) ---------- */
+  let tickerTimer = null;
+  function initTicker(root) {
+    clearInterval(tickerTimer);
+    const stage = $('#tickerStage', root);
+    if (!stage) return;
+    const items = $$('.ticker__item', stage);
+    if (items.length < 2) return;
+
+    let i = 0;
+    const step = () => {
+      const sortant = items[i];
+      i = (i + 1) % items.length;
+      sortant.classList.replace('is-on', 'is-out');
+      items[i].classList.add('is-on');
+      // La ligne sortante est remise en bas une fois hors champ,
+      // sinon elle réapparaîtrait par le haut au tour suivant.
+      setTimeout(() => sortant.classList.remove('is-out'), 650);
+    };
+    if (!reduced) tickerTimer = setInterval(step, 12000);
+  }
+
   /* ---------- Point d'entrée « contenu » ---------- */
   function initPage(root) {
     root = root || document;
@@ -277,6 +299,7 @@
     initTilt(root);
     initCarousel(root);
     initForm(root);
+    initTicker(root);
     applyParallax();
     onScroll();
   }
