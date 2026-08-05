@@ -817,10 +817,16 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
 .reviews__nav:hover{ color:var(--ochre); transform:scale(1.05); box-shadow:var(--nm-out-lg); }
 
 /* --- Contact --- */
+/* Trois blocs, deux colonnes : le titre et les infos pratiques à gauche,
+   le bloc d'appel à droite sur toute la hauteur. */
 .contact{
   display:grid; grid-template-columns:1fr 1.05fr;
+  grid-template-areas:"intro appel" "infos appel";
   gap:clamp(2.5rem,5vw,4.5rem); align-items:start;
 }
+.contact__intro{ grid-area:intro; }
+.contact__infos{ grid-area:infos; }
+.call{ grid-area:appel; }
 .contact__intro .h2{ margin-bottom:.6rem; }
 .infos{ display:grid; gap:1.2rem; margin:2.2rem 0; }
 .infos li{ display:flex; gap:1rem; align-items:flex-start; }
@@ -969,19 +975,86 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
 [data-reveal="right"]{ transform:translateX(40px); }
 [data-reveal].in{ opacity:1; transform:none; }
 
+/* Sur téléphone, la liste des soins passe en lignes plutôt qu'en cartes
+   empilées. En vertical, chaque soin coûtait ~600 px dont 250 rien que
+   d'illustration : la page faisait sept écrans pour six tarifs, et on ne
+   pouvait pas comparer deux soins sans faire l'aller-retour.
+   Ici l'essentiel — nom, durée, prix — tient sur une ligne. */
+@media (max-width:560px){
+  .card{ flex-direction:row; align-items:stretch; gap:0; }
+  .card__media{
+    flex:none; width:104px; aspect-ratio:auto; align-self:stretch;
+    border-radius:0;
+  }
+  .card__body{ padding:.95rem 1.1rem; min-width:0; }
+  .card__title{ font-size:1.05rem; }
+  .card__tag{ margin:.2rem 0 .45rem; font-size:.62rem; }
+  /* La description passe à la trappe : à cette largeur elle prenait quatre
+     lignes pour dire ce que le nom et l'intitulé disent déjà. Elle reste
+     dans le HTML, donc lisible par les moteurs et les lecteurs d'écran. */
+  .card__text{ display:none; }
+  .card__foot{ margin:0 0 .5rem; padding-top:.6rem; }
+  .card__price{ font-size:1.15rem; }
+  .card__link{ font-size:.8rem; }
+  /* En haut à droite, l'étiquette tombait sur le titre une fois la carte
+     couchée. Elle descend au niveau de « Réserver », dont la droite est libre. */
+  .card__ribbon{ top:auto; bottom:.85rem; right:1.1rem; }
+}
+
+/* ---------- BARRE D'APPEL (téléphone) ----------
+   Les rendez-vous se prennent par appel : le numéro doit rester joignable
+   sans revenir en haut ni ouvrir le menu. Au-delà de 860 px l'en-tête
+   porte déjà le bouton, la barre disparaît. */
+.callbar{ display:none; }
+@media (max-width:860px){
+  .callbar{
+    position:fixed; z-index:820;
+    left:.9rem; right:.9rem; bottom:calc(.9rem + env(safe-area-inset-bottom));
+    display:flex; align-items:center; justify-content:center; gap:.6rem;
+    padding:.95rem 1.2rem; border-radius:var(--pill);
+    background:var(--ochre); color:var(--white);
+    font-size:.95rem; font-weight:500;
+    box-shadow:0 10px 30px -12px rgba(42,35,32,.55);
+    transition:transform .3s var(--ease), opacity .3s var(--ease);
+  }
+  .callbar svg{
+    width:18px; height:18px; flex:none; fill:none; stroke:currentColor;
+    stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
+  }
+  .callbar:active{ transform:scale(.98); }
+  /* Rangée pendant que le tiroir est ouvert : elle passerait par-dessus. */
+  body.nav-open .callbar{ opacity:0; transform:translateY(120%); pointer-events:none; }
+  /* La barre flotte au-dessus du bas de page : on lui réserve la place. */
+  .footer{ padding-bottom:5.5rem; }
+  /* Un seul bouton flottant à la fois. */
+  .totop{ display:none; }
+}
 /* ---------- 13. RESPONSIVE ---------- */
 @media (max-width:1080px){
-  .hero{ min-height:auto; padding:1rem 0 5rem; }
+  .hero{ min-height:auto; padding:1rem 0 3rem; }
+  /* L'écart vient du `gap` de la grille ; le doubler d'une marge
+     repoussait le titre pour rien. */
+  .hero__inner{ gap:1.6rem; }
   .hero__inner{ grid-template-columns:1fr; }
   /* width:100% indispensable : en grid, `margin:auto` ferait rétrécir
      l'élément à sa largeur max-content au lieu de l'étirer. */
-  .hero__visual{ width:100%; max-width:460px; justify-self:center; order:-1; margin-bottom:3rem; }
+  /* La photo reste en tête — on veut voir Marie tout de suite — mais sa
+     hauteur est plafonnée : à 500 px elle repoussait le titre à 728 px,
+     hors d'un écran de 664. */
+  .hero__visual{ width:100%; max-width:460px; justify-self:center; order:-1; margin-bottom:0; }
+  /* `object-position` remonté : le recadrage centré rognait le haut du
+     crâne une fois la hauteur plafonnée. */
+  .hero__photo{ aspect-ratio:auto; height:min(40svh,310px); }
+  .hero__photo img{ object-position:50% 28%; }
   .hero__tilt{ transform:none; }
   .profile{ right:0; bottom:-9%; }
   .cue{ display:none; }
   .about{ grid-template-columns:1fr; }
   .about__media{ width:100%; max-width:470px; }
-  .contact{ grid-template-columns:1fr; }
+  /* Sur téléphone, le numéro passe juste sous le titre. En bas de page,
+     après l'adresse et les horaires, il fallait faire défiler tout
+     l'écran pour trouver le seul moyen de prendre rendez-vous. */
+  .contact{ grid-template-columns:1fr; grid-template-areas:"intro" "appel" "infos"; gap:2rem; }
   .section__head--split{ grid-template-columns:1fr; align-items:start; }
   .review{ flex:0 0 calc((100% - 1.3rem)/2); }
   .giftcard{ grid-template-columns:1fr; }
@@ -1062,7 +1135,12 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
 
 @media (max-width:560px){
   .hero__actions .btn{ width:100%; }
-  .profile{ position:static; width:100%; margin-top:1rem; transform:none; }
+  /* Posée sur la photo, la carte couvrait le bas du visage. Elle repasse
+     dessous, en version compacte : sa vignette saute — c'est le même
+     visage que la photo juste au-dessus — et elle ne coûte plus que 70 px
+     au lieu de 110. */
+  .profile{ position:static; width:100%; margin-top:.7rem; transform:none; padding:.75rem .9rem; }
+  .profile__thumb{ display:none; }
   .hero__title .ln{ gap:.4rem; }
   .about__sub{ right:0; width:52%; }
   .reviews__ctrl{ justify-content:center; }

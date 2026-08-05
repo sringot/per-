@@ -147,6 +147,41 @@ langages visuels. À remettre le jour où une deuxième photo arrive.
 
 Les 19 illustrations restent en place sur les autres pages.
 
+## Le téléphone d'abord
+
+Trois clientes sur quatre arriveront depuis un téléphone : c'est le format de
+référence, pas une adaptation du desktop. Quatre points en découlent.
+
+**Une barre d'appel fixe** (`.callbar`) en bas de l'écran, sur les 6 pages, en
+dessous de 860 px. Les rendez-vous se prennent par appel : le numéro doit
+rester à portée de pouce sans revenir en haut ni ouvrir le menu. Elle s'efface
+pendant que le tiroir est ouvert, et remplace le bouton « remonter » — un seul
+bouton flottant à la fois.
+
+**Le héros ne commence plus par une photo pleine hauteur.** `order:-1` sur le
+visuel, pensé pour l'ancienne illustration, plaçait le portrait avant le texte :
+avec une vraie photo de 500 px, le titre tombait à 728 px, hors d'un écran de
+664. La photo reste en tête — on veut voir Marie tout de suite — mais sa hauteur
+est plafonnée à `min(40svh, 310px)`. Le titre remonte à 515 px.
+
+**La liste des soins passe en lignes** sous 560 px : vignette à gauche, nom,
+durée et prix à droite. En cartes empilées, chaque soin coûtait ~600 px dont 250
+d'illustration — la page faisait 6,9 écrans pour six tarifs, et comparer deux
+soins imposait un aller-retour. Elle fait maintenant 3,5 écrans. La description
+est masquée à cette largeur (elle reste dans le HTML, donc lisible par les
+moteurs et les lecteurs d'écran).
+
+**La page contact met le numéro juste sous le titre.** En bas de page, après
+l'adresse et les horaires, il fallait défiler tout l'écran pour trouver le seul
+moyen de prendre rendez-vous. Le bloc d'appel et les infos pratiques sont deux
+enfants de grille distincts, réordonnés par `grid-template-areas`.
+
+| Page | Avant | Après |
+| ---- | ----- | ----- |
+| accueil  | 2,6 écrans · titre à 728 px | 2,2 écrans · titre à 515 px |
+| massages | 6,9 écrans | 3,5 écrans |
+| contact  | numéro en bas de page | numéro sous le titre |
+
 ## Le menu mobile
 
 En dessous de 1000 px, la navigation devient un tiroir latéral. Deux pièges
