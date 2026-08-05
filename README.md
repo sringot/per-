@@ -2,9 +2,9 @@
 
 Site vitrine statique pour **Marie Massage**, masseuse bien-être à Voisins-le-Bretonneux.
 
-> ⚠️ **Version de base.** Tous les textes sont en lorem ipsum et les tarifs sont
-> notés `XX €`. Les visuels, eux, sont définitifs : ce sont des illustrations
-> vectorielles, pas des placeholders. Voir « À compléter » plus bas.
+> ⚠️ **En cours.** Les textes de présentation viennent de Marie ; il reste du
+> lorem ipsum sur les avis et les descriptions de soins, et les tarifs sont
+> notés `XX €`. Voir « À compléter » plus bas.
 
 ## Lancer le site en local
 
@@ -107,10 +107,10 @@ CNIL considère comme non conforme au RGPD.
 
 ## Les illustrations
 
-Le site n'utilise pas de photos : chaque visuel est une **illustration
-vectorielle plate** aux couleurs de la marque (`assets/img/illus/`). C'est un
-choix, pas un pis-aller — le site est complet dès maintenant, sans attendre de
-séance photo, et l'univers visuel appartient à Marie Massage.
+Hors du portrait de Marie, chaque visuel est une **illustration vectorielle
+plate** aux couleurs de la marque (`assets/img/illus/`) : le cabinet, les soins,
+les avatars. Elles ont permis de livrer un site complet sans attendre de séance
+photo, et cèdent la place au fur et à mesure que de vraies photos arrivent.
 
 Elles sont générées par `tools-illustrations.py`, qui partage une palette et des
 primitives communes (tête, main, feuille, bougie, flacon) pour que les 19 scènes
@@ -121,9 +121,31 @@ le script puis le relancer :
 python3 tools-illustrations.py
 ```
 
-Si de vraies photos arrivent plus tard, il suffit de remplacer le `src` des
-balises `<img>` dans `index.html` : la mise en page ne bouge pas, `.ill img`
-applique déjà `object-fit: cover`.
+## La photo de Marie
+
+Le portrait a remplacé les illustrations sur l'accueil et la page « à propos ».
+Une seule photo alimente trois emplacements de rapports différents : `tools-photos.py`
+en tire les trois découpes depuis `assets/img/marie-source.png`.
+
+```bash
+python3 tools-photos.py
+```
+
+| Fichier | Usage | Format |
+| ------- | ----- | ------ |
+| `marie-hero.webp`     | arche du héros           | 1040 × 1144 |
+| `marie-portrait.webp` | bloc « à propos »        | 800 × 1000  |
+| `marie-thumb.webp`    | vignette de la carte     | 200 × 200   |
+
+Le point de visée est le **visage**, pas le centre de l'image : un recadrage
+centré coupait le haut du crâne sur le format le plus carré. Les repères sont
+en tête du script, en fractions de l'image d'origine.
+
+L'illustration secondaire qui accompagnait le portrait sur « à propos » a été
+retirée : un dessin plat à côté d'une vraie photo faisait cohabiter deux
+langages visuels. À remettre le jour où une deuxième photo arrive.
+
+Les 19 illustrations restent en place sur les autres pages.
 
 ## Le menu mobile
 
@@ -314,8 +336,11 @@ transparence, se perdrait sur une barre d'onglets sombre. L'ancien
 ## À compléter
 
 - [ ] **Textes** — remplacer tout le lorem ipsum (présentation, cabinet, soins)
-- [ ] **Photos** — optionnel : les illustrations peuvent rester telles quelles,
-      ou céder la place aux vraies photos (voir « Les illustrations »)
+- [ ] **Photos** — le portrait de Marie est en place ; le cabinet et les soins
+      sont encore illustrés
+- [ ] **Nombre de massages** — le texte de Marie annonce **5 massages**, la page
+      en présente **6** (Kobido, madérothérapie, relaxation, drainage
+      lymphatique, massage bébé, dos & nuque). À trancher.
 - [ ] **Tarifs et durées** — les `XX €` dans la section massages
 - [ ] **Avis** — les témoignages sont des exemples, à remplacer par les vrais
 - [ ] **Coordonnées** — téléphone et email sont des valeurs fictives, à

@@ -629,6 +629,8 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
 }
 /* Plafonné : au-delà le visuel écrasait la colonne de texte. */
 .about__media{ position:relative; padding-bottom:2.5rem; width:100%; max-width:400px; }
+/* Sans visuel secondaire en débord, la réserve du bas n'a plus d'objet. */
+.about__media--solo{ padding-bottom:0; }
 .about__main{ aspect-ratio:4/5; border-radius:var(--r-lg); box-shadow:var(--sh); }
 .about__sub{
   position:absolute; right:-8%; bottom:0; width:52%; aspect-ratio:4/3;
