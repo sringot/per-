@@ -91,11 +91,28 @@
           <a href="massages.html" class="btn btn--outline btn--lg magnetic"><span>Mes massages</span></a>
         </div>
 
-        <a class="proof reveal" href="avis.html" style="--d:.62s">
-          <span class="proof__avatars" aria-hidden="true">
-            <i class="ill"><img src="assets/img/illus/avatar-1.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-2.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-3.svg" alt=""></i>
+        <!-- Preuve sociale : avatars + un avis relayé toutes les 12 s.
+             Placé ici plutôt qu'en bas de page — c'est la première chose
+             que la cliente voit, sans avoir à faire défiler. -->
+        <a class="proof reveal" href="avis.html" style="--d:.62s" aria-label="Avis de clientes">
+          <span class="proof__top">
+            <span class="proof__avatars" aria-hidden="true">
+              <i class="ill"><img src="assets/img/illus/avatar-1.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-2.svg" alt=""></i><i class="ill"><img src="assets/img/illus/avatar-3.svg" alt=""></i>
+            </span>
+            <b>Ce qu'en disent mes clientes</b>
+            <span class="proof__more" aria-hidden="true">Tous les avis</span>
           </span>
-          <b>Ce qu'en disent mes clientes</b>
+
+          <span class="proof__quote">
+            <span class="ticker__stars" aria-hidden="true">★★★★★</span>
+            <span class="ticker__stage" id="tickerStage">
+              <span class="ticker__item is-on">« Lorem ipsum dolor sit amet, consectetur adipiscing elit. »<i>Prénom N. · Kobido</i></span>
+              <span class="ticker__item">« Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. »<i>Prénom N. · Relaxation</i></span>
+              <span class="ticker__item">« Duis aute irure dolor in reprehenderit in voluptate velit esse. »<i>Prénom N. · Drainage</i></span>
+              <span class="ticker__item">« Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia. »<i>Prénom N. · Madérothérapie</i></span>
+              <span class="ticker__item">« Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci. »<i>Prénom N. · Dos &amp; nuque</i></span>
+            </span>
+          </span>
         </a>
       </div>
 
@@ -123,21 +140,6 @@
     </a>
   </section>
 
-
-  <!-- ---------- AVIS EN ROTATION ---------- -->
-  <aside class="ticker" aria-label="Avis de clientes">
-    <a class="ticker__link" href="avis.html">
-      <span class="ticker__stars" aria-hidden="true">★★★★★</span>
-      <div class="ticker__stage" id="tickerStage">
-        <p class="ticker__item is-on">« Lorem ipsum dolor sit amet, consectetur adipiscing elit. »<i>Prénom N. · Kobido</i></p>
-        <p class="ticker__item">« Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. »<i>Prénom N. · Relaxation</i></p>
-        <p class="ticker__item">« Duis aute irure dolor in reprehenderit in voluptate velit esse. »<i>Prénom N. · Drainage</i></p>
-        <p class="ticker__item">« Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia. »<i>Prénom N. · Madérothérapie</i></p>
-        <p class="ticker__item">« Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci. »<i>Prénom N. · Dos &amp; nuque</i></p>
-      </div>
-      <span class="ticker__more">Tous les avis</span>
-    </a>
-  </aside>
 
 </main>
 

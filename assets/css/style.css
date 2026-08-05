@@ -374,11 +374,27 @@ body.ready .ln > span{ transform:none; }
 .hero__text{ max-width:44ch; font-size:clamp(1.02rem,.35vw + .9rem,1.18rem); }
 .hero__actions{ display:flex; flex-wrap:wrap; gap:.75rem; margin-top:2.1rem; }
 
-/* Renvoi vers les avis. Aucun chiffre : la seule preuve affichée est
-   celle que les clientes ont réellement écrite, sur la page avis. */
+/* Preuve sociale du héros : avatars, intitulé, puis un avis relayé.
+   Aucun chiffre — la seule preuve affichée est celle que les clientes
+   ont réellement écrite. */
 .proof{
-  display:inline-flex; align-items:center; gap:.85rem; margin-top:2.6rem;
-  width:fit-content; text-decoration:none;
+  display:flex; flex-direction:column; gap:.75rem; margin-top:2.4rem;
+  /* Calé sur la largeur du paragraphe du héros : plus étroit, la citation
+     partait sur trois lignes ; plus large, elle passait sous l'illustration. */
+  width:min(100%,31rem); text-decoration:none;
+}
+.proof__top{ display:flex; align-items:center; gap:.85rem; }
+/* Repoussé à droite, il ne colle à l'intitulé que si la place manque. */
+.proof__more{
+  margin-left:auto; padding-left:1rem;
+  font-size:.78rem; font-weight:500; color:var(--ochre);
+  transition:transform .25s var(--ease);
+}
+.proof:hover .proof__more{ transform:translateX(3px); }
+.proof__quote{
+  display:flex; align-items:flex-start; gap:.7rem;
+  padding:.75rem 1rem; border-radius:var(--r);
+  box-shadow:var(--nm-in);
 }
 .proof__avatars{ display:flex; }
 .proof__avatars i{
@@ -535,41 +551,30 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
 }
 .rev-cta p{ margin:.4rem 0 1.3rem; }
 
-/* ---------- BANDEAU D'AVIS (accueil) ----------
-   Une seule ligne visible à la fois, relayée toutes les 12 s. Volontairement
+/* ---------- AVIS RELAYÉ (héros de l'accueil) ----------
+   Un seul avis visible à la fois, relayé toutes les 12 s. Volontairement
    sobre : c'est un signal de confiance, pas un bloc de contenu. */
-.ticker{ padding:0 0 clamp(1.2rem,3vw,2rem); }
-.ticker__link{
-  display:flex; align-items:center; gap:1rem;
-  width:min(var(--shell),100% - var(--pad)*2); margin-inline:auto;
-  padding:.85rem 1.3rem; border-radius:var(--pill);
-  background:var(--surface); box-shadow:var(--nm-out);
-  transition:box-shadow .25s var(--ease);
-}
-.ticker__link:hover{ box-shadow:var(--nm-out-lg); }
-.ticker__stars{ color:var(--ochre); font-size:.8rem; letter-spacing:.1em; flex:none; }
-/* Hauteur fixe : les lignes se superposent, sans quoi le bandeau
-   sauterait à chaque changement de longueur de texte. */
-.ticker__stage{ position:relative; flex:1; height:1.5rem; overflow:hidden; }
+.ticker__stars{ color:var(--ochre); font-size:.8rem; letter-spacing:.1em; flex:none; line-height:1.5; }
+/* Hauteur fixe : les avis se superposent, sans quoi le bloc sauterait
+   à chaque changement de longueur de texte. Deux lignes de citation plus
+   la signature — le plus long des cinq avis tient dans cette hauteur. */
+.ticker__stage{ position:relative; flex:1; height:4.1rem; overflow:hidden; }
 .ticker__item{
   position:absolute; inset:0; margin:0;
-  display:flex; align-items:center; gap:.6rem;
-  font-size:.86rem; color:var(--ink); white-space:nowrap;
-  overflow:hidden; text-overflow:ellipsis;
-  opacity:0; transform:translateY(70%);
+  /* Centré : la hauteur est calée sur l'avis le plus long, un avis court
+     flotterait sinon en haut du cadre. */
+  display:flex; flex-direction:column; justify-content:center; gap:.2rem;
+  font-size:.86rem; line-height:1.45; color:var(--ink);
+  opacity:0; transform:translateY(40%);
   transition:opacity .6s var(--ease-out), transform .6s var(--ease-out);
 }
 .ticker__item.is-on{ opacity:1; transform:none; }
-.ticker__item.is-out{ opacity:0; transform:translateY(-70%); }
-.ticker__item i{ font-style:normal; font-size:.76rem; color:var(--ink-soft); flex:none; }
-.ticker__more{
-  flex:none; font-size:.78rem; font-weight:500; color:var(--ochre);
-  transition:transform .25s var(--ease);
-}
-.ticker__link:hover .ticker__more{ transform:translateX(3px); }
-@media (max-width:760px){
-  .ticker__more{ display:none; }
-  .ticker__item i{ display:none; }
+.ticker__item.is-out{ opacity:0; transform:translateY(-40%); }
+.ticker__item i{ font-style:normal; font-size:.76rem; color:var(--ink-soft); }
+
+@media (max-width:520px){
+  .proof__more{ display:none; }
+  .ticker__stage{ height:5.5rem; }
 }
 
 /* ---------- 10. SECTIONS ---------- */
