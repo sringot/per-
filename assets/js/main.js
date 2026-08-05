@@ -5,7 +5,7 @@
      · initShell()  — une seule fois : en-tête, menu, moteur de
                       défilement, transitions entre pages.
      · initPage()   — à chaque contenu : révélations, compteurs,
-                      carrousel, formulaire, héros.
+                      synthèse des avis, carrousel, formulaire, héros.
 
    La séparation permet de rebrancher un contenu remplacé sans
    réinstaller les écouteurs globaux, qui s'accumuleraient sinon.
@@ -266,6 +266,74 @@
     });
   }
 
+  /* ---------- Page avis : synthèse + « voir tous les avis » ----------
+     La moyenne et le nombre ne sont jamais écrits en dur : ils sont
+     recalculés à partir des avis réellement présents dans la page.
+     Ajouter ou retirer un <figure class="rev" data-note="…"> suffit,
+     la synthèse suit. */
+  function initReviews(root) {
+    const grid = $('#revGrid', root);
+    if (!grid) return;
+
+    const notes = $$('.rev[data-note]', grid)
+      .map(el => parseFloat(el.dataset.note))
+      .filter(n => !isNaN(n));
+    if (!notes.length) return;
+
+    const moy = notes.reduce((a, b) => a + b, 0) / notes.length;
+    const arrondi = Math.round(moy * 10) / 10;
+
+    const elMoy = $('#revMoy', root);
+    if (elMoy) {
+      elMoy.dataset.count = arrondi;
+      // Une moyenne pleine s'écrit « 5 », pas « 5,0 ».
+      elMoy.dataset.decimals = Number.isInteger(arrondi) ? 0 : 1;
+      elMoy.classList.add('count');
+    }
+    const elStars = $('#revStars', root);
+    if (elStars) {
+      const pleines = Math.round(moy);
+      elStars.textContent = '★'.repeat(pleines) + '☆'.repeat(5 - pleines);
+    }
+    const elNb = $('#revNb', root);
+    if (elNb) {
+      elNb.dataset.count = notes.length;
+      elNb.classList.add('count');
+    }
+    /* Les avis au-delà des six premiers restent repliés : la page garde
+       une hauteur raisonnable et le bouton fait le reste. */
+    const extras = $$('.rev--extra', grid);
+    const btn = $('#revMore', root);
+    if (!btn) return;
+
+    if (!extras.length) { btn.hidden = true; return; }
+
+    const libelle = () => {
+      const ouvert = btn.getAttribute('aria-expanded') === 'true';
+      btn.textContent = ouvert
+        ? 'Voir moins d’avis'
+        : `Voir tous les avis (${notes.length})`;
+    };
+    libelle();
+
+    btn.addEventListener('click', () => {
+      const ouvert = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!ouvert));
+      extras.forEach((el, i) => {
+        el.hidden = ouvert;
+        // Masqué, l'élément ne croise jamais l'observateur de révélation :
+        // on le déclenche à la main, en cascade.
+        if (!ouvert) {
+          el.style.setProperty('--d', (i * 0.08).toFixed(2) + 's');
+          requestAnimationFrame(() => el.classList.add('in'));
+        } else {
+          el.classList.remove('in');
+        }
+      });
+      libelle();
+    });
+  }
+
   /* ---------- Bandeau d'avis (accueil) ---------- */
   let tickerTimer = null;
   function initTicker(root) {
@@ -294,6 +362,7 @@
     cue = $('#cue', root);
     parallaxEls = $$('[data-parallax]', root);
     initReveals(root);
+    initReviews(root);   // avant les compteurs : il leur pose les valeurs
     initCounters(root);
     initMagnetic(root);
     initTilt(root);

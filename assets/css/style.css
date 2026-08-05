@@ -374,7 +374,12 @@ body.ready .ln > span{ transform:none; }
 .hero__text{ max-width:44ch; font-size:clamp(1.02rem,.35vw + .9rem,1.18rem); }
 .hero__actions{ display:flex; flex-wrap:wrap; gap:.75rem; margin-top:2.1rem; }
 
-.proof{ display:flex; align-items:center; gap:.85rem; margin-top:2.6rem; }
+/* Renvoi vers les avis. Aucun chiffre : la seule preuve affichée est
+   celle que les clientes ont réellement écrite, sur la page avis. */
+.proof{
+  display:inline-flex; align-items:center; gap:.85rem; margin-top:2.6rem;
+  width:fit-content; text-decoration:none;
+}
 .proof__avatars{ display:flex; }
 .proof__avatars i{
   width:40px; height:40px; border-radius:50%;
@@ -384,7 +389,11 @@ body.ready .ln > span{ transform:none; }
 .proof__avatars i:first-child{ margin-left:0; }
 .proof:hover .proof__avatars i{ margin-left:-6px; }
 .proof:hover .proof__avatars i:first-child{ margin-left:0; }
-.proof b{ font-size:.86rem; font-weight:500; color:var(--green); }
+.proof b{
+  font-size:.86rem; font-weight:500; color:var(--green);
+  border-bottom:1px solid transparent; transition:border-color .25s var(--ease);
+}
+.proof:hover b{ border-bottom-color:var(--ochre); color:var(--ochre); }
 
 /* Visuel : inclinaison douce qui suit le pointeur */
 /* Plafonnée : au-delà, l'illustration dicte la hauteur du héros et
@@ -458,6 +467,10 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
   display:flex; align-items:center; justify-content:center;
   gap:clamp(1.5rem,4vw,3.5rem); flex-wrap:wrap;
   padding:clamp(1.4rem,3vw,2rem) clamp(1.5rem,4vw,3rem);
+  /* Deux chiffres seulement : étiré sur toute la largeur, le bloc
+     n'était plus qu'une longue barre vide. Il se réduit à son contenu. */
+  width:fit-content; max-width:100%;
+  margin-inline:auto;
   margin-bottom:clamp(2rem,4vw,3rem);
   border-radius:var(--r-lg);
   background:var(--surface); box-shadow:var(--nm-out);
@@ -483,6 +496,9 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
   background:var(--surface); box-shadow:var(--nm-out);
   transition:transform .25s var(--ease-out), box-shadow .25s var(--ease);
 }
+/* `display:flex` plus haut l'emporterait sur le comportement natif de
+   l'attribut `hidden` : les avis repliés resteraient visibles. */
+.rev[hidden]{ display:none; }
 .rev:hover{ transform:translateY(-4px); box-shadow:var(--nm-out-lg); }
 .rev__stars{ color:var(--ochre); font-size:.86rem; letter-spacing:.12em; }
 .rev blockquote{ font-size:.92rem; line-height:1.65; color:var(--ink); flex:1; }
@@ -491,6 +507,26 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
 .rev figcaption b{ font-weight:500; color:var(--green); }
 .rev figcaption i{ font-style:normal; color:var(--ink-soft); font-size:.76rem; }
 .rev figcaption i::before{ content:'· '; }
+
+/* Bouton « voir tous les avis ». Volontairement discret : pas de pastille
+   en relief, seulement un libellé et un chevron qui bascule. */
+.rev-plus{ display:flex; justify-content:center; margin-top:1.6rem; }
+.rev-plus__btn{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.6rem 1.1rem; border:0; border-radius:999px;
+  background:transparent; cursor:pointer;
+  font:inherit; font-size:.86rem; font-weight:500; color:var(--ink-soft);
+  transition:color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.rev-plus__btn::after{
+  content:''; width:7px; height:7px; flex:none;
+  border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor;
+  transform:translateY(-2px) rotate(45deg);
+  transition:transform .3s var(--ease-out);
+}
+.rev-plus__btn:hover{ color:var(--ochre); box-shadow:var(--nm-out); }
+.rev-plus__btn:active{ box-shadow:var(--nm-in); }
+.rev-plus__btn[aria-expanded="true"]::after{ transform:translateY(1px) rotate(-135deg); }
 
 .rev-cta{
   margin-top:clamp(2rem,4vw,3rem); text-align:center;

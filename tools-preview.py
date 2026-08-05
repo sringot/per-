@@ -19,12 +19,25 @@ for w in (400, 500, 600, 700):
     faces.append("@font-face{font-family:'Figtree';font-style:normal;font-weight:%d;"
                  "font-display:swap;src:url(data:font/woff2;base64,%s) format('woff2');}" % (w, b64))
 
-# ---- illustrations ----
+# ---- visuels ----
+MIME = {'.svg': 'image/svg+xml', '.png': 'image/png',
+        '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp'}
+
 def inline_illus(html):
+    """Intègre tout visuel local en data: URI.
+
+    Un artifact ne sert qu'un fichier : le moindre chemin relatif oublié
+    donne une image cassée. On balaie donc `assets/img` en entier plutôt
+    qu'un sous-dossier.
+    """
     def sub(m):
-        b64 = base64.b64encode((ROOT / 'assets/img/illus' / (m.group(1) + '.svg')).read_bytes()).decode()
-        return f'src="data:image/svg+xml;base64,{b64}"'
-    return re.sub(r'src="assets/img/illus/([\w-]+)\.svg"', sub, html)
+        rel = m.group(1)
+        f = ROOT / rel
+        if not f.exists():
+            raise SystemExit(f'visuel introuvable : {rel}')
+        b64 = base64.b64encode(f.read_bytes()).decode()
+        return f'src="data:{MIME[f.suffix.lower()]};base64,{b64}"'
+    return re.sub(r'src="(assets/img/[\w./-]+)"', sub, html)
 
 css = (ROOT / 'assets/css/style.css').read_text(encoding='utf-8')
 js  = (ROOT / 'assets/js/main.js').read_text(encoding='utf-8')

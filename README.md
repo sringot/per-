@@ -97,6 +97,8 @@ CNIL considère comme non conforme au RGPD.
 - Animations : apparition au scroll, parallaxe, compteur, défilement inertiel,
   boutons magnétiques, préchargeur
 - Carrousel d'avis (flèches, points, lecture auto, swipe tactile)
+- Page avis : les 6 premiers témoignages affichés, les suivants repliés
+  derrière « Voir tous les avis »
 - Formulaire de contact avec validation en direct
 - Accessibilité : navigation clavier, libellés ARIA, lien d'évitement,
   respect de `prefers-reduced-motion`
@@ -120,6 +122,21 @@ python3 tools-illustrations.py
 Si de vraies photos arrivent plus tard, il suffit de remplacer le `src` des
 balises `<img>` dans `index.html` : la mise en page ne bouge pas, `.ill img`
 applique déjà `object-fit: cover`.
+
+## Les chiffres affichés
+
+Aucune statistique n'est écrite en dur : **rien n'est inventé**. La note
+moyenne et le nombre d'avis de la page « Avis » sont recalculés au chargement
+à partir des témoignages réellement présents dans `avis.html`. Chaque
+témoignage porte sa note :
+
+```html
+<figure class="rev" data-note="5"> … </figure>
+```
+
+Ajouter, retirer ou renoter un témoignage suffit : la synthèse suit. Les avis
+au-delà des six premiers portent la classe `rev--extra` et l'attribut `hidden` ;
+le bouton « Voir tous les avis » les déplie.
 
 ## Contraste
 
