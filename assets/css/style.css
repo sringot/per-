@@ -107,15 +107,12 @@ ul{ list-style:none; }
    le lissage CSS doit s'effacer pour ne pas animer par-dessus. */
 html.js-smooth{ scroll-behavior:auto; }
 
-/* Passage d'une page à l'autre : sortie en fondu, entrée en fondu.
-   L'entrée est une animation CSS pure — si le JS échoue, la page
-   reste visible au lieu de disparaître. */
-.page{ animation:pageIn .6s var(--ease-out) both; }
-@keyframes pageIn{ from{ opacity:0; transform:translateY(10px) } to{ opacity:1; transform:none } }
-body.leaving .page{
-  animation:none; opacity:0; transform:translateY(-10px);
-  transition:opacity .28s var(--ease), transform .28s var(--ease);
-}
+/* Arrivée sur une page : un fondu court, sans glissement. À 600 ms et
+   avec un déplacement, il se lisait comme un temps de chargement — alors
+   que la page était déjà là. Animation CSS pure : si le JS échoue, la
+   page reste visible au lieu de disparaître. */
+.page{ animation:pageIn .2s linear both; }
+@keyframes pageIn{ from{ opacity:0 } to{ opacity:1 } }
 
 /* ---------- EN-TÊTE DE PAGE (pages intérieures) ---------- */
 .page-head{

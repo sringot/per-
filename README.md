@@ -95,7 +95,9 @@ CNIL considère comme non conforme au RGPD.
 
 - Responsive (mobile, tablette, desktop) avec menu latéral sur mobile
 - Animations : apparition au scroll, parallaxe, compteur, défilement inertiel,
-  boutons magnétiques, préchargeur
+  boutons magnétiques
+- Navigation immédiate : aucun délai n'est ajouté au passage d'une page à
+  l'autre (voir « Le passage d'une page à l'autre »)
 - Carrousel d'avis (flèches, points, lecture auto, swipe tactile)
 - Page avis : les 6 premiers témoignages affichés, les suivants repliés
   derrière « Voir tous les avis »
@@ -122,6 +124,32 @@ python3 tools-illustrations.py
 Si de vraies photos arrivent plus tard, il suffit de remplacer le `src` des
 balises `<img>` dans `index.html` : la mise en page ne bouge pas, `.ill img`
 applique déjà `object-fit: cover`.
+
+## Le passage d'une page à l'autre
+
+Le site est multi-pages : chaque onglet est un vrai chargement. Trois délais
+s'y étaient ajoutés, pour un temps perçu d'**une seconde** — mesuré à 1024 ms
+vers une page, 1368 ms au retour sur l'accueil :
+
+| Délai                                  | Coût     |
+| -------------------------------------- | -------- |
+| fondu de sortie retenant la navigation | 280 ms   |
+| animation d'entrée (fondu + glissement)| 600 ms   |
+| préchargeur rejoué à chaque retour     | ~1100 ms |
+
+Les trois sont retirés ou réduits :
+
+- **Le clic ne retient plus rien.** Le fondu de sortie imposait 280 ms
+  d'attente avant même que le navigateur commence à charger — du temps ajouté
+  pour masquer du temps.
+- **L'animation d'entrée** passe de 600 ms avec glissement à un fondu de
+  200 ms. Longue et mobile, elle se lisait comme un chargement alors que la
+  page était déjà là.
+- **Le préchargeur ne joue qu'à la première arrivée** de la session
+  (`sessionStorage`). Revenir sur l'accueil le rejouait pour masquer un
+  chargement déjà terminé.
+
+Résultat mesuré : **336 ms** vers une page, **282 ms** au retour sur l'accueil.
 
 ## La prise de rendez-vous
 

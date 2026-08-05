@@ -330,13 +330,21 @@
     /* --- Préchargeur : accueil uniquement --- */
     const preloader = $('#preloader');
     const ready = () => document.body.classList.add('ready');
-    if (preloader) {
+
+    // Le préchargeur ne sert qu'à la toute première arrivée. Revenir sur
+    // l'accueil depuis un onglet le rejouait, ajoutant une seconde à
+    // chaque retour — pour masquer un chargement déjà terminé.
+    let dejaVu = false;
+    try { dejaVu = sessionStorage.getItem('mm-vu') === '1'; } catch (_) {}
+
+    if (preloader && !dejaVu) {
       const start = () => {
         ready();
+        try { sessionStorage.setItem('mm-vu', '1'); } catch (_) {}
         setTimeout(() => {
           preloader.classList.add('done');
-          setTimeout(() => preloader.remove(), 700);
-        }, reduced ? 0 : 400);
+          setTimeout(() => preloader.remove(), 500);
+        }, reduced ? 0 : 260);
       };
       window.addEventListener('load', start);
       // Filet de sécurité si `load` traîne (polices, images lentes)
@@ -344,6 +352,7 @@
         if (preloader.isConnected && !document.body.classList.contains('ready')) start();
       }, 2500);
     } else {
+      if (preloader) preloader.remove();
       requestAnimationFrame(ready);
     }
 
@@ -457,24 +466,10 @@
     });
 
     /* --- Transition entre pages ----------------------------------
-       La page sortante s'efface avant la navigation ; la page entrante
-       se révèle par une animation CSS pure, donc visible même sans JS. */
-    if (!reduced) {
-      document.addEventListener('click', e => {
-        const a = e.target.closest('a[href$=".html"]');
-        if (!a) return;
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-        if (a.target && a.target !== '_self') return;
-        const url = new URL(a.href, location.href);
-        if (url.origin !== location.origin) return;
-        if (url.pathname === location.pathname) return;      // page courante
-        e.preventDefault();
-        document.body.classList.add('leaving');
-        setTimeout(() => { location.href = a.href; }, 280);
-      });
-      // Retour arrière depuis le cache : la page doit réapparaître
-      window.addEventListener('pageshow', () => document.body.classList.remove('leaving'));
-    }
+       Il n'y en a plus. Le clic retenait la navigation 280 ms pour
+       jouer un fondu de sortie : autant d'attente ajoutée avant même
+       que le navigateur commence à charger. L'entrée se fait par une
+       animation CSS courte, qui ne bloque rien. */
   }
 
   initShell();

@@ -70,10 +70,10 @@ router = '''
     tpl[t.dataset.page] = { html: t.innerHTML, title: t.dataset.title };
   });
 
-  function show(page, animate) {
+  function show(page) {
     const entry = tpl[page];
     if (!entry) return;
-    const swap = () => {
+    {
       main.innerHTML = entry.html;
       document.title = entry.title;
       document.body.className = 'p-' + page.replace('.html', '');
@@ -85,10 +85,7 @@ router = '''
       window.scrollTo(0, 0);
       document.body.classList.add('ready');
       window.marieMassage.initPage(main);
-      requestAnimationFrame(() => document.body.classList.remove('leaving'));
-    };
-    if (animate) { document.body.classList.add('leaving'); setTimeout(swap, 280); }
-    else swap();
+    }
   }
 
   document.addEventListener('click', e => {
@@ -96,10 +93,10 @@ router = '''
     if (!a || !tpl[a.getAttribute('href')]) return;
     e.preventDefault();
     e.stopImmediatePropagation();
-    show(a.getAttribute('href'), true);
+    show(a.getAttribute('href'));
   }, true);
 
-  show('index.html', false);
+  show('index.html');
 })();
 '''
 
