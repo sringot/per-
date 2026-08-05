@@ -216,7 +216,8 @@ transparence, se perdrait sur une barre d'onglets sombre. L'ancien
       ou céder la place aux vraies photos (voir « Les illustrations »)
 - [ ] **Tarifs et durées** — les `XX €` dans la section massages
 - [ ] **Avis** — les témoignages sont des exemples, à remplacer par les vrais
-- [ ] **Coordonnées** — téléphone et email sont des valeurs fictives
+- [ ] **Coordonnées** — téléphone et email sont des valeurs fictives, à
+      remplacer dans `contact.html` **et dans le pied de page des 6 pages**
 - [ ] **Envoi du formulaire** — aujourd'hui la soumission est simulée côté
       navigateur : **aucun email n'est réellement envoyé**. Il faut brancher un
       service (Formspree, Netlify Forms, EmailJS…) à l'endroit marqué `TODO`
