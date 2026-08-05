@@ -149,6 +149,17 @@ ancêtre. `backwards` pose l'état de départ avant l'animation puis rend la mai
 L'ordre d'empilement attendu, une fois cela réglé : voile 940 < tiroir 950 <
 en-tête et bouton 960. Un appui sur le voile referme le tiroir.
 
+**Le tiroir doit porter `display:flex`.** La règle mobile posait
+`flex-direction`, `justify-content` et `gap` sans jamais déclarer le mode
+d'affichage : `<nav>` restait un bloc, et les trois propriétés étaient
+inertes. Le bouton « Prendre rendez-vous » se retrouvait collé sous
+« Contact », et la liste bloquée en haut au lieu d'être centrée.
+
+L'onglet courant se signale par une **pastille sur desktop** et un
+**souligné dans le tiroir**. Le lien y passe en `inline-block` pour épouser
+son texte : en bloc, il occupait toute la largeur du tiroir et le repère se
+posait au milieu du vide, à droite du mot.
+
 ## Le passage d'une page à l'autre
 
 Le site est multi-pages : chaque onglet est un vrai chargement. Trois délais
