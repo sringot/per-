@@ -647,6 +647,10 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
   border-radius:var(--r); border:8px solid var(--card);
   box-shadow:var(--sh); will-change:transform;
 }
+/* Sans visuel, la grille tombe à une colonne et le texte est borné à
+   une longueur de ligne lisible plutôt que d'aller au bord. */
+.about--texte{ grid-template-columns:1fr; }
+.about--texte .about__body{ max-width:60ch; }
 .about__body .h2{ margin-bottom:1.1rem; }
 
 .pillars{ display:grid; gap:.8rem; margin:2rem 0; }
@@ -1181,6 +1185,39 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   .about__sub{ right:0; width:52%; }
   .reviews__ctrl{ justify-content:center; }
   .reviews__arrows{ display:none; }
+}
+
+/* ---------- ALLÈGEMENT SUR TÉLÉPHONE ----------
+   Sur un petit écran, chaque bloc décoratif se paie en défilement. On
+   rétrécit ce qui illustre, on garde intact ce qui informe. */
+@media (max-width:560px){
+  /* Cinq vues d'une pièce dessinée occupaient deux écrans pleins. Les
+     tuiles rapetissent : on garde l'ambiance, on rend le défilement. */
+  .gallery{ gap:.6rem; grid-auto-rows:112px; }
+
+  /* La carte cadeau annonce quelque chose qui n'existe pas encore. Elle
+     passe d'un écran entier à un encart : le visuel de carte disparaît,
+     seul le message reste. */
+  .giftcard{ padding:1.4rem 1.3rem; gap:1rem; }
+  .giftcard__visual{ display:none; }
+  .giftcard__card{ display:none; }
+  .giftcard .h3{ font-size:1.25rem; }
+  .giftcard p{ font-size:.88rem; }
+
+  /* La carte de présentation répète, en plus court, le texte du héros
+     situé juste dessous. Sur mobile elle ne fait qu'éloigner le titre. */
+  .profile{ display:none; }
+
+  /* Avis : c'est le contenu de la page, on ne le coupe pas — on le
+     resserre. L'avatar est un dessin générique posé sur un prénom
+     anonyme : il occupe une ligne sans rien apprendre. */
+  .rev{ padding:1.1rem 1.2rem; gap:.7rem; }
+  .rev__av{ display:none; }
+  .rev blockquote{ font-size:.9rem; }
+
+  /* « À votre tour ? » propose l'action que la barre fixe propose déjà,
+     en permanence et à portée de pouce. */
+  .rev-cta{ display:none; }
 }
 
 /* ---------- 14. ACCESSIBILITÉ MOUVEMENT ---------- */

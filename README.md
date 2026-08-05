@@ -145,9 +145,10 @@ Le point de visée est le **visage**, pas le centre de l'image : un recadrage
 centré coupait le haut du crâne sur le format le plus carré. Les repères sont
 en tête du script, en fractions de l'image d'origine.
 
-L'illustration secondaire qui accompagnait le portrait sur « à propos » a été
-retirée : un dessin plat à côté d'une vraie photo faisait cohabiter deux
-langages visuels. À remettre le jour où une deuxième photo arrive.
+La page « à propos » n'affiche plus de portrait : la même photo ouvrait déjà
+l'accueil, et la revoir en tête du chapitre suivant n'apprenait rien. La page y
+gagne 0,7 écran sur téléphone, et sa grille tombe à une colonne, le texte borné
+à une longueur de ligne lisible.
 
 Les 19 illustrations restent en place sur les autres pages.
 
@@ -211,11 +212,26 @@ l'adresse et les horaires, il fallait défiler tout l'écran pour trouver le seu
 moyen de prendre rendez-vous. Le bloc d'appel et les infos pratiques sont deux
 enfants de grille distincts, réordonnés par `grid-template-areas`.
 
+**Ce qui illustre rétrécit, ce qui informe reste.** Sous 560 px : les vues du
+cabinet passent à des tuiles de 112 px, la carte cadeau perd son visuel et garde
+son message, les avis perdent leur avatar — un dessin générique posé sur un
+prénom anonyme. Deux blocs disparaissent parce qu'ils font doublon : la carte de
+présentation du héros, qui répète le texte situé juste dessous, et le pavé
+« À votre tour ? » des avis, qui propose l'action déjà offerte en permanence par
+la barre d'appel.
+
+Ces règles vivent **après** la section responsive dans `style.css` : à
+spécificité égale c'est la cascade qui tranche, et placées avant, elles étaient
+écrasées par les règles à 860 px qu'elles affinent.
+
 | Page | Avant | Après |
 | ---- | ----- | ----- |
-| accueil  | 2,6 écrans · titre à 728 px | 2,2 écrans · titre à 515 px |
-| massages | 6,9 écrans | 3,5 écrans |
-| contact  | numéro en bas de page | numéro sous le titre |
+| accueil    | 2,6 écrans · titre à 728 px | 2,1 écrans · titre à 438 px |
+| à propos   | 2,7 écrans | 2,0 écrans |
+| le cabinet | 2,7 écrans | 2,3 écrans |
+| massages   | 6,9 écrans | 3,2 écrans |
+| avis       | 4,0 écrans | 3,3 écrans |
+| contact    | numéro en bas de page | numéro sous le titre |
 
 ## Le menu mobile
 
