@@ -4,21 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marie Massage — Masseuse bien-être à Voisins-le-Bretonneux</title>
-  <meta name="description" content="Marie Massage, masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, massage bébé et relaxation.">
+  <meta name="description" content="Marie Massage, masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, relaxation, dos &amp; nuque. Sur rendez-vous, par téléphone.">
   <link rel="canonical" href="https://sringot.github.io/per-/">
 
-  <!-- Aperçu du lien partagé (WhatsApp, Instagram, Facebook…).
-       TODO : remplacer le domaine par le vrai à la mise en ligne. -->
+  <!-- Aperçu du lien partagé. TODO : vrai domaine à la mise en ligne. -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Marie Massage">
   <meta property="og:locale" content="fr_FR">
   <meta property="og:title" content="Marie Massage — Masseuse bien-être à Voisins-le-Bretonneux">
-  <meta property="og:description" content="Marie Massage, masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, massage bébé et relaxation.">
+  <meta property="og:description" content="Vous accueillir, vous masser, et vous permettre de décrocher un moment.">
   <meta property="og:url" content="https://sringot.github.io/per-/">
   <meta property="og:image" content="https://sringot.github.io/per-/assets/img/partage.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Marie, masseuse bien-être à Voisins-le-Bretonneux">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="assets/img/favicon.png" sizes="32x32">
@@ -28,16 +26,16 @@
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-600-latin.woff2" crossorigin>
 
   <link rel="stylesheet" href="assets/css/fonts.css">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/v2.css">
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "HealthAndBeautyBusiness",
     "name": "Marie Massage",
-    "description": "Masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, massage bébé et relaxation.",
+    "description": "Masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, relaxation, dos &amp; nuque.",
     "url": "https://sringot.github.io/per-/",
     "image": "https://sringot.github.io/per-/assets/img/partage.jpg",
-    "logo": "https://sringot.github.io/per-/assets/img/logo-mark.png",
     "telephone": "+33600000000",
     "email": "contact@mariemassage.fr",
     "priceRange": "€€",
@@ -56,166 +54,202 @@
   }
   </script>
 </head>
-<body class="p-index">
+<body>
 
-<!-- ============ PRELOADER (accueil uniquement) ============ -->
-<div class="preloader" id="preloader">
-  <div class="preloader__logo">
-    <img draggable="false" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
-  </div>
-  <span class="preloader__bar"><i></i></span>
-</div>
+<a class="evitement" href="#bulles">Aller à la navigation</a>
 
-<a class="skip-link" href="#main">Aller au contenu</a>
+<!-- ============================================================
+     L'ACCUEIL — un seul écran, jamais de défilement.
+     Une photo, un titre, cinq bulles. Rien d'autre.
+     ============================================================ -->
+<main class="scene" id="scene">
 
-<div class="page">
+  <div class="halo" aria-hidden="true"></div>
 
-  <!-- ---------- HEADER ---------- -->
-  <header class="header" id="header">
-    <div class="shell header__inner">
+  <figure class="portrait">
+    <picture>
+      <source media="(max-width:760px)" srcset="assets/img/marie-rond-m.webp" width="700" height="700">
+      <img src="assets/img/marie-rond.webp" alt="Marie, masseuse bien-être à Voisins-le-Bretonneux"
+           width="900" height="900" draggable="false" fetchpriority="high" decoding="async">
+    </picture>
+  </figure>
 
-      <a href="index.html" class="brand" aria-label="Marie Massage — accueil">
-        <img draggable="false" class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
-      </a>
+  <h1 class="titre">Marie</h1>
+  <!-- Le nom de la commune est insécable : sans cela il se coupe sur son
+       trait d'union (« Voisins-le- / Bretonneux »), ce qui se lit mal. -->
+  <p class="accroche">Masseuse bien-être à <span class="insecable">Voisins-le-Bretonneux</span></p>
 
-      <nav class="nav" id="nav" aria-label="Navigation principale">
-        <ul class="nav__list" id="navList">
-          <span class="nav__pill" id="navPill" aria-hidden="true"></span>
-          <li><a href="a-propos.html" class="nav__link">À propos</a></li>
-          <li><a href="le-cabinet.html" class="nav__link">Le cabinet</a></li>
-          <li><a href="massages.html" class="nav__link">Massages</a></li>
-          <li><a href="avis.html" class="nav__link">Avis</a></li>
-          <li><a href="contact.html" class="nav__link">Contact</a></li>
-        </ul>
-        <a href="contact.html" class="btn btn--primary nav__cta-m">Je prends du temps pour moi</a>
-      </nav>
+  <nav class="bulles" id="bulles" aria-label="Navigation principale">
 
-      <div class="header__end">
-        <a href="contact.html" class="btn btn--primary magnetic nav__cta">
-          <span>Je prends du temps pour moi</span>
-        </a>
-        <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
+    <button class="bulle" type="button" data-ouvre="moi" aria-expanded="false" aria-controls="moi">
+      <span class="bulle__rond">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.4" r="3.9"/><path d="M4.6 20.2a7.4 7.4 0 0 1 14.8 0"/></svg>
+      </span>
+      <span class="bulle__nom">Moi</span>
+    </button>
 
-    </div>
-  </header>
+    <button class="bulle" type="button" data-ouvre="lieu" aria-expanded="false" aria-controls="lieu">
+      <span class="bulle__rond">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V9.6L12 4l8 5.6V20"/><path d="M9.4 20v-5.4h5.2V20"/></svg>
+      </span>
+      <span class="bulle__nom">Le lieu</span>
+    </button>
 
-<main id="main">
+    <button class="bulle" type="button" data-ouvre="massages" aria-expanded="false" aria-controls="massages">
+      <span class="bulle__rond">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 13.4V5.6a1.6 1.6 0 0 1 3.2 0v5.2"/><path d="M11.8 10.4V6.4a1.6 1.6 0 0 1 3.2 0v4.4"/><path d="M15 10.8V8.2a1.5 1.5 0 0 1 3 0v6.2a5.6 5.6 0 0 1-5.6 5.6H11a5 5 0 0 1-4.3-2.5L5 14.7a1.5 1.5 0 0 1 2.4-1.8Z"/></svg>
+      </span>
+      <span class="bulle__nom">Massages</span>
+    </button>
 
-  <section class="hero" id="accueil">
-    <div class="hero__aura" aria-hidden="true">
-      <span class="orb orb--1"></span>
-      <span class="orb orb--2"></span>
-    </div>
+    <button class="bulle" type="button" data-ouvre="avis" aria-expanded="false" aria-controls="avis">
+      <span class="bulle__rond">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9L9.5 9Z"/></svg>
+      </span>
+      <span class="bulle__nom">Avis</span>
+    </button>
 
-    <div class="shell hero__inner">
+    <button class="bulle bulle--phare" type="button" data-ouvre="rdv" aria-expanded="false" aria-controls="rdv">
+      <span class="bulle__rond">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h3l2 5-2.4 1.4a12 12 0 0 0 5 5L15 13l5 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4 6.2 2 2 0 0 1 6 4Z"/></svg>
+      </span>
+      <span class="bulle__nom">Rendez-vous</span>
+    </button>
 
-      <div class="hero__content">
-        <p class="hero__eyebrow reveal" style="--d:.05s">
-          <span class="pulse"></span> Voisins-le-Bretonneux
-        </p>
-
-        <h1 class="hero__title">
-          <span class="ln"><span style="--d:.10s">Retrouvez</span></span>
-          <span class="ln"><span style="--d:.19s">votre équilibre</span></span>
-          <span class="ln"><span style="--d:.28s">&amp; bien-être</span></span>
-        </h1>
-
-        <p class="hero__text reveal" style="--d:.42s">
-          Vous accueillir, vous masser, et vous permettre de décrocher
-          un moment.
-        </p>
-
-        <div class="hero__actions reveal" style="--d:.52s">
-          <a href="contact.html" class="btn btn--primary btn--lg magnetic"><span>Je prends du temps pour moi</span></a>
-          <a href="massages.html" class="btn btn--outline btn--lg magnetic"><span>Mes massages</span></a>
-        </div>
-
-        <!-- Preuve sociale : avatars + un avis relayé toutes les 12 s.
-             Placé ici plutôt qu'en bas de page — c'est la première chose
-             que la cliente voit, sans avoir à faire défiler. -->
-        <a class="proof reveal" href="avis.html" style="--d:.62s" aria-label="Avis de clientes">
-          <span class="proof__top">
-            <span class="proof__avatars" aria-hidden="true">
-              <i class="ill"><img draggable="false" src="assets/img/illus/avatar-1.svg" alt="" loading="lazy" decoding="async"></i><i class="ill"><img draggable="false" src="assets/img/illus/avatar-2.svg" alt="" loading="lazy" decoding="async"></i><i class="ill"><img draggable="false" src="assets/img/illus/avatar-3.svg" alt="" loading="lazy" decoding="async"></i>
-            </span>
-            <b>Ce qu'en disent mes clientes</b>
-            <span class="proof__more" aria-hidden="true">Tous les avis</span>
-          </span>
-
-          <span class="proof__quote">
-            <span class="ticker__stars" aria-hidden="true">★★★★★</span>
-            <span class="ticker__stage" id="tickerStage">
-              <span class="ticker__item is-on">« Lorem ipsum dolor sit amet, consectetur adipiscing elit. »<i>Prénom N. · Kobido</i></span>
-              <span class="ticker__item">« Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. »<i>Prénom N. · Relaxation</i></span>
-              <span class="ticker__item">« Duis aute irure dolor in reprehenderit in voluptate velit esse. »<i>Prénom N. · Drainage</i></span>
-              <span class="ticker__item">« Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia. »<i>Prénom N. · Madérothérapie</i></span>
-              <span class="ticker__item">« Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci. »<i>Prénom N. · Dos &amp; nuque</i></span>
-            </span>
-          </span>
-        </a>
-      </div>
-
-      <div class="hero__visual" id="heroVisual">
-        <div class="hero__tilt" id="heroTilt">
-          <figure class="ill arch hero__photo">
-            <!-- Deux découpes, une par format : verticale pour l'arche haute
-                 du desktop, horizontale pour l'arche large du téléphone.
-                 Rogner la verticale à la hauteur du mobile perdait les côtés. -->
-            <picture>
-              <source media="(max-width:860px)" srcset="assets/img/marie-hero-large.webp" width="930" height="698">
-              <img draggable="false" src="assets/img/marie-hero.webp" alt="Marie, masseuse bien-être à Voisins-le-Bretonneux" width="1040" height="1144" fetchpriority="high" decoding="async">
-            </picture>
-          </figure>
-        </div>
-      </div>
-
-    </div>
-
-    <a href="a-propos.html" class="cue" id="cue" aria-label="Descendre">
-      <span class="cue__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13m0 0-6-6m6 6 6-6"/></svg></span>
-      <span class="cue__txt">Découvrir</span>
-    </a>
-  </section>
-
-
+  </nav>
 </main>
 
-  <!-- ---------- FOOTER ---------- -->
-  <footer class="footer">
-    <div class="shell footer__inner">
+<!-- ============================================================
+     LES PANNEAUX — présents dans la page, révélés au clic.
+     Ils restent dans le document pour que les moteurs les lisent ;
+     `inert` les retire du clavier et des lecteurs d'écran tant
+     qu'ils sont fermés.
+     ============================================================ -->
 
-      <div class="footer__top">
-        <a href="index.html" class="brand brand--footer" aria-label="Marie Massage — accueil">
-          <img draggable="false" class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
-        </a>
-        <p class="footer__tag">Masseuse bien-être · Voisins-le-Bretonneux</p>
+<section class="panneau" id="moi" aria-labelledby="moi-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="feuille">
+    <p class="sur-titre">À propos</p>
+    <h2 id="moi-t">Masser, par plaisir</h2>
+    <p class="chapo">
+      En parallèle de mon activité principale dans le paramédical, j'ai choisi de
+      consacrer une partie de mon temps à quelque chose que j'aime particulièrement&nbsp;:
+      masser.
+    </p>
+    <p>
+      L'idée est simple&nbsp;: vous accueillir, vous masser, et vous permettre de
+      décrocher un moment.
+    </p>
+    <p>
+      C'est une activité que je fais par plaisir, avec l'envie de proposer des
+      massages de qualité dans une ambiance simple et agréable.
+    </p>
+  </div>
+</section>
 
-        <!-- TODO : coordonnées fictives — à remplacer ici ET dans contact.html -->
-        <p class="footer__contact">
-          <a href="tel:+33600000000">06 00 00 00 00</a>
-          <span aria-hidden="true">·</span>
-          <a href="mailto:contact@mariemassage.fr">contact@mariemassage.fr</a>
-        </p>
-      </div>
+<section class="panneau" id="lieu" aria-labelledby="lieu-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="feuille">
+    <p class="sur-titre">Le lieu</p>
+    <h2 id="lieu-t">Une parenthèse<br>hors du temps</h2>
+    <p class="chapo">
+      J'ai créé une pièce entièrement dédiée aux massages, pensée pour vous
+      accueillir dans une atmosphère agréable et chaleureuse.
+    </p>
+    <p>
+      Un petit espace où, pendant une heure, le monde peut bien attendre un peu.
+    </p>
+    <ul class="details">
+      <li>Linge frais à chaque séance</li>
+      <li>Huiles végétales bio</li>
+      <li>Musique &amp; lumière tamisées</li>
+      <li>Parking gratuit</li>
+    </ul>
+  </div>
+</section>
 
-      <div class="footer__bottom">
-        <p>© <span id="year">2026</span> Marie Massage · <a href="mentions-legales.html">Mentions légales</a></p>
-        <p class="footer__mention">Les massages proposés sont des soins de bien-être, non thérapeutiques.</p>
-      </div>
+<section class="panneau" id="massages" aria-labelledby="massages-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="feuille">
+    <p class="sur-titre">Les massages</p>
+    <h2 id="massages-t">Cinq soins,<br>cinq univers</h2>
+    <p class="chapo">
+      Parce qu'on n'a pas tous les mêmes envies ni les mêmes besoins, chacun a
+      sa façon de prendre soin de vous.
+    </p>
 
-    </div>
-  </footer>
+    <!-- TODO : durées et tarifs réels -->
+    <ul class="soins">
+      <li><b>Kobido</b><i>Lifting japonais du visage</i><span>60 min · XX €</span></li>
+      <li><b>Madérothérapie</b><i>Soin corps remodelant</i><span>75 min · XX €</span></li>
+      <li><b>Relaxation</b><i>Massage corps complet</i><span>90 min · XX €</span></li>
+      <li><b>Drainage lymphatique</b><i>Jambes légères</i><span>60 min · XX €</span></li>
+      <li><b>Dos &amp; nuque</b><i>Format express</i><span>30 min · XX €</span></li>
+    </ul>
+  </div>
+</section>
 
-</div><!-- /.page -->
+<section class="panneau" id="avis" aria-labelledby="avis-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="feuille">
+    <p class="sur-titre">Retours clientes</p>
+    <h2 id="avis-t">Elles en parlent<br>mieux que moi</h2>
 
-<a href="#main" class="totop" id="totop" aria-label="Remonter en haut">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg>
-</a>
+    <p class="note"><b id="note-moy">—</b> <span id="note-etoiles" aria-hidden="true"></span>
+      <small><span id="note-nb">—</span> avis</small></p>
 
+    <!-- TODO : vrais témoignages, déposés par QR code -->
+    <ul class="avis" id="avis-liste">
+      <li data-note="5"><q>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</q><cite>Prénom N. · Kobido</cite></li>
+      <li data-note="5"><q>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</q><cite>Prénom N. · Relaxation</cite></li>
+      <li data-note="5"><q>Duis aute irure dolor in reprehenderit in voluptate velit esse.</q><cite>Prénom N. · Drainage</cite></li>
+      <li data-note="4"><q>Excepteur sint occaecat cupidatat non proident, sunt in culpa.</q><cite>Prénom N. · Dos &amp; nuque</cite></li>
+    </ul>
+  </div>
+</section>
 
-<script src="assets/js/main.js"></script>
+<section class="panneau" id="rdv" aria-labelledby="rdv-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="feuille feuille--rdv">
+    <p class="sur-titre">Rendez-vous</p>
+    <h2 id="rdv-t">On s'appelle&nbsp;?</h2>
+    <p class="chapo">
+      Les rendez-vous se prennent uniquement par téléphone&nbsp;: on convient
+      ensemble du soin et du créneau.
+    </p>
+
+    <!-- TODO : numéro fictif -->
+    <a class="numero" href="tel:+33600000000">06&nbsp;00&nbsp;00&nbsp;00&nbsp;00</a>
+    <a class="appel" href="tel:+33600000000">Appeler Marie</a>
+
+    <ul class="details">
+      <li>Lun – Sam · 9h – 20h</li>
+      <li>Voisins-le-Bretonneux (78960)</li>
+      <li>Adresse exacte communiquée au rendez-vous</li>
+    </ul>
+
+    <p class="ailleurs">
+      <a href="https://www.instagram.com/marieemassage/" target="_blank" rel="noopener">@marieemassage</a>
+      <a href="mailto:contact@mariemassage.fr">contact@mariemassage.fr</a>
+    </p>
+  </div>
+</section>
+
+<footer class="pied">
+  <p>© <span id="annee">2026</span> Marie Massage · <a href="mentions-legales.html">Mentions légales</a></p>
+  <p class="pied__note">Les massages proposés sont des soins de bien-être, non thérapeutiques.</p>
+</footer>
+
+<script src="assets/js/v2.js"></script>
 </body>
 </html>

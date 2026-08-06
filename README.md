@@ -1,10 +1,39 @@
-# Marie Massage — site vitrine
+# Marie Massage — site vitrine (V2, « les bulles »)
 
 Site vitrine statique pour **Marie Massage**, masseuse bien-être à Voisins-le-Bretonneux.
 
 > ⚠️ **En cours.** Les textes de présentation viennent de Marie ; il reste du
 > lorem ipsum sur les avis et les descriptions de soins, et les tarifs sont
 > notés `XX €`. Voir « À compléter » plus bas.
+
+## Deux versions, deux branches
+
+Marie a demandé un site plus radical : *« sur la page d'accueil juste un titre
+et sa photo, des onglets sous forme de bulles imagées par des logos, un site
+qui sort de l'ordinaire, très smooth, pas bourré d'informations »*. Plutôt que
+d'écraser le premier site, chaque parti pris vit sur sa branche :
+
+| Branche | Ce que c'est |
+| ------- | ------------ |
+| `claude/git-repo-access-ea5z33` | **V1** — site classique en 6 pages, en-tête, héros, sections. |
+| `claude/v2-bulles` | **V2** — un seul écran : le portrait, le prénom, cinq bulles. *(cette branche)* |
+
+Les deux partagent la charte, les polices, la photo source et l'outillage. Une
+idée de mise en forme adoptée d'un côté se transpose sans peine de l'autre.
+
+## Le parti pris de la V2
+
+Une page. Pas de défilement à l'accueil (`html{overflow:hidden}`) : tout tient
+dans la fenêtre, sur téléphone comme sur écran large. Les cinq rubriques sont
+des **panneaux déjà présents dans le document**, masqués par `clip-path`, et
+révélés au toucher : le disque de la bulle grandit jusqu'à remplir l'écran.
+L'ouverture part donc **de l'endroit qu'on a touché**, pas du milieu de l'écran
+— c'est là que se joue l'impression de fluidité.
+
+Les panneaux restant dans le HTML, les moteurs de recherche lisent tout le
+contenu sans exécuter une ligne de script ; `inert` les retire du clavier et
+des lecteurs d'écran tant qu'ils sont fermés. Chaque panneau a son adresse
+(`…/#massages`), partageable et compatible avec le bouton « retour ».
 
 ## Lancer le site en local
 
@@ -19,41 +48,33 @@ python3 -m http.server 8000
 ## Structure
 
 ```
-index.html            Accueil (page d'atterrissage : le héros)
-a-propos.html         À propos
-le-cabinet.html       Le cabinet
-massages.html         Les massages & tarifs
-avis.html             Avis clientes
-contact.html          Contact & rendez-vous
+index.html            Le site entier : l'accueil + les cinq panneaux
 mentions-legales.html Mentions légales (squelette — voir « À compléter »)
 404.html              Page introuvable
 robots.txt            indexation
 sitemap.xml           plan du site
 assets/
   css/fonts.css       polices auto-hébergées (@font-face)
-  css/style.css       styles + animations
-  js/main.js          interactions
+  css/v2.css          styles, animations, panneaux
+  js/v2.js            ouverture des panneaux, historique, synthèse des avis
+  css/style.css       feuille de la V1 — conservée, plus chargée ici
+  js/main.js          script de la V1 — conservé, plus chargé ici
   fonts/              Figtree 400/500/600 (woff2, sous-ensembles latin)
-  img/logo-mark.png   pictogramme (découpé dans le logo fourni) — le logo
-  img/logo-text.png   nom + sous-titre — plus inséré, tenu à jour au cas où
+  img/marie-rond*.webp portrait circulaire (deux tailles)
   img/favicon*.png    favicons (onglet + écran d'accueil iOS)
-  img/illus/          19 illustrations plates (SVG)
-tools-illustrations.py  script qui régénère les illustrations
-tools-logo.py           découpe le pictogramme de logov2.png et fait les favicons
-tools-build-pages.py    échafaudage ayant produit les 6 pages (déjà joué)
+tools-photos.py       découpe le portrait aux formats du gabarit
+tools-logo.py         découpe le pictogramme de logov2.png et fait les favicons
+tools-preview.py      assemble tout en un fichier autonome (aperçu partageable)
 ```
 
-Le site est **multi-pages** : on atterrit sur l'accueil, et chaque onglet de la
-navigation est un fichier `.html` à part. C'est plus léger à charger sur mobile,
-et chaque page se travaille isolément.
+Le site tient dans **un seul fichier HTML**. Pas d'en-tête à dupliquer, pas de
+navigation à répercuter : ajouter une rubrique, c'est une bulle dans `<nav>` et
+une `<section class="panneau">` plus bas, reliées par `data-ouvre` /
+`id`. Le script ne connaît aucune liste de pages, il lit le document.
 
-L'en-tête et le pied de page sont **dupliqués dans les 6 fichiers** — c'est le
-prix à payer pour un site statique sans outil de build. Si tu modifies la
-navigation ou le pied de page, répercute-le dans les 6.
-
-`tools-build-pages.py` a servi une seule fois à découper la page unique
-d'origine. **Ne le relance pas** : il écraserait tes modifications. Les fichiers
-`.html` sont désormais la source de vérité et s'éditent directement.
+Les fichiers de la V1 (`style.css`, `main.js`, les illustrations) restent dans
+le dépôt : ils ne sont plus chargés, mais servent de réserve si une idée de la
+V1 revient. Ils ne coûtent rien au visiteur.
 
 ## Charte graphique
 
@@ -97,31 +118,24 @@ CNIL considère comme non conforme au RGPD.
 
 ## Ce qui est déjà en place
 
-- Responsive (mobile, tablette, desktop) avec menu latéral sur mobile
-- Animations : apparition au scroll, parallaxe, compteur, défilement inertiel,
-  boutons magnétiques
-- Navigation immédiate : aucun délai n'est ajouté au passage d'une page à
-  l'autre (voir « Le passage d'une page à l'autre »)
-- Carrousel d'avis (flèches, points, lecture auto, swipe tactile)
-- Page avis : les 6 premiers témoignages affichés, les suivants repliés
-  derrière « Voir tous les avis »
-- Page contact tournée vers l'appel : le numéro en grand, cliquable
-- Libellé du bouton principal : « Je prends du temps pour moi » (choix de
-  Marie, en place des huit occurrences de « Prendre rendez-vous »)
-- Accessibilité : navigation clavier, libellés ARIA, lien d'évitement,
-  respect de `prefers-reduced-motion`
+- Un écran unique qui ne défile pas, sur téléphone comme sur desktop
+- Cinq bulles, la dernière (« Rendez-vous ») pleine et colorée : c'est l'action
+  attendue, la prise de rendez-vous se faisant uniquement par téléphone
+- Ouverture des panneaux en `clip-path`, ancrée sur la bulle touchée
+- Adresses partageables (`#massages`) et bouton « retour » du téléphone géré
+- Note moyenne des avis **calculée** à partir des avis présents, jamais écrite
+  en dur (voir « Les chiffres affichés »)
+- Métadonnées de partage, JSON-LD, `robots.txt`, `sitemap.xml`, page 404
+- Accessibilité : navigation clavier, `inert` sur les panneaux fermés, focus
+  rendu à la bulle d'origine, lien d'évitement, `prefers-reduced-motion`
 
 ## Les illustrations
 
-Hors du portrait de Marie, chaque visuel est une **illustration vectorielle
-plate** aux couleurs de la marque (`assets/img/illus/`) : le cabinet, les soins,
-les avatars. Elles ont permis de livrer un site complet sans attendre de séance
-photo, et cèdent la place au fur et à mesure que de vraies photos arrivent.
-
-Elles sont générées par `tools-illustrations.py`, qui partage une palette et des
-primitives communes (tête, main, feuille, bougie, flacon) pour que les 19 scènes
-restent cohérentes entre elles. Pour ajuster une couleur ou une scène, modifier
-le script puis le relancer :
+La V2 n'en affiche aucune : elle ne montre que le portrait de Marie. Les 19
+illustrations vectorielles plates de la V1 (`assets/img/illus/` : le cabinet,
+les soins, les avatars) restent au dépôt, générées par `tools-illustrations.py`
+à partir d'une palette et de primitives communes (tête, main, feuille, bougie,
+flacon). Si un panneau devait un jour porter un visuel, il est là :
 
 ```bash
 python3 tools-illustrations.py
@@ -129,13 +143,9 @@ python3 tools-illustrations.py
 
 ## La photo de Marie
 
-Le portrait a remplacé les illustrations sur l'accueil. Une seule photo alimente
-des emplacements de rapports différents : `tools-photos.py` en tire les découpes
-depuis `assets/img/marie-source.png`.
-
-La bulle « Moi c'est Marie » qui se posait sur la photo du héros a été retirée à
-la demande de Marie : sa vignette répétait le visage juste derrière, et
-« masseuse bien-être » figure déjà dans le pied de page.
+C'est le seul visuel du site, et le premier regard : à l'accueil il n'y a
+qu'elle et son prénom. Une seule photo source alimente toutes les découpes —
+`tools-photos.py` les tire de `assets/img/marie-source.png` :
 
 ```bash
 python3 tools-photos.py
@@ -143,41 +153,33 @@ python3 tools-photos.py
 
 | Fichier | Usage | Format |
 | ------- | ----- | ------ |
-| `marie-hero.webp`       | arche du héros, desktop   | 1040 × 1144 |
-| `marie-hero-large.webp` | arche du héros, téléphone | 900 × 675   |
-| `marie-portrait.webp`   | bloc « à propos »         | 800 × 1000  |
+| `marie-rond.webp`       | portrait de l'accueil, desktop   | 900 × 900   |
+| `marie-rond-m.webp`     | portrait de l'accueil, téléphone | 700 × 700   |
+| `marie-hero.webp`       | héros de la V1, desktop          | 1040 × 1144 |
+| `marie-hero-large.webp` | héros de la V1, téléphone        | 900 × 675   |
+| `marie-portrait.webp`   | bloc « à propos » de la V1       | 800 × 1000  |
 
-Le héros sert **une découpe par format**, via `<picture>`. L'arche est haute
-sur desktop, large et basse sur téléphone. Le script d'aperçu intègre donc
-`srcset` autant que `src`, sans quoi l'image mobile serait introuvable dans
-l'artifact.
-
-Sur téléphone la photo occupe **30 % de l'écran**, hauteur exprimée en `svh` et
-non en rapport d'image : la part reste la même du plus petit au plus grand
-téléphone. Elle en prenait 40 %, et repoussait le bouton hors du premier écran.
-
-30 % est un plancher, pas un choix esthétique : la photo d'origine ne fait que
-931 px de large, donc dans un cadre de 350 px le visage se rend à 188 px quoi
-qu'on fasse. En dessous de ~200 px de haut, le cadre coupe le menton ou le
-front. C'est aussi pourquoi la découpe mobile prend toute la largeur disponible
-— moins on zoome, moins la tête occupe de hauteur une fois rendue.
+Deux tailles pour un seul cadre rond, servies par `<picture>` : sur téléphone
+le disque occupe une bien plus grande part de l'écran, mais l'écran est plus
+étroit — 700 px suffisent donc à la même netteté apparente, pour un tiers de
+poids en moins. Le script d'aperçu intègre `srcset` autant que `src`, sans quoi
+l'image mobile serait introuvable dans l'artifact.
 
 Le point de visée est le **visage**, pas le centre de l'image : un recadrage
-centré coupait le haut du crâne sur le format le plus carré. Les repères sont
-en tête du script, en fractions de l'image d'origine.
+centré coupait le haut du crâne sur le format carré. Les repères sont en tête
+du script, en fractions de l'image d'origine.
 
-La page « à propos » n'affiche plus de portrait : la même photo ouvrait déjà
-l'accueil, et la revoir en tête du chapitre suivant n'apprenait rien. La page y
-gagne 0,7 écran sur téléphone, et sa grille tombe à une colonne, le texte borné
-à une longueur de ligne lisible.
-
-Les 19 illustrations restent en place sur les autres pages.
+Le disque mesure `clamp(150px, 34vh, 300px)` : exprimé en hauteur de fenêtre,
+il garde la même part de l'écran du plus petit téléphone au plus grand, et ne
+pousse jamais les bulles hors de vue. Un halo très dilué derrière lui l'assoit
+sur le fond, et une respiration de neuf secondes (`souffle`) l'anime à peine —
+assez pour que la page ne paraisse pas figée, trop peu pour distraire.
 
 ## Mise en ligne
 
 Ce qu'un site publié doit porter, et qui est en place :
 
-- **Aperçu des liens partagés** (`og:` / `twitter:`) sur les 8 pages, avec une
+- **Aperçu des liens partagés** (`og:` / `twitter:`) sur les 3 pages, avec une
   image dédiée `assets/img/partage.jpg` (1200 × 630). Sans elle, un lien envoyé
   sur WhatsApp ou Instagram s'affiche sans visuel.
 - **Données structurées** `HealthAndBeautyBusiness` sur l'accueil : nom,
@@ -187,8 +189,8 @@ Ce qu'un site publié doit porter, et qui est en place :
 - **Page 404** et **mentions légales**, liées depuis le pied de page.
 
 > ⚠️ Les URL absolues (`og:url`, `canonical`, sitemap, robots) pointent vers
-> `https://www.mariemassage.fr`. **À remplacer par le vrai domaine** avant la
-> mise en ligne — un `canonical` faux fait disparaître le site des résultats.
+> l'adresse GitHub Pages de relecture. **À remplacer par le vrai domaine** avant
+> la mise en ligne — un `canonical` faux fait disparaître le site des résultats.
 
 ## Les photos et leur enregistrement
 
@@ -210,100 +212,67 @@ mentions légales.
 > retirer. Ne pas la réintroduire sans le lui redemander.
 
 Trois clientes sur quatre arriveront depuis un téléphone : c'est le format de
-référence, pas une adaptation du desktop. Quatre points en découlent.
+référence, pas une adaptation du desktop. La V2 est née de là — le meilleur
+moyen d'alléger une page mobile étant de ne pas la remplir.
 
-**Le héros ne commence plus par une photo pleine hauteur.** `order:-1` sur le
-visuel, pensé pour l'ancienne illustration, plaçait le portrait avant le texte :
-avec une vraie photo de 500 px, le titre tombait à 728 px, hors d'un écran de
-664. La photo reste en tête — on veut voir Marie tout de suite — mais sa hauteur
-est plafonnée à `min(40svh, 310px)`. Le titre remonte à 515 px.
-
-**La liste des soins passe en lignes** sous 560 px : vignette à gauche, nom,
-durée et prix à droite. En cartes empilées, chaque soin coûtait ~600 px dont 250
-d'illustration — la page faisait 6,9 écrans pour six tarifs, et comparer deux
-soins imposait un aller-retour. Elle fait maintenant 3,5 écrans. La description
-est masquée à cette largeur (elle reste dans le HTML, donc lisible par les
-moteurs et les lecteurs d'écran).
-
-**La page contact met le numéro juste sous le titre.** En bas de page, après
-l'adresse et les horaires, il fallait défiler tout l'écran pour trouver le seul
-moyen de prendre rendez-vous. Le bloc d'appel et les infos pratiques sont deux
-enfants de grille distincts, réordonnés par `grid-template-areas`.
+**Tout tient dans la fenêtre.** L'accueil ne défile pas : portrait, prénom,
+accroche et cinq bulles. La V1 demandait 1,8 à 3 écrans par page ; ici il n'y
+a plus d'écran à parcourir avant de trouver quoi que ce soit. Les hauteurs sont
+en `vh` et non en pixels, donc la composition tient aussi bien sur un petit
+téléphone que sur un grand.
 
 **L'échelle typographique est calée sur le téléphone.** Les bornes basses des
 `clamp()` ne s'appliquent qu'aux petits écrans : les baisser ne touche que le
-mobile, sans un empilement d'exceptions. Le titre du héros passe de 42 à 33 px,
-celui des pages intérieures de 37 à 29, les boutons de 59 à 50 px de haut — la
-cible confortable au pouce est de 48. L'interligne descend de 1,7 à 1,6 : c'est
-confortable sur une ligne de 80 caractères, trop aéré sur une ligne de 40.
+mobile, sans un empilement d'exceptions.
 
-**Lisibilité et cibles tactiles**, relevées par un balayage de tous les
-éléments visibles des 8 pages :
+**Les cibles tactiles.** Chaque bulle fait 64 px de diamètre minimum et son
+libellé fait partie du bouton : la zone de contact dépasse largement les 44 px
+recommandés. Rien ne descend sous 11 px de texte.
 
-- rien ne descend sous 11 px. L'intitulé du soin tombait à 9,9 px et
-  l'étiquette à 9 — or l'intitulé dit *ce qu'est* le massage, il doit se lire.
-- toute zone cliquable atteint 44 px de haut, la cible confortable au pouce.
-  « Réserver » n'en faisait que 20 : plutôt que d'épaissir le lien — six cartes,
-  six fois la hauteur ajoutée — sa zone est étendue à la carte entière par un
-  `::after`. Aucune hauteur gagnée, et on peut appuyer n'importe où sur la carte.
-  Les liens du pied de page gagnent un remplissage compensé par une marge
-  négative : de la surface de contact, pas de la mise en page.
+**Le paysage et les petits écrans.** Le texte, les bulles et le pied de page
+ne rétrécissent pas avec la hauteur de l'écran ; seul le portrait le peut, et
+c'est donc lui qui cède. Sous 620 px de haut il passe de 34 à 28 % de la
+fenêtre — sans quoi un 320 × 568 débordait de 19 px, et comme rien ne défile
+ici, ces 19 px étaient perdus, pas repoussés. Sous 520 px — un téléphone
+couché, ou un clavier ouvert — il rétrécit encore et l'accroche disparaît : la
+commune figure déjà dans le panneau « Le lieu ». Les bulles, elles, restent
+toujours visibles. Vérifié de 280 × 653 à 1920 × 1080 : aucun débord.
 
-**Ce qui illustre rétrécit, ce qui informe reste.** Sous 560 px : les vues du
-cabinet passent à des tuiles de 112 px, la carte cadeau perd son visuel et garde
-son message, les avis perdent leur avatar — un dessin générique posé sur un
-prénom anonyme. Deux blocs disparaissent parce qu'ils font doublon : la carte de
-présentation du héros, qui répète le texte situé juste dessous, et le pavé
-« À votre tour ? » des avis, qui propose l'action déjà offerte en permanence par
-la barre d'appel.
+**Au toucher.** `touch-action: manipulation` écarte le double-appui pour zoomer
+et le délai que le navigateur garde en réserve avant de valider un appui. Le
+voile gris d'iOS est retiré au profit d'états `:active` conformes à la charte —
+sur un écran tactile `:hover` ne se déclenche jamais. Les panneaux portent
+`overscroll-behavior: contain` : le rebond de fin de course ne se propage pas
+au fond.
 
-Ces règles vivent **après** la section responsive dans `style.css` : à
-spécificité égale c'est la cascade qui tranche, et placées avant, elles étaient
-écrasées par les règles à 860 px qu'elles affinent.
+## Les panneaux
 
-| Page | Avant | Après |
-| ---- | ----- | ----- |
-| accueil    | 2,6 écrans · titre à 728 px | 1,9 écran · titre à 423 px |
-| à propos   | 2,7 écrans | 1,8 écran |
-| le cabinet | 2,7 écrans | 2,2 écrans |
-| massages   | 6,9 écrans | 2,9 écrans |
-| avis       | 4,0 écrans | 3,0 écrans |
-| contact    | numéro en bas de page | numéro sous le titre |
+Le geste central du site : la bulle s'ouvre en panneau. Trois points le font
+tenir.
 
-## Le menu mobile
+**Le disque part de la bulle.** Au clic, le JS relève le centre du rond touché
+et le pose en `--x` / `--y` sur le panneau ; le CSS anime
+`clip-path: circle(0 → 150% at var(--x) var(--y))`. Sans ces coordonnées
+l'ouverture partirait du milieu de l'écran et perdrait son lien avec ce qu'on
+vient de toucher. `clip-path` s'anime sur le compositeur : aucune remise en
+page, donc aucune saccade.
 
-En dessous de 1000 px, la navigation devient un tiroir latéral. Deux pièges
-s'y sont cachés longtemps — les noter évite de les réintroduire :
+**`visibility` doit être décalée dans le temps.** Un panneau réduit à un disque
+de rayon nul reste techniquement affiché ; il capterait les clics par-dessus
+l'accueil. On le passe donc en `visibility:hidden`, mais **après** la fermeture
+(`transition: visibility 0s linear .55s`), sinon il disparaîtrait avant que
+l'animation ait joué. À l'ouverture, la même transition est remise à `0s`.
 
-**Le fond doit être figé en passant `<body>` en position fixe**, pas avec
-`overflow:hidden`. C'est `<html>` qui défile, pas `<body>` : la règle ne
-verrouillait rien. Pire, elle faisait de `<body>` un conteneur de défilement,
-et l'en-tête `sticky` s'y accrochait — il partait donc hors de l'écran avec le
-contenu, emportant le bouton qui sert à refermer le menu. Le JS mémorise la
-position défilée, la pose en `top` négatif, et la restitue à la fermeture
-(en `behavior:'instant'`, sinon `scroll-behavior:smooth` la fait glisser à vue).
+**Le clavier suit le doigt.** `inert` est retiré à l'ouverture et remis à la
+fermeture : tant qu'un panneau est fermé, ni la tabulation ni un lecteur
+d'écran ne le traversent — alors que son contenu reste dans le document pour
+les moteurs de recherche. Le focus part sur la croix de fermeture, et revient
+sur la bulle d'origine quand on referme, sinon il retombe en tête de document
+et l'on perd sa place.
 
-**`.page` ne doit pas rester un contexte d'empilement.** Son animation
-d'entrée était en `animation-fill-mode: both`, ce qui garde l'animation
-d'opacité appliquée une fois finie — et une opacité animée crée un contexte
-d'empilement permanent. L'en-tête et le tiroir s'y trouvaient enfermés au
-niveau 0, donc **sous** le voile du menu (`z-index:940`), quel que soit le
-`z-index` du header : on ne fait pas sortir un descendant du contexte de son
-ancêtre. `backwards` pose l'état de départ avant l'animation puis rend la main.
-
-L'ordre d'empilement attendu, une fois cela réglé : voile 940 < tiroir 950 <
-en-tête et bouton 960. Un appui sur le voile referme le tiroir.
-
-**Le tiroir doit porter `display:flex`.** La règle mobile posait
-`flex-direction`, `justify-content` et `gap` sans jamais déclarer le mode
-d'affichage : `<nav>` restait un bloc, et les trois propriétés étaient
-inertes. Le bouton « Prendre rendez-vous » se retrouvait collé sous
-« Contact », et la liste bloquée en haut au lieu d'être centrée.
-
-L'onglet courant se signale par une **pastille sur desktop** et un
-**souligné dans le tiroir**. Le lien y passe en `inline-block` pour épouser
-son texte : en bloc, il occupait toute la largeur du tiroir et le repère se
-posait au milieu du vide, à droite du mot.
+`Échap`, le bouton « retour » du téléphone et l'arrivée directe sur une
+adresse `#…` passent tous par les deux mêmes fonctions, `ouvrir()` et
+`fermer()`.
 
 ## Fluidité
 
@@ -327,41 +296,25 @@ tout le reste en `loading=lazy` : la page d'accueil descend de 91 à 73 Ko et de
 et avec lui le délai que le navigateur garde en réserve avant de valider un
 appui. Le voile gris d'iOS est retiré au profit d'états `:active` conformes à la
 charte — sur un écran tactile `:hover` ne se déclenche jamais, donc appuyer sur
-une carte ne renvoyait aucun retour. Le tiroir porte `overscroll-behavior:
-contain`, la page `overscroll-behavior-y: none` : le rebond de fin de course ne
-se propage plus au fond.
+une bulle ne renvoyait aucun retour. Les panneaux portent `overscroll-behavior:
+contain` : le rebond de fin de course ne se propage plus au fond.
 
 ## Le passage d'une page à l'autre
 
-Le site est multi-pages : chaque onglet est un vrai chargement. Trois délais
-s'y étaient ajoutés, pour un temps perçu d'**une seconde** — mesuré à 1024 ms
-vers une page, 1368 ms au retour sur l'accueil :
-
-| Délai                                  | Coût     |
-| -------------------------------------- | -------- |
-| fondu de sortie retenant la navigation | 280 ms   |
-| animation d'entrée (fondu + glissement)| 600 ms   |
-| préchargeur rejoué à chaque retour     | ~1100 ms |
-
-Les trois sont retirés ou réduits :
-
-- **Le clic ne retient plus rien.** Le fondu de sortie imposait 280 ms
-  d'attente avant même que le navigateur commence à charger — du temps ajouté
-  pour masquer du temps.
-- **L'animation d'entrée** passe de 600 ms avec glissement à un fondu de
-  200 ms. Longue et mobile, elle se lisait comme un chargement alors que la
-  page était déjà là.
-- **Le préchargeur ne joue qu'à la première arrivée** de la session
-  (`sessionStorage`). Revenir sur l'accueil le rejouait pour masquer un
-  chargement déjà terminé.
-
-Résultat mesuré : **336 ms** vers une page, **282 ms** au retour sur l'accueil.
+Sans objet ici : il n'y a plus qu'une page. C'était le principal reproche fait
+à la V1 — chaque onglet rechargeait le document, et trois délais s'y étaient
+ajoutés pour un temps perçu d'une seconde (fondu de sortie retenant la
+navigation 280 ms, animation d'entrée 600 ms, préchargeur rejoué à chaque
+retour ~1100 ms). Ramenés à 336 ms là-bas, ils tombent à zéro ici : le contenu
+est déjà chargé, l'ouverture d'un panneau est une animation, pas une
+navigation.
 
 ## La prise de rendez-vous
 
-Les rendez-vous se prennent **uniquement par téléphone**. La page contact est
-donc bâtie autour de l'appel : le numéro en grand, en `tel:` — un appui suffit
-depuis un mobile — et les horaires juste dessous.
+Les rendez-vous se prennent **uniquement par téléphone**. C'est pour cela que
+la cinquième bulle est pleine et colorée quand les autres sont creuses : elle
+ouvre un panneau bâti autour de l'appel, le numéro en grand, en `tel:` — un
+appui suffit depuis un mobile — et les horaires juste dessous.
 
 Le formulaire de contact qui occupait cette place a été **retiré**, pas
 seulement masqué : il ne pouvait pas prendre de rendez-vous et laissait croire
@@ -374,8 +327,8 @@ pas un canal de réservation.
 ## Les chiffres affichés
 
 Aucune statistique n'est écrite en dur : **rien n'est inventé**. La note
-moyenne et le nombre d'avis de la page « Avis » sont recalculés au chargement
-à partir des témoignages réellement présents dans `avis.html`. Chaque
+moyenne et le nombre d'avis du panneau « Avis » sont recalculés au chargement
+à partir des témoignages réellement présents dans `index.html`. Chaque
 témoignage porte sa note :
 
 ```html
@@ -461,17 +414,18 @@ transparence, se perdrait sur une barre d'onglets sombre. L'ancien
 - [ ] **Textes** — remplacer tout le lorem ipsum (présentation, cabinet, soins)
 - [ ] **Photos** — le portrait de Marie est en place ; le cabinet et les soins
       sont encore illustrés
-- [ ] **Nombre de massages** — le texte de Marie annonce **5 massages**, la page
-      en présente **6** (Kobido, madérothérapie, relaxation, drainage
-      lymphatique, massage bébé, dos & nuque). À trancher.
+- [ ] **Nombre de massages** — le panneau en présente **5** (Kobido,
+      madérothérapie, relaxation, drainage lymphatique, dos & nuque), conforme
+      au texte de Marie. Le massage bébé de la V1 a été retiré — à confirmer.
 - [ ] **Tarifs et durées** — les `XX €` dans la section massages
 - [ ] **Avis** — les témoignages sont des exemples, à remplacer par les vrais
 - [ ] **Coordonnées** — téléphone et email sont des valeurs fictives, à
-      remplacer dans `contact.html` **et dans le pied de page des 6 pages**
+      remplacer dans `index.html` (panneau « Rendez-vous », JSON-LD) et dans
+      `mentions-legales.html`
 - [ ] **Mentions légales** — la page existe, chaque `[À COMPLÉTER]` doit être
       renseigné : nom de famille, SIRET, adresse, hébergeur
-- [ ] **Nom de domaine** — remplacer `www.mariemassage.fr` dans les balises
-      `og:`/`canonical` des 8 pages, `robots.txt` et `sitemap.xml`
+- [ ] **Nom de domaine** — remplacer l'adresse GitHub Pages dans les balises
+      `og:`/`canonical` des 3 pages, `robots.txt` et `sitemap.xml`
 - [ ] **Carte cadeau** — actuellement un simple encart « bientôt »
 
 ## Outillage
@@ -492,7 +446,9 @@ Le plus court chemin pour obtenir une adresse partageable, sans rien installer :
 
 1. Sur GitHub, dépôt **`sringot/per-`** → onglet **Settings** → **Pages**
 2. Sous *Build and deployment* → *Source*, choisir **Deploy from a branch**
-3. Branche : **`claude/git-repo-access-ea5z33`**, dossier **`/ (root)`** → **Save**
+3. Branche : **`claude/v2-bulles`** pour la V2, **`claude/git-repo-access-ea5z33`**
+   pour la V1 ; dossier **`/ (root)`** → **Save**. Changer de branche ici, c'est
+   changer la version en ligne — pratique pour les faire comparer à Marie.
 
 Une minute plus tard, le site est servi sur :
 
@@ -503,8 +459,7 @@ https://sringot.github.io/per-/
 Chaque `git push` sur cette branche met la page en ligne à jour.
 
 Le site n'utilise **aucun chemin absolu** : il fonctionne aussi bien à la racine
-d'un domaine que dans un sous-dossier comme `/per-/`. Vérifié page par page,
-navigation et menu mobile compris.
+d'un domaine que dans un sous-dossier comme `/per-/`.
 
 Les URL absolues (`og:`, `canonical`, `sitemap.xml`, `robots.txt`) pointent sur
 cette adresse GitHub Pages, pour que les aperçus de lien fonctionnent pendant la

@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""Assemble les 6 pages en un fichier unique et autonome, pour l'aperçu.
+"""Assemble le site en un fichier unique et autonome, pour l'aperçu.
 
 Un artifact ne peut héberger qu'un seul fichier : ce script embarque les
-polices et les illustrations en data: URI, place le contenu des 6 pages
-dans des gabarits, et ajoute un routeur minimal qui les échange au clic.
+polices, la feuille de style, le script et les illustrations dans la page
+d'accueil. La V2 tenant déjà en une seule page — les rubriques sont des
+panneaux présents dans le document —, il n'y a plus de routeur à simuler :
+l'aperçu se comporte exactement comme le site en ligne.
 
 Ne sert qu'à la prévisualisation — le vrai site reste multi-fichiers.
 """
 import base64, pathlib, re
 
 ROOT = pathlib.Path(__file__).parent
-PAGES = ['index', 'a-propos', 'le-cabinet', 'massages', 'avis', 'contact']
 
 # ---- polices ----
 faces = []
@@ -38,83 +39,33 @@ def inline_illus(html):
         b64 = base64.b64encode(f.read_bytes()).decode()
         attr = m.group(0).split('=')[0]
         return f'{attr}="data:{MIME[f.suffix.lower()]};base64,{b64}"'
-    # `srcset` autant que `src` : depuis que le héros sert une découpe par
-    # format, oublier le second laissait l'image mobile introuvable.
+    # `srcset` autant que `src` : depuis que le portrait sert une découpe
+    # par format, oublier le second laissait l'image mobile introuvable.
     return re.sub(r'(?:src|srcset)="(assets/img/[\w./-]+)"', sub, html)
 
-css = (ROOT / 'assets/css/style.css').read_text(encoding='utf-8')
-js  = (ROOT / 'assets/js/main.js').read_text(encoding='utf-8')
+css = (ROOT / 'assets/css/v2.css').read_text(encoding='utf-8')
+js  = (ROOT / 'assets/js/v2.js').read_text(encoding='utf-8')
 
-# ---- extraction des contenus ----
-mains, titles = {}, {}
-for name in PAGES:
-    src = (ROOT / f'{name}.html').read_text(encoding='utf-8')
-    mains[name] = inline_illus(re.search(r'<main id="main">(.*?)</main>', src, re.S).group(1))
-    titles[name] = re.search(r'<title>(.*?)</title>', src, re.S).group(1)
-
-shell = (ROOT / 'index.html').read_text(encoding='utf-8')
-body = re.search(r'<body[^>]*>(.*)</body>', shell, re.S).group(1)
+src = (ROOT / 'index.html').read_text(encoding='utf-8')
+title = re.search(r'<title>(.*?)</title>', src, re.S).group(1)
+body = re.search(r'<body[^>]*>(.*)</body>', src, re.S).group(1)
 body = inline_illus(body)
-body = body.replace('<script src="assets/js/main.js"></script>', '')
-# le contenu de l'accueil est injecté par le routeur
-body = re.sub(r'<main id="main">.*?</main>', '<main id="main"></main>', body, flags=re.S)
+# Feuille et script sont embarqués plus bas ; les balises d'origine
+# pointeraient vers des fichiers que l'artifact ne sert pas.
+body = re.sub(r'<script src="assets/js/v2\.js"[^>]*></script>', '', body)
 
-templates = '\n'.join(
-    f'<template data-page="{n}.html" data-title="{titles[n]}">{mains[n]}</template>'
-    for n in PAGES)
+if 'assets/img/' in body:
+    raise SystemExit('un chemin de visuel n’a pas été embarqué')
 
-router = '''
-/* Routeur d'aperçu — remplace la navigation entre fichiers, qu'un
-   artifact ne peut pas servir. Le vrai site navigue normalement. */
-(function () {
-  const main = document.getElementById('main');
-  const tpl  = {};
-  document.querySelectorAll('template[data-page]').forEach(t => {
-    tpl[t.dataset.page] = { html: t.innerHTML, title: t.dataset.title };
-  });
+# L'artifact suit le thème du lecteur ; le site n'a qu'un mode clair.
+lock = (':root{color-scheme:light}\n'
+        ':root[data-theme="dark"],:root[data-theme="light"]{color-scheme:light}')
 
-  function show(page) {
-    const entry = tpl[page];
-    if (!entry) return;
-    {
-      main.innerHTML = entry.html;
-      document.title = entry.title;
-      document.body.className = 'p-' + page.replace('.html', '');
-      document.querySelectorAll('.nav__link, .footer__nav a').forEach(a => {
-        const on = a.getAttribute('href') === page;
-        if (on) a.setAttribute('aria-current', 'page');
-        else a.removeAttribute('aria-current');
-      });
-      window.scrollTo(0, 0);
-      document.body.classList.add('ready');
-      window.marieMassage.initPage(main);
-    }
-  }
-
-  document.addEventListener('click', e => {
-    const a = e.target.closest('a[href$=".html"]');
-    if (!a || !tpl[a.getAttribute('href')]) return;
-    e.preventDefault();
-    // Capture + arrêt immédiat : le clic n'atteint jamais les gestionnaires
-    // posés sur le lien lui-même, dont celui qui referme le tiroir. C'est
-    // donc au routeur de le faire — sinon le menu reste ouvert par-dessus
-    // la page suivante, alors que le vrai site, lui, le referme.
-    e.stopImmediatePropagation();
-    const ouvert = document.body.classList.contains('nav-open');
-    if (ouvert) window.marieMassage.fermerMenu();
-    // Même délai que le site : on voit le tiroir sortir avant l'échange.
-    setTimeout(() => show(a.getAttribute('href')), ouvert ? 200 : 0);
-  }, true);
-
-  show('index.html');
-})();
-'''
-
-lock = ':root{color-scheme:light}\n:root[data-theme="dark"],:root[data-theme="light"]{color-scheme:light}'
-out = (f"<title>Marie Massage — Masseuse bien-être</title>\n"
+out = (f"<title>{title}</title>\n"
        f"<style>\n{chr(10).join(faces)}\n{lock}\n{css}\n</style>\n"
-       f"{body}\n{templates}\n<script>\n{js}\n</script>\n<script>\n{router}\n</script>\n")
+       f"{body}\n<script>\n{js}\n</script>\n")
 
-dest = pathlib.Path('/tmp/claude-0/-home-user-per-/0ab23514-8cad-52d4-a3c4-7a8a46290735/scratchpad/marie-massage.html')
+dest = pathlib.Path('/tmp/claude-0/-home-user-per-/0ab23514-8cad-52d4-a3c4-7a8a46290735'
+                    '/scratchpad/marie-massage-v2.html')
 dest.write_text(out, encoding='utf-8')
-print(f'{len(PAGES)} pages embarquées — {round(len(out.encode())/1024)} Ko')
+print(f'aperçu écrit — {round(len(out.encode())/1024)} Ko → {dest}')

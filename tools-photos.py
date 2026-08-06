@@ -38,6 +38,11 @@ FORMATS = [
     # Toute la largeur disponible : moins on zoome, moins la tête occupe
     # de hauteur une fois rendue, et plus la bande visible peut être basse.
     ('marie-hero-large.webp', 4 / 3,   930, 1.00, 0.385),
+    # V2 : le portrait est un disque. Deux tailles — sur téléphone il
+    # occupe une bien plus grande part de l'écran, donc moins de pixels
+    # suffisent pour la même netteté apparente.
+    ('marie-rond.webp',       1 / 1,    900, 0.86, 0.375),
+    ('marie-rond-m.webp',     1 / 1,    700, 0.86, 0.375),
 ]
 
 

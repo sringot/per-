@@ -1,0 +1,324 @@
+/* =========================================================
+   MARIE MASSAGE — V2 « bulles »
+
+   Un seul écran, jamais de défilement à l'accueil : une photo,
+   un titre, cinq bulles. Le contenu vit dans des panneaux qui
+   s'ouvrent depuis la bulle qu'on touche — la bulle grandit
+   jusqu'à remplir l'écran.
+
+   Même charte que la V1 : Figtree, socle crème, ocre, relief doux.
+   ========================================================= */
+
+/* ---------- 1. VARIABLES ---------- */
+:root{
+  --ochre:      #AC4B28;
+  --ochre-d:    #8E3A1E;
+  --green:      #3F4A38;
+  --herb:       #9A8B5F;
+  --sage:       #A7AE9B;
+  --yellow:     #F2E7B3;
+
+  --card:       #F4F1E9;
+  --ink:        #2A2320;
+  --ink-soft:   #635D57;
+  --line:       rgba(42,35,32,.10);
+  --white:      #FFF;
+
+  --nm-light:   rgba(255,255,255,.95);
+  --nm-dark:    rgba(122,104,84,.18);
+  --nm-out:     -5px -5px 12px var(--nm-light), 6px 7px 16px var(--nm-dark);
+  --nm-out-lg:  -8px -8px 20px var(--nm-light), 10px 12px 26px var(--nm-dark);
+  --nm-in:      inset -3px -3px 8px var(--nm-light), inset 4px 4px 9px var(--nm-dark);
+
+  --ease:       cubic-bezier(.22,.68,.28,1);
+  --ease-out:   cubic-bezier(.16,1,.3,1);
+  --pad:        clamp(1.1rem,4vw,3rem);
+}
+
+/* ---------- 2. SOCLE ---------- */
+*,*::before,*::after{ box-sizing:border-box; }
+*{ margin:0; padding:0; }
+
+html{
+  -webkit-text-size-adjust:100%;
+  background:var(--card);
+}
+/* L'accueil tient dans un écran : rien ne défile derrière. La règle vise
+   la présence de `.scene`, pas `html` tout court — les mentions légales
+   partagent cette feuille et font trois écrans de haut : bloquées, elles
+   étaient illisibles. Un navigateur sans `:has()` laisse simplement
+   défiler l'accueil, ce qui ne casse rien. */
+html:has(.scene){ overflow:hidden; }
+body{
+  font-family:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:clamp(.94rem,.35vw + .86rem,1rem);
+  line-height:1.6;
+  color:var(--ink);
+  background:var(--card);
+  -webkit-font-smoothing:antialiased;
+  min-height:100svh;
+  display:flex; flex-direction:column;
+}
+img{ display:block; max-width:100%; }
+button{ background:none; border:0; font:inherit; color:inherit; cursor:pointer; }
+a{ color:inherit; text-decoration:none; }
+ul{ list-style:none; }
+
+/* Confort au toucher : pas de délai de double-appui, pas de voile gris. */
+a, button{ touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
+
+.evitement{
+  position:fixed; top:.6rem; left:.6rem; z-index:99;
+  background:var(--green); color:var(--white);
+  padding:.6rem 1rem; border-radius:999px;
+  transform:translateY(-200%); transition:transform .3s var(--ease);
+}
+.evitement:focus{ transform:none; }
+:focus-visible{ outline:2.5px solid var(--ochre); outline-offset:4px; border-radius:6px; }
+
+/* ---------- 3. L'ACCUEIL ---------- */
+.scene{
+  flex:1;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:clamp(.9rem,2.4vh,1.6rem);
+  padding:clamp(1rem,3vh,2rem) var(--pad);
+  text-align:center;
+  position:relative;
+}
+
+/* Une seule tache de couleur, très diluée, derrière le portrait. */
+.halo{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(42% 34% at 50% 38%, rgba(242,231,179,.62) 0%, transparent 72%),
+    radial-gradient(30% 24% at 78% 74%, rgba(167,174,155,.28) 0%, transparent 76%);
+}
+.scene > *:not(.halo){ position:relative; z-index:1; }
+
+.portrait{
+  width:clamp(150px, 34vh, 300px);
+  aspect-ratio:1;
+  border-radius:50%;
+  overflow:hidden;
+  box-shadow:var(--nm-out-lg);
+  /* Respiration très lente : le disque « vit » sans distraire. */
+  animation:souffle 9s ease-in-out infinite;
+}
+.portrait img{ width:100%; height:100%; object-fit:cover; }
+@keyframes souffle{
+  0%,100%{ transform:translateY(0) scale(1); }
+  50%    { transform:translateY(-7px) scale(1.012); }
+}
+
+.titre{
+  font-size:clamp(2.6rem,8vw,4.4rem);
+  font-weight:600; line-height:1; letter-spacing:-.04em;
+  color:var(--green);
+}
+.accroche{
+  font-size:clamp(.82rem,2.4vw,.98rem);
+  color:var(--ink-soft); max-width:34ch;
+  /* Deux lignes de longueur voisine plutôt qu'une longue et un mot seul. */
+  text-wrap:balance;
+}
+.insecable{ white-space:nowrap; }
+
+/* ---------- 4. LES BULLES ---------- */
+.bulles{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:clamp(.7rem,2.6vw,1.5rem);
+  margin-top:clamp(.4rem,1.6vh,1rem);
+}
+.bulle{
+  display:flex; flex-direction:column; align-items:center; gap:.5rem;
+  width:clamp(64px,17vw,86px);
+  color:var(--ink-soft);
+  transition:transform .3s var(--ease-out), color .3s var(--ease);
+}
+.bulle__rond{
+  width:clamp(54px,15vw,74px); aspect-ratio:1;
+  display:grid; place-items:center;
+  border-radius:50%;
+  background:var(--card);
+  box-shadow:var(--nm-out);
+  color:var(--ochre);
+  transition:box-shadow .3s var(--ease), transform .35s var(--ease-out);
+}
+.bulle__rond svg{
+  width:44%; height:44%;
+  fill:none; stroke:currentColor; stroke-width:1.6;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.bulle__nom{
+  font-size:clamp(.66rem,2.1vw,.76rem); font-weight:500;
+  letter-spacing:.02em; line-height:1.2;
+}
+.bulle:hover{ color:var(--green); }
+.bulle:hover .bulle__rond{ box-shadow:var(--nm-out-lg); transform:translateY(-4px); }
+.bulle:active .bulle__rond{ box-shadow:var(--nm-in); transform:translateY(0) scale(.96); }
+
+/* La bulle du rendez-vous est la seule pleine : c'est l'action. */
+.bulle--phare .bulle__rond{ background:var(--ochre); color:var(--white); }
+.bulle--phare{ color:var(--green); }
+
+/* Entrée en cascade, une bulle après l'autre. */
+.bulle{ opacity:0; animation:monte .7s var(--ease-out) forwards; }
+.bulle:nth-child(1){ animation-delay:.30s }
+.bulle:nth-child(2){ animation-delay:.38s }
+.bulle:nth-child(3){ animation-delay:.46s }
+.bulle:nth-child(4){ animation-delay:.54s }
+.bulle:nth-child(5){ animation-delay:.62s }
+@keyframes monte{ from{ opacity:0; transform:translateY(16px) scale(.9) } to{ opacity:1; transform:none } }
+
+.portrait, .titre, .accroche{ opacity:0; animation:monte .8s var(--ease-out) forwards; }
+.titre   { animation-delay:.10s }
+.accroche{ animation-delay:.18s }
+
+/* ---------- 5. LES PANNEAUX ---------- */
+.panneau{
+  position:fixed; inset:0; z-index:50;
+  background:var(--card);
+  overflow-y:auto; overscroll-behavior:contain;
+  padding:clamp(3.6rem,9vh,5.5rem) var(--pad) clamp(2rem,6vh,4rem);
+  /* Fermé : réduit au disque de la bulle d'origine, donc invisible.
+     Les coordonnées sont posées par le JS au moment du clic. */
+  clip-path:circle(0 at var(--x,50%) var(--y,90%));
+  visibility:hidden;
+  transition:clip-path .55s var(--ease-out), visibility 0s linear .55s;
+}
+.panneau.ouvert{
+  clip-path:circle(150% at var(--x,50%) var(--y,90%));
+  visibility:visible;
+  transition:clip-path .6s var(--ease-out), visibility 0s;
+}
+
+.fermer{
+  position:fixed; top:clamp(.9rem,2.5vh,1.6rem); right:var(--pad); z-index:2;
+  width:44px; height:44px; border-radius:50%;
+  display:grid; place-items:center;
+  background:var(--card); box-shadow:var(--nm-out); color:var(--green);
+  transition:box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+.fermer svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
+.fermer:hover{ box-shadow:var(--nm-out-lg); }
+.fermer:active{ box-shadow:var(--nm-in); transform:scale(.94); }
+
+.feuille{
+  max-width:34rem; margin-inline:auto;
+  opacity:0; transform:translateY(14px);
+  transition:opacity .4s var(--ease) .18s, transform .5s var(--ease-out) .18s;
+}
+.panneau.ouvert .feuille{ opacity:1; transform:none; }
+
+.sur-titre{
+  font-size:.7rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ochre); margin-bottom:.7rem;
+}
+.feuille h2{
+  font-size:clamp(1.7rem,5.5vw,2.5rem);
+  font-weight:600; line-height:1.06; letter-spacing:-.03em;
+  color:var(--green); margin-bottom:1.1rem;
+}
+.chapo{ font-size:1.02rem; color:var(--ink); }
+.feuille p{ color:var(--ink-soft); }
+.feuille p + p{ margin-top:.8rem; }
+.chapo + p{ margin-top:1rem; }
+
+.details{
+  display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.6rem;
+}
+.details li{
+  font-size:.78rem; color:var(--ink-soft);
+  padding:.45rem .9rem; border-radius:999px; box-shadow:var(--nm-out);
+}
+
+/* --- La liste des soins --- */
+.soins{ margin-top:1.6rem; display:grid; gap:.55rem; }
+.soins li{
+  display:grid; grid-template-columns:1fr auto; align-items:baseline;
+  gap:.2rem 1rem;
+  padding:.85rem 1.1rem; border-radius:16px; box-shadow:var(--nm-out);
+}
+/* Chaque case est posée explicitement : un `grid-row` sur le seul tarif
+   suffisait à le faire placer avant les autres, et le nom du soin se
+   retrouvait rejeté dans la colonne de droite. */
+.soins b{ grid-area:1 / 1; font-weight:600; color:var(--green); font-size:1rem; }
+.soins i{
+  grid-area:2 / 1; font-style:normal; font-size:.74rem;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--ochre);
+}
+.soins span{
+  grid-area:1 / 2 / span 2 / auto; align-self:center;
+  font-size:.86rem; color:var(--ink-soft); white-space:nowrap;
+}
+
+/* --- Les avis --- */
+.note{ display:flex; align-items:baseline; gap:.6rem; margin-bottom:1.4rem; }
+.note b{ font-size:1.9rem; font-weight:600; color:var(--green); letter-spacing:-.03em; }
+.note span{ color:var(--ochre); font-size:.8rem; letter-spacing:.12em; }
+.note small{ font-size:.78rem; color:var(--ink-soft); }
+
+.avis{ display:grid; gap:.7rem; }
+.avis li{ padding:1rem 1.1rem; border-radius:16px; box-shadow:var(--nm-out); }
+.avis q{ display:block; font-size:.9rem; color:var(--ink); quotes:'«\00a0' '\00a0»'; }
+.avis cite{ display:block; margin-top:.45rem; font-style:normal; font-size:.76rem; color:var(--ink-soft); }
+
+/* --- Le rendez-vous --- */
+.feuille--rdv{ text-align:center; }
+.feuille--rdv .chapo{ margin-inline:auto; max-width:30ch; }
+.numero{
+  display:block; margin:1.6rem 0 1.1rem;
+  font-size:clamp(1.8rem,7vw,2.6rem); font-weight:600;
+  letter-spacing:-.02em; color:var(--green);
+  transition:color .25s var(--ease);
+}
+.numero:hover{ color:var(--ochre); }
+.appel{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:52px; padding:.9rem 2.2rem; border-radius:999px;
+  background:var(--ochre); color:var(--white); font-weight:500;
+  transition:background .25s var(--ease), transform .2s var(--ease);
+}
+.appel:hover{ background:var(--ochre-d); }
+.appel:active{ transform:scale(.98); }
+.feuille--rdv .details{ justify-content:center; }
+.ailleurs{ display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem 1.4rem; margin-top:1.8rem; }
+.ailleurs a{
+  font-size:.84rem; color:var(--green);
+  padding:.5rem 0; border-bottom:1px solid var(--line);
+  transition:color .25s var(--ease), border-color .25s var(--ease);
+}
+.ailleurs a:hover{ color:var(--ochre); border-bottom-color:var(--ochre); }
+
+/* ---------- 6. PIED DE PAGE ---------- */
+.pied{
+  padding:0 var(--pad) clamp(.9rem,2.5vh,1.4rem);
+  text-align:center; font-size:.7rem; color:var(--ink-soft);
+}
+.pied a{ border-bottom:1px solid var(--line); }
+.pied a:hover{ color:var(--ochre); border-bottom-color:var(--ochre); }
+.pied__note{ opacity:.7; margin-top:.2rem; }
+
+/* ---------- 7. ÉCRANS COURTS ----------
+   Un écran d'accueil sans défilement doit tenir partout : sur un
+   téléphone couché, la hauteur fond. Le portrait cède le premier. */
+/* Un petit téléphone debout (320 × 568) : le texte, les bulles et le pied
+   de page ne rétrécissent pas avec la hauteur, seul le portrait le peut.
+   À 34 vh il faisait déborder l'écran de 19 px — et comme rien ne défile
+   ici, ces 19 px étaient perdus, pas repoussés. */
+@media (max-height:620px){
+  .portrait{ width:clamp(120px,28vh,300px); }
+}
+@media (max-height:520px){
+  .portrait{ width:clamp(96px,22vh,150px); }
+  .titre{ font-size:clamp(1.8rem,5vh,2.6rem); }
+  .accroche{ display:none; }
+}
+
+/* ---------- 8. MOUVEMENT RÉDUIT ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  .portrait, .titre, .accroche, .bulle{ opacity:1; }
+  .portrait{ animation:none; }
+}
