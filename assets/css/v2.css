@@ -79,24 +79,56 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 .evitement:focus{ transform:none; }
 :focus-visible{ outline:2.5px solid var(--ochre); outline-offset:4px; border-radius:6px; }
 
-/* ---------- 3. L'ACCUEIL ---------- */
+/* ---------- 3. L'ACCUEIL ----------
+   Composition décentrée : la photo se pose à gauche, le nom et les bulles
+   la suivent. Sur téléphone la colonne unique reste calée à gauche plutôt
+   que centrée — c'est le même déséquilibre voulu, dans un format étroit. */
 .scene{
   flex:1;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  display:flex; flex-direction:column;
+  align-items:flex-start; justify-content:center;
   gap:clamp(.9rem,2.4vh,1.6rem);
   padding:clamp(1rem,3vh,2rem) var(--pad);
-  text-align:center;
+  text-align:left;
   position:relative;
+  width:100%; max-width:1180px; margin-inline:auto;
+}
+.mot{
+  display:flex; flex-direction:column; align-items:flex-start;
+  gap:clamp(.5rem,1.5vh,1rem);
+  min-width:0;
 }
 
-/* Une seule tache de couleur, très diluée, derrière le portrait. */
+/* Une seule tache de couleur, très diluée. Elle suit la photo : centrée,
+   elle éclairait le vide laissé à droite. */
 .halo{
   position:absolute; inset:0; z-index:0; pointer-events:none;
   background:
-    radial-gradient(42% 34% at 50% 38%, rgba(242,231,179,.62) 0%, transparent 72%),
-    radial-gradient(30% 24% at 78% 74%, rgba(167,174,155,.28) 0%, transparent 76%);
+    radial-gradient(46% 34% at 30% 34%, rgba(242,231,179,.62) 0%, transparent 72%),
+    radial-gradient(30% 24% at 84% 78%, rgba(167,174,155,.28) 0%, transparent 76%);
 }
 .scene > *:not(.halo){ position:relative; z-index:1; }
+
+/* Écran large : deux colonnes. Le pictogramme coiffe la photo, le nom et
+   les bulles occupent la colonne de droite, centrés sur la hauteur. */
+@media (min-width:780px){
+  .scene{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr);
+    grid-template-areas:"logo mot" "photo mot";
+    align-content:center; align-items:center; justify-items:start;
+    column-gap:clamp(2rem,5vw,4.5rem);
+    row-gap:clamp(.6rem,1.8vh,1.2rem);
+  }
+  .logo    { grid-area:logo; }
+  .portrait{ grid-area:photo; }
+  .mot     { grid-area:mot; }
+  .halo{
+    background:
+      radial-gradient(38% 46% at 26% 52%, rgba(242,231,179,.62) 0%, transparent 72%),
+      radial-gradient(26% 30% at 88% 82%, rgba(167,174,155,.28) 0%, transparent 76%);
+  }
+}
 
 /* Le pictogramme seul, en tête d'écran. Il tient lieu d'en-tête : il n'y
    en a pas d'autre sur ce site. `alt` vide — le nom de la marque est juste
@@ -143,7 +175,7 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 
 /* ---------- 4. LES BULLES ---------- */
 .bulles{
-  display:flex; flex-wrap:wrap; justify-content:center;
+  display:flex; flex-wrap:wrap; justify-content:flex-start;
   gap:clamp(.7rem,2.6vw,1.5rem);
   margin-top:clamp(.4rem,1.6vh,1rem);
 }

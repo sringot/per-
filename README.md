@@ -35,6 +35,13 @@ contenu sans exécuter une ligne de script ; `inert` les retire du clavier et
 des lecteurs d'écran tant qu'ils sont fermés. Chaque panneau a son adresse
 (`…/#massages`), partageable et compatible avec le bouton « retour ».
 
+**La composition est décentrée.** La photo se pose à gauche, le nom et les
+bulles la suivent ; le vide à droite est voulu, c'est lui qui donne au premier
+regard son air de ne pas être une page d'accueil ordinaire. Au-delà de 780 px
+de large, deux colonnes : le pictogramme coiffe la photo à gauche, le bloc du
+nom occupe la droite. En dessous, une seule colonne — mais calée à gauche, pas
+centrée : le même déséquilibre, dans un format étroit.
+
 ## Lancer le site en local
 
 Aucune installation, aucune dépendance. Il suffit d'un serveur HTTP statique
@@ -121,6 +128,7 @@ CNIL considère comme non conforme au RGPD.
 
 - Un écran unique qui ne défile pas, sur téléphone comme sur desktop : le
   pictogramme, la photo de Marie dans son arche, `marieemassage`, cinq bulles
+- Composition décentrée : la photo à gauche, le nom et les bulles à sa suite
 - Cinq bulles, la dernière (« Rendez-vous ») pleine et colorée : c'est l'action
   attendue, la prise de rendez-vous se faisant uniquement par téléphone
 - Ouverture des panneaux en `clip-path`, ancrée sur la bulle touchée
