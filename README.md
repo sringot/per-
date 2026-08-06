@@ -16,7 +16,7 @@ d'écraser le premier site, chaque parti pris vit sur sa branche :
 | Branche | Ce que c'est |
 | ------- | ------------ |
 | `claude/git-repo-access-ea5z33` | **V1** — site classique en 6 pages, en-tête, héros, sections. |
-| `claude/v2-bulles` | **V2** — un seul écran : le portrait, le prénom, cinq bulles. *(cette branche)* |
+| `claude/v2-bulles` | **V2** — un seul écran : le pictogramme, la photo, `marieemassage`, cinq bulles. *(cette branche)* |
 
 Les deux partagent la charte, les polices, la photo source et l'outillage. Une
 idée de mise en forme adoptée d'un côté se transpose sans peine de l'autre.
@@ -60,7 +60,8 @@ assets/
   css/style.css       feuille de la V1 — conservée, plus chargée ici
   js/main.js          script de la V1 — conservé, plus chargé ici
   fonts/              Figtree 400/500/600 (woff2, sous-ensembles latin)
-  img/marie-rond*.webp portrait circulaire (deux tailles)
+  img/marie-hero*.webp portrait dans son arche (deux tailles)
+  img/logo-mark.png   pictogramme, seul en-tête du site
   img/favicon*.png    favicons (onglet + écran d'accueil iOS)
 tools-photos.py       découpe le portrait aux formats du gabarit
 tools-logo.py         découpe le pictogramme de logov2.png et fait les favicons
@@ -118,7 +119,8 @@ CNIL considère comme non conforme au RGPD.
 
 ## Ce qui est déjà en place
 
-- Un écran unique qui ne défile pas, sur téléphone comme sur desktop
+- Un écran unique qui ne défile pas, sur téléphone comme sur desktop : le
+  pictogramme, la photo de Marie dans son arche, `marieemassage`, cinq bulles
 - Cinq bulles, la dernière (« Rendez-vous ») pleine et colorée : c'est l'action
   attendue, la prise de rendez-vous se faisant uniquement par téléphone
 - Ouverture des panneaux en `clip-path`, ancrée sur la bulle touchée
@@ -143,8 +145,8 @@ python3 tools-illustrations.py
 
 ## La photo de Marie
 
-C'est le seul visuel du site, et le premier regard : à l'accueil il n'y a
-qu'elle et son prénom. Une seule photo source alimente toutes les découpes —
+C'est le premier regard : à l'accueil il n'y a que le pictogramme, elle, et le
+nom de la marque. Une seule photo source alimente toutes les découpes —
 `tools-photos.py` les tire de `assets/img/marie-source.png` :
 
 ```bash
@@ -153,27 +155,51 @@ python3 tools-photos.py
 
 | Fichier | Usage | Format |
 | ------- | ----- | ------ |
-| `marie-rond.webp`       | portrait de l'accueil, desktop   | 900 × 900   |
-| `marie-rond-m.webp`     | portrait de l'accueil, téléphone | 700 × 700   |
-| `marie-hero.webp`       | héros de la V1, desktop          | 1040 × 1144 |
-| `marie-hero-large.webp` | héros de la V1, téléphone        | 900 × 675   |
+| `marie-hero.webp`       | portrait de l'accueil, desktop   | 1040 × 1144 |
+| `marie-hero-m.webp`     | portrait de l'accueil, téléphone | 700 × 770   |
+| `marie-hero-large.webp` | héros de la V1, téléphone        | 930 × 698   |
 | `marie-portrait.webp`   | bloc « à propos » de la V1       | 800 × 1000  |
 
-Deux tailles pour un seul cadre rond, servies par `<picture>` : sur téléphone
-le disque occupe une bien plus grande part de l'écran, mais l'écran est plus
-étroit — 700 px suffisent donc à la même netteté apparente, pour un tiers de
-poids en moins. Le script d'aperçu intègre `srcset` autant que `src`, sans quoi
-l'image mobile serait introuvable dans l'artifact.
+**Le cadre est l'arche de la V1**, reprise telle quelle : plus haute que large,
+arrondie en demi-cercle vers le haut, posée sur deux angles doux. Un disque
+avait été essayé ; Marie a demandé à revenir au cadre d'origine.
+
+Deux tailles pour ce cadre, servies par `<picture>` : le cadre étant plus petit
+sur téléphone, 700 px suffisent à la même netteté apparente pour la moitié du
+poids. Le script d'aperçu intègre `srcset` autant que `src`, sans quoi l'image
+mobile serait introuvable dans l'artifact.
 
 Le point de visée est le **visage**, pas le centre de l'image : un recadrage
 centré coupait le haut du crâne sur le format carré. Les repères sont en tête
 du script, en fractions de l'image d'origine.
 
-Le disque mesure `clamp(150px, 34vh, 300px)` : exprimé en hauteur de fenêtre,
-il garde la même part de l'écran du plus petit téléphone au plus grand, et ne
-pousse jamais les bulles hors de vue. Un halo très dilué derrière lui l'assoit
-sur le fond, et une respiration de neuf secondes (`souffle`) l'anime à peine —
-assez pour que la page ne paraisse pas figée, trop peu pour distraire.
+L'arche est dimensionnée **par sa hauteur** (`clamp(168px, 33vh, 380px)`), la
+largeur en découlant du rapport : dans un écran qui ne défile pas, c'est la
+hauteur qui est rare, pas la largeur. Elle garde ainsi la même part d'écran du
+plus petit téléphone au plus grand, sans jamais pousser les bulles hors de vue.
+Un halo très dilué derrière elle l'assoit sur le fond, et une respiration de
+neuf secondes (`souffle`) l'anime à peine — assez pour que la page ne paraisse
+pas figée, trop peu pour distraire.
+
+> `animation` étant un raccourci, la respiration doit être déclarée **dans la
+> même règle** que l'animation d'entrée : posée séparément, la seconde écrasait
+> la première et le souffle ne jouait jamais.
+
+## Le nom et le pictogramme
+
+L'accueil s'ouvre sur le **pictogramme seul** — le M de `logo-mark.png`, en
+ocre, en haut de l'écran. Il tient lieu d'en-tête : il n'y en a pas d'autre sur
+ce site. Son `alt` est vide, le nom de la marque figurant juste dessous en
+titre ; le répéter n'apprendrait rien à un lecteur d'écran.
+
+Le titre affiche **`marieemassage`**, le nom sous lequel Marie est connue de sa
+clientèle, et non « Marie ». Treize signes au lieu de cinq : l'échelle
+typographique est recalée pour qu'il tienne sur une ligne dès 320 px de large,
+sans quoi il se couperait en plein milieu du mot.
+
+> Le `<h1>` ne contient donc plus « massage à Voisins-le-Bretonneux ». Ce n'est
+> pas perdu pour le référencement : le titre d'onglet, la ligne d'accroche
+> juste dessous et les données structurées le portent toujours.
 
 ## Mise en ligne
 
@@ -229,14 +255,15 @@ mobile, sans un empilement d'exceptions.
 libellé fait partie du bouton : la zone de contact dépasse largement les 44 px
 recommandés. Rien ne descend sous 11 px de texte.
 
-**Le paysage et les petits écrans.** Le texte, les bulles et le pied de page
-ne rétrécissent pas avec la hauteur de l'écran ; seul le portrait le peut, et
-c'est donc lui qui cède. Sous 620 px de haut il passe de 34 à 28 % de la
-fenêtre — sans quoi un 320 × 568 débordait de 19 px, et comme rien ne défile
-ici, ces 19 px étaient perdus, pas repoussés. Sous 520 px — un téléphone
-couché, ou un clavier ouvert — il rétrécit encore et l'accroche disparaît : la
-commune figure déjà dans le panneau « Le lieu ». Les bulles, elles, restent
-toujours visibles. Vérifié de 280 × 653 à 1920 × 1080 : aucun débord.
+**Le paysage et les petits écrans.** Les bulles et le pied de page ne
+rétrécissent pas avec la hauteur de l'écran ; la photo et le pictogramme le
+peuvent, et ce sont donc eux qui cèdent. Sous 700 px de haut la photo passe de
+33 à 23 % de la fenêtre et le pictogramme perd sa marge — sans quoi un
+320 × 568 débordait de 28 px, et comme rien ne défile ici, ces 28 px étaient
+perdus, pas repoussés. Sous 520 px — un téléphone couché, ou un clavier ouvert
+— tout rétrécit encore et l'accroche disparaît : la commune figure déjà dans le
+panneau « Le lieu ». Les bulles, elles, restent toujours visibles. Vérifié de
+280 × 653 à 1920 × 1080 : aucun débord, et de 16 à 148 px de marge libre.
 
 **Au toucher.** `touch-action: manipulation` écarte le double-appui pour zoomer
 et le délai que le navigateur garde en réserve avant de valider un appui. Le
