@@ -221,6 +221,13 @@ l'adresse et les horaires, il fallait défiler tout l'écran pour trouver le seu
 moyen de prendre rendez-vous. Le bloc d'appel et les infos pratiques sont deux
 enfants de grille distincts, réordonnés par `grid-template-areas`.
 
+**L'échelle typographique est calée sur le téléphone.** Les bornes basses des
+`clamp()` ne s'appliquent qu'aux petits écrans : les baisser ne touche que le
+mobile, sans un empilement d'exceptions. Le titre du héros passe de 42 à 33 px,
+celui des pages intérieures de 37 à 29, les boutons de 59 à 50 px de haut — la
+cible confortable au pouce est de 48. L'interligne descend de 1,7 à 1,6 : c'est
+confortable sur une ligne de 80 caractères, trop aéré sur une ligne de 40.
+
 **Ce qui illustre rétrécit, ce qui informe reste.** Sous 560 px : les vues du
 cabinet passent à des tuiles de 112 px, la carte cadeau perd son visuel et garde
 son message, les avis perdent leur avatar — un dessin générique posé sur un
@@ -235,11 +242,11 @@ spécificité égale c'est la cascade qui tranche, et placées avant, elles éta
 
 | Page | Avant | Après |
 | ---- | ----- | ----- |
-| accueil    | 2,6 écrans · titre à 728 px | 2,1 écrans · titre à 438 px |
-| à propos   | 2,7 écrans | 2,0 écrans |
-| le cabinet | 2,7 écrans | 2,3 écrans |
-| massages   | 6,9 écrans | 3,2 écrans |
-| avis       | 4,0 écrans | 3,3 écrans |
+| accueil    | 2,6 écrans · titre à 728 px | 1,9 écran · titre à 423 px |
+| à propos   | 2,7 écrans | 1,8 écran |
+| le cabinet | 2,7 écrans | 2,2 écrans |
+| massages   | 6,9 écrans | 2,9 écrans |
+| avis       | 4,0 écrans | 3,0 écrans |
 | contact    | numéro en bas de page | numéro sous le titre |
 
 ## Le menu mobile

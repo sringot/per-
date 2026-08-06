@@ -161,7 +161,7 @@ html.js-smooth{ scroll-behavior:auto; }
 /* ---------- EN-TÊTE DE PAGE (pages intérieures) ---------- */
 .page-head{
   position:relative; overflow:hidden;
-  padding:clamp(3rem,7vw,5.5rem) 0 clamp(2rem,4vw,3rem);
+  padding:clamp(2rem,7vw,5.5rem) 0 clamp(1.4rem,4vw,3rem);
 }
 .page-head__aura{
   position:absolute; inset:0; pointer-events:none;
@@ -169,11 +169,11 @@ html.js-smooth{ scroll-behavior:auto; }
 }
 .page-head .shell{ position:relative; z-index:1; }
 .page-head__title{
-  font-size:clamp(2.3rem,5vw,3.9rem);
+  font-size:clamp(1.8rem,5vw,3.9rem);
   letter-spacing:-.035em; line-height:1.05;
   margin-bottom:1.1rem;
 }
-.page-head__intro{ max-width:52ch; font-size:1.02rem; }
+.page-head__intro{ max-width:52ch; font-size:clamp(.94rem,1.6vw,1.02rem); }
 /* L'en-tête de page porte déjà sa respiration : la section qui suit
    ne doit pas y rajouter la sienne. */
 .page-head + .section{ padding-top:clamp(1.5rem,3vw,2.5rem); }
@@ -192,9 +192,11 @@ h1,h2,h3,.h2,.h3{
   font-weight:600; line-height:1.08;
   letter-spacing:-.03em; color:var(--green);
 }
-h1{ font-size:clamp(2.5rem,5.6vw,4.5rem); }
-.h2{ font-size:clamp(1.9rem,3.6vw,3rem); }
-.h3{ font-size:clamp(1.4rem,2.2vw,2rem); }
+/* Borne basse = valeur sur téléphone. À 2,5 rem le titre faisait 42 px
+   sur un écran de 390 : trois lignes qui occupaient un tiers de la vue. */
+h1{ font-size:clamp(2rem,5.6vw,4.5rem); }
+.h2{ font-size:clamp(1.6rem,3.6vw,3rem); }
+.h3{ font-size:clamp(1.18rem,2.2vw,2rem); }
 
 .eyebrow{
   display:inline-block;
@@ -203,7 +205,7 @@ h1{ font-size:clamp(2.5rem,5.6vw,4.5rem); }
   margin-bottom:1rem;
 }
 
-.lead{ font-size:1.06rem; color:var(--ink); }
+.lead{ font-size:clamp(.98rem,1.8vw,1.06rem); color:var(--ink); }
 p{ color:var(--ink-soft); }
 p + p{ margin-top:.9rem; }
 .section__intro{ max-width:46ch; }
@@ -236,7 +238,9 @@ p + p{ margin-top:.9rem; }
 .btn--outline{ --bg:var(--surface); --fg:var(--green); --hov:var(--green); box-shadow:var(--nm-out); }
 .btn--dark{ --bg:var(--green); --hov:var(--green-d); }
 .btn--light{ --bg:var(--white); --fg:var(--green); --hov:var(--green-d); }
-.btn--lg{ padding:1.05rem 2.1rem; font-size:.95rem; }
+/* Sur téléphone le bouton faisait 59 px de haut : bien au-delà de la
+   cible de 48 px qui suffit au pouce, et d'autant de gagné en hauteur. */
+.btn--lg{ padding:clamp(.8rem,2vw,1.05rem) clamp(1.5rem,4vw,2.1rem); font-size:clamp(.9rem,1.6vw,.95rem); }
 .btn--block{ width:100%; }
 .btn[disabled]{ opacity:.6; pointer-events:none; }
 
@@ -384,7 +388,7 @@ p + p{ margin-top:.9rem; }
 
 .hero__eyebrow{
   display:inline-flex; align-items:center; gap:.55rem;
-  padding:.4rem .95rem .4rem .7rem; margin-bottom:1.5rem;
+  padding:.35rem .85rem .35rem .6rem; margin-bottom:clamp(.9rem,2.5vw,1.5rem);
   border:0; border-radius:var(--pill);
   background:var(--surface); box-shadow:var(--nm-out);
   font-size:.74rem; letter-spacing:.1em; text-transform:uppercase;
@@ -401,9 +405,9 @@ p + p{ margin-top:.9rem; }
 }
 
 .hero__title{
-  font-size:clamp(2.6rem,4.6vw,5.6rem);
-  letter-spacing:-.038em; line-height:1.02;
-  margin-bottom:1.5rem;
+  font-size:clamp(2.05rem,4.6vw,5.6rem);
+  letter-spacing:-.038em; line-height:1.04;
+  margin-bottom:clamp(1rem,2.5vw,1.5rem);
 }
 /* Masque de ligne réutilisable : le texte monte depuis dessous */
 .ln{ display:block; overflow:hidden; padding-bottom:.07em; }
@@ -414,8 +418,8 @@ p + p{ margin-top:.9rem; }
 }
 body.ready .ln > span{ transform:none; }
 
-.hero__text{ max-width:44ch; font-size:clamp(1.02rem,.35vw + .9rem,1.18rem); }
-.hero__actions{ display:flex; flex-wrap:wrap; gap:.75rem; margin-top:2.1rem; }
+.hero__text{ max-width:44ch; font-size:clamp(.95rem,.35vw + .9rem,1.18rem); }
+.hero__actions{ display:flex; flex-wrap:wrap; gap:.75rem; margin-top:clamp(1.3rem,3vw,2.1rem); }
 
 /* Preuve sociale du héros : avatars, intitulé, puis un avis relayé.
    Aucun chiffre — la seule preuve affichée est celle que les clientes
@@ -608,7 +612,7 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
 }
 
 /* ---------- 10. SECTIONS ---------- */
-.section{ padding:clamp(3.5rem,7vw,7rem) 0; }
+.section{ padding:clamp(2.4rem,7vw,7rem) 0; }
 .section__head{ margin-bottom:clamp(2.2rem,4vw,3.5rem); }
 .section__head--split{
   display:grid; grid-template-columns:1fr 1fr;
@@ -999,9 +1003,14 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   .card__foot{ margin:0 0 .5rem; padding-top:.6rem; }
   .card__price{ font-size:1.15rem; }
   .card__link{ font-size:.8rem; }
-  /* En haut à droite, l'étiquette tombait sur le titre une fois la carte
-     couchée. Elle descend au niveau de « Réserver », dont la droite est libre. */
-  .card__ribbon{ top:auto; bottom:.85rem; right:1.1rem; }
+  /* En position absolue, l'étiquette mordait sur le titre dès que l'écran
+     descendait sous 380 px — aucune réserve fixe ne tient à toute largeur.
+     Elle repasse dans le flux, au-dessus du titre : plus de recouvrement
+     possible, quelle que soit la place. */
+  .card__ribbon{
+    position:static; align-self:flex-start;
+    margin-bottom:.3rem; font-size:.56rem; padding:.18rem .5rem;
+  }
 }
 
 /* ---------- PAGES ANNEXES (404, mentions légales) ---------- */
@@ -1173,6 +1182,30 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   /* « À votre tour ? » propose l'action que la barre fixe propose déjà,
      en permanence et à portée de pouce. */
   .rev-cta{ display:none; }
+
+  /* Interligne : 1,7 est confortable sur une ligne de 80 caractères,
+     trop aéré sur une ligne de 40. */
+  body{ line-height:1.6; }
+  p + p{ margin-top:.7rem; }
+
+  /* L'avis relayé du héros tenait sur trois lignes de haut pour en
+     afficher deux. */
+  .proof{ gap:.55rem; margin-top:1.6rem; }
+  .proof__quote{ padding:.6rem .8rem; gap:.55rem; }
+  .ticker__stage{ height:4.4rem; }
+  .proof__avatars i{ width:32px; height:32px; margin-left:-11px; }
+
+  /* La carte cadeau : un encart, pas une section. */
+  .giftcard{ padding:1.1rem 1.2rem; }
+  .giftcard .btn{ padding:.7rem 1.3rem; }
+
+  /* Six avis à la suite : chaque marge se paie six fois. */
+  .rev{ padding:.9rem 1rem; gap:.55rem; }
+  .rev-sum{ padding:1rem 1.4rem; margin-bottom:1.4rem; }
+
+  /* Les tuiles de soin : le titre porte l'information, pas la marge. */
+  .card__body{ padding:.8rem .95rem; }
+  .cards{ gap:.7rem; }
 }
 
 /* ---------- 14. ACCESSIBILITÉ MOUVEMENT ---------- */
