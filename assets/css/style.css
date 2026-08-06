@@ -731,6 +731,11 @@ body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
   display:inline-flex; align-items:center; gap:.45rem;
   font-size:.84rem; font-weight:500; color:var(--green); align-self:flex-start;
 }
+/* « Réserver » ne faisait que 74 × 20 px : une cible minuscule pour un
+   pouce, qui en demande 44. Plutôt que d'épaissir le lien — six cartes,
+   six fois la hauteur ajoutée — on étend sa zone à la carte entière.
+   Aucune hauteur gagnée, et on peut appuyer n'importe où. */
+.card__link::after{ content:''; position:absolute; inset:0; z-index:2; }
 .card__link svg{
   width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8;
   stroke-linecap:round; stroke-linejoin:round; transition:transform .35s var(--ease);
@@ -1206,6 +1211,21 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   /* Les tuiles de soin : le titre porte l'information, pas la marge. */
   .card__body{ padding:.8rem .95rem; }
   .cards{ gap:.7rem; }
+
+  /* Sous 12 px, un texte devient pénible à lire sur un écran tenu à bout
+     de bras. L'intitulé du soin dit ce qu'est le massage : il doit se lire. */
+  .card__tag{ font-size:.7rem; letter-spacing:.1em; }
+  .card__ribbon{ font-size:.64rem; }
+  .eyebrow, .hero__eyebrow{ font-size:.76rem; }
+
+  /* Cibles tactiles portées à 44 px de haut. Le remplissage déborde sans
+     pousser le voisin : c'est de la surface de contact, pas de la mise en
+     page. */
+  .call__num{ padding:.35rem 0; }
+  .footer__bottom a, .footer__contact a, .infos a{
+    display:inline-block; padding:.62rem 0; margin:-.62rem 0;
+  }
+  .rev-plus__btn{ min-height:44px; }
 }
 
 /* ---------- 14. ACCESSIBILITÉ MOUVEMENT ---------- */

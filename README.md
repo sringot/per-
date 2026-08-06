@@ -228,6 +228,18 @@ celui des pages intérieures de 37 à 29, les boutons de 59 à 50 px de haut —
 cible confortable au pouce est de 48. L'interligne descend de 1,7 à 1,6 : c'est
 confortable sur une ligne de 80 caractères, trop aéré sur une ligne de 40.
 
+**Lisibilité et cibles tactiles**, relevées par un balayage de tous les
+éléments visibles des 8 pages :
+
+- rien ne descend sous 11 px. L'intitulé du soin tombait à 9,9 px et
+  l'étiquette à 9 — or l'intitulé dit *ce qu'est* le massage, il doit se lire.
+- toute zone cliquable atteint 44 px de haut, la cible confortable au pouce.
+  « Réserver » n'en faisait que 20 : plutôt que d'épaissir le lien — six cartes,
+  six fois la hauteur ajoutée — sa zone est étendue à la carte entière par un
+  `::after`. Aucune hauteur gagnée, et on peut appuyer n'importe où sur la carte.
+  Les liens du pied de page gagnent un remplissage compensé par une marge
+  négative : de la surface de contact, pas de la mise en page.
+
 **Ce qui illustre rétrécit, ce qui informe reste.** Sous 560 px : les vues du
 cabinet passent à des tuiles de 112 px, la carte cadeau perd son visuel et garde
 son message, les avis perdent leur avatar — un dessin générique posé sur un
