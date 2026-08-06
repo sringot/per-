@@ -148,10 +148,19 @@ python3 tools-photos.py
 | `marie-portrait.webp`   | bloc « à propos »         | 800 × 1000  |
 
 Le héros sert **une découpe par format**, via `<picture>`. L'arche est haute
-sur desktop, large et basse sur téléphone : rogner la version verticale à cette
-hauteur perdait les côtés et cassait la composition. Le script d'aperçu intègre
-donc `srcset` autant que `src`, sans quoi l'image mobile serait introuvable dans
+sur desktop, large et basse sur téléphone. Le script d'aperçu intègre donc
+`srcset` autant que `src`, sans quoi l'image mobile serait introuvable dans
 l'artifact.
+
+Sur téléphone la photo occupe **30 % de l'écran**, hauteur exprimée en `svh` et
+non en rapport d'image : la part reste la même du plus petit au plus grand
+téléphone. Elle en prenait 40 %, et repoussait le bouton hors du premier écran.
+
+30 % est un plancher, pas un choix esthétique : la photo d'origine ne fait que
+931 px de large, donc dans un cadre de 350 px le visage se rend à 188 px quoi
+qu'on fasse. En dessous de ~200 px de haut, le cadre coupe le menton ou le
+front. C'est aussi pourquoi la découpe mobile prend toute la largeur disponible
+— moins on zoome, moins la tête occupe de hauteur une fois rendue.
 
 Le point de visée est le **visage**, pas le centre de l'image : un recadrage
 centré coupait le haut du crâne sur le format le plus carré. Les repères sont

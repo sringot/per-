@@ -21,20 +21,27 @@ DEST   = ROOT / 'assets/img'
 # Repères relevés sur la photo (fractions de largeur / hauteur).
 VISAGE_X, VISAGE_Y = 0.55, 0.40
 
-# nom, rapport largeur/hauteur, largeur finale, part de l'image gardée
+# nom, rapport, largeur finale, part de l'image gardée, visée verticale
+# (la visée par défaut convient aux formats hauts ; un bandeau large doit
+#  viser plus haut, sinon le crâne sort du cadre)
 FORMATS = [
     # Héros de l'accueil : arche, un peu plus haute que large.
-    ('marie-hero.webp',    1 / 1.1,  1040, 0.98),
+    ('marie-hero.webp',      1 / 1.1, 1040, 0.98, VISAGE_Y),
     # Page « à propos » : portrait 4/5.
-    ('marie-portrait.webp', 4 / 5,    800, 0.92),
+    ('marie-portrait.webp',  4 / 5,    800, 0.92, VISAGE_Y),
     # Héros sur téléphone : l'arche y est large et basse. Recadrer la
     # version verticale à cette hauteur rognait les côtés et cassait la
     # composition ; cette découpe-ci est cadrée pour ce format.
-    ('marie-hero-large.webp', 4 / 3,   900, 0.86),
+    # Cadrée large mais pas en bandeau : c'est le conteneur qui découpe
+    # la bande finale, via `object-position`. Une découpe 16/9 ne pouvait
+    # pas contenir la tête entière, la photo d'origine étant verticale.
+    # Toute la largeur disponible : moins on zoome, moins la tête occupe
+    # de hauteur une fois rendue, et plus la bande visible peut être basse.
+    ('marie-hero-large.webp', 4 / 3,   930, 1.00, 0.385),
 ]
 
 
-def recadre(im, rapport, part):
+def recadre(im, rapport, part, visee_y):
     """Recadre autour du visage, en gardant `part` de la dimension limitante."""
     W, H = im.size
     # Plus grande boîte au bon rapport qui tienne dans l'image.
@@ -45,7 +52,7 @@ def recadre(im, rapport, part):
         w = W * part
         h = w / rapport
 
-    cx, cy = W * VISAGE_X, H * VISAGE_Y
+    cx, cy = W * VISAGE_X, H * visee_y
     x = min(max(cx - w / 2, 0), W - w)
     y = min(max(cy - h / 2, 0), H - h)
     return im.crop((round(x), round(y), round(x + w), round(y + h)))
@@ -57,8 +64,8 @@ def main():
     src = Image.open(SOURCE).convert('RGB')
     print(f'source : {src.size[0]}×{src.size[1]}')
 
-    for nom, rapport, largeur, part in FORMATS:
-        im = recadre(src, rapport, part)
+    for nom, rapport, largeur, part, visee in FORMATS:
+        im = recadre(src, rapport, part, visee)
         im = im.resize((largeur, round(largeur / rapport)), Image.LANCZOS)
         chemin = DEST / nom
         im.save(chemin, quality=82, method=6)

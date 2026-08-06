@@ -1055,9 +1055,15 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
      hauteur est plafonnée : à 500 px elle repoussait le titre à 728 px,
      hors d'un écran de 664. */
   .hero__visual{ width:100%; max-width:460px; justify-self:center; order:-1; margin-bottom:0; }
-  /* La découpe horizontale est déjà cadrée pour cette arche : elle se
-     pose telle quelle, sans plafond de hauteur ni décalage à rattraper. */
-  .hero__photo{ aspect-ratio:4/3; }
+  /* Hauteur exprimée en part d'écran, pas en rapport d'image : à 4/3 la
+     photo prenait 40 % du premier écran et repoussait le bouton hors de
+     vue sur iPhone SE et 13. Ici elle en occupe ~26 % quel que soit le
+     téléphone, et le bouton rentre partout. */
+  /* 30 % de l'écran : en dessous, le cadre est trop court pour contenir
+     la tête entière — la photo d'origine ne fait que 931 px de large, donc
+     le visage se rend à 188 px quoi qu'on fasse. */
+  .hero__photo{ aspect-ratio:auto; height:clamp(165px,30svh,245px); }
+  .hero__photo img{ object-position:50% 42%; }
   /* Arche moins haute : sur une image large, un demi-cercle plein
      mangeait le haut du visage. */
   .hero__photo.arch{ border-radius:44% 44% var(--r-lg) var(--r-lg) / 30% 30% var(--r-lg) var(--r-lg); }
