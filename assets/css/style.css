@@ -1041,34 +1041,6 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   font-size:.85em; color:var(--ochre);
 }
 
-/* ---------- BARRE D'APPEL (téléphone) ----------
-   Les rendez-vous se prennent par appel : le numéro doit rester joignable
-   sans revenir en haut ni ouvrir le menu. Au-delà de 860 px l'en-tête
-   porte déjà le bouton, la barre disparaît. */
-.callbar{ display:none; }
-@media (max-width:860px){
-  .callbar{
-    position:fixed; z-index:820;
-    left:.9rem; right:.9rem; bottom:calc(.9rem + env(safe-area-inset-bottom));
-    display:flex; align-items:center; justify-content:center; gap:.6rem;
-    padding:.95rem 1.2rem; border-radius:var(--pill);
-    background:var(--ochre); color:var(--white);
-    font-size:.95rem; font-weight:500;
-    box-shadow:0 10px 30px -12px rgba(42,35,32,.55);
-    transition:transform .3s var(--ease), opacity .3s var(--ease);
-  }
-  .callbar svg{
-    width:18px; height:18px; flex:none; fill:none; stroke:currentColor;
-    stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
-  }
-  .callbar:active{ transform:scale(.98); }
-  /* Rangée pendant que le tiroir est ouvert : elle passerait par-dessus. */
-  body.nav-open .callbar{ opacity:0; transform:translateY(120%); pointer-events:none; }
-  /* La barre flotte au-dessus du bas de page : on lui réserve la place. */
-  .footer{ padding-bottom:5.5rem; }
-  /* Un seul bouton flottant à la fois. */
-  .totop{ display:none; }
-}
 /* ---------- 13. RESPONSIVE ---------- */
 @media (max-width:1080px){
   .hero{ min-height:auto; padding:1rem 0 3rem; }

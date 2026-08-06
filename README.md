@@ -106,6 +106,8 @@ CNIL considère comme non conforme au RGPD.
 - Page avis : les 6 premiers témoignages affichés, les suivants repliés
   derrière « Voir tous les avis »
 - Page contact tournée vers l'appel : le numéro en grand, cliquable
+- Libellé du bouton principal : « Je prends du temps pour moi » (choix de
+  Marie, en place des huit occurrences de « Prendre rendez-vous »)
 - Accessibilité : navigation clavier, libellés ARIA, lien d'évitement,
   respect de `prefers-reduced-motion`
 
@@ -185,14 +187,11 @@ mentions légales.
 
 ## Le téléphone d'abord
 
+> Une barre d'appel fixe en bas de l'écran a existé un temps ; Marie l'a fait
+> retirer. Ne pas la réintroduire sans le lui redemander.
+
 Trois clientes sur quatre arriveront depuis un téléphone : c'est le format de
 référence, pas une adaptation du desktop. Quatre points en découlent.
-
-**Une barre d'appel fixe** (`.callbar`) en bas de l'écran, sur les 6 pages, en
-dessous de 860 px. Les rendez-vous se prennent par appel : le numéro doit
-rester à portée de pouce sans revenir en haut ni ouvrir le menu. Elle s'efface
-pendant que le tiroir est ouvert, et remplace le bouton « remonter » — un seul
-bouton flottant à la fois.
 
 **Le héros ne commence plus par une photo pleine hauteur.** `order:-1` sur le
 visuel, pensé pour l'ancienne illustration, plaçait le portrait avant le texte :
