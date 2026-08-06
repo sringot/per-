@@ -270,7 +270,7 @@ p + p{ margin-top:.9rem; }
   background:var(--surface);
   box-shadow:var(--nm-out);
 }
-.ill img{
+.ill img, .ill picture{
   width:100%; height:100%;
   object-fit:cover; display:block;
 }
@@ -479,19 +479,6 @@ body.ready .ln > span{ transform:none; }
 body.ready .hero__photo{ clip-path:inset(0 0 0 0); transform:none; }
 .hero__photo img{ transition:transform 1.2s var(--ease-out); }
 .hero__visual:hover .hero__photo img{ transform:scale(1.04); }
-
-.profile{
-  position:absolute; z-index:3; right:-7%; bottom:7%;
-  width:min(330px,92%);
-  display:flex; gap:.85rem; align-items:flex-start;
-  padding:.95rem; border-radius:var(--r);
-  background:var(--surface);
-  box-shadow:var(--nm-out-lg);
-  transform:translateZ(52px);
-}
-.profile__thumb{ width:70px; height:70px; flex:none; border-radius:var(--r-sm); }
-.profile__body b{ display:block; font-size:.88rem; font-weight:600; color:var(--green); line-height:1.35; }
-.profile__body p{ font-size:.75rem; line-height:1.55; margin-top:.25rem; }
 
 /* Invite à descendre */
 .cue{
@@ -1054,12 +1041,13 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
      hauteur est plafonnée : à 500 px elle repoussait le titre à 728 px,
      hors d'un écran de 664. */
   .hero__visual{ width:100%; max-width:460px; justify-self:center; order:-1; margin-bottom:0; }
-  /* `object-position` remonté : le recadrage centré rognait le haut du
-     crâne une fois la hauteur plafonnée. */
-  .hero__photo{ aspect-ratio:auto; height:min(40svh,310px); }
-  .hero__photo img{ object-position:50% 28%; }
+  /* La découpe horizontale est déjà cadrée pour cette arche : elle se
+     pose telle quelle, sans plafond de hauteur ni décalage à rattraper. */
+  .hero__photo{ aspect-ratio:4/3; }
+  /* Arche moins haute : sur une image large, un demi-cercle plein
+     mangeait le haut du visage. */
+  .hero__photo.arch{ border-radius:44% 44% var(--r-lg) var(--r-lg) / 30% 30% var(--r-lg) var(--r-lg); }
   .hero__tilt{ transform:none; }
-  .profile{ right:0; bottom:-9%; }
   .cue{ display:none; }
   .about{ grid-template-columns:1fr; }
   .about__media{ width:100%; max-width:470px; }
@@ -1151,8 +1139,6 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
      dessous, en version compacte : sa vignette saute — c'est le même
      visage que la photo juste au-dessus — et elle ne coûte plus que 70 px
      au lieu de 110. */
-  .profile{ position:static; width:100%; margin-top:.7rem; transform:none; padding:.75rem .9rem; }
-  .profile__thumb{ display:none; }
   .hero__title .ln{ gap:.4rem; }
   .about__sub{ right:0; width:52%; }
   .reviews__ctrl{ justify-content:center; }
@@ -1176,9 +1162,6 @@ body.ready .anim-pop{ animation:pop .7s var(--ease-out) var(--d,0s) forwards; }
   .giftcard .h3{ font-size:1.25rem; }
   .giftcard p{ font-size:.88rem; }
 
-  /* La carte de présentation répète, en plus court, le texte du héros
-     situé juste dessous. Sur mobile elle ne fait qu'éloigner le titre. */
-  .profile{ display:none; }
 
   /* Avis : c'est le contenu de la page, on ne le coupe pas — on le
      resserre. L'avatar est un dessin générique posé sur un prénom

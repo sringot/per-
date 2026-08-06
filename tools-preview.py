@@ -36,8 +36,11 @@ def inline_illus(html):
         if not f.exists():
             raise SystemExit(f'visuel introuvable : {rel}')
         b64 = base64.b64encode(f.read_bytes()).decode()
-        return f'src="data:{MIME[f.suffix.lower()]};base64,{b64}"'
-    return re.sub(r'src="(assets/img/[\w./-]+)"', sub, html)
+        attr = m.group(0).split('=')[0]
+        return f'{attr}="data:{MIME[f.suffix.lower()]};base64,{b64}"'
+    # `srcset` autant que `src` : depuis que le héros sert une découpe par
+    # format, oublier le second laissait l'image mobile introuvable.
+    return re.sub(r'(?:src|srcset)="(assets/img/[\w./-]+)"', sub, html)
 
 css = (ROOT / 'assets/css/style.css').read_text(encoding='utf-8')
 js  = (ROOT / 'assets/js/main.js').read_text(encoding='utf-8')

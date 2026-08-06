@@ -129,9 +129,13 @@ python3 tools-illustrations.py
 
 ## La photo de Marie
 
-Le portrait a remplacé les illustrations sur l'accueil et la page « à propos ».
-Une seule photo alimente trois emplacements de rapports différents : `tools-photos.py`
-en tire les trois découpes depuis `assets/img/marie-source.png`.
+Le portrait a remplacé les illustrations sur l'accueil. Une seule photo alimente
+des emplacements de rapports différents : `tools-photos.py` en tire les découpes
+depuis `assets/img/marie-source.png`.
+
+La bulle « Moi c'est Marie » qui se posait sur la photo du héros a été retirée à
+la demande de Marie : sa vignette répétait le visage juste derrière, et
+« masseuse bien-être » figure déjà dans le pied de page.
 
 ```bash
 python3 tools-photos.py
@@ -139,9 +143,15 @@ python3 tools-photos.py
 
 | Fichier | Usage | Format |
 | ------- | ----- | ------ |
-| `marie-hero.webp`     | arche du héros           | 1040 × 1144 |
-| `marie-portrait.webp` | bloc « à propos »        | 800 × 1000  |
-| `marie-thumb.webp`    | vignette de la carte     | 200 × 200   |
+| `marie-hero.webp`       | arche du héros, desktop   | 1040 × 1144 |
+| `marie-hero-large.webp` | arche du héros, téléphone | 900 × 675   |
+| `marie-portrait.webp`   | bloc « à propos »         | 800 × 1000  |
+
+Le héros sert **une découpe par format**, via `<picture>`. L'arche est haute
+sur desktop, large et basse sur téléphone : rogner la version verticale à cette
+hauteur perdait les côtés et cassait la composition. Le script d'aperçu intègre
+donc `srcset` autant que `src`, sans quoi l'image mobile serait introuvable dans
+l'artifact.
 
 Le point de visée est le **visage**, pas le centre de l'image : un recadrage
 centré coupait le haut du crâne sur le format le plus carré. Les repères sont

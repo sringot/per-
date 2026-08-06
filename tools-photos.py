@@ -27,10 +27,10 @@ FORMATS = [
     ('marie-hero.webp',    1 / 1.1,  1040, 0.98),
     # Page « à propos » : portrait 4/5.
     ('marie-portrait.webp', 4 / 5,    800, 0.92),
-    # Vignette de la carte du héros : carré. Assez large pour contenir le
-    # menton et le haut du crâne — plus serré, la vignette de 70 px ne
-    # montrait qu'une joue.
-    ('marie-thumb.webp',    1 / 1,    200, 0.64),
+    # Héros sur téléphone : l'arche y est large et basse. Recadrer la
+    # version verticale à cette hauteur rognait les côtés et cassait la
+    # composition ; cette découpe-ci est cadrée pour ce format.
+    ('marie-hero-large.webp', 4 / 3,   900, 0.86),
 ]
 
 
