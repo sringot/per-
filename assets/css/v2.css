@@ -329,13 +329,40 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   position:relative; display:block; width:100%;
   aspect-ratio:.68;
   transform-style:preserve-3d;
-  transition:transform .7s var(--ease-out);
+  /* Souplesse **symétrique**, et non la sortie rapide du reste du site :
+     avec `ease-out`, la carte franchissait les 90° en 110 ms puis rampait
+     600 ms. Comme les deux faces sont cachées de part et d'autre de cet
+     angle, elle restait un quart de seconde parfaitement invisible.
+     Une courbe symétrique fait coïncider la moitié du temps avec la
+     moitié de la rotation — d'où le retard de `visibility`, à .3s. */
+  transition:transform .6s cubic-bezier(.45,0,.55,1);
 }
-.soin__carte[aria-expanded="true"]{ transform:rotateY(180deg); }
-.soin__carte:hover{ transform:translateY(-5px); }
-.soin__carte[aria-expanded="true"]:hover{ transform:rotateY(180deg) translateY(-5px); }
-.soin__carte:active{ transform:scale(.98); }
-.soin__carte[aria-expanded="true"]:active{ transform:rotateY(180deg) scale(.98); }
+
+/* Toutes les variantes déclarent la **même suite** de fonctions. Avec des
+   suites différentes, le navigateur ne peut plus interpoler fonction par
+   fonction : il décompose les matrices, et une rotation d'exactement 180°
+   s'y lit comme un aplatissement — la carte s'écrasait au lieu de tourner. */
+.soin__carte                      { transform:rotateY(0)      translateY(0)    scale(1);   }
+.soin__carte:hover                { transform:rotateY(-9deg)  translateY(-5px) scale(1);   }
+.soin__carte:active               { transform:rotateY(0)      translateY(0)    scale(.98); }
+.soin__carte[aria-expanded="true"]      { transform:rotateY(180deg) translateY(0)    scale(1);   }
+.soin__carte[aria-expanded="true"]:hover{ transform:rotateY(189deg) translateY(-5px) scale(1);   }
+.soin__carte[aria-expanded="true"]:active{transform:rotateY(180deg) translateY(0)    scale(.98); }
+
+/* Une carte à peine inclinée au survol : c'est le repère le plus direct,
+   on voit qu'elle a une épaisseur et donc un dos. Le toucher n'ayant pas
+   de survol, le téléphone reçoit l'amorce ci-dessous. */
+
+/* Amorce : à la première ouverture du panneau, une carte entrouvre son dos
+   puis se referme. Sur un écran tactile, rien d'autre ne dit qu'une carte
+   se retourne — et une carte qui ne bouge jamais n'a l'air que d'une image.
+
+   C'est une simple classe posée puis retirée, pas une `@keyframes` : une
+   animation prend la main sur `transform`, et un appui pendant qu'elle
+   court ne déclenchait plus aucune transition — la carte sautait d'un coup
+   à 180°. Avec une classe, l'appui ne fait que redonner une cible à la
+   transition déjà en place. */
+.soin__carte.amorce{ transform:rotateY(-26deg) translateY(-4px) scale(1); }
 
 .soin__face{
   position:absolute; inset:0;
@@ -349,7 +376,7 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   /* Le lecteur d'écran, lui, ne voit pas les faces : il faut le lui dire.
      Le changement est retardé jusqu'au milieu du retournement, sinon la
      face partante disparaît avant d'avoir fini de tourner. */
-  visibility:hidden; transition:visibility 0s linear .35s;
+  visibility:hidden; transition:visibility 0s linear .3s;
 }
 /* Monogramme au centre, nom en bas : en simple pile centrée, un nom sur
    deux lignes (« Drainage lymphatique ») remontait le monogramme et les
@@ -362,6 +389,19 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 .soin__face--arriere{ transform:rotateY(180deg); text-align:left; }
 .soin__carte[aria-expanded="true"] .soin__face--avant  { visibility:hidden; }
 .soin__carte[aria-expanded="true"] .soin__face--arriere{ visibility:visible; }
+
+/* Le pictogramme « ça se retourne », dans le coin de chaque face. Sur la
+   face avant il invite, sur la face arrière il indique le retour. */
+.soin__tourne{
+  position:absolute; top:.6rem; right:.6rem;
+  width:22px; height:22px; opacity:.6;
+}
+.soin__tourne svg{
+  width:100%; height:100%;
+  fill:none; stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.soin__carte:hover .soin__tourne{ opacity:.95; }
 
 /* Le monogramme : un masque, donc une couleur pilotée par le CSS. */
 .soin__signe{
@@ -387,12 +427,27 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   font-size:clamp(.62rem,2.2vw,.7rem); line-height:1.5; opacity:.82;
 }
 
+.astuce{
+  display:flex; align-items:center; gap:.45rem;
+  margin-top:1.4rem;
+  font-size:.8rem; color:var(--ink-soft);
+}
+.astuce svg{
+  width:16px; height:16px; flex:none; color:var(--ochre);
+  fill:none; stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+
 /* Retourner une carte est un geste de confort, pas une information :
    sans mouvement, on échange simplement les deux faces. */
 @media (prefers-reduced-motion:reduce){
-  .soin__carte, .soin__carte[aria-expanded="true"]{ transform:none; }
+  .soin__carte, .soin__carte:hover, .soin__carte:active,
+  .soin__carte[aria-expanded="true"],
+  .soin__carte[aria-expanded="true"]:hover,
+  .soin__carte[aria-expanded="true"]:active{ transform:none; }
   .soin__face--arriere{ transform:none; }
   .soin__face{ transition:none; }
+  .soin__carte.amorce{ animation:none; }
   .soin__carte[aria-expanded="true"] .soin__face--arriere{ z-index:1; }
 }
 

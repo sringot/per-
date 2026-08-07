@@ -110,6 +110,9 @@
      état, c'est une de trop. */
   $$('.soin__carte').forEach(carte => {
     carte.addEventListener('click', () => {
+      // L'amorce vise le même `transform` : la retirer ici évite qu'elle
+      // reprenne la main si l'on appuie pendant qu'elle joue.
+      carte.classList.remove('amorce');
       const ouverte = carte.getAttribute('aria-expanded') === 'true';
       carte.setAttribute('aria-expanded', String(!ouverte));
     });
@@ -124,6 +127,21 @@
       .forEach(c => c.setAttribute('aria-expanded', 'false'));
     massages.querySelector('.fermer').addEventListener('click', rendre);
     document.addEventListener('keydown', e => { if (e.key === 'Escape') rendre(); });
+
+    // Amorce : à la première ouverture, une carte entrouvre son dos. Sur un
+    // écran tactile il n'y a pas de survol, donc rien ne dirait qu'une carte
+    // se retourne. Une seule fois, et sur une seule carte : le geste doit se
+    // remarquer, pas s'imposer.
+    const bulleMassages = bulles.find(b => b.dataset.ouvre === 'massages');
+    if (bulleMassages) {
+      bulleMassages.addEventListener('click', function amorcer() {
+        bulleMassages.removeEventListener('click', amorcer);
+        const carte = massages.querySelector('.soin__carte');
+        if (!carte) return;
+        setTimeout(() => carte.classList.add('amorce'), 500);
+        setTimeout(() => carte.classList.remove('amorce'), 1250);
+      });
+    }
   }
 
   /* ---------- Synthèse des avis ----------

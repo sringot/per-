@@ -205,6 +205,38 @@ retournement paraîtrait plat. `backface-visibility` cache la face arrière à
 l'œil ; `visibility`, retardée jusqu'au milieu du mouvement, la cache aussi
 aux lecteurs d'écran.
 
+Trois pièges s'y cachent, et chacun cassait la fluidité :
+
+**La souplesse doit être symétrique.** Le reste du site sort en `ease-out`,
+très en avance sur lui-même. Appliquée à un retournement, cette courbe
+franchissait les 90° en 110 ms puis rampait 600 ms — et comme les deux faces
+sont cachées de part et d'autre de cet angle, la carte restait **un quart de
+seconde parfaitement invisible**. Une courbe symétrique
+(`cubic-bezier(.45,0,.55,1)`) fait coïncider la moitié du temps avec la moitié
+de la rotation, ce qui aligne le passage de `visibility` sur le moment où la
+carte est de chant.
+
+**Toutes les variantes déclarent la même suite de fonctions.** Avec `transform:
+translateY(-5px)` au survol face à `transform: rotateY(180deg)` retournée, les
+suites diffèrent : le navigateur ne peut plus interpoler fonction par fonction
+et décompose les matrices. Une rotation d'exactement 180° s'y lit comme un
+aplatissement — la carte s'écrasait au lieu de tourner. D'où
+`rotateY(…) translateY(…) scale(…)` partout, même à zéro.
+
+**L'amorce est une classe, pas une `@keyframes`.** Une animation prend la main
+sur `transform` ; un appui pendant qu'elle jouait ne déclenchait plus aucune
+transition et la carte sautait d'un coup à 180°. Une simple classe posée puis
+retirée laisse la transition en place : l'appui ne fait que lui redonner une
+cible.
+
+**Faire comprendre qu'une carte se retourne.** Rien ne le dit d'une image
+immobile. Trois repères, cumulés : un pictogramme de rotation dans le coin de
+chaque face, une ligne d'invite au-dessus de la grille, et au survol une carte
+légèrement pivotée — on voit qu'elle a une épaisseur, donc un dos. Le toucher
+n'ayant pas de survol, le téléphone reçoit à la place une **amorce** : à la
+première ouverture du panneau, une carte entrouvre son dos puis se referme.
+Une seule fois, sur une seule carte.
+
 ## Les illustrations
 
 La V2 n'en affiche aucune : elle ne montre que le portrait de Marie. Les 19
