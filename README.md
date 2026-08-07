@@ -131,24 +131,34 @@ voit qu'il manque quand on l'enlève. Le bruit est calculé par le navigateur
 dizaines de kilo-octets, et aucun motif qui se répète. Mesuré à processeur bridé
 ×6, il ne coûte rien — médiane d'image identique avec et sans, à 16,6 ms.
 
-**Cinq nappes qui dérivent.** Aux teintes des rubriques, très diluées, elles
-éclairent la page et occupent le vide laissé à droite par la composition
-décentrée. Elles avancent lentement, en deux couches de vitesses et de sens
-différents : d'un bloc, le mouvement se verrait.
+**Une image de fond.** Crèmes très doux, formes organiques et le pictogramme
+en filigrane — fournie par Sacha (`fond-source.png`). Elle respire très
+lentement : une dérive de quelques pourcents, en boucle.
 
-> Les nappes sont **fixées à la fenêtre**, pas posées dans la scène. La scène
-> est bornée à 1180 px : les nappes s'y seraient arrêtées et les bords d'un
-> grand écran seraient restés crème nu. Fixées, elles ne comptent pas non plus
-> dans le débordement de la page — en `absolute`, leur débord de 30 %
-> allongeait le document de 120 à 280 px selon l'écran.
+> 1,6 Mo de PNG pour un dégradé. `tools-fond.py` la ramène à **6 Ko** en WebP,
+> sans différence visible — un dégradé se compresse d'autant mieux qu'il est
+> lisse. Le format téléphone reçoit sa **propre découpe verticale** : servie
+> telle quelle, l'image paysage était agrandie 1,4× pour couvrir la hauteur et
+> l'on n'en voyait plus qu'un tiers.
 
-> La dérive porte sur `transform`, jamais sur les dégradés eux-mêmes : déplacer
-> un dégradé le redessine à chaque image, déplacer une couche déjà dessinée ne
-> coûte qu'une recomposition.
+> L'image est **fixée à la fenêtre**, pas posée dans la scène. La scène est
+> bornée à 1180 px : le fond s'y serait arrêté et les bords d'un grand écran
+> seraient restés unis. Fixée, elle ne compte pas non plus dans le débordement
+> de la page.
+
+> La dérive porte sur `transform`, jamais sur l'image : déplacer une couche
+> déjà dessinée ne coûte qu'une recomposition, la redessiner coûte une image
+> entière.
+
+**Le socle a suivi.** `--card` est désormais **relevé sur l'image** (sa teinte
+médiane, `#FCF0E2`) et non choisi à part. Tout le langage de relief repose sur
+des surfaces qui partagent la couleur du fond : resté au crème d'avant, plus
+gris que l'image, chaque bulle se détachait comme un disque gris posé dessus
+au lieu d'être creusée dans la page.
 
 Contrastes relevés sur le rendu, aux points les plus teintés du fond : le texte
-secondaire tient **4,9:1** et les titres **7,1:1**. Les nappes réchauffent le
-crème, elles ne l'assombrissent pas au point de gêner la lecture.
+secondaire tient **5,5:1** et les titres **7,8:1**. L'image étant plus claire
+que l'ancien socle, la lecture y gagne.
 
 > Le neumorphisme *franc* est écarté volontairement : il repose sur des écarts
 > de luminosité trop faibles pour rester lisible. C'est sa variante accessible

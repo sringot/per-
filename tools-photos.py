@@ -25,8 +25,10 @@ VISAGE_X, VISAGE_Y = 0.55, 0.40
 # (la visée par défaut convient aux formats hauts ; un bandeau large doit
 #  viser plus haut, sinon le crâne sort du cadre)
 FORMATS = [
-    # Héros de l'accueil : arche, un peu plus haute que large.
-    ('marie-hero.webp',      1 / 1.1, 1040, 0.98, VISAGE_Y),
+    # Arche de l'accueil. Plus haute que large, et **plus haute qu'avant** :
+    # sur téléphone la photo descend maintenant jusqu'au nom, et c'est cette
+    # hauteur gagnée qui laisse grandir la colonne de bulles à côté.
+    ('marie-hero.webp',     1 / 1.34, 1040, 0.98, VISAGE_Y),
     # Page « à propos » : portrait 4/5.
     ('marie-portrait.webp',  4 / 5,    800, 0.92, VISAGE_Y),
     # Héros sur téléphone : l'arche y est large et basse. Recadrer la
@@ -42,7 +44,7 @@ FORMATS = [
     # `marie-hero.webp` — celui-ci sert tel quel sur grand écran. Sur
     # téléphone le cadre est plus petit : moins de pixels suffisent pour
     # la même netteté apparente, pour la moitié du poids.
-    ('marie-hero-m.webp',    1 / 1.1,   700, 0.98, VISAGE_Y),
+    ('marie-hero-m.webp',   1 / 1.34,   700, 0.98, VISAGE_Y),
 ]
 
 

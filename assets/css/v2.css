@@ -18,7 +18,12 @@
   --sage:       #A7AE9B;
   --yellow:     #F2E7B3;
 
-  --card:       #F4F1E9;
+  /* Le socle est **relevé sur l'image de fond** (sa teinte médiane), et non
+     choisi à part : tout le langage de relief repose sur des surfaces qui
+     partagent la couleur du fond. Resté au crème d'avant, plus gris que
+     l'image, chaque bulle se détachait comme un disque gris posé dessus au
+     lieu d'être creusée dans la page. */
+  --card:       #FCF0E2;
   --ink:        #2A2320;
   --ink-soft:   #635D57;
   --line:       rgba(42,35,32,.10);
@@ -137,7 +142,10 @@ body::after{
   width:100%; max-width:1180px; margin-inline:auto;
 }
 .logo    { grid-area:logo; }
-.portrait{ grid-area:photo; }
+/* Alignée en bas de sa rangée : si la colonne de bulles se trouve un peu
+   plus haute, c'est elle qui dépasse vers le haut, et la photo continue de
+   descendre jusqu'au nom — c'est ce contact-là qui tient la composition. */
+.portrait{ grid-area:photo; align-self:end; }
 .mot     { grid-area:mot; }
 .bulles  { grid-area:bulles; }
 .mot{
@@ -146,44 +154,34 @@ body::after{
   min-width:0;
 }
 
-/* --- Les nappes ---
-   Le fond n'est pas un aplat : cinq nappes très diluées, aux teintes des
-   rubriques, éclairent la page. Elles débordent largement de leur boîte
-   (`inset:-30%`) et **dérivent** — deux couches, deux vitesses, deux sens.
-   Sans le débord, la dérive ferait apparaître un bord ; sans les deux
-   couches, tout bougerait d'un bloc et le mouvement se verrait.
+/* --- Le fond ---
+   Une image, pas un aplat : crèmes très doux et formes organiques, avec le
+   pictogramme en filigrane. Elle vient de `fond-source.png` (1,6 Mo de PNG
+   pour un dégradé) ; `tools-fond.py` la ramène à **6 Ko** en WebP, sans
+   différence visible — un dégradé se compresse d'autant mieux qu'il est
+   lisse. Deux tailles : un téléphone n'a pas besoin de 1600 px.
 
-   La dérive porte sur `transform`, jamais sur les dégradés eux-mêmes :
-   déplacer un dégradé redessine à chaque image, déplacer une couche déjà
-   dessinée ne coûte qu'une recomposition. */
+   La couche est **fixée à la fenêtre**, et non posée dans la scène : celle-ci
+   est bornée à 1180 px, le fond s'y serait arrêté et les bords d'un grand
+   écran seraient restés crème nu. Fixée, elle ne compte pas non plus dans le
+   débordement de la page.
+
+   Elle respire très lentement — une dérive sur `transform`, jamais sur
+   l'image elle-même : déplacer une couche déjà dessinée ne coûte qu'une
+   recomposition, la redessiner coûte une image entière. */
 .halo{
-  /* Fixé à la fenêtre, et non posé dans la scène : la scène est bornée à
-     1180 px, les nappes s'y seraient arrêtées et les bords d'un grand
-     écran seraient restés crème nu. Fixé, l'élément ne compte pas non
-     plus dans le débordement de la page — en `absolute`, son -30 %
-     allongeait le document de 120 à 280 px selon l'écran. */
-  position:fixed; inset:-30%; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(38% 28% at 34% 42%, rgba(242,231,179,.70) 0%, transparent 72%),
-    radial-gradient(24% 20% at 12% 74%, rgba(126,61,73,.12)   0%, transparent 78%);
-  animation:derive 38s ease-in-out infinite alternate;
+  position:fixed; inset:-8%; z-index:0; pointer-events:none;
+  background:url('../img/fond-m.webp') center/cover no-repeat;
+  animation:derive 46s ease-in-out infinite alternate;
 }
-.halo::after{
-  content:''; position:absolute; inset:0;
-  background:
-    radial-gradient(26% 22% at 78% 34%, rgba(227,158,153,.26) 0%, transparent 78%),
-    radial-gradient(30% 24% at 86% 72%, rgba(167,174,155,.30) 0%, transparent 76%),
-    radial-gradient(22% 18% at 60% 88%, rgba(172,75,40,.07)   0%, transparent 80%);
-  animation:derive2 53s ease-in-out infinite alternate;
+@media (min-width:780px){
+  .halo{ background-image:url('../img/fond.webp'); }
 }
 @keyframes derive{
   from{ transform:translate3d(0,0,0)      scale(1); }
-  to  { transform:translate3d(2.5%,-2%,0) scale(1.07); }
+  to  { transform:translate3d(1.5%,-1%,0) scale(1.05); }
 }
-@keyframes derive2{
-  from{ transform:translate3d(0,0,0)      scale(1.04); }
-  to  { transform:translate3d(-3%,1.6%,0) scale(1); }
-}
+
 .scene > *:not(.halo){ position:relative; z-index:1; }
 
 /* Écran large : deux colonnes. Le pictogramme coiffe la photo, le nom et
@@ -201,17 +199,6 @@ body::after{
   }
   /* Sur écran large, la composition tient à gauche : les nappes de droite
      s'élargissent pour que le vide reste habité au lieu d'être blanc. */
-  .halo{
-    background:
-      radial-gradient(30% 40% at 27% 50%, rgba(242,231,179,.70) 0%, transparent 72%),
-      radial-gradient(20% 26% at 7% 86%,  rgba(126,61,73,.12)   0%, transparent 78%);
-  }
-  .halo::after{
-    background:
-      radial-gradient(26% 38% at 70% 24%, rgba(227,158,153,.26) 0%, transparent 78%),
-      radial-gradient(30% 40% at 88% 76%, rgba(167,174,155,.30) 0%, transparent 76%),
-      radial-gradient(24% 30% at 52% 92%, rgba(172,75,40,.07)   0%, transparent 80%);
-  }
 }
 
 /* Le pictogramme seul, en tête d'écran. Il tient lieu d'en-tête : il n'y
@@ -231,8 +218,8 @@ body::after{
      de l'arche. Le `min()` garde une seconde borne en hauteur d'écran :
      sur un téléphone couché, la colonne est très large et la photo
      dépassait de 280 px. Deux limites, pas une. */
-  width:min(100%, 40vh); height:auto;
-  aspect-ratio:1/1.1;
+  width:min(100%, 34vh); height:auto;
+  aspect-ratio:1/1.34;
   border-radius:min(50vw,290px) min(50vw,290px) var(--r-lg) var(--r-lg);
   overflow:hidden;
   box-shadow:var(--nm-out-lg);
@@ -278,7 +265,10 @@ body::after{
 .bulles{
   display:flex; flex-direction:column; align-items:center;
   justify-content:space-between;
-  gap:clamp(.3rem,1vh,.7rem);
+  /* Espacement calé pour que la colonne fasse la hauteur de la photo :
+     plus haute, elle dictait la hauteur de la rangée et la photo cessait
+     de descendre jusqu'au nom. */
+  gap:clamp(.2rem,.6vh,.5rem);
   height:100%;
 }
 .bulle{
@@ -286,12 +276,12 @@ body::after{
   /* Assez large pour que « Rendez-vous » tienne sur une ligne : à deux
      lignes, la dernière bulle dépassait la hauteur de la photo et la
      colonne débordait sous elle. */
-  width:clamp(56px,16vw,72px);
+  width:clamp(62px,18vw,78px);
   color:var(--ink-soft);
   transition:transform .3s var(--ease-out), color .3s var(--ease);
 }
 .bulle__rond{
-  width:clamp(44px,12vw,74px); aspect-ratio:1;
+  width:clamp(52px,15vw,74px); aspect-ratio:1;
   display:grid; place-items:center;
   border-radius:50%;
   background:var(--card);
@@ -355,7 +345,7 @@ body::after{
    requête média du haut : à spécificité égale c'est la dernière déclaration
    qui l'emporte, et la colonne du téléphone reprenait le dessus. */
 @media (min-width:780px){
-  .portrait{ width:auto; height:clamp(220px,36vh,400px); }
+  .portrait{ width:auto; height:clamp(240px,42vh,460px); }
   .mot{ gap:clamp(.5rem,1.5vh,1rem); align-self:end; }
   .bulles{
     flex-direction:row; align-items:flex-start; justify-content:flex-start;
@@ -803,10 +793,10 @@ body::after{
 @media (max-height:700px){
   .scene{ row-gap:clamp(.4rem,1.2vh,1rem); }
   .logo{ width:clamp(28px,5vh,44px); margin-bottom:0; }
-  .portrait{ width:min(100%, 34vh); }
+  .portrait{ width:min(100%, 27vh); }
 }
 @media (max-height:520px){
-  .portrait{ width:min(100%, 30vh); }
+  .portrait{ width:min(100%, 22vh); }
   .logo{ width:clamp(22px,3.6vh,34px); }
   .titre{ font-size:clamp(1.5rem,4.2vh,2.4rem); }
   .accroche{ display:none; }
@@ -825,7 +815,7 @@ body::after{
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
-  .halo, .halo::after{ animation:none; transform:none; }
+  .halo{ animation:none; transform:none; }
   .logo, .portrait, .titre, .accroche, .bulle{ opacity:1; }
   .portrait{ animation:none; }
 }

@@ -57,7 +57,9 @@ def inline_css(css):
             raise SystemExit(f'visuel CSS introuvable : {rel}')
         b64 = base64.b64encode(f.read_bytes()).decode()
         return f'url(data:{MIME[f.suffix.lower()]};base64,{b64})'
-    return re.sub(r'url\(\.\./([\w./-]+)\)', sub, css)
+    # Les guillemets sont optionnels dans `url()` : les ignorer laissait
+    # passer le fond, déclaré `url('../img/fond.webp')`.
+    return re.sub(r'''url\(\s*['"]?\.\./([\w./-]+)['"]?\s*\)''', sub, css)
 
 
 css = inline_css((ROOT / 'assets/css/v2.css').read_text(encoding='utf-8'))
@@ -71,7 +73,7 @@ body = inline_illus(body)
 # pointeraient vers des fichiers que l'artifact ne sert pas.
 body = re.sub(r'<script src="assets/js/v2\.js"[^>]*></script>', '', body)
 
-if 'assets/img/' in body or '../img/' in css:
+if 'assets/img/' in body or '../img/' in css or '../fonts/' in css:
     raise SystemExit('un chemin de visuel n’a pas été embarqué')
 
 # L'artifact suit le thème du lecteur ; le site n'a qu'un mode clair.
