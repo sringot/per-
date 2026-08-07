@@ -324,10 +324,27 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 /* La perspective est portée par le conteneur, la rotation par la carte :
    sur le même élément, la perspective s'appliquerait à la carte elle-même
    et le retournement paraîtrait plat. */
-.soin{ perspective:1100px; }
+/* --- Le retournement ---
+   Deux mouvements, donc deux éléments : la carte s'élève et se repose,
+   le pivot tourne. Sur un seul élément c'est impossible — `transform`
+   est une propriété unique, une seule durée, et l'élévation doit
+   culminer à mi-course quand la rotation, elle, avance tout droit. */
 .soin__carte{
   position:relative; display:block; width:100%;
   aspect-ratio:.68;
+  perspective:1100px;
+  transform:translateY(0) scale(1);
+  transition:transform .34s var(--ease-out);
+}
+/* L'envol : posé au moment de l'appui, retiré à mi-parcours. La carte
+   monte vers l'oeil pendant qu'elle tourne, puis se repose — le geste de
+   quelqu'un qui prend une carte, la retourne, et la remet sur la table. */
+.soin__carte.envol{ transform:translateY(-14px) scale(1.045); }
+.soin__carte:hover{ transform:translateY(-5px) scale(1); }
+.soin__carte:active{ transform:translateY(0) scale(.98); }
+
+.soin__pivot{
+  position:absolute; inset:0;
   transform-style:preserve-3d;
   /* Souplesse **symétrique**, et non la sortie rapide du reste du site :
      avec `ease-out`, la carte franchissait les 90° en 110 ms puis rampait
@@ -335,23 +352,16 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
      angle, elle restait un quart de seconde parfaitement invisible.
      Une courbe symétrique fait coïncider la moitié du temps avec la
      moitié de la rotation — d'où le retard de `visibility`, à .3s. */
-  transition:transform .6s cubic-bezier(.45,0,.55,1);
+  transition:transform .62s cubic-bezier(.45,0,.55,1);
+  transform:rotateY(0);
 }
-
 /* Toutes les variantes déclarent la **même suite** de fonctions. Avec des
    suites différentes, le navigateur ne peut plus interpoler fonction par
    fonction : il décompose les matrices, et une rotation d'exactement 180°
    s'y lit comme un aplatissement — la carte s'écrasait au lieu de tourner. */
-.soin__carte                      { transform:rotateY(0)      translateY(0)    scale(1);   }
-.soin__carte:hover                { transform:rotateY(-9deg)  translateY(-5px) scale(1);   }
-.soin__carte:active               { transform:rotateY(0)      translateY(0)    scale(.98); }
-.soin__carte[aria-expanded="true"]      { transform:rotateY(180deg) translateY(0)    scale(1);   }
-.soin__carte[aria-expanded="true"]:hover{ transform:rotateY(189deg) translateY(-5px) scale(1);   }
-.soin__carte[aria-expanded="true"]:active{transform:rotateY(180deg) translateY(0)    scale(.98); }
-
-/* Une carte à peine inclinée au survol : c'est le repère le plus direct,
-   on voit qu'elle a une épaisseur et donc un dos. Le toucher n'ayant pas
-   de survol, le téléphone reçoit l'amorce ci-dessous. */
+.soin__carte:hover .soin__pivot{ transform:rotateY(-9deg); }
+.soin__carte[aria-expanded="true"] .soin__pivot{ transform:rotateY(180deg); }
+.soin__carte[aria-expanded="true"]:hover .soin__pivot{ transform:rotateY(189deg); }
 
 /* Amorce : à la première ouverture du panneau, une carte entrouvre son dos
    puis se referme. Sur un écran tactile, rien d'autre ne dit qu'une carte
@@ -362,8 +372,9 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
    court ne déclenchait plus aucune transition — la carte sautait d'un coup
    à 180°. Avec une classe, l'appui ne fait que redonner une cible à la
    transition déjà en place. */
-.soin__carte.amorce{ transform:rotateY(-26deg) translateY(-4px) scale(1); }
+.soin__carte.amorce .soin__pivot{ transform:rotateY(-26deg); }
 
+/* --- Les deux faces --- */
 .soin__face{
   position:absolute; inset:0;
   display:flex; flex-direction:column;
@@ -376,7 +387,8 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   /* Le lecteur d'écran, lui, ne voit pas les faces : il faut le lui dire.
      Le changement est retardé jusqu'au milieu du retournement, sinon la
      face partante disparaît avant d'avoir fini de tourner. */
-  visibility:hidden; transition:visibility 0s linear .3s;
+  visibility:hidden;
+  transition:box-shadow .34s var(--ease-out), visibility 0s linear .31s;
 }
 /* Monogramme au centre, nom en bas : en simple pile centrée, un nom sur
    deux lignes (« Drainage lymphatique ») remontait le monogramme et les
@@ -389,6 +401,46 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 .soin__face--arriere{ transform:rotateY(180deg); text-align:left; }
 .soin__carte[aria-expanded="true"] .soin__face--avant  { visibility:hidden; }
 .soin__carte[aria-expanded="true"] .soin__face--arriere{ visibility:visible; }
+
+/* L'ombre suit l'élévation : une carte qui monte projette plus loin et
+   plus doux. C'est ce qui la fait décoller de la page. */
+.soin__carte.envol .soin__face{ box-shadow:0 32px 48px -22px rgba(42,35,32,.55); }
+
+/* Un reflet balaie la carte pendant qu'elle est de chant : c'est ce qui
+   lui donne l'air d'une surface, et non d'un rectangle de couleur. */
+.soin__face::before{
+  content:''; position:absolute; inset:0; border-radius:inherit;
+  pointer-events:none; opacity:0; z-index:2;
+  background:linear-gradient(105deg,
+    transparent 32%, rgba(255,255,255,.32) 50%, transparent 68%);
+  transition:opacity .3s var(--ease);
+}
+.soin__carte.envol .soin__face::before{ opacity:1; }
+
+/* Le contenu de la face qui arrive se pose juste après elle. Sans ce
+   décalage, tout paraît d'un bloc à la seconde où la carte passe les 90° :
+   on voit un basculement, pas une lecture qui s'ouvre.
+
+   L'échelon passe par une variable, et non par `transition-delay` posé
+   directement sur `:nth-child` : les règles d'état, plus spécifiques,
+   l'écraseraient — tout le contenu arriverait au même instant, et le
+   contenu qui part attendrait un tiers de seconde avant de s'effacer. */
+.soin__face > *{
+  --pose:.33s;
+  transition:opacity .3s var(--ease), transform .45s var(--ease-out);
+}
+.soin__face > :nth-child(2){ --pose:.39s; }
+.soin__face > :nth-child(3){ --pose:.45s; }
+.soin__face > :nth-child(4){ --pose:.51s; }
+
+.soin__carte[aria-expanded="true"]  .soin__face--avant   > *,
+.soin__carte[aria-expanded="false"] .soin__face--arriere > *{
+  opacity:0; transform:translateY(12px); transition-delay:0s;
+}
+.soin__carte[aria-expanded="true"]  .soin__face--arriere > *,
+.soin__carte[aria-expanded="false"] .soin__face--avant   > *{
+  opacity:1; transform:none; transition-delay:var(--pose);
+}
 
 /* Le pictogramme « ça se retourne », dans le coin de chaque face. Sur la
    face avant il invite, sur la face arrière il indique le retour. */
@@ -441,13 +493,16 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 /* Retourner une carte est un geste de confort, pas une information :
    sans mouvement, on échange simplement les deux faces. */
 @media (prefers-reduced-motion:reduce){
-  .soin__carte, .soin__carte:hover, .soin__carte:active,
-  .soin__carte[aria-expanded="true"],
-  .soin__carte[aria-expanded="true"]:hover,
-  .soin__carte[aria-expanded="true"]:active{ transform:none; }
+  .soin__carte, .soin__carte:hover, .soin__carte:active, .soin__carte.envol,
+  .soin__pivot,
+  .soin__carte:hover .soin__pivot,
+  .soin__carte.amorce .soin__pivot,
+  .soin__carte[aria-expanded="true"] .soin__pivot,
+  .soin__carte[aria-expanded="true"]:hover .soin__pivot{ transform:none; }
   .soin__face--arriere{ transform:none; }
-  .soin__face{ transition:none; }
-  .soin__carte.amorce{ animation:none; }
+  .soin__face, .soin__face > *{ transition:none; }
+  .soin__face > *{ opacity:1 !important; transform:none !important; }
+  .soin__face::before{ display:none; }
   .soin__carte[aria-expanded="true"] .soin__face--arriere{ z-index:1; }
 }
 

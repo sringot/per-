@@ -205,7 +205,28 @@ retournement paraîtrait plat. `backface-visibility` cache la face arrière à
 l'œil ; `visibility`, retardée jusqu'au milieu du mouvement, la cache aussi
 aux lecteurs d'écran.
 
-Trois pièges s'y cachent, et chacun cassait la fluidité :
+**Le mouvement complet.** Une rotation seule paraît plate. La carte
+s'**élève** vers l'œil pendant qu'elle tourne, puis se repose — le geste de
+quelqu'un qui prend une carte, la retourne, et la remet sur la table. Trois
+choses l'accompagnent : l'ombre s'agrandit et s'adoucit avec la hauteur, un
+reflet balaie la surface au moment où la carte est de chant, et le contenu de
+la face qui arrive se pose juste derrière elle, ligne après ligne.
+
+> Deux mouvements, donc **deux éléments** : la carte s'élève, un pivot tourne.
+> `transform` est une propriété unique — une seule durée, une seule courbe —
+> et l'élévation doit culminer à mi-course quand la rotation, elle, avance
+> tout droit. Sur un seul élément c'est impossible.
+
+> L'élévation est une classe posée puis retirée à mi-parcours : une transition
+> ne sait aller que d'un point à un autre, elle ne peut pas culminer en chemin.
+
+> L'échelon du contenu passe par une **variable** (`--pose`), et non par un
+> `transition-delay` posé sur `:nth-child` : les règles d'état sont plus
+> spécifiques et l'écrasaient — tout arrivait au même instant, et le contenu
+> qui part attendait un tiers de seconde avant de s'effacer.
+
+Trois pièges se cachent dans la rotation elle-même, et chacun cassait la
+fluidité :
 
 **La souplesse doit être symétrique.** Le reste du site sort en `ease-out`,
 très en avance sur lui-même. Appliquée à un retournement, cette courbe

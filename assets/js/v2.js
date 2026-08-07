@@ -109,12 +109,20 @@
      même chose que ce qu'on voit. Deux sources de vérité pour un seul
      état, c'est une de trop. */
   $$('.soin__carte').forEach(carte => {
+    let repos = null;
     carte.addEventListener('click', () => {
       // L'amorce vise le même `transform` : la retirer ici évite qu'elle
       // reprenne la main si l'on appuie pendant qu'elle joue.
       carte.classList.remove('amorce');
       const ouverte = carte.getAttribute('aria-expanded') === 'true';
       carte.setAttribute('aria-expanded', String(!ouverte));
+
+      // L'envol monte puis redescend : deux états, donc une classe posée
+      // puis retirée à mi-parcours. Une transition ne sait aller que d'un
+      // point à un autre — elle ne peut pas culminer en chemin.
+      clearTimeout(repos);
+      carte.classList.add('envol');
+      repos = setTimeout(() => carte.classList.remove('envol'), 310);
     });
   });
 
@@ -140,6 +148,10 @@
         if (!carte) return;
         setTimeout(() => carte.classList.add('amorce'), 500);
         setTimeout(() => carte.classList.remove('amorce'), 1250);
+        // La carte s'élève aussi pendant l'amorce, comme lors d'un vrai
+        // retournement : c'est l'élévation qui dit qu'elle est saisissable.
+        setTimeout(() => carte.classList.add('envol'), 500);
+        setTimeout(() => carte.classList.remove('envol'), 1250);
       });
     }
   }
