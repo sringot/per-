@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marie Massage — Masseuse bien-être à Voisins-le-Bretonneux</title>
-  <meta name="description" content="Marie Massage, masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, relaxation, dos &amp; nuque. Sur rendez-vous, par téléphone.">
+  <meta name="description" content="Marie Massage, masseuse bien-être à Voisins-le-Bretonneux. Kobido, relaxant, deep tissus, madérothérapie, drainage lymphatique. Sur rendez-vous, par téléphone.">
   <link rel="canonical" href="https://sringot.github.io/per-/">
 
   <!-- Aperçu du lien partagé. TODO : vrai domaine à la mise en ligne. -->
@@ -33,7 +33,7 @@
     "@context": "https://schema.org",
     "@type": "HealthAndBeautyBusiness",
     "name": "Marie Massage",
-    "description": "Masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, relaxation, dos &amp; nuque.",
+    "description": "Masseuse bien-être à Voisins-le-Bretonneux. Kobido, relaxant, deep tissus, madérothérapie, drainage lymphatique.",
     "url": "https://sringot.github.io/per-/",
     "image": "https://sringot.github.io/per-/assets/img/partage.jpg",
     "telephone": "+33600000000",
@@ -186,7 +186,7 @@
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <div class="feuille">
+  <div class="feuille feuille--soins">
     <p class="sur-titre">Les massages</p>
     <h2 id="massages-t">Cinq soins,<br>cinq univers</h2>
     <p class="chapo">
@@ -194,13 +194,77 @@
       sa façon de prendre soin de vous.
     </p>
 
-    <!-- TODO : durées et tarifs réels -->
+    <!-- Les cartes de la planche de Marie. Chaque carte se retourne au
+         toucher : le monogramme devant, la description derrière.
+         Le monogramme est un masque CSS, pas une image — sa couleur reste
+         ainsi pilotée par les variables, comme le reste de la charte.
+         TODO : descriptions, durées et tarifs réels (avec Marie). -->
     <ul class="soins">
-      <li><b>Kobido</b><i>Lifting japonais du visage</i><span>60 min · XX €</span></li>
-      <li><b>Madérothérapie</b><i>Soin corps remodelant</i><span>75 min · XX €</span></li>
-      <li><b>Relaxation</b><i>Massage corps complet</i><span>90 min · XX €</span></li>
-      <li><b>Drainage lymphatique</b><i>Jambes légères</i><span>60 min · XX €</span></li>
-      <li><b>Dos &amp; nuque</b><i>Format express</i><span>30 min · XX €</span></li>
+      <li class="soin soin--kobido">
+        <button class="soin__carte" type="button" aria-expanded="false">
+          <span class="soin__face soin__face--avant">
+            <span class="soin__signe" aria-hidden="true"></span>
+            <span class="soin__nom">Kobido</span>
+          </span>
+          <span class="soin__face soin__face--arriere">
+            <span class="soin__titre">Kobido</span>
+            <span class="soin__texte">Un modelage du visage venu du Japon, tout en pressions et en lissages. Le grain de peau s'affine, les traits se détendent.</span>
+            <span class="soin__pied">Lifting japonais du visage<br>60 min · XX €</span>
+          </span>
+        </button>
+      </li>
+      <li class="soin soin--relaxant">
+        <button class="soin__carte" type="button" aria-expanded="false">
+          <span class="soin__face soin__face--avant">
+            <span class="soin__signe" aria-hidden="true"></span>
+            <span class="soin__nom">Relaxant</span>
+          </span>
+          <span class="soin__face soin__face--arriere">
+            <span class="soin__titre">Relaxant</span>
+            <span class="soin__texte">Des manœuvres lentes et enveloppantes, du dos aux jambes. Celui qu'on choisit quand on a surtout besoin de déposer les armes.</span>
+            <span class="soin__pied">Massage corps complet<br>90 min · XX €</span>
+          </span>
+        </button>
+      </li>
+      <li class="soin soin--deep-tissus">
+        <button class="soin__carte" type="button" aria-expanded="false">
+          <span class="soin__face soin__face--avant">
+            <span class="soin__signe" aria-hidden="true"></span>
+            <span class="soin__nom">Deep Tissus</span>
+          </span>
+          <span class="soin__face soin__face--arriere">
+            <span class="soin__titre">Deep Tissus</span>
+            <span class="soin__texte">Un travail appuyé, muscle par muscle, sur les zones nouées. Pour les dos qui ont passé la semaine devant un écran.</span>
+            <span class="soin__pied">Tensions profondes<br>60 min · XX €</span>
+          </span>
+        </button>
+      </li>
+      <li class="soin soin--madero">
+        <button class="soin__carte" type="button" aria-expanded="false">
+          <span class="soin__face soin__face--avant">
+            <span class="soin__signe" aria-hidden="true"></span>
+            <span class="soin__nom">Madéro</span>
+          </span>
+          <span class="soin__face soin__face--arriere">
+            <span class="soin__titre">Madéro</span>
+            <span class="soin__texte">La madérothérapie : des outils en bois qui roulent et pétrissent. Un soin tonique, qui relance la circulation et affine la silhouette.</span>
+            <span class="soin__pied">Soin corps remodelant<br>75 min · XX €</span>
+          </span>
+        </button>
+      </li>
+      <li class="soin soin--drainage">
+        <button class="soin__carte" type="button" aria-expanded="false">
+          <span class="soin__face soin__face--avant">
+            <span class="soin__signe" aria-hidden="true"></span>
+            <span class="soin__nom">Drainage lymphatique</span>
+          </span>
+          <span class="soin__face soin__face--arriere">
+            <span class="soin__titre">Drainage lymphatique</span>
+            <span class="soin__texte">Des pressions douces et rythmées qui relancent la lymphe. Les jambes se dégonflent, la sensation de lourdeur s'en va.</span>
+            <span class="soin__pied">Jambes légères<br>60 min · XX €</span>
+          </span>
+        </button>
+      </li>
     </ul>
   </div>
 </section>

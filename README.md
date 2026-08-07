@@ -70,6 +70,8 @@ assets/
   img/marie-hero*.webp portrait dans son arche (deux tailles)
   img/logo-mark.png   pictogramme, seul en-tête du site
   img/favicon*.png    favicons (onglet + écran d'accueil iOS)
+  img/soins/*.svg     monogrammes des cinq cartes (masques, sans couleur)
+tools-cartes.py       relève couleurs et monogrammes de la planche de soins
 tools-photos.py       découpe le portrait aux formats du gabarit
 tools-logo.py         découpe le pictogramme de logov2.png et fait les favicons
 tools-preview.py      assemble tout en un fichier autonome (aperçu partageable)
@@ -132,12 +134,76 @@ CNIL considère comme non conforme au RGPD.
 - Cinq bulles, la dernière (« Rendez-vous ») pleine et colorée : c'est l'action
   attendue, la prise de rendez-vous se faisant uniquement par téléphone
 - Ouverture des panneaux en `clip-path`, ancrée sur la bulle touchée
+- Panneau « Massages » : cinq cartes colorées qui se retournent au toucher
 - Adresses partageables (`#massages`) et bouton « retour » du téléphone géré
 - Note moyenne des avis **calculée** à partir des avis présents, jamais écrite
   en dur (voir « Les chiffres affichés »)
 - Métadonnées de partage, JSON-LD, `robots.txt`, `sitemap.xml`, page 404
 - Accessibilité : navigation clavier, `inert` sur les panneaux fermés, focus
   rendu à la bulle d'origine, lien d'évitement, `prefers-reduced-motion`
+
+## Les cartes de soins
+
+Le panneau « Massages » présente les cinq soins en cartes, reprises d'une
+planche dessinée pour Marie (`reference-cartes-soins.png`) : une couleur par
+soin, un monogramme dans l'esprit du logo — deux têtes rondes posées sur une
+lettre pleine — et le nom en bas. **Un appui retourne la carte** et découvre la
+description, la durée et le tarif.
+
+Rien n'est relevé à l'œil : `tools-cartes.py` lit la planche et en tire tout.
+
+```bash
+python3 tools-cartes.py
+```
+
+**Les couleurs, à la médiane.** La planche est bruitée : sa couleur la plus
+fréquente n'y représente que 6 à 14 % des pixels, si bien qu'un simple mode
+attrape un grain plutôt qu'un ton. Chaque carte est donc séparée en deux
+groupes — le fond et ce qui s'en éloigne — et chaque groupe rend sa médiane.
+
+**Les monogrammes, vectorisés.** À 1799 px de large, la planche ne donne que
+~150 px par monogramme : posé tel quel dans une carte de 220 px sur un écran
+dense, il piquerait. Chaque silhouette est donc agrandie ×5, puis tracée par
+`potrace`. Le résultat pèse quelques kilo-octets et ne pique jamais.
+
+> Le vignettage de la planche passe le seuil sur les fonds sombres et laisse
+> de longs filets verticaux au bord des cartes, qui se retrouvaient tracés à
+> côté de la lettre. Ils sont fins mais hauts : une aire minimale absolue ne
+> les distingue pas. C'est leur taille **relative** au monogramme qui les
+> trahit — on ne garde que les taches d'au moins 4 % de la plus grande.
+
+Les cinq silhouettes n'ont pas les mêmes proportions ; chacune est posée dans
+une toile carrée, centrée. Sans cela elles paraîtraient de tailles
+différentes, comme des capitales de hauteurs inégales.
+
+**Le monogramme est un masque CSS, pas une image.** Le fichier SVG ne porte
+aucune couleur : c'est le CSS qui la donne, via `mask`. Changer une teinte se
+fait donc dans `v2.css`, sans retoucher un seul dessin.
+
+**Le contraste est recalculé.** Sur la planche, trois cartes sur cinq écrivent
+leur nom autour de 2:1 — très en dessous des 4,5:1 exigés pour du petit texte.
+La grande forme du monogramme garde sa couleur d'origine, mais le texte reçoit
+la **même teinte poussée** jusqu'au seuil, du côté opposé au fond :
+
+| Carte | Fond | Monogramme | Texte | Après |
+| ----- | ---- | ---------- | ----- | ----- |
+| Kobido               | `#7E3D49` | `#F8E2AF` (6,2:1) | inchangé  | —     |
+| Relaxant             | `#A9AE9D` | `#707550` (2,1:1) | `#3F422D` | 4,5:1 |
+| Deep Tissus          | `#FAE1AB` | `#D59C40` (1,9:1) | `#825F27` | 4,5:1 |
+| Madéro               | `#D15929` | `#FDF5E8` (3,8:1) | `#141413` | 4,5:1 |
+| Drainage lymphatique | `#E39E99` | `#BF585A` (2,0:1) | `#6B3132` | 4,6:1 |
+
+> Sur l'orange, éclaircir plafonne à 4,1:1 **même en blanc pur** : c'est la
+> seule carte où il faut assombrir. Les deux directions sont donc essayées, et
+> on retient celle qui atteint la cible en s'écartant le moins de la teinte.
+
+**Le retournement.** Tout l'état tient dans `aria-expanded` : le CSS s'en sert
+pour la rotation, un lecteur d'écran y lit la même chose que ce qu'on voit. La
+perspective est portée par le conteneur et la rotation par la carte — sur le
+même élément, la perspective s'appliquerait à la carte elle-même et le
+retournement paraîtrait plat. `backface-visibility` cache la face arrière à
+l'œil ; `visibility`, retardée jusqu'au milieu du mouvement, la cache aussi
+aux lecteurs d'écran.
 
 ## Les illustrations
 
@@ -449,9 +515,10 @@ transparence, se perdrait sur une barre d'onglets sombre. L'ancien
 - [ ] **Textes** — remplacer tout le lorem ipsum (présentation, cabinet, soins)
 - [ ] **Photos** — le portrait de Marie est en place ; le cabinet et les soins
       sont encore illustrés
-- [ ] **Nombre de massages** — le panneau en présente **5** (Kobido,
-      madérothérapie, relaxation, drainage lymphatique, dos & nuque), conforme
-      au texte de Marie. Le massage bébé de la V1 a été retiré — à confirmer.
+- [ ] **Descriptions des soins** — les textes au dos des cartes sont des
+      exemples, à écrire avec Marie
+- [ ] **Nom du soin « Deep Tissus »** — la planche l'écrit ainsi ; le terme
+      consacré est *deep tissue*. À trancher avec Marie.
 - [ ] **Tarifs et durées** — les `XX €` dans la section massages
 - [ ] **Avis** — les témoignages sont des exemples, à remplacer par les vrais
 - [ ] **Coordonnées** — téléphone et email sont des valeurs fictives, à

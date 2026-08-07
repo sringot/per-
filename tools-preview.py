@@ -43,7 +43,24 @@ def inline_illus(html):
     # par format, oublier le second laissait l'image mobile introuvable.
     return re.sub(r'(?:src|srcset)="(assets/img/[\w./-]+)"', sub, html)
 
-css = (ROOT / 'assets/css/v2.css').read_text(encoding='utf-8')
+def inline_css(css):
+    """Intègre les visuels appelés depuis le CSS (`url(../img/…)`).
+
+    Les monogrammes des cartes de soins sont posés en masque CSS, pas en
+    balise `<img>` : le balayage du HTML ne les voit donc pas, et sans
+    cette passe-ci les cinq cartes s'affichent vides dans l'aperçu.
+    """
+    def sub(m):
+        rel = 'assets/' + m.group(1)
+        f = ROOT / rel
+        if not f.exists():
+            raise SystemExit(f'visuel CSS introuvable : {rel}')
+        b64 = base64.b64encode(f.read_bytes()).decode()
+        return f'url(data:{MIME[f.suffix.lower()]};base64,{b64})'
+    return re.sub(r'url\(\.\./([\w./-]+)\)', sub, css)
+
+
+css = inline_css((ROOT / 'assets/css/v2.css').read_text(encoding='utf-8'))
 js  = (ROOT / 'assets/js/v2.js').read_text(encoding='utf-8')
 
 src = (ROOT / 'index.html').read_text(encoding='utf-8')
@@ -54,7 +71,7 @@ body = inline_illus(body)
 # pointeraient vers des fichiers que l'artifact ne sert pas.
 body = re.sub(r'<script src="assets/js/v2\.js"[^>]*></script>', '', body)
 
-if 'assets/img/' in body:
+if 'assets/img/' in body or '../img/' in css:
     raise SystemExit('un chemin de visuel n’a pas été embarqué')
 
 # L'artifact suit le thème du lecteur ; le site n'a qu'un mode clair.

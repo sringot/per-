@@ -103,6 +103,29 @@
     ouvrir(depart, bulles.find(b => b.dataset.ouvre === depart));
   }
 
+  /* ---------- Les cartes de soins ----------
+     Un appui retourne la carte. Tout l'état tient dans `aria-expanded` :
+     le CSS s'en sert pour la rotation, et un lecteur d'écran y lit la
+     même chose que ce qu'on voit. Deux sources de vérité pour un seul
+     état, c'est une de trop. */
+  $$('.soin__carte').forEach(carte => {
+    carte.addEventListener('click', () => {
+      const ouverte = carte.getAttribute('aria-expanded') === 'true';
+      carte.setAttribute('aria-expanded', String(!ouverte));
+    });
+  });
+
+  // Refermer les cartes en quittant le panneau : rouvrir « Massages » et
+  // retrouver ses cartes retournées donnerait l'impression d'un état resté
+  // en plan.
+  const massages = document.getElementById('massages');
+  if (massages) {
+    const rendre = () => $$('.soin__carte', massages)
+      .forEach(c => c.setAttribute('aria-expanded', 'false'));
+    massages.querySelector('.fermer').addEventListener('click', rendre);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') rendre(); });
+  }
+
   /* ---------- Synthèse des avis ----------
      Jamais écrite en dur : la moyenne et le nombre viennent des avis
      présents dans la page. Ajouter un <li data-note="…"> suffit. */

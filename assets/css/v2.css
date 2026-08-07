@@ -290,23 +290,110 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 }
 
 /* --- La liste des soins --- */
-.soins{ margin-top:1.6rem; display:grid; gap:.55rem; }
-.soins li{
-  display:grid; grid-template-columns:1fr auto; align-items:baseline;
-  gap:.2rem 1rem;
-  padding:.85rem 1.1rem; border-radius:16px; box-shadow:var(--nm-out);
+/* --- Les cartes de soins ---
+   Cinq cartes reprises de la planche de Marie. Chacune se retourne au
+   toucher : le monogramme devant, la description derrière.
+
+   Les couleurs et les monogrammes sont relevés sur la planche par
+   `tools-cartes.py`, jamais saisis à la main. Le monogramme est posé en
+   **masque** : le fichier SVG ne porte aucune couleur, c'est le CSS qui
+   la donne — une teinte se change donc ici, sans retoucher les dessins. */
+/* Cinq cartes dans les 34 rem d'une feuille de lecture donnent des
+   vignettes de 96 px : illisibles. Ce panneau-ci s'élargit, le texte au
+   dessus des cartes gardant sa longueur de ligne. */
+.feuille--soins{ max-width:min(72rem,100%); }
+.feuille--soins > :not(.soins){ max-width:34rem; }
+
+.soins{
+  margin-top:1.8rem;
+  display:grid; gap:clamp(.55rem,2.4vw,1rem);
+  grid-template-columns:repeat(2,minmax(0,1fr));
 }
-/* Chaque case est posée explicitement : un `grid-row` sur le seul tarif
-   suffisait à le faire placer avant les autres, et le nom du soin se
-   retrouvait rejeté dans la colonne de droite. */
-.soins b{ grid-area:1 / 1; font-weight:600; color:var(--green); font-size:1rem; }
-.soins i{
-  grid-area:2 / 1; font-style:normal; font-size:.74rem;
-  letter-spacing:.08em; text-transform:uppercase; color:var(--ochre);
+@media (min-width:600px){ .soins{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (min-width:1000px){ .soins{ grid-template-columns:repeat(5,minmax(0,1fr)); } }
+
+/* Relevé sur la planche de référence par tools-cartes.py.
+   `--signe-c` est la couleur du monogramme, `--texte` la même teinte
+   poussée jusqu'à 4,5:1 — le petit texte l'exige, pas la grande forme. */
+.soin--kobido     { --fond:#7E3D49; --signe-c:#F8E2AF; --texte:#F8E2AF; --signe:url(../img/soins/kobido.svg); }
+.soin--relaxant   { --fond:#A9AE9D; --signe-c:#707550; --texte:#3F422D; --signe:url(../img/soins/relaxant.svg); }
+.soin--deep-tissus{ --fond:#FAE1AB; --signe-c:#D59C40; --texte:#825F27; --signe:url(../img/soins/deep-tissus.svg); }
+.soin--madero     { --fond:#D15929; --signe-c:#FDF5E8; --texte:#141413; --signe:url(../img/soins/madero.svg); }
+.soin--drainage   { --fond:#E39E99; --signe-c:#BF585A; --texte:#6B3132; --signe:url(../img/soins/drainage.svg); }
+
+/* La perspective est portée par le conteneur, la rotation par la carte :
+   sur le même élément, la perspective s'appliquerait à la carte elle-même
+   et le retournement paraîtrait plat. */
+.soin{ perspective:1100px; }
+.soin__carte{
+  position:relative; display:block; width:100%;
+  aspect-ratio:.68;
+  transform-style:preserve-3d;
+  transition:transform .7s var(--ease-out);
 }
-.soins span{
-  grid-area:1 / 2 / span 2 / auto; align-self:center;
-  font-size:.86rem; color:var(--ink-soft); white-space:nowrap;
+.soin__carte[aria-expanded="true"]{ transform:rotateY(180deg); }
+.soin__carte:hover{ transform:translateY(-5px); }
+.soin__carte[aria-expanded="true"]:hover{ transform:rotateY(180deg) translateY(-5px); }
+.soin__carte:active{ transform:scale(.98); }
+.soin__carte[aria-expanded="true"]:active{ transform:rotateY(180deg) scale(.98); }
+
+.soin__face{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  padding:clamp(.8rem,3vw,1.15rem);
+  border-radius:16px;
+  background:var(--fond); color:var(--texte);
+  box-shadow:0 14px 28px -20px rgba(42,35,32,.6);
+  /* Sans cela, la face cachée transparaît à travers celle de devant. */
+  -webkit-backface-visibility:hidden; backface-visibility:hidden;
+  /* Le lecteur d'écran, lui, ne voit pas les faces : il faut le lui dire.
+     Le changement est retardé jusqu'au milieu du retournement, sinon la
+     face partante disparaît avant d'avoir fini de tourner. */
+  visibility:hidden; transition:visibility 0s linear .35s;
+}
+/* Monogramme au centre, nom en bas : en simple pile centrée, un nom sur
+   deux lignes (« Drainage lymphatique ») remontait le monogramme et les
+   cinq cartes ne s'alignaient plus. */
+.soin__face--avant{
+  visibility:visible;
+  display:grid; grid-template-rows:1fr auto; justify-items:center;
+  align-items:center; gap:.7rem;
+}
+.soin__face--arriere{ transform:rotateY(180deg); text-align:left; }
+.soin__carte[aria-expanded="true"] .soin__face--avant  { visibility:hidden; }
+.soin__carte[aria-expanded="true"] .soin__face--arriere{ visibility:visible; }
+
+/* Le monogramme : un masque, donc une couleur pilotée par le CSS. */
+.soin__signe{
+  width:58%; aspect-ratio:1; flex:none;
+  background:var(--signe-c);
+  -webkit-mask:var(--signe) center/contain no-repeat;
+          mask:var(--signe) center/contain no-repeat;
+}
+.soin__nom{
+  font-size:clamp(.68rem,2.4vw,.78rem); font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase; text-align:center;
+  line-height:1.3;
+}
+.soin__titre{
+  font-size:clamp(.86rem,3vw,1rem); font-weight:600; line-height:1.15;
+  letter-spacing:-.01em;
+}
+.soin__texte{
+  margin-top:.5rem; flex:1;
+  font-size:clamp(.72rem,2.5vw,.8rem); line-height:1.45;
+}
+.soin__pied{
+  font-size:clamp(.62rem,2.2vw,.7rem); line-height:1.5; opacity:.82;
+}
+
+/* Retourner une carte est un geste de confort, pas une information :
+   sans mouvement, on échange simplement les deux faces. */
+@media (prefers-reduced-motion:reduce){
+  .soin__carte, .soin__carte[aria-expanded="true"]{ transform:none; }
+  .soin__face--arriere{ transform:none; }
+  .soin__face{ transition:none; }
+  .soin__carte[aria-expanded="true"] .soin__face--arriere{ z-index:1; }
 }
 
 /* --- Les avis --- */
