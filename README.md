@@ -43,14 +43,25 @@ des lecteurs d'écran tant qu'ils sont fermés. Chaque panneau a son adresse
 bulles la suivent ; le vide à droite est voulu, c'est lui qui donne au premier
 regard son air de ne pas être une page d'accueil ordinaire.
 
-Sur **téléphone**, les cinq bulles se rangent en **colonne contre la photo**.
-C'est ce qui la fait grandir : la bande droite de l'écran restait vide, et la
-photo était bornée en hauteur pour ne pas pousser les bulles hors de vue. Elle
-passe de 253 × 279 à 281 × 309 px sur un écran de 390, et occupe désormais la
-pleine largeur utile.
+Sur **téléphone**, les cinq bulles se rangent en **colonne contre la photo**,
+et la photo **s'étire à la hauteur exacte de cette colonne** : haut contre
+haut, bas contre bas. Elle passe de 253 × 279 à 273 × 385 px sur un écran de
+390 — la moitié de surface en plus.
 
-Au-delà de 780 px, deux colonnes : le pictogramme coiffe la photo à gauche, le
-nom et les bulles — remises en ligne — occupent la droite.
+> L'égalité est obtenue par construction, pas par calcul : la colonne fixe la
+> hauteur de la rangée, la photo la remplit. Un rapport d'image figé ne pouvait
+> pas la garantir — la hauteur des bulles dépend de leur taille, celle de la
+> photo de sa largeur, et les deux ne tombaient juste qu'à une largeur d'écran
+> précise. Écart mesuré : **0 px**, de 280 à 430 px de large.
+
+> Sur un écran court, c'est donc **la colonne** qu'il faut réduire, jamais la
+> photo : la rétrécir en largeur pendant que sa hauteur restait celle des
+> bulles la transformait en bandeau vertical, jusqu'à 1/2,3 sur un 320 × 568.
+
+Au-delà de **700 px de large *et* 560 px de haut**, deux colonnes : le
+pictogramme coiffe la photo à gauche, le nom et les bulles — remises en ligne —
+occupent la droite. La double condition sépare une tablette, qui mérite cette
+composition, d'un téléphone couché, qui est large mais court.
 
 > Les surcharges « écran large » sont déclarées **après** les règles de base
 > des bulles, et non dans la requête média du haut de la feuille : à
