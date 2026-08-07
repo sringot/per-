@@ -23,8 +23,12 @@ idée de mise en forme adoptée d'un côté se transpose sans peine de l'autre.
 
 ## Le parti pris de la V2
 
-Une page. Pas de défilement à l'accueil (`html{overflow:hidden}`) : tout tient
-dans la fenêtre, sur téléphone comme sur écran large. Les cinq rubriques sont
+Une page. Pas de défilement à l'accueil : tout tient dans la fenêtre, sur
+téléphone comme sur écran large — **par la mise en page, pas par un verrou**.
+Un `overflow:hidden` a existé un temps ; à 200 % de zoom, ou avec une police
+système à 24 px, la composition dépasse la fenêtre et le verrou rendait alors
+les bulles et le pied de page inatteignables, ni au doigt ni au clavier. Aux
+tailles normales rien ne défile de toute façon. Les cinq rubriques sont
 des **panneaux déjà présents dans le document**, masqués par `clip-path`, et
 révélés au toucher : le disque de la bulle grandit jusqu'à remplir l'écran.
 L'ouverture part donc **de l'endroit qu'on a touché**, pas du milieu de l'écran
@@ -64,9 +68,7 @@ assets/
   css/fonts.css       polices auto-hébergées (@font-face)
   css/v2.css          styles, animations, panneaux
   js/v2.js            ouverture des panneaux, historique, synthèse des avis
-  css/style.css       feuille de la V1 — conservée, plus chargée ici
-  js/main.js          script de la V1 — conservé, plus chargé ici
-  fonts/              Figtree 400/500/600 (woff2, sous-ensembles latin)
+  fonts/              Figtree variable 400-600 (woff2, latin + latin-ext)
   img/marie-hero*.webp portrait dans son arche (deux tailles)
   img/logo-mark.png   pictogramme, seul en-tête du site
   img/favicon*.png    favicons (onglet + écran d'accueil iOS)
@@ -82,9 +84,10 @@ navigation à répercuter : ajouter une rubrique, c'est une bulle dans `<nav>` e
 une `<section class="panneau">` plus bas, reliées par `data-ouvre` /
 `id`. Le script ne connaît aucune liste de pages, il lit le document.
 
-Les fichiers de la V1 (`style.css`, `main.js`, les illustrations) restent dans
-le dépôt : ils ne sont plus chargés, mais servent de réserve si une idée de la
-V1 revient. Ils ne coûtent rien au visiteur.
+La feuille et le script de la V1 ont été **supprimés de cette branche** : plus
+aucune page ne les chargeait, et 74 Ko de code mort finissent toujours par être
+lus comme s'ils étaient vivants. Ils restent intacts sur la branche V1, et dans
+l'historique.
 
 ## Charte graphique
 
@@ -625,6 +628,59 @@ de l'onglet et la ligne légale du pied de page.
 Le favicon garde un fond crème arrondi : le pictogramme seul, tout en
 transparence, se perdrait sur une barre d'onglets sombre. L'ancien
 `favicon.svg` était un *tracé* du logo, pas le logo — il est supprimé.
+
+## Ce que la relecture a corrigé
+
+Une relecture complète du site déployé a relevé quinze défauts ; ils sont tous
+corrigés. Les plus coûteux, pour mémoire — ce sont des pièges qui se
+reproduisent :
+
+**Une adresse ordinaire emportait tout le script.** `ouvrir()` acceptait
+n'importe quel `id` trouvé dans la page, pas seulement les panneaux. Arriver
+sur `…/#bulles` — la cible du lien d'évitement du site lui-même — cherchait un
+bouton de fermeture dans un `<nav>`, et l'exception coupait le fichier : plus
+aucune carte ne se retournait, la note moyenne restait vide, l'année du pied de
+page restait figée. Douze `id` de la page menaient à ce chemin.
+
+**Le fond restait atteignable sous un panneau ouvert.** `clip-path` masque à
+l'œil et rien d'autre : la tabulation sortait du panneau et parcourait les
+bulles et le pied de page invisibles en dessous. Le fond reçoit maintenant
+`inert` — le même mécanisme que celui déjà employé pour les panneaux fermés —
+et le retire **avant** qu'on y remette le focus.
+
+**Fermer empilait au lieu de revenir.** Chaque fermeture ajoutait une entrée
+d'historique : le bouton « retour » du téléphone rouvrait le panneau qu'on
+venait de fermer, et cinq rubriques visitées demandaient onze retours pour
+sortir du site. La croix appelle désormais `history.back()`.
+
+**Trois copies de la même police.** Figtree est une police **variable** : les
+fichiers 400, 500 et 600 livrés par Google avaient le même md5. Déclarés
+séparément, ils se téléchargeaient trois fois — 60 Ko pour 20 Ko utiles.
+
+**Un verrou de défilement rendait le contenu inatteignable.** `overflow:hidden`
+sur `html` tenait l'accueil dans un écran ; à 200 % de zoom la composition
+dépasse, et les bulles comme le pied de page devenaient hors d'atteinte, au
+doigt comme au clavier. Retiré : aux tailles normales rien ne défile de toute
+façon.
+
+**Deux `opacity` défaisaient des contrastes calculés.** `tools-cartes.py`
+calcule chaque encre pour tenir 4,5:1 ; un `opacity:.82` sur la ligne
+durée-et-tarif la recomposait sur le fond de la carte et la ramenait entre 3,3
+et 3,8:1 sur quatre cartes sur cinq. Même chose pour la mention « soins de
+bien-être, non thérapeutiques », à 3,1:1. Une opacité n'éclaircit pas un texte,
+elle le mélange au fond — la couleur se choisit, elle ne se dilue pas.
+
+**Les survols collaient sur iOS.** `:hover` y reste appliqué au dernier élément
+touché : après un appui, la carte restait posée à 189°, de travers, flottant
+au-dessus de ses voisines. Tous les survols sont passés sous
+`@media (hover:hover) and (pointer:fine)`.
+
+**Les deux pages annexes n'avaient plus de style.** Elles gardaient le balisage
+de la V1 alors qu'elles ne chargent plus que `v2.css` : un mur de texte sans
+respiration, et des liens rendus invisibles par `a{text-decoration:none}`. La
+404 est en outre devenue **autonome** — styles inclus, aucun fichier externe :
+GitHub Pages la sert depuis n'importe quelle profondeur d'adresse, où tout
+chemin relatif se serait perdu.
 
 ## À compléter
 

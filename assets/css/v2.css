@@ -62,12 +62,13 @@ html{
   -webkit-text-size-adjust:100%;
   background:var(--card);
 }
-/* L'accueil tient dans un écran : rien ne défile derrière. La règle vise
-   la présence de `.scene`, pas `html` tout court — les mentions légales
-   partagent cette feuille et font trois écrans de haut : bloquées, elles
-   étaient illisibles. Un navigateur sans `:has()` laisse simplement
-   défiler l'accueil, ce qui ne casse rien. */
-html:has(.scene){ overflow:hidden; }
+/* L'accueil tient dans un écran — mais par sa mise en page, pas par un
+   verrou. `overflow:hidden` sur `html` a été retiré : à 200 % de zoom, ou
+   avec une police système à 24 px, la composition dépasse la fenêtre et
+   le verrou rendait alors les bulles et le pied de page **inatteignables**,
+   ni au doigt ni au clavier. Aux tailles normales rien ne défile de toute
+   façon, la page tenant exactement dans la fenêtre — vérifié de 280 × 653
+   à 1920 × 1080. */
 body{
   font-family:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
   font-size:clamp(.94rem,.35vw + .86rem,1rem);
@@ -233,7 +234,10 @@ body::after{
 .titre{
   font-size:clamp(1.75rem,6.6vw,3.5rem);
   font-weight:600; line-height:1; letter-spacing:-.035em;
-  color:var(--green); white-space:nowrap;
+  color:var(--green);
+  /* Un seul mot : il ne peut pas se couper aux espaces. À très fort
+     agrandissement il vaut mieux qu'il se coupe que qu'il déborde. */
+  overflow-wrap:anywhere;
 }
 .accroche{
   font-size:clamp(.82rem,2.4vw,.98rem);
@@ -289,10 +293,14 @@ body::after{
   font-size:clamp(.66rem,2.1vw,.76rem); font-weight:500;
   letter-spacing:.02em; line-height:1.2;
 }
-.bulle:hover{ color:var(--green); }
-.bulle:hover .bulle__rond{
-  box-shadow:var(--nm-out-lg); transform:translateY(-4px);
-  background-color:color-mix(in srgb, var(--teinte,var(--ochre)) 12%, var(--card));
+/* Réservé aux vrais pointeurs : sur iOS, `:hover` reste collé au dernier
+   élément touché et la bulle restait soulevée après l'appui. */
+@media (hover:hover) and (pointer:fine){
+  .bulle:hover{ color:var(--green); }
+  .bulle:hover .bulle__rond{
+    box-shadow:var(--nm-out-lg); transform:translateY(-4px);
+    background-color:color-mix(in srgb, var(--teinte,var(--ochre)) 12%, var(--card));
+  }
 }
 .bulle:active .bulle__rond{ box-shadow:var(--nm-in); transform:translateY(0) scale(.96); }
 
@@ -457,7 +465,6 @@ body::after{
    monte vers l'oeil pendant qu'elle tourne, puis se repose — le geste de
    quelqu'un qui prend une carte, la retourne, et la remet sur la table. */
 .soin__carte.envol{ transform:translateY(-14px) scale(1.045); }
-.soin__carte:hover{ transform:translateY(-5px) scale(1); }
 .soin__carte:active{ transform:translateY(0) scale(.98); }
 
 .soin__pivot{
@@ -476,9 +483,19 @@ body::after{
    suites différentes, le navigateur ne peut plus interpoler fonction par
    fonction : il décompose les matrices, et une rotation d'exactement 180°
    s'y lit comme un aplatissement — la carte s'écrasait au lieu de tourner. */
-.soin__carte:hover .soin__pivot{ transform:rotateY(-9deg); }
 .soin__carte[aria-expanded="true"] .soin__pivot{ transform:rotateY(180deg); }
-.soin__carte[aria-expanded="true"]:hover .soin__pivot{ transform:rotateY(189deg); }
+
+/* Les survols sont réservés aux vrais pointeurs. iOS garde `:hover` collé
+   au dernier élément touché : après un appui, la carte restait posée à
+   189° — visiblement de travers, son texte fuyant — et flottait 5 px
+   au-dessus de ses quatre voisines. */
+@media (hover:hover) and (pointer:fine){
+  .soin__carte:hover{ transform:translateY(-5px) scale(1); }
+  .soin__carte:hover .soin__pivot{ transform:rotateY(-9deg); }
+  .soin__carte[aria-expanded="true"]:hover{ transform:translateY(-5px) scale(1); }
+  .soin__carte[aria-expanded="true"]:hover .soin__pivot{ transform:rotateY(189deg); }
+  .soin__carte:hover .soin__tourne{ opacity:.95; }
+}
 
 /* Amorce : à la première ouverture du panneau, une carte entrouvre son dos
    puis se referme. Sur un écran tactile, rien d'autre ne dit qu'une carte
@@ -592,8 +609,12 @@ body::after{
   margin-top:.5rem; flex:1;
   font-size:clamp(.72rem,2.5vw,.8rem); line-height:1.45;
 }
+/* Pas d'`opacity` ici : elle recomposait l'encre sur le fond de la carte
+   et ramenait la ligne durée-et-tarif — le texte commercialement décisif,
+   à 10-11 px — entre 3,3 et 3,8:1 sur quatre cartes sur cinq, alors même
+   que `tools-cartes.py` avait calculé cette encre pour tenir 4,5:1. */
 .soin__pied{
-  font-size:clamp(.62rem,2.2vw,.7rem); line-height:1.5; opacity:.82;
+  font-size:clamp(.62rem,2.2vw,.7rem); line-height:1.5;
 }
 
 .astuce{
@@ -661,6 +682,45 @@ body::after{
 }
 .ailleurs a:hover{ color:var(--ochre); border-bottom-color:var(--ochre); }
 
+/* ---------- 5 bis. LES PAGES ANNEXES ----------
+   Mentions légales et 404 partagent cette feuille, mais n'ont ni bulles ni
+   panneaux : sans styles à eux, le seul `*{margin:0;padding:0}` du socle
+   les réduisait à un mur de texte sans respiration, et les liens, privés
+   de soulignement par `a{text-decoration:none}`, ne se voyaient plus. */
+.annexe{
+  flex:1; position:relative; z-index:1;
+  width:100%; max-width:44rem; margin-inline:auto;
+  padding:clamp(2.5rem,8vh,5rem) var(--pad) clamp(2rem,5vh,3rem);
+}
+.annexe h1{
+  font-size:clamp(1.9rem,6vw,2.8rem);
+  font-weight:600; line-height:1.06; letter-spacing:-.03em;
+  color:var(--green); margin-bottom:1.4rem;
+}
+.annexe h2{
+  font-size:1.05rem; font-weight:600; color:var(--green);
+  margin:2.2rem 0 .5rem;
+}
+/* Le sur-titre et le chapô sont définis dans `.feuille`, qui n'existe que
+   dans les panneaux : sur ces pages-ci ils retombaient au texte courant —
+   « Erreur 404 » s'affichait en noir, à la taille du corps. */
+.annexe .sur-titre{
+  font-size:.7rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ochre); margin-bottom:.7rem;
+}
+.annexe p{ color:var(--ink-soft); }
+.annexe .chapo{ font-size:1.02rem; color:var(--ink); }
+.annexe p + p{ margin-top:.7rem; }
+.annexe code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.86em; color:var(--ochre);
+}
+.annexe a:not(.appel){ color:var(--ochre); border-bottom:1px solid var(--line); }
+.annexe ul{ margin-top:.6rem; padding-left:1.1rem; list-style:disc; }
+.annexe li{ color:var(--ink-soft); margin-top:.3rem; }
+.annexe--404{ text-align:center; max-width:34rem; }
+.annexe--404 .chapo{ margin-bottom:2rem; }
+
 /* ---------- 6. PIED DE PAGE ---------- */
 .pied{
   padding:0 var(--pad) clamp(.9rem,2.5vh,1.4rem);
@@ -668,7 +728,10 @@ body::after{
 }
 .pied a{ border-bottom:1px solid var(--line); }
 .pied a:hover{ color:var(--ochre); border-bottom-color:var(--ochre); }
-.pied__note{ opacity:.7; margin-top:.2rem; }
+/* Ni `opacity` ici : à .7 la mention « soins de bien-être, non
+   thérapeutiques » tombait à 3,1:1 pour 11 px — or c'est la phrase qui
+   distingue une pratique de bien-être d'un acte médical. */
+.pied__note{ margin-top:.2rem; }
 
 /* ---------- 7. ÉCRANS COURTS ----------
    Un écran d'accueil sans défilement doit tenir partout : sur un

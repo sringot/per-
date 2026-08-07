@@ -5,62 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Page introuvable — Marie Massage</title>
   <meta name="description" content="Cette page n'existe pas ou plus.">
-  <link rel="canonical" href="https://sringot.github.io/per-/contact.html">
+  <meta name="robots" content="noindex">
 
-  <!-- Aperçu du lien partagé (WhatsApp, Instagram, Facebook…).
-       TODO : remplacer le domaine par le vrai à la mise en ligne. -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Marie Massage">
-  <meta property="og:locale" content="fr_FR">
-  <meta property="og:title" content="Contact & rendez-vous — Marie Massage">
-  <meta property="og:description" content="Prendre rendez-vous avec Marie Massage à Voisins-le-Bretonneux.">
-  <meta property="og:url" content="https://sringot.github.io/per-/contact.html">
-  <meta property="og:image" content="https://sringot.github.io/per-/assets/img/partage.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Marie, masseuse bien-être à Voisins-le-Bretonneux">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <link rel="icon" href="assets/img/favicon.png" sizes="32x32">
-  <link rel="apple-touch-icon" href="assets/img/favicon-180.png">
-
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-400-latin.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-600-latin.woff2" crossorigin>
-
-  <link rel="stylesheet" href="assets/css/fonts.css">
-  <link rel="stylesheet" href="assets/css/v2.css">
+  <!-- ⚠️ Cette page est **autonome** : aucun fichier externe, styles inclus.
+       GitHub Pages la sert depuis n'importe quelle adresse — /per-/soins/kobido
+       aussi bien que /per-/x. Des chemins relatifs viseraient alors
+       /per-/soins/assets/… : la page d'erreur s'afficherait sans feuille de
+       style, sans police et sans favicon, et son lien de retour serait
+       lui-même en 404. Tout inclure supprime le problème à la racine.
+       Le seul chemin qui reste est celui du retour, ci-dessous.
+       TODO : `/per-/` devient `/` le jour du vrai domaine. -->
+  <style>
+    *,*::before,*::after{ box-sizing:border-box }
+    *{ margin:0; padding:0 }
+    body{
+      font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+      background:#F4F1E9; color:#2A2320; line-height:1.6;
+      min-height:100svh; display:flex; flex-direction:column;
+    }
+    main{
+      flex:1; display:flex; flex-direction:column; justify-content:center;
+      align-items:center; text-align:center; gap:1.1rem;
+      padding:2rem clamp(1.1rem,4vw,3rem);
+    }
+    .sur-titre{
+      font-size:.7rem; font-weight:500; letter-spacing:.2em;
+      text-transform:uppercase; color:#AC4B28;
+    }
+    h1{
+      font-size:clamp(1.9rem,6vw,2.8rem); font-weight:600;
+      line-height:1.06; letter-spacing:-.03em; color:#3F4A38;
+    }
+    p.chapo{ color:#635D57; max-width:34ch }
+    a.appel{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-height:52px; margin-top:.6rem; padding:.9rem 2.2rem;
+      border-radius:999px; background:#AC4B28; color:#FFF;
+      font-weight:500; text-decoration:none;
+    }
+    a.appel:hover{ background:#8E3A1E }
+    footer{
+      text-align:center; font-size:.7rem; color:#635D57;
+      padding:0 clamp(1.1rem,4vw,3rem) 1.4rem;
+    }
+    footer a{ color:inherit }
+  </style>
 </head>
-<body class="p-404">
+<body>
 
-<a class="skip-link" href="#main">Aller au contenu</a>
-
-<div class="page">
-
-
-<main id="main">
-  <section class="section">
-    <div class="shell erreur">
-      <p class="eyebrow">Erreur 404</p>
-      <h1 class="h2">Cette page<br>n'existe pas</h1>
-      <p class="section__intro">
-        Le lien est peut-être erroné, ou la page a changé d'adresse.
-      </p>
-      <div class="erreur__actions">
-        <a href="index.html" class="btn btn--primary btn--lg magnetic"><span>Retour à l'accueil</span></a>
-        <a href="massages.html" class="btn btn--outline btn--lg magnetic"><span>Voir les massages</span></a>
-      </div>
-    </div>
-  </section>
+<main>
+  <p class="sur-titre">Erreur 404</p>
+  <h1>Cette page<br>n'existe pas</h1>
+  <p class="chapo">Le lien est peut-être erroné, ou la page a changé d'adresse.</p>
+  <a class="appel" href="/per-/">Retour à l'accueil</a>
 </main>
 
+<footer>
+  <p>© 2026 Marie Massage</p>
+</footer>
 
-</div><!-- /.page -->
-
-<a href="#main" class="totop" id="totop" aria-label="Remonter en haut">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg>
-</a>
-
-
-<script src="assets/js/v2.js"></script>
 </body>
 </html>

@@ -19,17 +19,29 @@
   const memorise = (etat, hash) => {
     try { history.pushState(etat, '', hash); } catch (e) { /* sans gravité */ }
   };
+  const remplace = (url) => {
+    try { history.replaceState(null, '', url); } catch (e) { /* sans gravité */ }
+  };
 
   const bulles   = $$('.bulle');
   const panneaux = $$('.panneau');
+  // Ce qui doit disparaître du clavier et des lecteurs d'écran quand un
+  // panneau couvre l'écran. `clip-path` ne masque qu'à l'œil : sans cela,
+  // la tabulation sortait du panneau et parcourait la page en dessous.
+  const fond = [$('.scene'), $('.pied'), $('.evitement')].filter(Boolean);
   let ouvert = null;          // panneau affiché, ou null
   let declencheur = null;     // bulle d'où il est parti, pour y revenir
+  let aPousse = false;        // a-t-on ajouté une entrée d'historique ?
 
   /* ---------- Ouvrir / fermer ---------- */
 
   function ouvrir(id, bulle) {
     const p = document.getElementById(id);
-    if (!p || ouvert === p) return;
+    // Seuls les panneaux s'ouvrent. Sans ce filtre, une adresse pointant
+    // sur n'importe quel `id` de la page — #bulles, la cible du lien
+    // d'évitement — arrivait ici, ne trouvait pas de bouton de fermeture,
+    // et l'erreur emportait tout le reste du script.
+    if (!p || !p.classList.contains('panneau') || ouvert === p) return;
     if (ouvert) fermer({ silencieux: true });
 
     // Le disque part du centre de la bulle : sans ces coordonnées,
@@ -43,7 +55,7 @@
 
     p.removeAttribute('inert');
     p.classList.add('ouvert');
-    document.body.classList.add('panneau-ouvert');
+    fond.forEach(e => e.setAttribute('inert', ''));
     ouvert = p;
     declencheur = bulle || null;
     if (bulle) bulle.setAttribute('aria-expanded', 'true');
@@ -52,15 +64,24 @@
     // la navigation au clavier dans le panneau.
     p.querySelector('.fermer').focus({ preventScroll: true });
     p.scrollTop = 0;
+    cartes(p).forEach(c => c.setAttribute('aria-expanded', 'false'));
+    amorcer(p);
 
-    if (location.hash !== '#' + id) memorise({ panneau: id }, '#' + id);
+    if (location.hash !== '#' + id) {
+      memorise({ panneau: id }, '#' + id);
+      aPousse = true;
+    }
   }
 
   function fermer(opts = {}) {
     if (!ouvert) return;
     ouvert.classList.remove('ouvert');
     ouvert.setAttribute('inert', '');
-    document.body.classList.remove('panneau-ouvert');
+    // Les cartes retournées reviennent à l'endroit : rouvrir « Massages »
+    // et les retrouver sur le dos donnerait l'impression d'un état en plan.
+    cartes(ouvert).forEach(c => c.setAttribute('aria-expanded', 'false'));
+    // Le fond redevient atteignable **avant** qu'on y remette le focus.
+    fond.forEach(e => e.removeAttribute('inert'));
     bulles.forEach(b => b.setAttribute('aria-expanded', 'false'));
 
     // Le focus revient sur la bulle d'origine : sans cela il retombe
@@ -68,8 +89,22 @@
     if (declencheur) declencheur.focus({ preventScroll: true });
     ouvert = null;
     declencheur = null;
+  }
 
-    if (!opts.silencieux && location.hash) memorise(null, location.pathname);
+  // Fermeture demandée par l'utilisateur (croix, Échap, voile).
+  // On **revient en arrière** au lieu d'empiler une entrée de plus :
+  // sinon le bouton « retour » du téléphone rouvrait le panneau qu'on
+  // venait de fermer, et l'historique grossissait de deux entrées par
+  // aller-retour — cinq rubriques visitées, onze retours pour sortir.
+  function demandeFermeture() {
+    if (!ouvert) return;
+    if (aPousse) {
+      aPousse = false;
+      history.back();          // le popstate ci-dessous referme
+    } else {
+      remplace(location.pathname);
+      fermer();
+    }
   }
 
   /* ---------- Branchements ---------- */
@@ -79,35 +114,58 @@
   });
 
   panneaux.forEach(p => {
-    p.querySelector('.fermer').addEventListener('click', () => fermer());
+    p.querySelector('.fermer').addEventListener('click', demandeFermeture);
   });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && ouvert) fermer();
+    if (e.key === 'Escape' && ouvert) demandeFermeture();
   });
 
   // Bouton « retour » du téléphone : il doit refermer le panneau,
   // pas quitter le site.
   window.addEventListener('popstate', () => {
     const id = location.hash.slice(1);
-    if (id && document.getElementById(id)) {
+    const p = id && document.getElementById(id);
+    if (p && p.classList.contains('panneau')) {
+      aPousse = false;
       ouvrir(id, bulles.find(b => b.dataset.ouvre === id));
     } else {
-      fermer({ silencieux: true });
+      aPousse = false;
+      fermer();
     }
   });
 
-  // Arrivée directe sur une adresse partagée (…/#massages).
+  // Arrivée directe sur une adresse partagée (…/#massages). Aucune entrée
+  // n'a été empilée : `aPousse` reste faux, et la fermeture nettoiera
+  // l'adresse au lieu de tenter un retour qui sortirait du site.
   const depart = location.hash.slice(1);
-  if (depart && document.getElementById(depart)) {
-    ouvrir(depart, bulles.find(b => b.dataset.ouvre === depart));
-  }
+  if (depart) ouvrir(depart, bulles.find(b => b.dataset.ouvre === depart));
 
   /* ---------- Les cartes de soins ----------
      Un appui retourne la carte. Tout l'état tient dans `aria-expanded` :
      le CSS s'en sert pour la rotation, et un lecteur d'écran y lit la
      même chose que ce qu'on voit. Deux sources de vérité pour un seul
-     état, c'est une de trop. */
+     état, c'est une de trop.
+
+     `cartes()` et `amorcer()` sont appelées depuis `ouvrir()` et
+     `fermer()`, et non branchées sur la croix et sur la bulle : accrochées
+     aux déclencheurs, elles se taisaient dès qu'on fermait autrement — par
+     le bouton « retour », ou en arrivant sur une adresse partagée. */
+  function cartes(p) { return $$('.soin__carte', p); }
+
+  let amorceFaite = false;
+  function amorcer(p) {
+    const carte = p.querySelector('.soin__carte');
+    if (!carte || amorceFaite) return;
+    amorceFaite = true;
+    // Une carte entrouvre son dos puis se referme. Sur un écran tactile il
+    // n'y a pas de survol : rien d'autre ne dirait qu'une carte se
+    // retourne. Une seule fois, sur une seule carte — le geste doit se
+    // remarquer, pas s'imposer.
+    setTimeout(() => carte.classList.add('amorce', 'envol'), 500);
+    setTimeout(() => carte.classList.remove('amorce', 'envol'), 1250);
+  }
+
   $$('.soin__carte').forEach(carte => {
     let repos = null;
     carte.addEventListener('click', () => {
@@ -126,36 +184,6 @@
     });
   });
 
-  // Refermer les cartes en quittant le panneau : rouvrir « Massages » et
-  // retrouver ses cartes retournées donnerait l'impression d'un état resté
-  // en plan.
-  const massages = document.getElementById('massages');
-  if (massages) {
-    const rendre = () => $$('.soin__carte', massages)
-      .forEach(c => c.setAttribute('aria-expanded', 'false'));
-    massages.querySelector('.fermer').addEventListener('click', rendre);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') rendre(); });
-
-    // Amorce : à la première ouverture, une carte entrouvre son dos. Sur un
-    // écran tactile il n'y a pas de survol, donc rien ne dirait qu'une carte
-    // se retourne. Une seule fois, et sur une seule carte : le geste doit se
-    // remarquer, pas s'imposer.
-    const bulleMassages = bulles.find(b => b.dataset.ouvre === 'massages');
-    if (bulleMassages) {
-      bulleMassages.addEventListener('click', function amorcer() {
-        bulleMassages.removeEventListener('click', amorcer);
-        const carte = massages.querySelector('.soin__carte');
-        if (!carte) return;
-        setTimeout(() => carte.classList.add('amorce'), 500);
-        setTimeout(() => carte.classList.remove('amorce'), 1250);
-        // La carte s'élève aussi pendant l'amorce, comme lors d'un vrai
-        // retournement : c'est l'élévation qui dit qu'elle est saisissable.
-        setTimeout(() => carte.classList.add('envol'), 500);
-        setTimeout(() => carte.classList.remove('envol'), 1250);
-      });
-    }
-  }
-
   /* ---------- Synthèse des avis ----------
      Jamais écrite en dur : la moyenne et le nombre viennent des avis
      présents dans la page. Ajouter un <li data-note="…"> suffit. */
@@ -164,7 +192,7 @@
     if (!liste) return;
     const notes = $$('li[data-note]', liste)
       .map(li => parseFloat(li.dataset.note))
-      .filter(n => !isNaN(n));
+      .filter(n => n >= 0 && n <= 5);
     if (!notes.length) return;
 
     const moy = notes.reduce((a, b) => a + b, 0) / notes.length;
@@ -172,7 +200,10 @@
     $('#note-moy').textContent = Number.isInteger(arrondi)
       ? String(arrondi)
       : arrondi.toFixed(1).replace('.', ',');
-    const pleines = Math.round(moy);
+    // Bornée : les avis sont destinés à être remplacés à la main, et une
+    // note saisie hors barème (« 55 », ou un barème sur 10) rendait
+    // `repeat()` négatif — l'exception emportait le reste du script.
+    const pleines = Math.max(0, Math.min(5, Math.round(moy)));
     $('#note-etoiles').textContent = '★'.repeat(pleines) + '☆'.repeat(5 - pleines);
     $('#note-nb').textContent = notes.length;
   })();

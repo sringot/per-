@@ -14,11 +14,11 @@ import base64, pathlib, re
 ROOT = pathlib.Path(__file__).parent
 
 # ---- polices ----
-faces = []
-for w in (400, 500, 600):
-    b64 = base64.b64encode((ROOT / f'assets/fonts/figtree-{w}-latin.woff2').read_bytes()).decode()
-    faces.append("@font-face{font-family:'Figtree';font-style:normal;font-weight:%d;"
-                 "font-display:swap;src:url(data:font/woff2;base64,%s) format('woff2');}" % (w, b64))
+# Une seule déclaration : Figtree est une police variable, les « trois
+# graisses » livrées par Google en étaient trois copies du même fichier.
+b64 = base64.b64encode((ROOT / 'assets/fonts/figtree-400-latin.woff2').read_bytes()).decode()
+faces = ["@font-face{font-family:'Figtree';font-style:normal;font-weight:400 600;"
+         "font-display:swap;src:url(data:font/woff2;base64,%s) format('woff2');}" % b64]
 
 # ---- visuels ----
 MIME = {'.svg': 'image/svg+xml', '.png': 'image/png',
