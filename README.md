@@ -97,6 +97,36 @@ en retrait, et les boutons s'enfoncent au clic.
 Le socle `#F4F1E9` est un ton moyen et non du blanc : sans cela les reflets
 clairs du relief ne se détachent pas.
 
+### Le fond n'est pas un aplat
+
+Deux choses le tirent du côté de la matière.
+
+**Un grain, sur tout le site.** Un aplat se lit comme une couleur ; il lui faut
+un grain très fin — 3,5 % — pour passer pour du papier. On ne le voit pas ; on
+voit qu'il manque quand on l'enlève. Le bruit est calculé par le navigateur
+(`feTurbulence`) plutôt que servi en image : **300 octets** au lieu de plusieurs
+dizaines de kilo-octets, et aucun motif qui se répète. Mesuré à processeur bridé
+×6, il ne coûte rien — médiane d'image identique avec et sans, à 16,6 ms.
+
+**Cinq nappes qui dérivent.** Aux teintes des rubriques, très diluées, elles
+éclairent la page et occupent le vide laissé à droite par la composition
+décentrée. Elles avancent lentement, en deux couches de vitesses et de sens
+différents : d'un bloc, le mouvement se verrait.
+
+> Les nappes sont **fixées à la fenêtre**, pas posées dans la scène. La scène
+> est bornée à 1180 px : les nappes s'y seraient arrêtées et les bords d'un
+> grand écran seraient restés crème nu. Fixées, elles ne comptent pas non plus
+> dans le débordement de la page — en `absolute`, leur débord de 30 %
+> allongeait le document de 120 à 280 px selon l'écran.
+
+> La dérive porte sur `transform`, jamais sur les dégradés eux-mêmes : déplacer
+> un dégradé le redessine à chaque image, déplacer une couche déjà dessinée ne
+> coûte qu'une recomposition.
+
+Contrastes relevés sur le rendu, aux points les plus teintés du fond : le texte
+secondaire tient **4,9:1** et les titres **7,1:1**. Les nappes réchauffent le
+crème, elles ne l'assombrissent pas au point de gêner la lecture.
+
 > Le neumorphisme *franc* est écarté volontairement : il repose sur des écarts
 > de luminosité trop faibles pour rester lisible. C'est sa variante accessible
 > qui est appliquée (ombres douces multi-couches, rayons 8-12 px, animations

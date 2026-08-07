@@ -87,6 +87,21 @@ ul{ list-style:none; }
 a, button{ touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
 img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 
+/* --- Le grain ---
+   Le socle crème est un aplat, et un aplat se lit comme une couleur, pas
+   comme une matière. Un grain très fin par-dessus tout le site — 3,5 % —
+   suffit à le faire passer pour du papier. On ne le voit pas ; on voit
+   qu'il manque quand on l'enlève.
+
+   Le bruit est généré par le navigateur (`feTurbulence`) plutôt que servi
+   en image : 300 octets au lieu de plusieurs dizaines de kilo-octets, et
+   aucun motif qui se répète. */
+body::after{
+  content:''; position:fixed; inset:0; z-index:999;
+  pointer-events:none; opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
 .evitement{
   position:fixed; top:.6rem; left:.6rem; z-index:99;
   background:var(--green); color:var(--white);
@@ -116,15 +131,43 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   min-width:0;
 }
 
-/* Une seule tache de couleur, très diluée. Elle suit la photo : centrée,
-   elle éclairait le vide laissé à droite. */
+/* --- Les nappes ---
+   Le fond n'est pas un aplat : cinq nappes très diluées, aux teintes des
+   rubriques, éclairent la page. Elles débordent largement de leur boîte
+   (`inset:-30%`) et **dérivent** — deux couches, deux vitesses, deux sens.
+   Sans le débord, la dérive ferait apparaître un bord ; sans les deux
+   couches, tout bougerait d'un bloc et le mouvement se verrait.
+
+   La dérive porte sur `transform`, jamais sur les dégradés eux-mêmes :
+   déplacer un dégradé redessine à chaque image, déplacer une couche déjà
+   dessinée ne coûte qu'une recomposition. */
 .halo{
-  position:absolute; inset:0; z-index:0; pointer-events:none;
+  /* Fixé à la fenêtre, et non posé dans la scène : la scène est bornée à
+     1180 px, les nappes s'y seraient arrêtées et les bords d'un grand
+     écran seraient restés crème nu. Fixé, l'élément ne compte pas non
+     plus dans le débordement de la page — en `absolute`, son -30 %
+     allongeait le document de 120 à 280 px selon l'écran. */
+  position:fixed; inset:-30%; z-index:0; pointer-events:none;
   background:
-    radial-gradient(46% 34% at 30% 34%, rgba(242,231,179,.62) 0%, transparent 72%),
-    radial-gradient(28% 22% at 82% 30%, rgba(227,158,153,.20) 0%, transparent 78%),
-    radial-gradient(26% 26% at 12% 82%, rgba(126,61,73,.10)  0%, transparent 78%),
-    radial-gradient(30% 24% at 84% 78%, rgba(167,174,155,.28) 0%, transparent 76%);
+    radial-gradient(38% 28% at 34% 42%, rgba(242,231,179,.70) 0%, transparent 72%),
+    radial-gradient(24% 20% at 12% 74%, rgba(126,61,73,.12)   0%, transparent 78%);
+  animation:derive 38s ease-in-out infinite alternate;
+}
+.halo::after{
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(26% 22% at 78% 34%, rgba(227,158,153,.26) 0%, transparent 78%),
+    radial-gradient(30% 24% at 86% 72%, rgba(167,174,155,.30) 0%, transparent 76%),
+    radial-gradient(22% 18% at 60% 88%, rgba(172,75,40,.07)   0%, transparent 80%);
+  animation:derive2 53s ease-in-out infinite alternate;
+}
+@keyframes derive{
+  from{ transform:translate3d(0,0,0)      scale(1); }
+  to  { transform:translate3d(2.5%,-2%,0) scale(1.07); }
+}
+@keyframes derive2{
+  from{ transform:translate3d(0,0,0)      scale(1.04); }
+  to  { transform:translate3d(-3%,1.6%,0) scale(1); }
 }
 .scene > *:not(.halo){ position:relative; z-index:1; }
 
@@ -142,12 +185,18 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   .logo    { grid-area:logo; }
   .portrait{ grid-area:photo; }
   .mot     { grid-area:mot; }
+  /* Sur écran large, la composition tient à gauche : les nappes de droite
+     s'élargissent pour que le vide reste habité au lieu d'être blanc. */
   .halo{
     background:
-      radial-gradient(38% 46% at 26% 52%, rgba(242,231,179,.62) 0%, transparent 72%),
-      radial-gradient(22% 30% at 72% 22%, rgba(227,158,153,.20) 0%, transparent 78%),
-      radial-gradient(20% 28% at 8% 86%,  rgba(126,61,73,.10)  0%, transparent 78%),
-      radial-gradient(26% 30% at 88% 82%, rgba(167,174,155,.28) 0%, transparent 76%);
+      radial-gradient(30% 40% at 27% 50%, rgba(242,231,179,.70) 0%, transparent 72%),
+      radial-gradient(20% 26% at 7% 86%,  rgba(126,61,73,.12)   0%, transparent 78%);
+  }
+  .halo::after{
+    background:
+      radial-gradient(26% 38% at 70% 24%, rgba(227,158,153,.26) 0%, transparent 78%),
+      radial-gradient(30% 40% at 88% 76%, rgba(167,174,155,.30) 0%, transparent 76%),
+      radial-gradient(24% 30% at 52% 92%, rgba(172,75,40,.07)   0%, transparent 80%);
   }
 }
 
@@ -643,6 +692,7 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  .halo, .halo::after{ animation:none; transform:none; }
   .logo, .portrait, .titre, .accroche, .bulle{ opacity:1; }
   .portrait{ animation:none; }
 }
