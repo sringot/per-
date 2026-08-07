@@ -118,17 +118,31 @@ body::after{
    que centrée — c'est le même déséquilibre voulu, dans un format étroit. */
 .scene{
   flex:1;
-  display:flex; flex-direction:column;
-  align-items:flex-start; justify-content:center;
-  gap:clamp(.9rem,2.4vh,1.6rem);
+  /* Téléphone : la photo prend la largeur, les bulles se rangent en
+     colonne contre elle. C'est ce qui la fait grandir — la bande droite
+     restait vide, et la photo était bornée par la hauteur pour ne pas
+     pousser les bulles hors de l'écran. */
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-areas:
+    "logo  logo"
+    "photo bulles"
+    "mot   mot";
+  align-content:center; justify-items:start;
+  column-gap:clamp(.7rem,3vw,1.2rem);
+  row-gap:clamp(.6rem,1.8vh,1.2rem);
   padding:clamp(1rem,3vh,2rem) var(--pad);
   text-align:left;
   position:relative;
   width:100%; max-width:1180px; margin-inline:auto;
 }
+.logo    { grid-area:logo; }
+.portrait{ grid-area:photo; }
+.mot     { grid-area:mot; }
+.bulles  { grid-area:bulles; }
 .mot{
   display:flex; flex-direction:column; align-items:flex-start;
-  gap:clamp(.5rem,1.5vh,1rem);
+  gap:clamp(.3rem,1vh,.6rem);
   min-width:0;
 }
 
@@ -176,16 +190,15 @@ body::after{
    les bulles occupent la colonne de droite, centrés sur la hauteur. */
 @media (min-width:780px){
   .scene{
-    display:grid;
     grid-template-columns:auto minmax(0,1fr);
-    grid-template-areas:"logo mot" "photo mot";
+    grid-template-areas:
+      "logo  mot"
+      "photo mot"
+      "photo bulles";
     align-content:center; align-items:center; justify-items:start;
     column-gap:clamp(2rem,5vw,4.5rem);
     row-gap:clamp(.6rem,1.8vh,1.2rem);
   }
-  .logo    { grid-area:logo; }
-  .portrait{ grid-area:photo; }
-  .mot     { grid-area:mot; }
   /* Sur écran large, la composition tient à gauche : les nappes de droite
      s'élargissent pour que le vide reste habité au lieu d'être blanc. */
   .halo{
@@ -214,8 +227,11 @@ body::after{
    en `vh` et la largeur en découle — dans un écran qui ne défile pas,
    c'est la hauteur qui est rare, pas la largeur. */
 .portrait{
-  height:clamp(168px, 33vh, 380px);
-  width:auto;
+  /* Sur téléphone la photo remplit sa colonne — la hauteur suit le rapport
+     de l'arche. Le `min()` garde une seconde borne en hauteur d'écran :
+     sur un téléphone couché, la colonne est très large et la photo
+     dépassait de 280 px. Deux limites, pas une. */
+  width:min(100%, 40vh); height:auto;
   aspect-ratio:1/1.1;
   border-radius:min(50vw,290px) min(50vw,290px) var(--r-lg) var(--r-lg);
   overflow:hidden;
@@ -260,18 +276,22 @@ body::after{
 .bulle[data-ouvre="rdv"],      #rdv     { --teinte:var(--rdv-i);      --teinte-t:var(--rdv-t); }
 
 .bulles{
-  display:flex; flex-wrap:wrap; justify-content:flex-start;
-  gap:clamp(.7rem,2.6vw,1.5rem);
-  margin-top:clamp(.4rem,1.6vh,1rem);
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:space-between;
+  gap:clamp(.3rem,1vh,.7rem);
+  height:100%;
 }
 .bulle{
-  display:flex; flex-direction:column; align-items:center; gap:.5rem;
-  width:clamp(64px,17vw,86px);
+  display:flex; flex-direction:column; align-items:center; gap:.22rem;
+  /* Assez large pour que « Rendez-vous » tienne sur une ligne : à deux
+     lignes, la dernière bulle dépassait la hauteur de la photo et la
+     colonne débordait sous elle. */
+  width:clamp(56px,16vw,72px);
   color:var(--ink-soft);
   transition:transform .3s var(--ease-out), color .3s var(--ease);
 }
 .bulle__rond{
-  width:clamp(54px,15vw,74px); aspect-ratio:1;
+  width:clamp(44px,12vw,74px); aspect-ratio:1;
   display:grid; place-items:center;
   border-radius:50%;
   background:var(--card);
@@ -290,8 +310,8 @@ body::after{
   stroke-linecap:round; stroke-linejoin:round;
 }
 .bulle__nom{
-  font-size:clamp(.66rem,2.1vw,.76rem); font-weight:500;
-  letter-spacing:.02em; line-height:1.2;
+  font-size:clamp(.6rem,1.9vw,.76rem); font-weight:500;
+  letter-spacing:.02em; line-height:1.15; text-align:center;
 }
 /* Réservé aux vrais pointeurs : sur iOS, `:hover` reste collé au dernier
    élément touché et la bulle restait soulevée après l'appui. */
@@ -326,6 +346,24 @@ body::after{
 .portrait{
   animation:monte .8s var(--ease-out) .06s forwards,
             souffle 9s ease-in-out 1s infinite;
+}
+
+/* Écran large : la place ne manque plus. La photo reprend une hauteur en
+   part d'écran, et les bulles se remettent en ligne sous le nom.
+
+   Ce bloc est **après** les règles de base des bulles, et non dans la
+   requête média du haut : à spécificité égale c'est la dernière déclaration
+   qui l'emporte, et la colonne du téléphone reprenait le dessus. */
+@media (min-width:780px){
+  .portrait{ width:auto; height:clamp(220px,36vh,400px); }
+  .mot{ gap:clamp(.5rem,1.5vh,1rem); align-self:end; }
+  .bulles{
+    flex-direction:row; align-items:flex-start; justify-content:flex-start;
+    height:auto; align-self:start;
+    gap:clamp(.7rem,2.6vw,1.5rem);
+  }
+  .bulle{ gap:.5rem; width:clamp(64px,17vw,86px); }
+  .bulle__rond{ width:clamp(54px,15vw,74px); }
 }
 
 /* ---------- 5. LES PANNEAUX ---------- */
@@ -405,6 +443,24 @@ body::after{
 .feuille p{ color:var(--ink-soft); }
 .feuille p + p{ margin-top:.8rem; }
 .chapo + p{ margin-top:1rem; }
+
+/* --- Les cadres en attente ---
+   Trois emplacements réservés pour les photos du cabinet. Ils tiennent la
+   place et la disent : un blanc dans une maquette se lit comme un oubli,
+   un cadre annoté se lit comme une étape. */
+.attente{
+  display:grid; gap:.6rem; margin-top:1.6rem;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+}
+.attente__cadre{
+  aspect-ratio:4/3; border-radius:14px;
+  display:grid; place-items:center; text-align:center;
+  color:color-mix(in srgb, var(--ink-soft) 70%, var(--card));
+  font-size:.72rem; letter-spacing:.06em;
+  background:color-mix(in srgb, var(--ink) 4%, var(--card));
+  border:1.5px dashed color-mix(in srgb, var(--ink) 18%, var(--card));
+}
+.attente__cadre span{ padding:0 .6rem; }
 
 .details{
   display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.6rem;
@@ -740,16 +796,30 @@ body::after{
    de page ne rétrécissent pas avec la hauteur, seul le portrait le peut.
    À 34 vh il faisait déborder l'écran de 19 px — et comme rien ne défile
    ici, ces 19 px étaient perdus, pas repoussés. */
+/* Écrans courts. La photo étant maintenant pilotée par sa **largeur**, sa
+   seconde borne l'est aussi : `min(100%, Nvh)` fixe la largeur, la hauteur
+   suit le rapport. Reprendre ici une contrainte de hauteur la faisait
+   s'écraser à 92 px sur un téléphone couché. */
 @media (max-height:700px){
-  .scene{ gap:clamp(.55rem,1.7vh,1.6rem); }
+  .scene{ row-gap:clamp(.4rem,1.2vh,1rem); }
   .logo{ width:clamp(28px,5vh,44px); margin-bottom:0; }
-  .portrait{ height:clamp(126px,23vh,300px); }
+  .portrait{ width:min(100%, 34vh); }
 }
 @media (max-height:520px){
-  .portrait{ height:clamp(92px,19vh,170px); }
+  .portrait{ width:min(100%, 30vh); }
   .logo{ width:clamp(22px,3.6vh,34px); }
   .titre{ font-size:clamp(1.5rem,4.2vh,2.4rem); }
   .accroche{ display:none; }
+  /* Téléphone couché : la hauteur manque, la largeur abonde. Le libellé
+     passe **à côté** du rond au lieu de dessous — la colonne perd un tiers
+     de sa hauteur et gagne une largeur dont on dispose. */
+  .bulles{ align-items:flex-end; gap:.35rem; }
+  .bulle{
+    flex-direction:row-reverse; align-items:center;
+    width:auto; gap:.45rem;
+  }
+  .bulle__rond{ width:clamp(36px,8vh,48px); }
+  .bulle__nom{ text-align:right; }
 }
 
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */

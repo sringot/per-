@@ -78,15 +78,18 @@
     </picture>
   </figure>
 
-  <!-- Le nom, la ligne d'accroche et les bulles forment un bloc : sur écran
-       large il se pose à droite de la photo, sur téléphone il passe dessous.
-       Sans ce conteneur, chacun se placerait pour son compte dans la grille. -->
+  <!-- Le nom et la ligne d'accroche forment un bloc : ils se déplacent
+       ensemble d'une composition à l'autre. La navigation, elle, est un
+       emplacement de grille à part — sur téléphone elle se range en colonne
+       à côté de la photo, sur écran large elle suit le nom. -->
   <div class="mot">
 
   <h1 class="titre">marieemassage</h1>
   <!-- Le nom de la commune est insécable : sans cela il se coupe sur son
        trait d'union (« Voisins-le- / Bretonneux »), ce qui se lit mal. -->
   <p class="accroche">Masseuse bien-être à <span class="insecable">Voisins-le-Bretonneux</span></p>
+
+  </div><!-- /.mot -->
 
   <nav class="bulles" id="bulles" aria-label="Navigation principale">
 
@@ -127,7 +130,6 @@
 
   </nav>
 
-  </div><!-- /.mot -->
 </main>
 
 <!-- ============================================================
@@ -174,6 +176,16 @@
     <p>
       Un petit espace où, pendant une heure, le monde peut bien attendre un peu.
     </p>
+    <!-- Cadres en attente : les vraies photos du cabinet remplaceront ces
+         blocs. Ils sont là pour que la place soit réservée dès maintenant,
+         et pour qu'on voie tout de suite ce qui manque. `aria-hidden` : un
+         lecteur d'écran n'a rien à annoncer d'une image absente. -->
+    <ul class="attente" aria-hidden="true">
+      <li class="attente__cadre"><span>Photo du cabinet</span></li>
+      <li class="attente__cadre"><span>Photo du cabinet</span></li>
+      <li class="attente__cadre"><span>Photo du cabinet</span></li>
+    </ul>
+
     <ul class="details">
       <li>Linge frais à chaque séance</li>
       <li>Huiles végétales bio</li>

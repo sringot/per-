@@ -41,10 +41,30 @@ des lecteurs d'écran tant qu'ils sont fermés. Chaque panneau a son adresse
 
 **La composition est décentrée.** La photo se pose à gauche, le nom et les
 bulles la suivent ; le vide à droite est voulu, c'est lui qui donne au premier
-regard son air de ne pas être une page d'accueil ordinaire. Au-delà de 780 px
-de large, deux colonnes : le pictogramme coiffe la photo à gauche, le bloc du
-nom occupe la droite. En dessous, une seule colonne — mais calée à gauche, pas
-centrée : le même déséquilibre, dans un format étroit.
+regard son air de ne pas être une page d'accueil ordinaire.
+
+Sur **téléphone**, les cinq bulles se rangent en **colonne contre la photo**.
+C'est ce qui la fait grandir : la bande droite de l'écran restait vide, et la
+photo était bornée en hauteur pour ne pas pousser les bulles hors de vue. Elle
+passe de 253 × 279 à 281 × 309 px sur un écran de 390, et occupe désormais la
+pleine largeur utile.
+
+Au-delà de 780 px, deux colonnes : le pictogramme coiffe la photo à gauche, le
+nom et les bulles — remises en ligne — occupent la droite.
+
+> Les surcharges « écran large » sont déclarées **après** les règles de base
+> des bulles, et non dans la requête média du haut de la feuille : à
+> spécificité égale c'est la dernière déclaration qui l'emporte, et la colonne
+> du téléphone reprenait le dessus sur le desktop.
+
+> La photo a **deux bornes**, pas une : `width: min(100%, 40vh)`. La largeur
+> de sa colonne la dimensionne, mais sur un téléphone couché cette colonne est
+> très large et la photo dépassait de 280 px. La hauteur d'écran est la
+> seconde limite.
+
+> Sur un écran court, le libellé passe **à côté** du rond au lieu de dessous :
+> la colonne perd un tiers de sa hauteur et gagne une largeur dont on dispose
+> justement en paysage.
 
 ## Lancer le site en local
 
