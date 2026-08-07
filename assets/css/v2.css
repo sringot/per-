@@ -32,6 +32,23 @@
 
   --r-lg:       26px;
 
+  /* Une couleur par rubrique, tirée des cartes de soins. Deux valeurs
+     pour chacune : `-i` pour les tracés (icônes, filets — 3:1 suffit)
+     et `-t` pour le petit texte (4,5:1). Les tons bruts des cartes sont
+     trop pâles sur le socle crème : la sauge y tombe à 2:1, le jaune à
+     1,1:1. Ils sont donc foncés juste ce qu'il faut, par le même calcul
+     que celui des cartes — la teinte reste reconnaissable.
+
+     Les valeurs `-t` sont calculées non pas sur le crème nu mais sur le
+     **crème lavé de 13 % de la teinte**, celui du haut des panneaux : le
+     lavis assombrit le fond, et trois d'entre elles y retombaient à
+     4,1-4,2:1. */
+  --moi-i:      #7E3D49;  --moi-t:      #7E3D49;   /* bordeaux */
+  --lieu-i:     #898D7F;  --lieu-t:     #67695F;   /* sauge     */
+  --massages-i: #988968;  --massages-t: #786C52;   /* jaune     */
+  --avis-i:     #B37D79;  --avis-t:     #875E5B;   /* rose      */
+  --rdv-i:      #AC4B28;  --rdv-t:      #A24626;   /* ocre      */
+
   --ease:       cubic-bezier(.22,.68,.28,1);
   --ease-out:   cubic-bezier(.16,1,.3,1);
   --pad:        clamp(1.1rem,4vw,3rem);
@@ -105,6 +122,8 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   position:absolute; inset:0; z-index:0; pointer-events:none;
   background:
     radial-gradient(46% 34% at 30% 34%, rgba(242,231,179,.62) 0%, transparent 72%),
+    radial-gradient(28% 22% at 82% 30%, rgba(227,158,153,.20) 0%, transparent 78%),
+    radial-gradient(26% 26% at 12% 82%, rgba(126,61,73,.10)  0%, transparent 78%),
     radial-gradient(30% 24% at 84% 78%, rgba(167,174,155,.28) 0%, transparent 76%);
 }
 .scene > *:not(.halo){ position:relative; z-index:1; }
@@ -126,6 +145,8 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   .halo{
     background:
       radial-gradient(38% 46% at 26% 52%, rgba(242,231,179,.62) 0%, transparent 72%),
+      radial-gradient(22% 30% at 72% 22%, rgba(227,158,153,.20) 0%, transparent 78%),
+      radial-gradient(20% 28% at 8% 86%,  rgba(126,61,73,.10)  0%, transparent 78%),
       radial-gradient(26% 30% at 88% 82%, rgba(167,174,155,.28) 0%, transparent 76%);
   }
 }
@@ -174,6 +195,17 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 .insecable{ white-space:nowrap; }
 
 /* ---------- 4. LES BULLES ---------- */
+
+/* La bulle et son panneau portent la même teinte : c'est ce qui fait
+   qu'une rubrique se reconnaît avant même d'être lue. Le disque reste
+   crème et seul le tracé se colore — cinq ronds pleins et vifs sur
+   l'accueil basculeraient du côté de l'application pour enfants. */
+.bulle[data-ouvre="moi"],      #moi     { --teinte:var(--moi-i);      --teinte-t:var(--moi-t); }
+.bulle[data-ouvre="lieu"],     #lieu    { --teinte:var(--lieu-i);     --teinte-t:var(--lieu-t); }
+.bulle[data-ouvre="massages"], #massages{ --teinte:var(--massages-i); --teinte-t:var(--massages-t); }
+.bulle[data-ouvre="avis"],     #avis    { --teinte:var(--avis-i);     --teinte-t:var(--avis-t); }
+.bulle[data-ouvre="rdv"],      #rdv     { --teinte:var(--rdv-i);      --teinte-t:var(--rdv-t); }
+
 .bulles{
   display:flex; flex-wrap:wrap; justify-content:flex-start;
   gap:clamp(.7rem,2.6vw,1.5rem);
@@ -191,8 +223,13 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   border-radius:50%;
   background:var(--card);
   box-shadow:var(--nm-out);
-  color:var(--ochre);
-  transition:box-shadow .3s var(--ease), transform .35s var(--ease-out);
+  color:var(--teinte,var(--ochre));
+  /* Un souffle de la teinte dans le disque lui-même. À 8 %, le relief
+     doux tient encore — au-delà, le disque cesse de partager le fond et
+     l'illusion de creux tombe. */
+  background-color:color-mix(in srgb, var(--teinte,var(--ochre)) 8%, var(--card));
+  transition:box-shadow .3s var(--ease), transform .35s var(--ease-out),
+             background-color .3s var(--ease);
 }
 .bulle__rond svg{
   width:44%; height:44%;
@@ -204,7 +241,10 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   letter-spacing:.02em; line-height:1.2;
 }
 .bulle:hover{ color:var(--green); }
-.bulle:hover .bulle__rond{ box-shadow:var(--nm-out-lg); transform:translateY(-4px); }
+.bulle:hover .bulle__rond{
+  box-shadow:var(--nm-out-lg); transform:translateY(-4px);
+  background-color:color-mix(in srgb, var(--teinte,var(--ochre)) 12%, var(--card));
+}
 .bulle:active .bulle__rond{ box-shadow:var(--nm-in); transform:translateY(0) scale(.96); }
 
 /* La bulle du rendez-vous est la seule pleine : c'est l'action. */
@@ -249,6 +289,30 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   transition:clip-path .6s var(--ease-out), visibility 0s;
 }
 
+/* Le disque s'ouvre **dans la couleur de sa rubrique**, puis la couleur
+   se retire : on voit passer une teinte sans jamais lire une page
+   colorée. C'est le geste qui porte la couleur, pas le décor. */
+.panneau::before{
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:var(--teinte,var(--ochre));
+  opacity:.16;
+  transition:opacity .9s var(--ease) .25s;
+}
+.panneau.ouvert::before{ opacity:0; }
+
+/* Et il en reste un lavis en tête de panneau, assez faible pour ne pas
+   se voir et assez présent pour qu'« Avis » et « Le lieu » n'aient pas
+   la même température. */
+.panneau::after{
+  content:''; position:absolute; inset:0 0 auto; height:clamp(190px,38vh,360px);
+  z-index:0; pointer-events:none;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--teinte,var(--ochre)) 13%, transparent) 0,
+    transparent 100%);
+}
+/* Le contenu passe au-dessus des deux voiles. */
+.panneau > *{ position:relative; z-index:1; }
+
 .fermer{
   position:fixed; top:clamp(.9rem,2.5vh,1.6rem); right:var(--pad); z-index:2;
   width:44px; height:44px; border-radius:50%;
@@ -267,9 +331,13 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 }
 .panneau.ouvert .feuille{ opacity:1; transform:none; }
 
-.sur-titre{
+/* Deux classes, et non `.sur-titre` seul : le sur-titre est un `<p>` dans
+   `.feuille`, et `.feuille p` (une classe + un élément) l'emportait sur
+   une classe unique. Sa couleur retombait donc sur celle du texte
+   courant — il n'a jamais été à l'ocre annoncé. */
+.feuille .sur-titre{
   font-size:.7rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
-  color:var(--ochre); margin-bottom:.7rem;
+  color:var(--teinte-t,var(--ochre)); margin-bottom:.7rem;
 }
 .feuille h2{
   font-size:clamp(1.7rem,5.5vw,2.5rem);
@@ -485,7 +553,7 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
   font-size:.8rem; color:var(--ink-soft);
 }
 .astuce svg{
-  width:16px; height:16px; flex:none; color:var(--ochre);
+  width:16px; height:16px; flex:none; color:var(--teinte,var(--ochre));
   fill:none; stroke:currentColor; stroke-width:1.8;
   stroke-linecap:round; stroke-linejoin:round;
 }
@@ -509,7 +577,7 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 /* --- Les avis --- */
 .note{ display:flex; align-items:baseline; gap:.6rem; margin-bottom:1.4rem; }
 .note b{ font-size:1.9rem; font-weight:600; color:var(--green); letter-spacing:-.03em; }
-.note span{ color:var(--ochre); font-size:.8rem; letter-spacing:.12em; }
+.note span{ color:var(--teinte-t,var(--ochre)); font-size:.8rem; letter-spacing:.12em; }
 .note small{ font-size:.78rem; color:var(--ink-soft); }
 
 .avis{ display:grid; gap:.7rem; }

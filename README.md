@@ -102,20 +102,52 @@ clairs du relief ne se détachent pas.
 > qui est appliquée (ombres douces multi-couches, rayons 8-12 px, animations
 > 200-300 ms, contraste ≥ 4,5:1).
 
-Trois familles de couleur seulement : **vert, orange, jaune**.
-Le burgundy a été retiré (il tirait vers le prune sur les grands titres).
+Le socle est commun à tout le site, et deux couleurs y portent la structure :
 
 | Rôle           | Hex       | Usage                                        |
 | -------------- | --------- | -------------------------------------------- |
 | Vert profond   | `#3F4A38` | titres, textes forts, survols                |
-| Orange (ocre)  | `#AC4B28` | boutons, CTA, icônes — **seul accent vif**   |
-| Kaki           | `#9A8B5F` | petits détails, carte cadeau                 |
-| Sauge          | `#A7AE9B` | petits détails, fond de section très dilué   |
-| Jaune pastel   | `#F2E7B3` | dérivés dilués pour les fonds doux           |
+| Orange (ocre)  | `#AC4B28` | l'action — boutons, appel, bulle du rendez-vous |
+| Encre          | `#2A2320` | texte courant                                |
+| Encre douce    | `#635D57` | texte secondaire                             |
 | Socle          | `#F4F1E9` | fond unique, support du relief               |
 
+### Une couleur par rubrique
+
+La planche des soins a apporté cinq teintes. Elles ne servent pas qu'aux
+cartes : **chaque rubrique en porte une**, de sa bulle à son panneau. C'est ce
+qui fait qu'on reconnaît une section avant même de l'avoir lue.
+
+| Rubrique | Teinte | Tracés (≥ 3:1) | Petit texte (≥ 4,5:1) |
+| -------- | ------ | -------------- | --------------------- |
+| Moi         | bordeaux | `#7E3D49` | `#7E3D49` |
+| Le lieu     | sauge    | `#898D7F` | `#67695F` |
+| Massages    | jaune    | `#988968` | `#786C52` |
+| Avis        | rose     | `#B37D79` | `#875E5B` |
+| Rendez-vous | ocre     | `#AC4B28` | `#A24626` |
+
+Deux valeurs par teinte, et elles sont **calculées, pas choisies** : les tons
+bruts de la planche sont faits pour du texte blanc sur fond plein, pas pour du
+tracé sur crème. La sauge y tombe à 2:1, le rose à 1,9:1, le jaune à 1,1:1 —
+autant dire invisible. Chacune est donc foncée juste ce qu'il faut, du côté
+opposé au fond, par le même calcul que celui des cartes.
+
+> Les valeurs de texte sont calculées non pas sur le crème nu mais sur le
+> **crème lavé de 13 % de la teinte** — celui du haut des panneaux. Le lavis
+> assombrit le fond, et trois d'entre elles y retombaient à 4,1-4,2:1.
+
+**Où la couleur apparaît, et où elle s'arrête.** Le disque des bulles reste
+crème et ne prend que 8 % de sa teinte ; seul le tracé se colore. Cinq ronds
+pleins et vifs sur la page d'accueil basculeraient du côté de l'application
+pour enfants — et au-delà de ~10 %, le disque cesse de partager le fond, ce
+qui fait tomber l'illusion de relief. Le panneau, lui, **s'ouvre dans sa
+couleur** puis la laisse se retirer : on voit passer une teinte sans jamais
+lire une page colorée. Il en reste un lavis en tête, assez faible pour ne pas
+se voir et assez présent pour qu'« Avis » et « Le lieu » n'aient pas la même
+température.
+
 Typographie : **Figtree** pour tout (titres en 600, texte en 400).
-Toutes les valeurs sont des variables CSS en haut de `style.css` — les changer
+Toutes les valeurs sont des variables CSS en haut de `v2.css` — les changer
 là suffit à répercuter partout.
 
 La page occupe toute la fenêtre, sans cadre ni bloc flottant. La largeur utile
@@ -131,6 +163,7 @@ CNIL considère comme non conforme au RGPD.
 - Un écran unique qui ne défile pas, sur téléphone comme sur desktop : le
   pictogramme, la photo de Marie dans son arche, `marieemassage`, cinq bulles
 - Composition décentrée : la photo à gauche, le nom et les bulles à sa suite
+- Une couleur par rubrique, de la bulle au panneau, contrastes calculés
 - Cinq bulles, la dernière (« Rendez-vous ») pleine et colorée : c'est l'action
   attendue, la prise de rendez-vous se faisant uniquement par téléphone
 - Ouverture des panneaux en `clip-path`, ancrée sur la bulle touchée
