@@ -379,20 +379,31 @@ durée, et sous chacune son forfait quand il existe :
 | Madéro               | 1 h — 70 €   | 5 séances — 300 € |
 | Drainage lymphatique | 1 h — 80 €   | 5 séances — 350 € |
 
-**L'économie du forfait n'est jamais écrite.** Chaque forfait porte le prix à
-la séance, le nombre de séances et le prix du lot ; le gain (`−20 €`, `−50 €`)
-se calcule au chargement. Un tarif qui change met l'affichage à jour tout seul,
-et une addition fausse devient impossible.
+**Le dos de la carte est fait pour eux.** Il portait auparavant quatre niveaux
+d'information — nom, sous-titre, paragraphe de description, ligne de tarif —
+dans 173 × 254 px : tout y était petit, et le prix, seule chose qu'on vient
+chercher, finissait en 10 px au pied de la carte. Le paragraphe a été retiré
+(le sous-titre dit déjà ce qu'est le soin en quatre mots) et le prix passe à
+**26 px**. La carte suit le format de la planche de Marie, 330 × 530, soit un
+rapport de .62 — le format plus trapu d'avant ne laissait pas la place au
+Relaxant et à ses deux durées, dont le dos débordait de 21 px.
+
+**Le prix de référence, pas la remise.** Le forfait affiche « au lieu de
+180 € » et non « −20 € » : une remise brute posée à côté d'un prix ne dit pas
+ce qu'elle est — remise ? acompte ? part par séance ? Le prix de référence, lui,
+se comprend sans notice. Il reste **calculé** et jamais écrit : chaque forfait
+porte le prix à la séance, le nombre de séances et le prix du lot.
 
 ```html
-<span class="tarif tarif--forfait" data-unite="70" data-lot="5" data-prix="300">
+<span class="offre offre--forfait" data-unite="70" data-lot="5" data-prix="300">
 ```
 
-> Aucune `opacity` sur ces lignes. La hiérarchie passe par la taille et le
-> retrait — une transparence recomposerait l'encre sur le fond de la carte et
-> défairait le contraste calculé par `tools-cartes.py`. C'est le piège qui
-> avait déjà coûté la ligne des tarifs une première fois. Mesuré après coup :
-> **4,54:1 au pire cas**, sur les cinq cartes et les quatre niveaux de texte.
+> Aucune `opacity` sur ces textes. La hiérarchie passe par la taille, le retrait
+> et un fond creusé — une transparence recomposerait l'encre sur le fond de la
+> carte et défairait le contraste calculé par `tools-cartes.py`. C'est le piège
+> qui avait déjà coûté la ligne des tarifs une première fois, et que j'y ai
+> réintroduit une seconde. Mesuré après coup : **4,54:1 au pire cas**, sur les
+> cinq cartes et les six niveaux de texte.
 
 ## Les illustrations
 

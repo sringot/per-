@@ -568,7 +568,10 @@ body::after{
    culminer à mi-course quand la rotation, elle, avance tout droit. */
 .soin__carte{
   position:relative; display:block; width:100%;
-  aspect-ratio:.68;
+  /* .62, comme les cartes de la planche de Marie (330 × 530). Le format
+     d'avant, plus trapu, ne laissait pas la place au Relaxant et à ses deux
+     durées : son dos débordait de 21 px. */
+  aspect-ratio:.62;
   perspective:1100px;
   transform:translateY(0) scale(1);
   transition:transform .34s var(--ease-out);
@@ -678,7 +681,7 @@ body::after{
 .soin__face > :nth-child(2){ --pose:.39s; }
 .soin__face > :nth-child(3){ --pose:.45s; }
 .soin__face > :nth-child(4){ --pose:.51s; }
-.soin__face > :nth-child(5){ --pose:.57s; }
+
 
 .soin__carte[aria-expanded="true"]  .soin__face--avant   > *,
 .soin__carte[aria-expanded="false"] .soin__face--arriere > *{
@@ -726,50 +729,44 @@ body::after{
   font-size:clamp(.6rem,2vw,.68rem); font-weight:500;
   letter-spacing:.06em; text-transform:uppercase;
 }
-.soin__texte{
-  margin-top:.55rem; flex:1;
-  font-size:clamp(.7rem,2.4vw,.78rem); line-height:1.4;
-}
+
 
 /* --- Les tarifs ---
-   Une ligne par durée, et sous chacune son forfait s'il existe. Le prix est
-   aligné à droite : c'est la colonne qu'on parcourt du regard quand on
-   compare deux soins. */
+   Ce sont eux qu'on vient chercher : ils occupent donc le dos de la carte,
+   en grand, et non un pied de page en 10 px. Le paragraphe de description a
+   été retiré — le sous-titre dit déjà ce qu'est le soin en quatre mots, et
+   c'est ce paragraphe qui écrasait tout le reste dans 173 × 254 px.
+
+   Chaque offre est un bloc : la durée en tête, le prix en gros dessous.
+   Le forfait est un bloc de même forme, en retrait et sur fond creusé, avec
+   son prix de référence — « au lieu de 180 € » plutôt que « −30 € », parce
+   qu'une remise brute posée à côté d'un prix ne dit pas ce qu'elle est. */
 .soin__tarifs{
-  display:flex; flex-direction:column; gap:.1rem;
-  margin-top:.5rem;
-  border-top:1px solid currentColor;
-  padding-top:.45rem;
-  /* Le filet ne doit pas peser autant que le texte. */
-  border-top-color:color-mix(in srgb, currentColor 22%, transparent);
+  display:flex; flex-direction:column; gap:.4rem;
+  /* Centré dans la place restante, et non collé en bas : les quatre soins
+     à une seule durée laissaient sinon un grand vide entre le sous-titre et
+     leur prix. Sur le Relaxant, qui remplit sa carte, cela ne change rien. */
+  margin-block:auto; padding-top:.6rem;
 }
-.tarif{
-  display:flex; align-items:baseline; justify-content:space-between; gap:.5rem;
-  font-size:clamp(.68rem,2.3vw,.76rem); line-height:1.35;
+.offre{ display:flex; flex-direction:column; }
+.offre__duree{
+  font-size:clamp(.58rem,1.9vw,.66rem); font-weight:500;
+  letter-spacing:.1em; text-transform:uppercase;
 }
-.tarif__prix{ font-weight:600; white-space:nowrap; }
-/* Le forfait est un cran en dessous : c'est une option de la durée qui le
-   précède, pas une ligne de même rang. */
-/* Aucune `opacity` : elle recompose l'encre sur le fond de la carte et
-   défait le contraste que `tools-cartes.py` a calculé pour tenir 4,5:1 —
-   c'est le piège qui avait déjà coûté la ligne des tarifs. La hiérarchie
-   passe donc par la taille et le retrait, pas par la transparence. */
-.tarif--forfait{
-  font-size:clamp(.6rem,2vw,.68rem);
-  padding-left:.6rem;
+.offre__prix{
+  font-size:clamp(1.25rem,4.6vw,1.6rem); font-weight:600;
+  line-height:1.05; letter-spacing:-.02em;
 }
-.tarif--forfait .tarif__prix{ font-weight:500; }
-.tarif__gain{
-  font-style:normal; font-weight:500;
-  margin-left:.3rem;
+.offre--forfait{
+  padding:.4rem .55rem .45rem;
+  border-radius:11px;
+  box-shadow:var(--nm-in);
 }
-.tarif__gain:empty{ display:none; }
-/* Aucune `opacity` sur ces textes-là. Elle recomposait l'encre sur le fond
-   de la carte et ramenait la ligne des tarifs — le texte commercialement
-   décisif, à 10-11 px — entre 3,3 et 3,8:1 sur quatre cartes sur cinq, alors
-   même que `tools-cartes.py` avait calculé cette encre pour tenir 4,5:1.
-   Les .82 et .85 ci-dessus portent sur du texte de rang inférieur, dont le
-   contraste reste vérifié plus bas. */
+.offre--forfait .offre__prix{ font-size:clamp(.98rem,3.4vw,1.2rem); }
+.offre__avant{
+  font-size:clamp(.56rem,1.9vw,.64rem); line-height:1.3;
+}
+.offre__avant:empty{ display:none; }
 
 .astuce{
   display:flex; align-items:center; gap:.45rem;
