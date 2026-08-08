@@ -184,6 +184,21 @@
     });
   });
 
+  /* ---------- L'économie des forfaits ----------
+     Jamais écrite : elle se déduit du prix à la séance, du nombre de
+     séances et du prix du lot. Un tarif qui change met le gain à jour tout
+     seul, et une addition fausse devient impossible. */
+  $$('.tarif--forfait').forEach(f => {
+    const u = parseFloat(f.dataset.unite);
+    const n = parseFloat(f.dataset.lot);
+    const p = parseFloat(f.dataset.prix);
+    if ([u, n, p].some(isNaN)) return;
+    const gain = u * n - p;
+    if (gain <= 0) return;
+    const cible = $('.tarif__gain', f);
+    if (cible) cible.textContent = `−${gain} €`;
+  });
+
   /* ---------- Synthèse des avis ----------
      Jamais écrite en dur : la moyenne et le nombre viennent des avis
      présents dans la page. Ajouter un <li data-note="…"> suffit. */

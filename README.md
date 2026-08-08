@@ -365,6 +365,35 @@ n'ayant pas de survol, le téléphone reçoit à la place une **amorce** : à la
 première ouverture du panneau, une carte entrouvre son dos puis se referme.
 Une seule fois, sur une seule carte.
 
+## Les tarifs
+
+Transmis par Marie, et portés par les cartes elles-mêmes. Une ligne par
+durée, et sous chacune son forfait quand il existe :
+
+| Soin | Séance | Forfait |
+| ---- | ------ | ------- |
+| Kobido               | 1 h — 60 €   | — |
+| Relaxant             | 1 h — 60 €   | 3 séances — 160 € |
+|                      | 1 h 30 — 90 €| 3 séances — 240 € |
+| Deep Tissus          | 1 h — 70 €   | 3 séances — 180 € |
+| Madéro               | 1 h — 70 €   | 5 séances — 300 € |
+| Drainage lymphatique | 1 h — 80 €   | 5 séances — 350 € |
+
+**L'économie du forfait n'est jamais écrite.** Chaque forfait porte le prix à
+la séance, le nombre de séances et le prix du lot ; le gain (`−20 €`, `−50 €`)
+se calcule au chargement. Un tarif qui change met l'affichage à jour tout seul,
+et une addition fausse devient impossible.
+
+```html
+<span class="tarif tarif--forfait" data-unite="70" data-lot="5" data-prix="300">
+```
+
+> Aucune `opacity` sur ces lignes. La hiérarchie passe par la taille et le
+> retrait — une transparence recomposerait l'encre sur le fond de la carte et
+> défairait le contraste calculé par `tools-cartes.py`. C'est le piège qui
+> avait déjà coûté la ligne des tarifs une première fois. Mesuré après coup :
+> **4,54:1 au pire cas**, sur les cinq cartes et les quatre niveaux de texte.
+
 ## Les illustrations
 
 La V2 n'en affiche aucune : elle ne montre que le portrait de Marie. Les 19
@@ -732,7 +761,11 @@ chemin relatif se serait perdu.
       exemples, à écrire avec Marie
 - [ ] **Nom du soin « Deep Tissus »** — la planche l'écrit ainsi ; le terme
       consacré est *deep tissue*. À trancher avec Marie.
-- [ ] **Tarifs et durées** — les `XX €` dans la section massages
+- [x] ~~**Tarifs et durées**~~ — transmis par Marie, en place sur les cartes
+- [ ] **Panneau « Moi »** — la structure est posée, les contenus manquent :
+      formations (école + année), ancienneté (« je masse depuis X ans »),
+      photo de Marie en séance, déroulé réel d'une séance. Chaque champ à
+      remplir est entre crochets dans `index.html`.
 - [ ] **Avis** — les témoignages sont des exemples, à remplacer par les vrais
 - [ ] **Coordonnées** — téléphone et email sont des valeurs fictives, à
       remplacer dans `index.html` (panneau « Rendez-vous », JSON-LD) et dans

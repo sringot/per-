@@ -441,6 +441,61 @@ body::after{
 .feuille p + p{ margin-top:.8rem; }
 .chapo + p{ margin-top:1rem; }
 
+/* --- Le panneau « Moi » ---
+   Le plus intime du site, et celui qui décide : la barrière de confiance
+   est plus haute ici que pour n'importe quel autre service local. D'où le
+   parcours de formation, le déroulé d'une séance, et le cadre posé — ce
+   que c'est, ce que ce n'est pas. */
+.moi__h{
+  font-size:1.05rem; font-weight:600; color:var(--green);
+  margin:2rem 0 .7rem;
+}
+
+/* Chaque ligne : l'intitulé en tête, l'école et l'année en dessous. C'est
+   la lecture en diagonale qui compte — on cherche « est-ce qu'elle a
+   appris », pas le détail. */
+.parcours{
+  display:grid; gap:.5rem; margin-top:1.6rem;
+}
+.parcours li{
+  display:flex; flex-direction:column; gap:.1rem;
+  padding:.7rem .95rem; border-radius:14px; box-shadow:var(--nm-out);
+}
+.parcours b{ font-weight:600; font-size:.9rem; color:var(--green); }
+.parcours span{ font-size:.76rem; color:var(--ink-soft); }
+
+/* Le déroulé, numéroté : c'est l'inconnu qui bloque une première
+   réservation, pas le prix. */
+.etapes{ counter-reset:etape; display:grid; gap:.7rem; list-style:none; }
+.etapes li{
+  counter-increment:etape;
+  display:grid; grid-template-columns:auto 1fr; gap:.75rem; align-items:start;
+  font-size:.9rem; color:var(--ink-soft);
+}
+.etapes li::before{
+  content:counter(etape);
+  width:1.6rem; height:1.6rem; border-radius:50%;
+  display:grid; place-items:center;
+  font-size:.72rem; font-weight:600;
+  color:var(--teinte-t,var(--ochre));
+  background:color-mix(in srgb, var(--teinte,var(--ochre)) 13%, var(--card));
+}
+.etapes b{ font-weight:600; color:var(--ink); }
+
+.moi__cadre{
+  margin-top:1.8rem; padding:.9rem 1.1rem; border-radius:14px;
+  font-size:.84rem; box-shadow:var(--nm-in);
+}
+.moi__liens{
+  display:flex; flex-wrap:wrap; align-items:center; gap:.5rem 1.2rem;
+  margin-top:1.8rem; font-size:.84rem;
+}
+.moi__anciennete{ font-weight:600; color:var(--green); }
+.moi__liens a{
+  color:var(--teinte-t,var(--ochre));
+  border-bottom:1px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+
 /* --- Les cadres en attente ---
    Trois emplacements réservés pour les photos du cabinet. Ils tiennent la
    place et la disent : un blanc dans une maquette se lit comme un oubli,
@@ -458,6 +513,10 @@ body::after{
   border:1.5px dashed color-mix(in srgb, var(--ink) 18%, var(--card));
 }
 .attente__cadre span{ padding:0 .6rem; }
+/* Un seul cadre, plus large : dans « Moi » il ne s'agit pas d'une série de
+   vues du cabinet mais d'une image unique. */
+.attente--une{ grid-template-columns:1fr; }
+.attente--une .attente__cadre{ aspect-ratio:3/2; }
 
 .details{
   display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.6rem;
@@ -619,6 +678,7 @@ body::after{
 .soin__face > :nth-child(2){ --pose:.39s; }
 .soin__face > :nth-child(3){ --pose:.45s; }
 .soin__face > :nth-child(4){ --pose:.51s; }
+.soin__face > :nth-child(5){ --pose:.57s; }
 
 .soin__carte[aria-expanded="true"]  .soin__face--avant   > *,
 .soin__carte[aria-expanded="false"] .soin__face--arriere > *{
@@ -649,6 +709,9 @@ body::after{
   -webkit-mask:var(--signe) center/contain no-repeat;
           mask:var(--signe) center/contain no-repeat;
 }
+/* Le pictogramme de retournement occupe le coin haut-droit : sans cette
+   réserve, « Drainage lymphatique » passait dessous. */
+.soin__titre, .soin__sous{ padding-right:1.7rem; }
 .soin__nom{
   font-size:clamp(.68rem,2.4vw,.78rem); font-weight:600;
   letter-spacing:.14em; text-transform:uppercase; text-align:center;
@@ -658,17 +721,55 @@ body::after{
   font-size:clamp(.86rem,3vw,1rem); font-weight:600; line-height:1.15;
   letter-spacing:-.01em;
 }
+.soin__sous{
+  margin-top:.15rem;
+  font-size:clamp(.6rem,2vw,.68rem); font-weight:500;
+  letter-spacing:.06em; text-transform:uppercase;
+}
 .soin__texte{
-  margin-top:.5rem; flex:1;
-  font-size:clamp(.72rem,2.5vw,.8rem); line-height:1.45;
+  margin-top:.55rem; flex:1;
+  font-size:clamp(.7rem,2.4vw,.78rem); line-height:1.4;
 }
-/* Pas d'`opacity` ici : elle recomposait l'encre sur le fond de la carte
-   et ramenait la ligne durée-et-tarif — le texte commercialement décisif,
-   à 10-11 px — entre 3,3 et 3,8:1 sur quatre cartes sur cinq, alors même
-   que `tools-cartes.py` avait calculé cette encre pour tenir 4,5:1. */
-.soin__pied{
-  font-size:clamp(.62rem,2.2vw,.7rem); line-height:1.5;
+
+/* --- Les tarifs ---
+   Une ligne par durée, et sous chacune son forfait s'il existe. Le prix est
+   aligné à droite : c'est la colonne qu'on parcourt du regard quand on
+   compare deux soins. */
+.soin__tarifs{
+  display:flex; flex-direction:column; gap:.1rem;
+  margin-top:.5rem;
+  border-top:1px solid currentColor;
+  padding-top:.45rem;
+  /* Le filet ne doit pas peser autant que le texte. */
+  border-top-color:color-mix(in srgb, currentColor 22%, transparent);
 }
+.tarif{
+  display:flex; align-items:baseline; justify-content:space-between; gap:.5rem;
+  font-size:clamp(.68rem,2.3vw,.76rem); line-height:1.35;
+}
+.tarif__prix{ font-weight:600; white-space:nowrap; }
+/* Le forfait est un cran en dessous : c'est une option de la durée qui le
+   précède, pas une ligne de même rang. */
+/* Aucune `opacity` : elle recompose l'encre sur le fond de la carte et
+   défait le contraste que `tools-cartes.py` a calculé pour tenir 4,5:1 —
+   c'est le piège qui avait déjà coûté la ligne des tarifs. La hiérarchie
+   passe donc par la taille et le retrait, pas par la transparence. */
+.tarif--forfait{
+  font-size:clamp(.6rem,2vw,.68rem);
+  padding-left:.6rem;
+}
+.tarif--forfait .tarif__prix{ font-weight:500; }
+.tarif__gain{
+  font-style:normal; font-weight:500;
+  margin-left:.3rem;
+}
+.tarif__gain:empty{ display:none; }
+/* Aucune `opacity` sur ces textes-là. Elle recomposait l'encre sur le fond
+   de la carte et ramenait la ligne des tarifs — le texte commercialement
+   décisif, à 10-11 px — entre 3,3 et 3,8:1 sur quatre cartes sur cinq, alors
+   même que `tools-cartes.py` avait calculé cette encre pour tenir 4,5:1.
+   Les .82 et .85 ci-dessus portent sur du texte de rang inférieur, dont le
+   contraste reste vérifié plus bas. */
 
 .astuce{
   display:flex; align-items:center; gap:.45rem;
