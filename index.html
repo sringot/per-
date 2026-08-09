@@ -244,7 +244,7 @@
 
     <p class="astuce">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg>
-      Touchez une carte pour voir les tarifs.
+      Touchez une carte pour découvrir le soin.
     </p>
 
     <!-- Les cartes de la planche de Marie. Chaque carte se retourne au
@@ -265,7 +265,7 @@
             <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
             <span class="soin__titre">Kobido</span>
             <span class="soin__sous">Lifting japonais du visage</span>
-            <span class="soin__tarifs"><span class="offre"><span class="offre__duree">1 h</span><span class="offre__prix">60&nbsp;€</span></span></span>
+            <span class="soin__desc">Un modelage du visage venu du Japon, tout en pressions et en lissages. Le grain de peau s'affine, les traits se détendent.</span>
           </span>
           </span>
         </button>
@@ -282,7 +282,7 @@
             <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
             <span class="soin__titre">Relaxant</span>
             <span class="soin__sous">Massage corps complet</span>
-            <span class="soin__tarifs"><span class="offre"><span class="offre__duree">1 h</span><span class="offre__prix">60&nbsp;€</span></span><span class="offre offre--forfait" data-unite="60" data-lot="3" data-prix="160"><span class="offre__duree">Forfait 3 séances</span><span class="offre__prix">160&nbsp;€</span><span class="offre__avant"></span></span><span class="offre"><span class="offre__duree">1 h 30</span><span class="offre__prix">90&nbsp;€</span></span><span class="offre offre--forfait" data-unite="90" data-lot="3" data-prix="240"><span class="offre__duree">Forfait 3 séances</span><span class="offre__prix">240&nbsp;€</span><span class="offre__avant"></span></span></span>
+            <span class="soin__desc">Des manœuvres lentes et enveloppantes, du dos aux jambes. Celui qu'on choisit quand on a surtout besoin de déposer les armes.</span>
           </span>
           </span>
         </button>
@@ -299,7 +299,7 @@
             <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
             <span class="soin__titre">Deep Tissus</span>
             <span class="soin__sous">Tensions profondes</span>
-            <span class="soin__tarifs"><span class="offre"><span class="offre__duree">1 h</span><span class="offre__prix">70&nbsp;€</span></span><span class="offre offre--forfait" data-unite="70" data-lot="3" data-prix="180"><span class="offre__duree">Forfait 3 séances</span><span class="offre__prix">180&nbsp;€</span><span class="offre__avant"></span></span></span>
+            <span class="soin__desc">Un travail appuyé, muscle par muscle, sur les zones nouées. Pour les dos qui ont passé la semaine devant un écran.</span>
           </span>
           </span>
         </button>
@@ -316,7 +316,7 @@
             <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
             <span class="soin__titre">Madéro</span>
             <span class="soin__sous">Soin corps remodelant</span>
-            <span class="soin__tarifs"><span class="offre"><span class="offre__duree">1 h</span><span class="offre__prix">70&nbsp;€</span></span><span class="offre offre--forfait" data-unite="70" data-lot="5" data-prix="300"><span class="offre__duree">Forfait 5 séances</span><span class="offre__prix">300&nbsp;€</span><span class="offre__avant"></span></span></span>
+            <span class="soin__desc">Des outils en bois qui roulent et pétrissent. Un soin tonique, qui relance la circulation.</span>
           </span>
           </span>
         </button>
@@ -333,12 +333,63 @@
             <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
             <span class="soin__titre">Drainage lymphatique</span>
             <span class="soin__sous">Jambes légères</span>
-            <span class="soin__tarifs"><span class="offre"><span class="offre__duree">1 h</span><span class="offre__prix">80&nbsp;€</span></span><span class="offre offre--forfait" data-unite="80" data-lot="5" data-prix="350"><span class="offre__duree">Forfait 5 séances</span><span class="offre__prix">350&nbsp;€</span><span class="offre__avant"></span></span></span>
+            <span class="soin__desc">Des pressions douces et rythmées qui relancent la lymphe. Les jambes se dégonflent, la lourdeur s'en va.</span>
           </span>
           </span>
         </button>
       </li>
     </ul>
+
+    <!-- Le bloc des tarifs est un enfant à part de la feuille : celle-ci
+         borne ses paragraphes à une longueur de ligne lisible, et le tableau
+         s'y retrouvait à l'étroit — « 1 h 30 » et « 90 € » passaient à la
+         ligne l'un sous l'autre. -->
+    <div class="tarifs">
+    <h3 class="bloc-h" id="tarifs-t">Les tarifs</h3>
+    <!-- Le tableau plutôt que le dos des cartes : on lit des prix côte à
+         côte, pas un par un. En retourner cinq pour en comparer deux, c'était
+         demander de retenir un chiffre en changeant d'écran. -->
+    <div class="tableau">
+      <table aria-labelledby="tarifs-t">
+        <thead>
+          <tr>
+            <th scope="col">Soin</th>
+            <th scope="col">La séance</th>
+            <th scope="col">En forfait</th>
+          </tr>
+        </thead>
+        <tbody>
+      <tr class="soin--kobido">
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Kobido</th>
+        <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">60&nbsp;€</b></span></td>
+        <td data-col="En forfait"><span class="t-l t-l--vide">Pas de forfait</span></td>
+      </tr>
+      <tr class="soin--relaxant">
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Relaxant</th>
+        <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">60&nbsp;€</b></span><span class="t-l"><span class="t-l__nom">1 h 30</span><b class="t-l__prix">90&nbsp;€</b></span></td>
+        <td data-col="En forfait"><span class="t-l" data-unite="60" data-lot="3" data-prix="160"><span class="t-l__nom">3&nbsp;séances&nbsp;de&nbsp;1&nbsp;h</span><b class="t-l__prix">160&nbsp;€</b><em class="t-avant"></em></span><span class="t-l" data-unite="90" data-lot="3" data-prix="240"><span class="t-l__nom">3&nbsp;séances&nbsp;de&nbsp;1&nbsp;h&nbsp;30</span><b class="t-l__prix">240&nbsp;€</b><em class="t-avant"></em></span></td>
+      </tr>
+      <tr class="soin--deep-tissus">
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Deep Tissus</th>
+        <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">70&nbsp;€</b></span></td>
+        <td data-col="En forfait"><span class="t-l" data-unite="70" data-lot="3" data-prix="180"><span class="t-l__nom">3&nbsp;séances</span><b class="t-l__prix">180&nbsp;€</b><em class="t-avant"></em></span></td>
+      </tr>
+      <tr class="soin--madero">
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Madéro</th>
+        <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">70&nbsp;€</b></span></td>
+        <td data-col="En forfait"><span class="t-l" data-unite="70" data-lot="5" data-prix="300"><span class="t-l__nom">5&nbsp;séances</span><b class="t-l__prix">300&nbsp;€</b><em class="t-avant"></em></span></td>
+      </tr>
+      <tr class="soin--drainage">
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Drainage lymphatique</th>
+        <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">80&nbsp;€</b></span></td>
+        <td data-col="En forfait"><span class="t-l" data-unite="80" data-lot="5" data-prix="350"><span class="t-l__nom">5&nbsp;séances</span><b class="t-l__prix">350&nbsp;€</b><em class="t-avant"></em></span></td>
+      </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tableau__note">Un forfait s'applique au soin choisi&nbsp;; le tarif indiqué couvre l'ensemble des séances.</p>
+    </div><!-- /.tarifs -->
+
   </div>
 </section>
 

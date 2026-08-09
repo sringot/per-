@@ -540,6 +540,9 @@ body::after{
    dessus des cartes gardant sa longueur de ligne. */
 .feuille--soins{ max-width:min(72rem,100%); }
 .feuille--soins > :not(.soins){ max-width:34rem; }
+/* Le tableau n'est pas de la prose : il lui faut la largeur de ses colonnes,
+   pas une longueur de ligne de lecture. */
+.feuille--soins > .tarifs{ max-width:min(46rem,100%); }
 
 .soins{
   margin-top:1.8rem;
@@ -552,11 +555,11 @@ body::after{
 /* Relevé sur la planche de référence par tools-cartes.py.
    `--signe-c` est la couleur du monogramme, `--texte` la même teinte
    poussée jusqu'à 4,5:1 — le petit texte l'exige, pas la grande forme. */
-.soin--kobido     { --fond:#7E3D49; --signe-c:#F8E2AF; --texte:#F8E2AF; --signe:url(../img/soins/kobido.svg); }
-.soin--relaxant   { --fond:#A9AE9D; --signe-c:#707550; --texte:#3F422D; --signe:url(../img/soins/relaxant.svg); }
-.soin--deep-tissus{ --fond:#FAE1AB; --signe-c:#D59C40; --texte:#825F27; --signe:url(../img/soins/deep-tissus.svg); }
-.soin--madero     { --fond:#D15929; --signe-c:#FDF5E8; --texte:#141413; --signe:url(../img/soins/madero.svg); }
-.soin--drainage   { --fond:#E39E99; --signe-c:#BF585A; --texte:#6B3132; --signe:url(../img/soins/drainage.svg); }
+.soin--kobido     { --fond:#7E3D49; --signe-c:#F8E2AF; --texte:#F8E2AF; --marque:#978A6B; --signe:url(../img/soins/kobido.svg); }
+.soin--relaxant   { --fond:#A9AE9D; --signe-c:#707550; --texte:#3F422D; --marque:#707550; --signe:url(../img/soins/relaxant.svg); }
+.soin--deep-tissus{ --fond:#FAE1AB; --signe-c:#D59C40; --texte:#825F27; --marque:#B38336; --signe:url(../img/soins/deep-tissus.svg); }
+.soin--madero     { --fond:#D15929; --signe-c:#FDF5E8; --texte:#141413; --marque:#8E8982; --signe:url(../img/soins/madero.svg); }
+.soin--drainage   { --fond:#E39E99; --signe-c:#BF585A; --texte:#6B3132; --marque:#BF585A; --signe:url(../img/soins/drainage.svg); }
 
 /* La perspective est portée par le conteneur, la rotation par la carte :
    sur le même élément, la perspective s'appliquerait à la carte elle-même
@@ -731,42 +734,111 @@ body::after{
 }
 
 
-/* --- Les tarifs ---
-   Ce sont eux qu'on vient chercher : ils occupent donc le dos de la carte,
-   en grand, et non un pied de page en 10 px. Le paragraphe de description a
-   été retiré — le sous-titre dit déjà ce qu'est le soin en quatre mots, et
-   c'est ce paragraphe qui écrasait tout le reste dans 173 × 254 px.
+/* --- La description au dos --- */
+.soin__desc{
+  margin-top:.55rem;
+  font-size:clamp(.72rem,2.5vw,.8rem); line-height:1.45;
+}
 
-   Chaque offre est un bloc : la durée en tête, le prix en gros dessous.
-   Le forfait est un bloc de même forme, en retrait et sur fond creusé, avec
-   son prix de référence — « au lieu de 180 € » plutôt que « −30 € », parce
-   qu'une remise brute posée à côté d'un prix ne dit pas ce qu'elle est. */
-.soin__tarifs{
-  display:flex; flex-direction:column; gap:.4rem;
-  /* Centré dans la place restante, et non collé en bas : les quatre soins
-     à une seule durée laissaient sinon un grand vide entre le sous-titre et
-     leur prix. Sur le Relaxant, qui remplit sa carte, cela ne change rien. */
-  margin-block:auto; padding-top:.6rem;
+/* --- Le tableau des tarifs ---
+   Sous la grille, une seule fois. On lit des prix **côte à côte** : les
+   porter au dos des cartes obligeait à en retourner cinq, et à retenir un
+   chiffre en changeant d'écran pour en comparer deux.
+
+   Chaque ligne porte la classe de son soin (`.soin--kobido`…), donc ses
+   variables de couleur : le monogramme du tableau vient du même masque que
+   celui de la carte, et la palette n'a qu'une seule source. */
+.bloc-h{
+  font-size:1.05rem; font-weight:600; color:var(--green);
+  margin:2.4rem 0 .9rem;
 }
-.offre{ display:flex; flex-direction:column; }
-.offre__duree{
-  font-size:clamp(.58rem,1.9vw,.66rem); font-weight:500;
-  letter-spacing:.1em; text-transform:uppercase;
+.tableau table{
+  width:100%; border-collapse:collapse;
+  font-size:clamp(.8rem,2.6vw,.9rem);
+  /* Les chiffres s'alignent en colonnes : ils doivent avoir la même chasse. */
+  font-variant-numeric:tabular-nums;
 }
-.offre__prix{
-  font-size:clamp(1.25rem,4.6vw,1.6rem); font-weight:600;
-  line-height:1.05; letter-spacing:-.02em;
+.tableau thead th{
+  text-align:left; font-weight:500; color:var(--ink-soft);
+  font-size:.64rem; letter-spacing:.12em; text-transform:uppercase;
+  padding:0 1rem .5rem 0; white-space:nowrap;
 }
-.offre--forfait{
-  padding:.4rem .55rem .45rem;
-  border-radius:11px;
-  box-shadow:var(--nm-in);
+.tableau tbody th, .tableau tbody td{
+  border-top:1px solid var(--line);
+  padding:.8rem 1rem .8rem 0;
+  vertical-align:top;
 }
-.offre--forfait .offre__prix{ font-size:clamp(.98rem,3.4vw,1.2rem); }
-.offre__avant{
-  font-size:clamp(.56rem,1.9vw,.64rem); line-height:1.3;
+.tableau tbody th{
+  text-align:left; font-weight:600; color:var(--green);
+  white-space:nowrap;
 }
-.offre__avant:empty{ display:none; }
+/* Le monogramme de la carte, en petit. `--marque` est la même teinte poussée
+   jusqu'à 3:1 sur le socle du site : hors de sa carte, elle n'a plus le fond
+   coloré qui la faisait ressortir. */
+.t-signe{
+  display:inline-block; vertical-align:-.18em;
+  width:1.05em; height:1.05em; margin-right:.5rem;
+  background:var(--marque);
+  -webkit-mask:var(--signe) center/contain no-repeat;
+          mask:var(--signe) center/contain no-repeat;
+}
+/* Une offre : sa durée (ou son nombre de séances) et son prix. Le Relaxant
+   en a deux par cellule, d'où la liste plutôt qu'une ligne de tableau de
+   plus — une cellule fusionnée ne survivrait pas au réempilement. */
+.t-l{
+  display:flex; align-items:baseline; flex-wrap:wrap;
+  gap:.15rem .6rem;
+}
+.t-l + .t-l{ margin-top:.55rem; }
+.t-l__nom { color:var(--ink-soft); white-space:nowrap; }
+.t-l__prix{ font-weight:600; color:var(--ink); white-space:nowrap; }
+.t-avant{
+  flex-basis:100%;
+  font-style:normal; font-size:.8em; color:var(--ink-soft);
+}
+.t-avant:empty{ display:none; }
+.t-l--vide{ color:var(--ink-soft); }
+.tableau__note{
+  margin-top:1rem;
+  font-size:.76rem; color:var(--ink-soft);
+}
+
+/* En tableau, une offre et son forfait sont sur la même ligne visuelle : il
+   leur faut la même hauteur. Le forfait porte une seconde ligne (« au lieu
+   de … ») que la séance n'a pas — sans plancher commun, les deux durées du
+   Relaxant se décalaient l'une par rapport à l'autre. */
+@media (min-width:621px){
+  .t-l{ min-height:2.5em; }
+  .t-l + .t-l{ margin-top:.35rem; }
+}
+
+/* Sur téléphone, le tableau se **réempile en blocs**. Il défilait
+   latéralement, et c'est la colonne des forfaits — la plus utile — qui
+   sortait de l'écran. Chaque cellule reprend son intitulé de colonne, sans
+   quoi les prix se retrouveraient sans étiquette. */
+@media (max-width:620px){
+  .tableau table, .tableau tbody, .tableau tr,
+  .tableau tbody th, .tableau tbody td{ display:block; width:100%; }
+  .tableau thead{ position:absolute; width:1px; height:1px;
+    overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+  .tableau tbody tr{
+    border-top:1px solid var(--line);
+    padding:1rem 0 .2rem;
+  }
+  .tableau tbody th, .tableau tbody td{ border-top:0; padding:0 0 .8rem; }
+  .tableau tbody th{
+    font-size:1rem; margin-bottom:.6rem; white-space:normal;
+  }
+  .tableau tbody td::before{
+    content:attr(data-col);
+    display:block; margin-bottom:.3rem;
+    font-size:.62rem; font-weight:500; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ink-soft);
+  }
+  /* La ligne d'offre s'étale : intitulé à gauche, prix à droite. */
+  .t-l{ justify-content:space-between; }
+  .t-avant{ text-align:right; }
+}
 
 .astuce{
   display:flex; align-items:center; gap:.45rem;

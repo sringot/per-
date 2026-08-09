@@ -367,43 +367,56 @@ Une seule fois, sur une seule carte.
 
 ## Les tarifs
 
-Transmis par Marie, et portés par les cartes elles-mêmes. Une ligne par
-durée, et sous chacune son forfait quand il existe :
+Transmis par Marie :
 
 | Soin | Séance | Forfait |
 | ---- | ------ | ------- |
-| Kobido               | 1 h — 60 €   | — |
-| Relaxant             | 1 h — 60 €   | 3 séances — 160 € |
-|                      | 1 h 30 — 90 €| 3 séances — 240 € |
-| Deep Tissus          | 1 h — 70 €   | 3 séances — 180 € |
-| Madéro               | 1 h — 70 €   | 5 séances — 300 € |
-| Drainage lymphatique | 1 h — 80 €   | 5 séances — 350 € |
+| Kobido               | 1 h — 60 €    | — |
+| Relaxant             | 1 h — 60 €    | 3 séances — 160 € |
+|                      | 1 h 30 — 90 € | 3 séances — 240 € |
+| Deep Tissus          | 1 h — 70 €    | 3 séances — 180 € |
+| Madéro               | 1 h — 70 €    | 5 séances — 300 € |
+| Drainage lymphatique | 1 h — 80 €    | 5 séances — 350 € |
 
-**Le dos de la carte est fait pour eux.** Il portait auparavant quatre niveaux
-d'information — nom, sous-titre, paragraphe de description, ligne de tarif —
-dans 173 × 254 px : tout y était petit, et le prix, seule chose qu'on vient
-chercher, finissait en 10 px au pied de la carte. Le paragraphe a été retiré
-(le sous-titre dit déjà ce qu'est le soin en quatre mots) et le prix passe à
-**26 px**. La carte suit le format de la planche de Marie, 330 × 530, soit un
-rapport de .62 — le format plus trapu d'avant ne laissait pas la place au
-Relaxant et à ses deux durées, dont le dos débordait de 21 px.
+**Ils vivent dans un tableau sous les cartes, pas au dos de chacune.** On lit
+des prix **côte à côte** : les porter au dos obligeait à retourner cinq cartes
+pour en comparer deux, donc à retenir un chiffre en changeant d'écran. Le dos
+de la carte reprend ce qu'il fait bien — la description du soin.
 
-**Le prix de référence, pas la remise.** Le forfait affiche « au lieu de
-180 € » et non « −20 € » : une remise brute posée à côté d'un prix ne dit pas
-ce qu'elle est — remise ? acompte ? part par séance ? Le prix de référence, lui,
-se comprend sans notice. Il reste **calculé** et jamais écrit : chaque forfait
-porte le prix à la séance, le nombre de séances et le prix du lot.
+**Le prix de référence, pas la remise.** Le forfait affiche « au lieu de 180 € »
+et non « −20 € » : une remise brute posée à côté d'un prix ne dit pas ce qu'elle
+est — remise ? acompte ? part par séance ? Il reste **calculé** et jamais écrit :
+chaque forfait porte le prix à la séance, le nombre de séances et le prix du lot.
 
 ```html
-<span class="offre offre--forfait" data-unite="70" data-lot="5" data-prix="300">
+<span class="t-l" data-unite="70" data-lot="5" data-prix="300">
 ```
 
-> Aucune `opacity` sur ces textes. La hiérarchie passe par la taille, le retrait
-> et un fond creusé — une transparence recomposerait l'encre sur le fond de la
-> carte et défairait le contraste calculé par `tools-cartes.py`. C'est le piège
-> qui avait déjà coûté la ligne des tarifs une première fois, et que j'y ai
-> réintroduit une seconde. Mesuré après coup : **4,54:1 au pire cas**, sur les
-> cinq cartes et les six niveaux de texte.
+**Sur téléphone, le tableau se réempile en blocs.** Il défilait latéralement, et
+c'est la colonne des forfaits — la plus utile — qui sortait de l'écran. Chaque
+cellule reprend son intitulé de colonne (`data-col`), sans quoi les prix se
+retrouveraient sans étiquette.
+
+> **Jamais de `rowspan`.** Le Relaxant a deux durées, mais une cellule fusionnée
+> ne survit pas au réempilement en blocs : ses deux durées vivent donc *dans*
+> une cellule, en liste. Une ligne de tableau par soin, toujours.
+
+> Le bloc des tarifs est un **enfant à part** de la feuille. Celle-ci borne ses
+> paragraphes à une longueur de ligne lisible (34 rem) ; le tableau s'y
+> retrouvait à l'étroit et « 1 h 30 » passait au-dessus de « 90 € ». Un tableau
+> n'est pas de la prose : il lui faut la largeur de ses colonnes.
+
+> Les deux forfaits du Relaxant s'appelaient tous deux « 3 séances ». Alignés en
+> tableau, la ligne disait lequel portait sur l'heure ; empilés sur téléphone,
+> plus rien ne le disait. Ils annoncent maintenant leur durée.
+
+**Le monogramme sert de repère de ligne**, avec le même masque que la carte.
+Hors de sa carte il perd le fond coloré qui le faisait ressortir : `--marque`
+est la même teinte poussée jusqu'à 3:1 sur le socle du site — un tracé, pas du
+texte (WCAG 1.4.11). Calculée par `tools-cartes.py`, comme le reste.
+
+Contrastes relevés sur le rendu : de **5,78:1** (intitulés, « au lieu de ») à
+**13,75:1** (les prix).
 
 ## Les illustrations
 

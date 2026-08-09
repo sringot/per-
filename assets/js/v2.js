@@ -188,7 +188,7 @@
      Jamais écrite : elle se déduit du prix à la séance, du nombre de
      séances et du prix du lot. Un tarif qui change met le gain à jour tout
      seul, et une addition fausse devient impossible. */
-  $$('.offre--forfait').forEach(f => {
+  $$('.t-l[data-prix]').forEach(f => {
     const u = parseFloat(f.dataset.unite);
     const n = parseFloat(f.dataset.lot);
     const p = parseFloat(f.dataset.prix);
@@ -196,7 +196,7 @@
     // « au lieu de 180 € » plutôt que « −30 € » : la remise brute posée à
     // côté d'un prix ne dit pas ce qu'elle est — remise ? acompte ? part
     // par séance ? Le prix de référence, lui, se comprend sans notice.
-    const cible = $('.offre__avant', f);
+    const cible = $('.t-avant', f);
     if (cible) cible.textContent = `au lieu de ${u * n} €`;
   });
 

@@ -40,6 +40,10 @@ ZOOM = 5
 
 NOMS = ['kobido', 'relaxant', 'deep-tissus', 'madero', 'drainage']
 
+# Le socle du site, relevé sur l'image de fond. Sert à vérifier les teintes
+# qui sortent de leur carte — le repère du tableau des tarifs.
+SOCLE = (0xFC, 0xF0, 0xE2)
+
 
 def cartes(im):
     """Repère les colonnes de la planche : les cartes sont sur fond blanc."""
@@ -214,18 +218,28 @@ def main():
 
         hexa = lambda c: '#%02X%02X%02X' % tuple(c)
         texte = encre_lisible(signe, fond)
+        # Hors de sa carte, le monogramme se pose sur le socle du site : sa
+        # teinte doit y être lisible aussi. 3:1 suffit — c'est un tracé, pas
+        # du texte (WCAG 1.4.11).
+        marque = encre_lisible(signe, SOCLE, vise=3.0)
         couleurs.append((nom, hexa(fond), hexa(signe), hexa(texte),
-                         contraste(signe, fond), contraste(texte, fond)))
+                         contraste(signe, fond), contraste(texte, fond),
+                         hexa(marque)))
         print(f'  {nom:12s} fond {hexa(fond)}  signe {hexa(signe)}'
               f' ({contraste(signe, fond):.1f}:1)  texte {hexa(texte)}'
-              f' ({contraste(texte, fond):.1f}:1)  {chemin.stat().st_size / 1024:.1f} Ko')
+              f' ({contraste(texte, fond):.1f}:1)  marque {hexa(marque)}'
+              f' ({contraste(marque, SOCLE):.1f}:1)')
 
     print('\n/* Relevé sur la planche de référence par tools-cartes.py.')
     print('   `signe` est la couleur du monogramme, `texte` la même teinte')
     print('   poussée jusqu\'à 4,5:1 — le petit texte l\'exige, pas la grande forme. */')
-    for nom, fond, signe, texte, _, _ in couleurs:
+    for nom, fond, signe, texte, _, _, marque in couleurs:
         print(f'.soin--{nom}{{ --fond:{fond}; --signe-c:{signe}; --texte:{texte};'
-              f' --signe:url(../img/soins/{nom}.svg); }}')
+              f' --marque:{marque}; --signe:url(../img/soins/{nom}.svg); }}')
+    print()
+    print(f'/* `--marque` : la même teinte, lisible sur le socle du site')
+    print(f'   ({hex(SOCLE[0])[2:].upper()}… soit #%02X%02X%02X) — le monogramme sert de repère' % tuple(SOCLE))
+    print('   dans le tableau des tarifs, hors de sa carte et donc hors de son fond. */')
 
 
 if __name__ == '__main__':
