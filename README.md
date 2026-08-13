@@ -418,6 +418,44 @@ texte (WCAG 1.4.11). Calculée par `tools-cartes.py`, comme le reste.
 Contrastes relevés sur le rendu : de **5,78:1** (intitulés, « au lieu de ») à
 **13,75:1** (les prix).
 
+## L'affiche des tarifs
+
+Marie voulait une carte des tarifs à afficher dans sa pièce de massage ; sa
+version Canva ne lui plaisait pas. `tools-affiche.py` compose un **A4
+imprimable** aux couleurs du site, avec les mêmes monogrammes.
+
+```bash
+python3 tools-affiche.py        # écrit affiche-tarifs.html
+```
+
+Le fichier est **autonome** : polices, monogrammes et couleurs y sont
+embarqués. Il s'ouvre et s'imprime partout, sans dépendre du dépôt ni d'une
+connexion. Ce n'est pas une page du site — ni dans le plan du site, ni
+indexable (`noindex`).
+
+**Quatre soins, pas cinq.** La carte de Marie ne porte pas le Deep Tissus :
+elle l'a mis de côté pour le moment. L'affiche s'y tient. Elle ajoute en
+revanche deux offres absentes du site : un **pack combiné** (Madéro +
+drainage, 6 séances) et un **massage découverte** (−10 € sur le premier).
+
+Trois précautions propres à l'impression :
+
+> **`print-color-adjust: exact`.** Par défaut, les navigateurs suppriment les
+> aplats de couleur à l'impression pour économiser l'encre : l'affiche
+> sortirait en blanc sur blanc.
+
+> **La marge est dans le dessin, pas dans le réglage.** `@page { margin: 0 }`
+> et un `padding` sur la feuille : une marge laissée au navigateur change
+> d'une imprimante à l'autre et décale toute la composition.
+
+> **Pas de grand dégradé.** Le fond du site en porte un ; sur papier il se
+> banderait. L'affiche n'a qu'une tache très diluée dans un angle.
+
+Contrastes relevés **sur le rendu**, en échantillonnant les pixels de chaque
+aplat : **5,7:1 au pire cas** (le petit texte sur le forfait du drainage, le
+bloc le plus saturé). L'encre secondaire y est d'un cran plus sombre que sur
+le site — la valeur du site y tombait à 4,5:1 tout juste.
+
 ## Les illustrations
 
 La V2 n'en affiche aucune : elle ne montre que le portrait de Marie. Les 19
