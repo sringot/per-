@@ -29,13 +29,17 @@ DEST = ROOT / 'affiche-tarifs.html'
 
 # clé, nom, sous-titre, fond, encre du monogramme, offres
 # Une offre : (durée, prix) et, s'il existe, (nombre de séances, prix du lot)
+#
+# L'ordre est celui voulu par Marie, et il n'est pas alphabétique : le
+# relaxant ouvre parce que c'est le soin d'appel, le drainage ferme parce
+# que c'est le plus cher. Ne pas retrier.
 SOINS = [
+    ('relaxant', 'Relaxant', 'Massage corps complet',
+     '#A9AE9D', '#3F422D',
+     [(('1 h', 60), (3, 150)), (('1 h 30', 90), (3, 240))]),
     ('kobido', 'Kobido', 'Lifting japonais du visage',
      '#7E3D49', '#F8E2AF',
      [(('1 h', 60), None)]),
-    ('relaxant', 'Relaxant', 'Massage corps complet',
-     '#A9AE9D', '#3F422D',
-     [(('1 h', 60), (3, 160)), (('1 h 30', 90), (3, 240))]),
     ('madero', 'Madéro', 'Soin corps remodelant',
      '#D15929', '#FDF5E8',
      [(('1 h', 70), (5, 300))]),
@@ -44,10 +48,8 @@ SOINS = [
      [(('1 h', 80), (5, 350))]),
 ]
 
-# ⚠️ Deux valeurs relevées sur la carte de Marie, dont l'export était brouillé
-# par des superpositions. À confirmer avec elle avant impression.
-PACK = ('Pack combiné', 'Madéro & drainage lymphatique', 6, 390)
-DECOUVERTE = ('Massage découverte', 10)
+PACK = ('Pack combiné', '3 Madéro & 3 drainages lymphatiques', 6, 390)
+DECOUVERTE = 10
 
 # L'encre secondaire est un cran plus sombre que sur le site (#635D57) :
 # les petits textes de l'affiche se posent sur des aplats teintés, et sur le
@@ -57,6 +59,13 @@ SOCLE, ENCRE, DOUX, VERT, OCRE = '#FCF0E2', '#2A2320', '#565049', '#3F4A38', '#A
 
 # Groupé par deux, comme on le lit et comme on le dicte.
 TEL = '06 31 18 34 81'
+VILLE = 'Montigny-le-Bretonneux'
+
+# Le monogramme du logo, posé dans un disque comme les pastilles des soins.
+# Marie a proposé deux accords ; celui-ci tient à l'impression (3,6:1 entre
+# le M et son disque, 7:1 entre le disque et le papier). L'autre — M jaune
+# sur disque rose — tombe à 1,7:1 et s'efface une fois imprimé.
+LOGO_FOND, LOGO_ENCRE = '#7E3D49', '#E39E99'
 
 
 def b64(chemin):
@@ -83,7 +92,6 @@ def bloc(cle, nom, sous, fond, encre, offres):
             lot, px = forfait
             # L'économie est calculée, jamais saisie : un tarif qui change la
             # met à jour, et une addition fausse devient impossible.
-            gain = prix * lot - px
             lignes.append(
                 f'<div class="ligne ligne--forfait">'
                 f'<span class="duree">Forfait {lot} séances de {duree}</span>'
@@ -117,9 +125,13 @@ def main():
         f'.mono--{cle}{{ -webkit-mask-image:url(data:image/svg+xml;base64,{d});'
         f' mask-image:url(data:image/svg+xml;base64,{d}); }}'
         for cle, d in monos.items())
+    logo_svg = b64('assets/img/logo.svg')
 
     nom_pack, sous_pack, lot_pack, prix_pack = PACK
-    nom_dec, remise_dec = DECOUVERTE
+    # Même correction que pour les titres de soins : l'ocre pur tombait à
+    # 4,2:1 sur le fond dilué de son propre bloc.
+    titre_pack = hexa(encre_lisible(rgb(OCRE),
+                                    melange(rgb(OCRE), rgb(SOCLE), PART_BLOC)))
 
     html = f'''<!DOCTYPE html>
 <html lang="fr">
@@ -168,24 +180,38 @@ body{{
 .feuille > *{{ position:relative; }}
 
 /* ---- En-tête ---- */
-header{{ text-align:center; margin-bottom:8mm; }}
-.logo{{ width:13mm; margin:0 auto 3mm; display:block; }}
+header{{ text-align:center; margin-bottom:5.5mm; }}
+/* Le logo reprend la forme des pastilles des soins : même disque, même
+   monogramme détouré. L'affiche n'a ainsi qu'un seul motif, décliné. */
+.logo{{
+  width:16mm; height:16mm; border-radius:50%;
+  background:{LOGO_FOND};
+  margin:0 auto 3.5mm; display:grid; place-items:center;
+}}
+.logo span{{
+  width:8.7mm; height:9mm; display:block;
+  background:{LOGO_ENCRE};
+  -webkit-mask:url(data:image/svg+xml;base64,{logo_svg}) center/contain no-repeat;
+          mask:url(data:image/svg+xml;base64,{logo_svg}) center/contain no-repeat;
+}}
 .marque{{
-  font-size:7.6mm; font-weight:600; letter-spacing:-.03em;
+  font-size:5.2mm; font-weight:600; letter-spacing:-.02em;
   line-height:1; color:{VERT};
 }}
-.sur-titre{{
-  margin-top:2.5mm;
-  font-size:2.5mm; font-weight:500; letter-spacing:.42em;
-  text-transform:uppercase; color:{OCRE};
+/* « Tarifs » est le titre de la feuille — c'est ce qu'on doit lire depuis
+   l'autre bout de la pièce, avant même le nom. */
+.titre{{
+  margin-top:2.6mm;
+  font-size:11mm; font-weight:600; line-height:1;
+  letter-spacing:.06em; text-transform:uppercase; color:{OCRE};
 }}
 
 /* ---- Les soins ---- */
-.soins{{ display:flex; flex-direction:column; gap:5mm; }}
+.soins{{ display:flex; flex-direction:column; gap:4.4mm; }}
 .soin{{
   display:grid; grid-template-columns:21mm 1fr auto;
   align-items:center; gap:5mm;
-  padding:6.5mm 6mm;
+  padding:5.8mm 6mm;
   border-radius:5.5mm;
   background:color-mix(in srgb, var(--fond) 12%, {SOCLE});
 }}
@@ -241,23 +267,33 @@ header{{ text-align:center; margin-bottom:8mm; }}
   font-size:2.5mm; color:{DOUX};
 }}
 
-/* ---- Le pack et l'offre de découverte ---- */
-.extras{{ margin-top:6mm; display:flex; flex-direction:column; gap:3.5mm; }}
+/* ---- Le pack et l'offre de découverte ----
+   Les deux blocs ont échangé leur poids. Le pack ne s'adresse qu'aux
+   habituées et criait plus fort que les tarifs eux-mêmes : il redescend au
+   même niveau qu'un soin. La remise, elle, est ce qui fait franchir la
+   porte une première fois — c'est elle qui mérite l'aplat. */
+.extras{{ margin-top:5.5mm; display:flex; flex-direction:column; gap:3.5mm; }}
 .pack{{
   display:grid; grid-template-columns:1fr auto; align-items:center; gap:5mm;
-  padding:6.5mm 7mm; border-radius:5.5mm;
-  background:{OCRE}; color:#FFF;
+  padding:5mm 6mm; border-radius:5.5mm;
+  background:color-mix(in srgb, {OCRE} 12%, {SOCLE});
 }}
-.pack h3{{ font-size:4.6mm; font-weight:600; line-height:1.1; }}
-.pack p{{ margin-top:1mm; font-size:3mm; opacity:.92; }}
-.pack .prix{{ font-size:8mm; color:#FFF; }}
-.pack .prix span{{ display:block; font-size:2.8mm; font-weight:500; opacity:.9; }}
+.pack h3{{ font-size:4.2mm; font-weight:600; line-height:1.1; color:{titre_pack}; }}
+.pack p{{ margin-top:.9mm; font-size:3mm; color:{DOUX}; }}
+.pack .prix{{ font-size:6mm; color:{ENCRE}; }}
+.pack .prix span{{
+  display:block; font-size:2.7mm; font-weight:500; color:{DOUX};
+}}
 .decouverte{{
-  text-align:center; padding:4.4mm 5mm; border-radius:4mm;
-  border:.4mm dashed color-mix(in srgb, {OCRE} 45%, {SOCLE});
-  font-size:3.4mm; color:{ENCRE};
+  display:flex; align-items:center; justify-content:center; gap:4mm;
+  padding:5mm; border-radius:5.5mm;
+  background:{OCRE}; color:#FFF; text-align:left;
 }}
-.decouverte b{{ color:{OCRE}; font-weight:600; }}
+.decouverte b{{
+  font-size:9mm; font-weight:600; line-height:1;
+  white-space:nowrap; font-variant-numeric:tabular-nums;
+}}
+.decouverte span{{ font-size:3.6mm; line-height:1.3; }}
 
 /* ---- Pied ---- */
 footer{{
@@ -278,9 +314,9 @@ footer{{
 <div class="feuille">
 
   <header>
-    <img class="logo" src="data:image/png;base64,{b64('assets/img/logo-mark.png')}" alt="">
+    <div class="logo"><span></span></div>
     <div class="marque">marieemassage</div>
-    <p class="sur-titre">Tarifs</p>
+    <h1 class="titre">Tarifs</h1>
   </header>
 
   <section class="soins">{''.join(bloc(*s) for s in SOINS)}
@@ -295,13 +331,14 @@ footer{{
       <div class="prix">{prix_pack}&nbsp;€<span>{lot_pack} séances</span></div>
     </div>
     <p class="decouverte">
-      <b>{nom_dec}</b> — <b>−{remise_dec}&nbsp;€</b> sur votre premier massage.
+      <b>−{DECOUVERTE}&nbsp;€</b>
+      <span>sur votre massage inédit</span>
     </p>
   </section>
 
   <footer>
     <p class="tel">Sur rendez-vous · {TEL}</p>
-    <p class="mention">Voisins-le-Bretonneux · Les massages proposés sont des soins de bien-être, non thérapeutiques.</p>
+    <p class="mention">{VILLE} · Les massages proposés sont des soins de bien-être, non thérapeutiques.</p>
   </footer>
 
 </div>
