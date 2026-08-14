@@ -18,8 +18,11 @@ le moment. L'affiche s'en tient donc à quatre soins, là où le site en
 présente cinq.
 """
 import base64
+import os
 import pathlib
 import sys
+
+from tools_couleur import contraste, encre_lisible, hexa, melange, rgb
 
 ROOT = pathlib.Path(__file__).parent
 DEST = ROOT / 'affiche-tarifs.html'
@@ -36,7 +39,7 @@ SOINS = [
     ('madero', 'Madéro', 'Soin corps remodelant',
      '#D15929', '#FDF5E8',
      [(('1 h', 70), (5, 300))]),
-    ('drainage', 'Drainage lymphatique', 'Jambes légères',
+    ('drainage', 'Drainage lymphatique', 'Méthode Nathalie Duarte',
      '#E39E99', '#6B3132',
      [(('1 h', 80), (5, 350))]),
 ]
@@ -52,9 +55,21 @@ DECOUVERTE = ('Massage découverte', 10)
 # tout juste. Relevé sur le rendu : 5,0:1 au pire cas après correction.
 SOCLE, ENCRE, DOUX, VERT, OCRE = '#FCF0E2', '#2A2320', '#565049', '#3F4A38', '#AC4B28'
 
+# Groupé par deux, comme on le lit et comme on le dicte.
+TEL = '06 31 18 34 81'
+
 
 def b64(chemin):
     return base64.b64encode((ROOT / chemin).read_bytes()).decode()
+
+
+# Ligne supplémentaire sous le sous-titre, pour les soins qui en ont besoin.
+APPUIS = {'drainage': 'De nombreux effets 🪄'}
+
+# Part de la teinte du soin dans le fond de son bloc, et dans celui de ses
+# forfaits. Ces valeurs sont aussi celles du CSS plus bas : les changer ici
+# suffit, le contraste des titres est recalculé dessus.
+PART_BLOC, PART_FORFAIT = .12, .19
 
 
 def bloc(cle, nom, sous, fond, encre, offres):
@@ -74,12 +89,23 @@ def bloc(cle, nom, sous, fond, encre, offres):
                 f'<span class="duree">Forfait {lot} séances de {duree}</span>'
                 f'<span class="prix">{px}&nbsp;€'
                 f'<em>au lieu de {prix * lot}&nbsp;€</em></span></div>')
+    # Le titre prend la couleur du soin — mais pas sa couleur brute : posée
+    # sur le fond de son propre bloc, la sauge tomberait à 1,7:1 et le rose
+    # à 1,5:1. On la pousse jusqu'à 4,5:1 en gardant la teinte, par le même
+    # calcul que celui des cartes du site.
+    fond_bloc = melange(rgb(fond), rgb(SOCLE), PART_BLOC)
+    titre = hexa(encre_lisible(rgb(fond), fond_bloc))
+
+    appui = APPUIS.get(cle)
+    appui = f'<p class="appui">{appui}</p>' if appui else ''
+
     return f'''
-    <article class="soin" style="--fond:{fond}; --encre:{encre}">
+    <article class="soin" style="--fond:{fond}; --encre:{encre}; --titre:{titre}">
       <div class="pastille"><span class="mono mono--{cle}"></span></div>
       <div class="titres">
         <h2>{nom}</h2>
         <p>{sous}</p>
+        {appui}
       </div>
       <div class="offres">{''.join(lignes)}</div>
     </article>'''
@@ -177,13 +203,18 @@ header{{ text-align:center; margin-bottom:8mm; }}
 }}
 {masques}
 .titres h2{{
-  font-size:5mm; font-weight:600; line-height:1.1; color:{VERT};
+  font-size:5mm; font-weight:600; line-height:1.1; color:var(--titre);
   letter-spacing:-.01em;
 }}
 .titres p{{
   margin-top:.8mm;
   font-size:2.8mm; font-weight:500; letter-spacing:.14em;
   text-transform:uppercase; color:{DOUX};
+}}
+.titres .appui{{
+  margin-top:1.2mm;
+  font-size:3.1mm; font-weight:400; letter-spacing:0;
+  text-transform:none; color:{ENCRE};
 }}
 .offres{{ display:flex; flex-direction:column; gap:1.6mm; min-width:62mm; }}
 .ligne{{
@@ -269,7 +300,7 @@ footer{{
   </section>
 
   <footer>
-    <p class="tel">Sur rendez-vous · 06 00 00 00 00</p>
+    <p class="tel">Sur rendez-vous · {TEL}</p>
     <p class="mention">Voisins-le-Bretonneux · Les massages proposés sont des soins de bien-être, non thérapeutiques.</p>
   </footer>
 
@@ -282,7 +313,14 @@ footer{{
 
     if '--pdf' in sys.argv:
         import subprocess
-        subprocess.run(['node', str(ROOT / 'tools-affiche-pdf.js')], check=True)
+        # Playwright est installé globalement ici ; node ne remonte pas jusqu'au
+        # node_modules global tout seul, on le lui indique.
+        env = dict(os.environ)
+        racine = subprocess.run(['npm', 'root', '-g'], capture_output=True,
+                                text=True, check=True).stdout.strip()
+        env['NODE_PATH'] = racine
+        subprocess.run(['node', str(ROOT / 'tools-affiche-pdf.js')],
+                       check=True, env=env)
 
 
 if __name__ == '__main__':
