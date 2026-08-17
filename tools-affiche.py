@@ -6,65 +6,77 @@ fichier s'ouvre et s'imprime partout, sans dépendre du dépôt ni d'une
 connexion. C'est un document imprimable, pas une page du site — il n'est ni
 listé dans le plan du site, ni indexable.
 
+La mise en page suit celle que Marie a dessinée sur Canva : une vignette
+par soin à gauche, le nom précédé de son initiale, le filet pointillé, puis
+les tarifs. Ce qui change, c'est l'habillage — la police, les couleurs et
+les formes sont celles du site, là où Canva avait posé un titre à empattements
+et des ornements qui ne venaient de nulle part.
+
 Les tarifs et les couleurs ne sont pas ressaisis : ils viennent d'ici, et
 d'ici seulement, à côté de ceux du site. Une teinte se change dans `SOINS`
 et l'affiche suit.
 
     python3 tools-affiche.py          # écrit affiche-tarifs.html
     python3 tools-affiche.py --pdf    # et le PDF, via le navigateur
-
-Marie n'a pas de « Deep Tissus » sur sa carte : elle l'a mis de côté pour
-le moment. L'affiche s'en tient donc à quatre soins, là où le site en
-présente cinq.
 """
 import base64
 import os
 import pathlib
 import sys
 
-from tools_couleur import contraste, encre_lisible, hexa, melange, rgb
+from tools_couleur import encre_lisible, hexa, melange, rgb
 
 ROOT = pathlib.Path(__file__).parent
 DEST = ROOT / 'affiche-tarifs.html'
 
-# clé, nom, sous-titre, fond, encre du monogramme, offres
+# clé, initiale, nom, sous-titre, fond, encre du monogramme, offres
 # Une offre : (durée, prix) et, s'il existe, (nombre de séances, prix du lot)
 #
-# L'ordre est celui voulu par Marie, et il n'est pas alphabétique : le
+# L'ordre est celui de la carte de Marie, et il n'est pas alphabétique : le
 # relaxant ouvre parce que c'est le soin d'appel, le drainage ferme parce
 # que c'est le plus cher. Ne pas retrier.
+#
+# Les initiales sont celles des monogrammes, pas des noms : le deep tissus
+# est signé d'un T. C'est ce qui permet de le distinguer du drainage, qui
+# prend le D.
 SOINS = [
-    ('relaxant', 'Relaxant', 'Massage corps complet',
+    ('relaxant', 'R', 'Relaxant', 'Massage corps complet',
      '#A9AE9D', '#3F422D',
-     [(('1 h', 60), (3, 150)), (('1 h 30', 90), (3, 240))]),
-    ('kobido', 'Kobido', 'Lifting japonais du visage',
+     [(('1 heure', 60), (3, 150)), (('1 heure 30', 90), (3, 240))]),
+    ('deep-tissus', 'T', 'Deep Tissus', 'Tensions profondes',
+     '#FAE1AB', '#D59C40',
+     [(('1 heure', 70), (3, 180))]),
+    ('kobido', 'K', 'Kobido', 'Lifting japonais du visage',
      '#7E3D49', '#F8E2AF',
-     [(('1 h', 60), None)]),
-    ('madero', 'Madéro', 'Soin corps remodelant',
+     [(('1 heure', 60), None)]),
+    ('madero', 'M', 'Madéro', 'Soin corps remodelant',
      '#D15929', '#FDF5E8',
-     [(('1 h', 70), (5, 300))]),
-    ('drainage', 'Drainage lymphatique', 'Méthode Nathalie Duarte',
+     [(('1 heure', 70), (5, 300))]),
+    ('drainage', 'D', 'Drainage lymphatique', 'Méthode Nathalie Duarte',
      '#E39E99', '#6B3132',
-     [(('1 h', 80), (5, 350))]),
+     [(('1 heure', 80), (5, 350))]),
 ]
 
-PACK = ('Pack combiné', '3 Madéro & 3 drainages lymphatiques', 6, 390)
+PACK = ('Pack combiné', 'Madéro & drainage lymphatique', 6, 390)
 DECOUVERTE = 10
+
+# Ligne supplémentaire sous le sous-titre, pour les soins qui en ont besoin.
+APPUIS = {'drainage': 'De nombreux effets 🪄'}
 
 # L'encre secondaire est un cran plus sombre que sur le site (#635D57) :
 # les petits textes de l'affiche se posent sur des aplats teintés, et sur le
 # forfait du drainage — le plus saturé — la valeur du site tombait à 4,5:1
-# tout juste. Relevé sur le rendu : 5,0:1 au pire cas après correction.
+# tout juste.
 SOCLE, ENCRE, DOUX, VERT, OCRE = '#FCF0E2', '#2A2320', '#565049', '#3F4A38', '#AC4B28'
 
 # Groupé par deux, comme on le lit et comme on le dicte.
 TEL = '06 31 18 34 81'
 VILLE = 'Montigny-le-Bretonneux'
 
-# Le monogramme du logo, posé dans un disque comme les pastilles des soins.
-# Marie a proposé deux accords ; celui-ci tient à l'impression (3,6:1 entre
-# le M et son disque, 7:1 entre le disque et le papier). L'autre — M jaune
-# sur disque rose — tombe à 1,7:1 et s'efface une fois imprimé.
+# Le monogramme du logo, posé dans un disque. Marie a proposé deux accords ;
+# celui-ci tient à l'impression (3,6:1 entre le M et son disque, 7:1 entre le
+# disque et le papier). L'autre — M jaune sur disque rose — tombe à 1,7:1 et
+# s'efface une fois imprimé.
 LOGO_FOND, LOGO_ENCRE = '#7E3D49', '#E39E99'
 
 
@@ -72,66 +84,59 @@ def b64(chemin):
     return base64.b64encode((ROOT / chemin).read_bytes()).decode()
 
 
-# Ligne supplémentaire sous le sous-titre, pour les soins qui en ont besoin.
-APPUIS = {'drainage': 'De nombreux effets 🪄'}
-
-# Part de la teinte du soin dans le fond de son bloc, et dans celui de ses
-# forfaits. Ces valeurs sont aussi celles du CSS plus bas : les changer ici
-# suffit, le contraste des titres est recalculé dessus.
-PART_BLOC, PART_FORFAIT = .12, .19
+def masque(donnees):
+    return (f'-webkit-mask:url(data:image/svg+xml;base64,{donnees}) center/contain no-repeat;'
+            f'mask:url(data:image/svg+xml;base64,{donnees}) center/contain no-repeat')
 
 
-def bloc(cle, nom, sous, fond, encre, offres):
-    lignes = []
-    for (duree, prix), forfait in offres:
-        lignes.append(
-            f'<div class="ligne">'
-            f'<span class="duree">{duree}</span>'
-            f'<span class="prix">{prix}&nbsp;€</span></div>')
+def encre_sur(teinte, fond=SOCLE, vise=4.5):
+    """Teinte du soin, poussée jusqu'à `vise` sur le fond qui l'accueille.
+
+    Les noms des soins sont écrits à même le papier, pas sur un aplat : la
+    sauge y tombe à 1,9:1 et le jaune du deep tissus à 1,2:1. On garde la
+    teinte — c'est elle qui identifie le soin — et l'on ne joue que sur sa
+    clarté.
+    """
+    return hexa(encre_lisible(rgb(teinte), rgb(fond), vise))
+
+
+def prix(n):
+    return f'{n}&nbsp;€'
+
+
+def bloc(cle, initiale, nom, sous, fond, encre, offres):
+    groupes = []
+    for (duree, px), forfait in offres:
+        abo = ''
         if forfait:
-            lot, px = forfait
+            lot, px_lot = forfait
             # L'économie est calculée, jamais saisie : un tarif qui change la
             # met à jour, et une addition fausse devient impossible.
-            lignes.append(
-                f'<div class="ligne ligne--forfait">'
-                f'<span class="duree">Forfait {lot} séances de {duree}</span>'
-                f'<span class="prix">{px}&nbsp;€'
-                f'<em>au lieu de {prix * lot}&nbsp;€</em></span></div>')
-    # Le titre prend la couleur du soin — mais pas sa couleur brute : posée
-    # sur le fond de son propre bloc, la sauge tomberait à 1,7:1 et le rose
-    # à 1,5:1. On la pousse jusqu'à 4,5:1 en gardant la teinte, par le même
-    # calcul que celui des cartes du site.
-    fond_bloc = melange(rgb(fond), rgb(SOCLE), PART_BLOC)
-    titre = hexa(encre_lisible(rgb(fond), fond_bloc))
+            abo = (f'<p class="abo">Abonnement = {lot} séances pour '
+                   f'{prix(px_lot)}<em>au lieu de {prix(px * lot)}</em></p>')
+        groupes.append(
+            f'<div class="groupe"><p class="ligne">{duree} — <b>{prix(px)}</b></p>{abo}</div>')
 
     appui = APPUIS.get(cle)
     appui = f'<p class="appui">{appui}</p>' if appui else ''
 
     return f'''
-    <article class="soin" style="--fond:{fond}; --encre:{encre}; --titre:{titre}">
-      <div class="pastille"><span class="mono mono--{cle}"></span></div>
-      <div class="titres">
-        <h2>{nom}</h2>
-        <p>{sous}</p>
+    <article class="soin" style="--fond:{fond};--encre:{encre};--titre:{encre_sur(fond)}">
+      <div class="vignette"><span class="mono" style="{masque(b64(f'assets/img/soins/{cle}.svg'))}"></span></div>
+      <div class="corps">
+        <h2><i>{initiale}</i> — {nom}</h2>
+        <p class="sous">{sous}</p>
         {appui}
+        <div class="groupes">{''.join(groupes)}</div>
       </div>
-      <div class="offres">{''.join(lignes)}</div>
     </article>'''
 
 
 def main():
-    monos = {cle: b64(f'assets/img/soins/{cle}.svg') for cle, *_ in SOINS}
-    masques = '\n'.join(
-        f'.mono--{cle}{{ -webkit-mask-image:url(data:image/svg+xml;base64,{d});'
-        f' mask-image:url(data:image/svg+xml;base64,{d}); }}'
-        for cle, d in monos.items())
-    logo_svg = b64('assets/img/logo.svg')
-
     nom_pack, sous_pack, lot_pack, prix_pack = PACK
-    # Même correction que pour les titres de soins : l'ocre pur tombait à
-    # 4,2:1 sur le fond dilué de son propre bloc.
-    titre_pack = hexa(encre_lisible(rgb(OCRE),
-                                    melange(rgb(OCRE), rgb(SOCLE), PART_BLOC)))
+    # Même correction que pour les noms de soins : l'ocre pur tombe à 4,2:1
+    # sur le fond dilué de son propre bloc.
+    titre_pack = encre_sur(OCRE, hexa(melange(rgb(OCRE), rgb(SOCLE), .12)))
 
     html = f'''<!DOCTYPE html>
 <html lang="fr">
@@ -164,7 +169,7 @@ body{{
 }}
 .feuille{{
   width:210mm; height:297mm; background:{SOCLE};
-  padding:16mm 15mm 12mm;
+  padding:15mm 14mm 11mm;
   display:flex; flex-direction:column;
   position:relative; overflow:hidden;
   box-shadow:0 8mm 20mm -10mm rgba(42,35,32,.4);
@@ -177,131 +182,112 @@ body{{
   width:110mm; height:110mm; border-radius:50%;
   background:radial-gradient(circle, rgba(242,231,179,.55) 0%, transparent 70%);
 }}
+/* Cette règle passe avant celle du cadre, et pas après : à spécificité
+   égale c'est la dernière qui gagne, et déclarée plus bas elle rendait le
+   cadre `relative`. Il reprenait alors sa place dans la colonne au lieu de
+   se poser par-dessus, et son filet traversait le logo. */
 .feuille > *{{ position:relative; }}
+/* Le double filet de Marie, sans les rinceaux : le cadre fait l'affiche,
+   les ornements venaient de la bibliothèque de Canva. */
+.cadre{{
+  position:absolute; inset:7mm; pointer-events:none;
+  border:.35mm solid color-mix(in srgb, {OCRE} 34%, {SOCLE});
+  border-radius:2.5mm;
+}}
+.cadre::before{{
+  content:''; position:absolute; inset:1.6mm;
+  border:.2mm solid color-mix(in srgb, {OCRE} 20%, {SOCLE});
+  border-radius:1.4mm;
+}}
 
 /* ---- En-tête ---- */
-header{{ text-align:center; margin-bottom:5.5mm; }}
-/* Le logo reprend la forme des pastilles des soins : même disque, même
-   monogramme détouré. L'affiche n'a ainsi qu'un seul motif, décliné. */
+header{{ text-align:center; margin-bottom:6mm; }}
 .logo{{
-  width:16mm; height:16mm; border-radius:50%;
+  width:12mm; height:12mm; border-radius:50%;
   background:{LOGO_FOND};
-  margin:0 auto 3.5mm; display:grid; place-items:center;
+  margin:0 auto 2.4mm; display:grid; place-items:center;
 }}
 .logo span{{
-  width:8.7mm; height:9mm; display:block;
+  width:6.5mm; height:6.7mm; display:block;
   background:{LOGO_ENCRE};
-  -webkit-mask:url(data:image/svg+xml;base64,{logo_svg}) center/contain no-repeat;
-          mask:url(data:image/svg+xml;base64,{logo_svg}) center/contain no-repeat;
+  {masque(b64('assets/img/logo.svg'))};
+}}
+/* « Tarifs massage » est le titre de la feuille — c'est ce qu'on doit lire
+   depuis l'autre bout de la pièce. L'interlettrage remplace les empattements
+   du Canva : il donne la même solennité sans changer de police. */
+.titre{{
+  font-size:9.4mm; font-weight:600; line-height:1;
+  letter-spacing:.13em; text-transform:uppercase; color:{OCRE};
 }}
 .marque{{
-  font-size:5.2mm; font-weight:600; letter-spacing:-.02em;
-  line-height:1; color:{VERT};
-}}
-/* « Tarifs » est le titre de la feuille — c'est ce qu'on doit lire depuis
-   l'autre bout de la pièce, avant même le nom. */
-.titre{{
-  margin-top:2.6mm;
-  font-size:11mm; font-weight:600; line-height:1;
-  letter-spacing:.06em; text-transform:uppercase; color:{OCRE};
+  margin-top:2.2mm;
+  font-size:3.4mm; font-weight:600; letter-spacing:-.01em; color:{VERT};
 }}
 
 /* ---- Les soins ---- */
 .soins{{ display:flex; flex-direction:column; gap:4.4mm; }}
-.soin{{
-  display:grid; grid-template-columns:21mm 1fr auto;
-  align-items:center; gap:5mm;
-  padding:5.8mm 6mm;
-  border-radius:5.5mm;
-  background:color-mix(in srgb, var(--fond) 12%, {SOCLE});
+.soin{{ display:grid; grid-template-columns:26mm 1fr; gap:6mm; align-items:start; }}
+/* Vignette rectangulaire, comme sur le Canva : le disque est la forme du
+   site, mais ici les cinq vignettes forment une colonne, et un rectangle
+   arrondi la tient mieux qu'un cercle. */
+.vignette{{
+  width:26mm; height:33mm; border-radius:3.4mm;
+  background:var(--fond); display:grid; place-items:center;
 }}
-.pastille{{
-  width:21mm; height:21mm; border-radius:50%;
-  background:var(--fond);
-  display:grid; place-items:center;
-}}
-.mono{{
-  width:11.6mm; height:11.6mm; display:block;
-  background:var(--encre);
-  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
-  -webkit-mask-position:center;  mask-position:center;
-  -webkit-mask-size:contain;     mask-size:contain;
-}}
-{masques}
-.titres h2{{
+.mono{{ width:14mm; height:14.5mm; display:block; background:var(--encre); }}
+.corps{{ padding-top:1.5mm; }}
+.corps h2{{
+  display:flex; align-items:center; gap:3mm;
   font-size:5mm; font-weight:600; line-height:1.1; color:var(--titre);
-  letter-spacing:-.01em;
 }}
-.titres p{{
-  margin-top:.8mm;
-  font-size:2.8mm; font-weight:500; letter-spacing:.14em;
+.corps h2 i{{ font-style:normal; }}
+/* Le filet pointillé prend la place qui reste : il tient la colonne des
+   noms sans qu'on ait à lui fixer une longueur qui se décalerait au
+   moindre changement de nom. */
+.corps h2::after{{
+  content:''; flex:1; height:0;
+  border-bottom:.3mm dotted color-mix(in srgb, var(--fond) 60%, {SOCLE});
+}}
+.sous{{
+  margin-top:1mm;
+  font-size:2.7mm; font-weight:500; letter-spacing:.13em;
   text-transform:uppercase; color:{DOUX};
 }}
-.titres .appui{{
-  margin-top:1.2mm;
-  font-size:3.1mm; font-weight:400; letter-spacing:0;
-  text-transform:none; color:{ENCRE};
+.appui{{ margin-top:1mm; font-size:3mm; color:{ENCRE}; }}
+.groupes{{ margin-top:2.6mm; display:flex; flex-direction:column; gap:2.4mm; }}
+.ligne{{ font-size:3.6mm; color:{DOUX}; }}
+.ligne b{{ font-size:4.6mm; font-weight:600; color:{ENCRE};
+  font-variant-numeric:tabular-nums; }}
+.abo{{
+  margin-top:.8mm; font-size:3.2mm; color:{ENCRE};
+  display:flex; align-items:baseline; gap:2.5mm;
 }}
-.offres{{ display:flex; flex-direction:column; gap:1.6mm; min-width:62mm; }}
-.ligne{{
-  display:flex; align-items:baseline; justify-content:space-between;
-  gap:4mm;
-}}
-.duree{{ font-size:3.3mm; color:{DOUX}; }}
-.prix{{
-  font-size:5.4mm; font-weight:600; white-space:nowrap;
-  text-align:right; line-height:1.1;
-  font-variant-numeric:tabular-nums;
-}}
-/* Le forfait est une option de la durée au-dessus : plus petit, en retrait,
-   et sur un fond creusé pour qu'on voie qu'il forme un bloc avec elle. */
-.ligne--forfait{{
-  margin-top:-.4mm; padding:1.6mm 2.6mm;
-  border-radius:2.4mm;
-  background:color-mix(in srgb, var(--fond) 19%, {SOCLE});
-}}
-.ligne--forfait .duree{{ font-size:2.9mm; color:{ENCRE}; }}
-.ligne--forfait .prix{{ font-size:4mm; }}
-.prix em{{
-  display:block; font-style:normal; font-weight:500;
-  font-size:2.5mm; color:{DOUX};
-}}
+.abo em{{ font-style:normal; font-size:2.7mm; color:{DOUX}; }}
 
 /* ---- Le pack et l'offre de découverte ----
-   Les deux blocs ont échangé leur poids. Le pack ne s'adresse qu'aux
-   habituées et criait plus fort que les tarifs eux-mêmes : il redescend au
-   même niveau qu'un soin. La remise, elle, est ce qui fait franchir la
-   porte une première fois — c'est elle qui mérite l'aplat. */
-.extras{{ margin-top:5.5mm; display:flex; flex-direction:column; gap:3.5mm; }}
-.pack{{
-  display:grid; grid-template-columns:1fr auto; align-items:center; gap:5mm;
-  padding:5mm 6mm; border-radius:5.5mm;
-  background:color-mix(in srgb, {OCRE} 12%, {SOCLE});
-}}
-.pack h3{{ font-size:4.2mm; font-weight:600; line-height:1.1; color:{titre_pack}; }}
-.pack p{{ margin-top:.9mm; font-size:3mm; color:{DOUX}; }}
-.pack .prix{{ font-size:6mm; color:{ENCRE}; }}
-.pack .prix span{{
-  display:block; font-size:2.7mm; font-weight:500; color:{DOUX};
-}}
+   Marie trouvait que le pack ressortait trop : il ne s'adresse qu'aux
+   habituées. Il reste au niveau d'un soin, et l'aplat plein va à la remise,
+   qui est ce qui fait franchir la porte une première fois. */
+.extras{{ margin-top:5mm; display:flex; gap:4mm; }}
+.pack,.decouverte{{ flex:1; border-radius:4mm; padding:4mm 5.5mm; }}
+.pack{{ background:color-mix(in srgb, {OCRE} 12%, {SOCLE}); }}
+.pack b{{ display:block; font-size:3.8mm; font-weight:600; color:{titre_pack}; }}
+.pack span{{ display:block; margin-top:.8mm; font-size:2.9mm; color:{DOUX}; }}
 .decouverte{{
-  display:flex; align-items:center; justify-content:center; gap:4mm;
-  padding:5mm; border-radius:5.5mm;
-  background:{OCRE}; color:#FFF; text-align:left;
+  background:{OCRE}; color:#FFF;
+  display:flex; align-items:center; justify-content:center; gap:3.4mm;
 }}
-.decouverte b{{
-  font-size:9mm; font-weight:600; line-height:1;
-  white-space:nowrap; font-variant-numeric:tabular-nums;
-}}
-.decouverte span{{ font-size:3.6mm; line-height:1.3; }}
+.decouverte b{{ font-size:7mm; font-weight:600; line-height:1;
+  white-space:nowrap; font-variant-numeric:tabular-nums; }}
+.decouverte span{{ font-size:3.1mm; line-height:1.3; }}
 
 /* ---- Pied ---- */
 footer{{
-  margin-top:auto; padding-top:6mm; text-align:center;
+  margin-top:auto; padding-top:5mm; text-align:center;
   border-top:.3mm solid rgba(42,35,32,.12);
 }}
-.tel{{ font-size:4.6mm; font-weight:600; color:{VERT}; letter-spacing:.01em; }}
-.mention{{ margin-top:1.6mm; font-size:2.7mm; color:{DOUX}; }}
+.tel{{ font-size:4.4mm; font-weight:600; color:{VERT}; }}
+.mention{{ margin-top:1.4mm; font-size:2.6mm; color:{DOUX}; }}
 
 @media print{{
   html{{ background:#FFF; }}
@@ -312,28 +298,22 @@ footer{{
 </head>
 <body>
 <div class="feuille">
+  <div class="cadre" aria-hidden="true"></div>
 
   <header>
     <div class="logo"><span></span></div>
-    <div class="marque">marieemassage</div>
-    <h1 class="titre">Tarifs</h1>
+    <h1 class="titre">Tarifs massage</h1>
+    <p class="marque">marieemassage</p>
   </header>
 
   <section class="soins">{''.join(bloc(*s) for s in SOINS)}
   </section>
 
   <section class="extras">
-    <div class="pack">
-      <div>
-        <h3>{nom_pack}</h3>
-        <p>{sous_pack}</p>
-      </div>
-      <div class="prix">{prix_pack}&nbsp;€<span>{lot_pack} séances</span></div>
-    </div>
-    <p class="decouverte">
-      <b>−{DECOUVERTE}&nbsp;€</b>
-      <span>sur votre massage inédit</span>
-    </p>
+    <p class="pack"><b>{nom_pack} — {prix(prix_pack)}</b>
+      <span>{sous_pack}, {lot_pack} séances</span></p>
+    <p class="decouverte"><b>−{DECOUVERTE}&nbsp;€</b>
+      <span>sur votre massage inédit</span></p>
   </section>
 
   <footer>
