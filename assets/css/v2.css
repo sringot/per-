@@ -554,11 +554,17 @@ body::after{
 
 /* Relevé sur la planche de référence par tools-cartes.py.
    `--signe-c` est la couleur du monogramme, `--texte` la même teinte
-   poussée jusqu'à 4,5:1 — le petit texte l'exige, pas la grande forme. */
+   poussée jusqu'à 4,5:1 — le petit texte l'exige, pas la grande forme.
+
+   Le Madéro fait exception : Marie a remplacé son orange par le Pantone
+   17-1230 Mocha Mousse, qui n'est donc pas sur la planche. Relancer
+   tools-cartes.py rendrait l'orange — c'est ici que la teinte fait foi
+   pour ce soin, et `--texte` comme `--marque` en ont été redéduits par les
+   mêmes fonctions. */
 .soin--kobido     { --fond:#7E3D49; --signe-c:#F8E2AF; --texte:#F8E2AF; --marque:#978A6B; --signe:url(../img/soins/kobido.svg); }
 .soin--relaxant   { --fond:#A9AE9D; --signe-c:#707550; --texte:#3F422D; --marque:#707550; --signe:url(../img/soins/relaxant.svg); }
 .soin--deep-tissus{ --fond:#FAE1AB; --signe-c:#D59C40; --texte:#825F27; --marque:#B38336; --signe:url(../img/soins/deep-tissus.svg); }
-.soin--madero     { --fond:#D15929; --signe-c:#FDF5E8; --texte:#141413; --marque:#8E8982; --signe:url(../img/soins/madero.svg); }
+.soin--madero     { --fond:#A47864; --signe-c:#FDF5E8; --texte:#191817; --marque:#8E8982; --signe:url(../img/soins/madero.svg); }
 .soin--drainage   { --fond:#E39E99; --signe-c:#BF585A; --texte:#6B3132; --marque:#BF585A; --signe:url(../img/soins/drainage.svg); }
 
 /* La perspective est portée par le conteneur, la rotation par la carte :

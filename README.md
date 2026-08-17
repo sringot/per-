@@ -297,12 +297,17 @@ la **même teinte poussée** jusqu'au seuil, du côté opposé au fond :
 | Kobido               | `#7E3D49` | `#F8E2AF` (6,2:1) | inchangé  | —     |
 | Relaxant             | `#A9AE9D` | `#707550` (2,1:1) | `#3F422D` | 4,5:1 |
 | Deep Tissus          | `#FAE1AB` | `#D59C40` (1,9:1) | `#825F27` | 4,5:1 |
-| Madéro               | `#D15929` | `#FDF5E8` (3,8:1) | `#141413` | 4,5:1 |
+| Madéro               | `#A47864` | `#FDF5E8` (3,6:1) | `#191817` | 4,6:1 |
 | Drainage lymphatique | `#E39E99` | `#BF585A` (2,0:1) | `#6B3132` | 4,6:1 |
 
-> Sur l'orange, éclaircir plafonne à 4,1:1 **même en blanc pur** : c'est la
+> Sur le Madéro, éclaircir plafonne à 3,9:1 **même en blanc pur** : c'est la
 > seule carte où il faut assombrir. Les deux directions sont donc essayées, et
 > on retient celle qui atteint la cible en s'écartant le moins de la teinte.
+
+> Le Madéro est le seul soin dont la teinte ne vient pas de la planche de
+> référence : Marie a remplacé son orange par le Pantone 17-1230 Mocha
+> Mousse. `tools-cartes.py` rendra donc l'ancien orange pour cette carte —
+> c'est `v2.css` qui fait foi.
 
 **Le retournement.** Tout l'état tient dans `aria-expanded` : le CSS s'en sert
 pour la rotation, un lecteur d'écran y lit la même chose que ce qu'on voit. La
@@ -372,7 +377,7 @@ Transmis par Marie :
 | Soin | Séance | Forfait |
 | ---- | ------ | ------- |
 | Kobido               | 1 h — 60 €    | — |
-| Relaxant             | 1 h — 60 €    | 3 séances — 160 € |
+| Relaxant             | 1 h — 60 €    | 3 séances — 150 € |
 |                      | 1 h 30 — 90 € | 3 séances — 240 € |
 | Deep Tissus          | 1 h — 70 €    | 3 séances — 180 € |
 | Madéro               | 1 h — 70 €    | 5 séances — 300 € |

@@ -40,6 +40,11 @@ ZOOM = 5
 
 NOMS = ['kobido', 'relaxant', 'deep-tissus', 'madero', 'drainage']
 
+# ⚠️ Le Madéro ne suit plus la planche : Marie a remplacé son orange par le
+# Pantone 17-1230 Mocha Mousse (#A47864). Ce script rendra donc l'orange
+# pour ce soin. Sa teinte fait foi dans v2.css et dans tools-affiche.py, où
+# elle est déjà posée — ne pas recopier aveuglément la sortie ci-dessous.
+
 # Le socle du site, relevé sur l'image de fond. Sert à vérifier les teintes
 # qui sortent de leur carte — le repère du tableau des tarifs.
 SOCLE = (0xFC, 0xF0, 0xE2)
