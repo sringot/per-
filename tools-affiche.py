@@ -62,7 +62,7 @@ APPUIS = {'drainage': 'De nombreux effets 🪄'}
 # les petits textes de l'affiche se posent sur des aplats teintés, et sur le
 # forfait du drainage — le plus saturé — la valeur du site tombait à 4,5:1
 # tout juste.
-SOCLE, ENCRE, DOUX, VERT, OCRE = '#FCF0E2', '#2A2320', '#565049', '#3F4A38', '#AC4B28'
+SOCLE, ENCRE, DOUX = '#FCF0E2', '#2A2320', '#565049'
 
 # Groupé par deux, comme on le lit et comme on le dicte.
 TEL = '06 31 18 34 81'
@@ -73,9 +73,10 @@ VILLE = 'Montigny-le-Bretonneux'
 # disque et détouré à l'ellipse par tools-logo-officiel.py, sans quoi ses
 # angles blancs se verraient sur le socle crème.
 LOGO = 'assets/img/logo-officiel.png'
-# Relevé sur ce fichier, pas choisi : c'est la teinte de son disque. Elle
-# donne le titre de l'affiche, à 9:1 sur le papier.
-BORDEAUX = '#6A2F3C'
+# Relevées sur ce fichier, pas choisies : ce sont les deux aplats du logo.
+# Elles portent tout l'accent de l'affiche — titre, cadre, blocs du bas — à
+# la place du vert et de l'ocre, qui n'en venaient pas.
+BORDEAUX, ROSE = '#6A2F3C', '#DC8C94'
 
 
 def b64(chemin):
@@ -132,9 +133,9 @@ def bloc(cle, nom, sous, fond, encre, offres):
 
 def main():
     nom_pack, sous_pack, lot_pack, prix_pack = PACK
-    # Même correction que pour les noms de soins : l'ocre pur tombe à 4,2:1
-    # sur le fond dilué de son propre bloc.
-    titre_pack = encre_sur(OCRE, hexa(melange(rgb(OCRE), rgb(SOCLE), .12)))
+    # Même calcul que pour les noms de soins, appliqué au fond dilué du
+    # bloc du pack.
+    titre_pack = encre_sur(BORDEAUX, hexa(melange(rgb(BORDEAUX), rgb(SOCLE), .11)))
 
     html = f'''<!DOCTYPE html>
 <html lang="fr">
@@ -194,15 +195,16 @@ body{{
 header{{ text-align:center; margin-bottom:6mm; }}
 .logo{{ width:14mm; height:14mm; display:block; margin:0 auto 2.6mm; }}
 /* « Tarifs massage » est le titre de la feuille — c'est ce qu'on doit lire
-   depuis l'autre bout de la pièce. L'interlettrage remplace les empattements
-   du Canva : il donne la même solennité sans changer de police. */
+   depuis l'autre bout de la pièce. Il est composé comme les noms de soins,
+   en plus grand : capitales et interlettrage large donnaient l'impression
+   d'une seconde police alors que c'est la même. */
 .titre{{
-  font-size:9.4mm; font-weight:600; line-height:1;
-  letter-spacing:.13em; text-transform:uppercase; color:{BORDEAUX};
+  font-size:11mm; font-weight:600; line-height:1;
+  letter-spacing:-.025em; color:{BORDEAUX};
 }}
 .marque{{
-  margin-top:2.2mm;
-  font-size:3.4mm; font-weight:600; letter-spacing:-.01em; color:{VERT};
+  margin-top:2.4mm;
+  font-size:3.4mm; font-weight:600; letter-spacing:-.01em; color:{ENCRE};
 }}
 
 /* ---- Les soins ---- */
@@ -254,14 +256,16 @@ header{{ text-align:center; margin-bottom:6mm; }}
    qui est ce qui fait franchir la porte une première fois. */
 .extras{{ margin-top:5mm; display:flex; gap:4mm; }}
 .pack,.decouverte{{ flex:1; border-radius:4mm; padding:4mm 5.5mm; }}
-.pack{{ background:color-mix(in srgb, {OCRE} 12%, {SOCLE}); }}
+.pack{{ background:color-mix(in srgb, {BORDEAUX} 11%, {SOCLE}); }}
 .pack b{{ display:block; font-size:3.8mm; font-weight:600; color:{titre_pack}; }}
 .pack span{{ display:block; margin-top:.8mm; font-size:2.9mm; color:{DOUX}; }}
 .decouverte{{
-  background:{OCRE}; color:#FFF;
+  background:{BORDEAUX}; color:#FFF;
   display:flex; align-items:center; justify-content:center; gap:3.4mm;
 }}
-.decouverte b{{ font-size:7mm; font-weight:600; line-height:1;
+/* Le disque bordeaux et son M rose, à plat : le bloc reprend le logo mot
+   pour mot au lieu d'inventer une couleur d'accent. */
+.decouverte b{{ font-size:7mm; font-weight:600; line-height:1; color:{ROSE};
   white-space:nowrap; font-variant-numeric:tabular-nums; }}
 .decouverte span{{ font-size:3.1mm; line-height:1.3; }}
 
@@ -270,7 +274,7 @@ footer{{
   margin-top:auto; padding-top:5mm; text-align:center;
   border-top:.3mm solid rgba(42,35,32,.12);
 }}
-.tel{{ font-size:4.4mm; font-weight:600; color:{VERT}; }}
+.tel{{ font-size:4.4mm; font-weight:600; color:{BORDEAUX}; }}
 .mention{{ margin-top:1.4mm; font-size:2.6mm; color:{DOUX}; }}
 
 @media print{{

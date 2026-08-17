@@ -56,15 +56,16 @@ body{
 header{ text-align:center; margin-bottom:6mm; }
 .logo{ width:14mm; height:14mm; display:block; margin:0 auto 2.6mm; }
 /* « Tarifs massage » est le titre de la feuille — c'est ce qu'on doit lire
-   depuis l'autre bout de la pièce. L'interlettrage remplace les empattements
-   du Canva : il donne la même solennité sans changer de police. */
+   depuis l'autre bout de la pièce. Il est composé comme les noms de soins,
+   en plus grand : capitales et interlettrage large donnaient l'impression
+   d'une seconde police alors que c'est la même. */
 .titre{
-  font-size:9.4mm; font-weight:600; line-height:1;
-  letter-spacing:.13em; text-transform:uppercase; color:#6A2F3C;
+  font-size:11mm; font-weight:600; line-height:1;
+  letter-spacing:-.025em; color:#6A2F3C;
 }
 .marque{
-  margin-top:2.2mm;
-  font-size:3.4mm; font-weight:600; letter-spacing:-.01em; color:#3F4A38;
+  margin-top:2.4mm;
+  font-size:3.4mm; font-weight:600; letter-spacing:-.01em; color:#2A2320;
 }
 
 /* ---- Les soins ---- */
@@ -116,14 +117,16 @@ header{ text-align:center; margin-bottom:6mm; }
    qui est ce qui fait franchir la porte une première fois. */
 .extras{ margin-top:5mm; display:flex; gap:4mm; }
 .pack,.decouverte{ flex:1; border-radius:4mm; padding:4mm 5.5mm; }
-.pack{ background:color-mix(in srgb, #AC4B28 12%, #FCF0E2); }
-.pack b{ display:block; font-size:3.8mm; font-weight:600; color:#A34726; }
+.pack{ background:color-mix(in srgb, #6A2F3C 11%, #FCF0E2); }
+.pack b{ display:block; font-size:3.8mm; font-weight:600; color:#6A2F3C; }
 .pack span{ display:block; margin-top:.8mm; font-size:2.9mm; color:#565049; }
 .decouverte{
-  background:#AC4B28; color:#FFF;
+  background:#6A2F3C; color:#FFF;
   display:flex; align-items:center; justify-content:center; gap:3.4mm;
 }
-.decouverte b{ font-size:7mm; font-weight:600; line-height:1;
+/* Le disque bordeaux et son M rose, à plat : le bloc reprend le logo mot
+   pour mot au lieu d'inventer une couleur d'accent. */
+.decouverte b{ font-size:7mm; font-weight:600; line-height:1; color:#DC8C94;
   white-space:nowrap; font-variant-numeric:tabular-nums; }
 .decouverte span{ font-size:3.1mm; line-height:1.3; }
 
@@ -132,7 +135,7 @@ footer{
   margin-top:auto; padding-top:5mm; text-align:center;
   border-top:.3mm solid rgba(42,35,32,.12);
 }
-.tel{ font-size:4.4mm; font-weight:600; color:#3F4A38; }
+.tel{ font-size:4.4mm; font-weight:600; color:#6A2F3C; }
 .mention{ margin-top:1.4mm; font-size:2.6mm; color:#565049; }
 
 @media print{
