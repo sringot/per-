@@ -7,8 +7,7 @@ connexion. C'est un document imprimable, pas une page du site — il n'est ni
 listé dans le plan du site, ni indexable.
 
 La mise en page suit celle que Marie a dessinée sur Canva : une vignette
-par soin à gauche, le nom précédé de son initiale, le filet pointillé, puis
-les tarifs. Ce qui change, c'est l'habillage — la police, les couleurs et
+par soin à gauche, le nom, le filet pointillé, puis les tarifs. Ce qui change, c'est l'habillage — la police, les couleurs et
 les formes sont celles du site, là où Canva avait posé un titre à empattements
 et des ornements qui ne venaient de nulle part.
 
@@ -29,30 +28,26 @@ from tools_couleur import encre_lisible, hexa, melange, rgb
 ROOT = pathlib.Path(__file__).parent
 DEST = ROOT / 'affiche-tarifs.html'
 
-# clé, initiale, nom, sous-titre, fond, encre du monogramme, offres
+# clé, nom, sous-titre, fond, encre du monogramme, offres
 # Une offre : (durée, prix) et, s'il existe, (nombre de séances, prix du lot)
 #
 # L'ordre est celui de la carte de Marie, et il n'est pas alphabétique : le
 # relaxant ouvre parce que c'est le soin d'appel, le drainage ferme parce
 # que c'est le plus cher. Ne pas retrier.
-#
-# Les initiales sont celles des monogrammes, pas des noms : le deep tissus
-# est signé d'un T. C'est ce qui permet de le distinguer du drainage, qui
-# prend le D.
 SOINS = [
-    ('relaxant', 'R', 'Relaxant', 'Massage corps complet',
+    ('relaxant', 'Relaxant', 'Massage corps complet',
      '#A9AE9D', '#3F422D',
      [(('1 heure', 60), (3, 150)), (('1 heure 30', 90), (3, 240))]),
-    ('deep-tissus', 'T', 'Deep Tissus', 'Tensions profondes',
+    ('deep-tissus', 'Deep Tissus', 'Tensions profondes',
      '#FAE1AB', '#D59C40',
      [(('1 heure', 70), (3, 180))]),
-    ('kobido', 'K', 'Kobido', 'Lifting japonais du visage',
+    ('kobido', 'Kobido', 'Lifting japonais du visage',
      '#7E3D49', '#F8E2AF',
      [(('1 heure', 60), None)]),
-    ('madero', 'M', 'Madéro', 'Soin corps remodelant',
+    ('madero', 'Madéro', 'Soin corps remodelant',
      '#D15929', '#FDF5E8',
      [(('1 heure', 70), (5, 300))]),
-    ('drainage', 'D', 'Drainage lymphatique', 'Méthode Nathalie Duarte',
+    ('drainage', 'Drainage lymphatique', 'Méthode Nathalie Duarte',
      '#E39E99', '#6B3132',
      [(('1 heure', 80), (5, 350))]),
 ]
@@ -73,11 +68,14 @@ SOCLE, ENCRE, DOUX, VERT, OCRE = '#FCF0E2', '#2A2320', '#565049', '#3F4A38', '#A
 TEL = '06 31 18 34 81'
 VILLE = 'Montigny-le-Bretonneux'
 
-# Le monogramme du logo, posé dans un disque. Marie a proposé deux accords ;
-# celui-ci tient à l'impression (3,6:1 entre le M et son disque, 7:1 entre le
-# disque et le papier). L'autre — M jaune sur disque rose — tombe à 1,7:1 et
-# s'efface une fois imprimé.
-LOGO_FOND, LOGO_ENCRE = '#7E3D49', '#E39E99'
+# Le logo officiel de Marie, inséré tel quel — jamais redessiné. Le fichier
+# livré est un carré blanc avec le disque au milieu ; il est recadré au
+# disque et détouré à l'ellipse par tools-logo-officiel.py, sans quoi ses
+# angles blancs se verraient sur le socle crème.
+LOGO = 'assets/img/logo-officiel.png'
+# Relevé sur ce fichier, pas choisi : c'est la teinte de son disque. Elle
+# donne le titre de l'affiche, à 9:1 sur le papier.
+BORDEAUX = '#6A2F3C'
 
 
 def b64(chemin):
@@ -104,7 +102,7 @@ def prix(n):
     return f'{n}&nbsp;€'
 
 
-def bloc(cle, initiale, nom, sous, fond, encre, offres):
+def bloc(cle, nom, sous, fond, encre, offres):
     groupes = []
     for (duree, px), forfait in offres:
         abo = ''
@@ -124,7 +122,7 @@ def bloc(cle, initiale, nom, sous, fond, encre, offres):
     <article class="soin" style="--fond:{fond};--encre:{encre};--titre:{encre_sur(fond)}">
       <div class="vignette"><span class="mono" style="{masque(b64(f'assets/img/soins/{cle}.svg'))}"></span></div>
       <div class="corps">
-        <h2><i>{initiale}</i> — {nom}</h2>
+        <h2>{nom}</h2>
         <p class="sous">{sous}</p>
         {appui}
         <div class="groupes">{''.join(groupes)}</div>
@@ -174,14 +172,6 @@ body{{
   position:relative; overflow:hidden;
   box-shadow:0 8mm 20mm -10mm rgba(42,35,32,.4);
 }}
-/* Une seule tache de couleur, très diluée, dans l'angle — la même idée que
-   le fond du site, en beaucoup plus discret : sur papier, un dégradé large
-   se banderait à l'impression. */
-.feuille::before{{
-  content:''; position:absolute; right:-30mm; top:-30mm;
-  width:110mm; height:110mm; border-radius:50%;
-  background:radial-gradient(circle, rgba(242,231,179,.55) 0%, transparent 70%);
-}}
 /* Cette règle passe avant celle du cadre, et pas après : à spécificité
    égale c'est la dernière qui gagne, et déclarée plus bas elle rendait le
    cadre `relative`. Il reprenait alors sa place dans la colonne au lieu de
@@ -191,33 +181,24 @@ body{{
    les ornements venaient de la bibliothèque de Canva. */
 .cadre{{
   position:absolute; inset:7mm; pointer-events:none;
-  border:.35mm solid color-mix(in srgb, {OCRE} 34%, {SOCLE});
+  border:.35mm solid color-mix(in srgb, {BORDEAUX} 30%, {SOCLE});
   border-radius:2.5mm;
 }}
 .cadre::before{{
   content:''; position:absolute; inset:1.6mm;
-  border:.2mm solid color-mix(in srgb, {OCRE} 20%, {SOCLE});
+  border:.2mm solid color-mix(in srgb, {BORDEAUX} 16%, {SOCLE});
   border-radius:1.4mm;
 }}
 
 /* ---- En-tête ---- */
 header{{ text-align:center; margin-bottom:6mm; }}
-.logo{{
-  width:12mm; height:12mm; border-radius:50%;
-  background:{LOGO_FOND};
-  margin:0 auto 2.4mm; display:grid; place-items:center;
-}}
-.logo span{{
-  width:6.5mm; height:6.7mm; display:block;
-  background:{LOGO_ENCRE};
-  {masque(b64('assets/img/logo.svg'))};
-}}
+.logo{{ width:14mm; height:14mm; display:block; margin:0 auto 2.6mm; }}
 /* « Tarifs massage » est le titre de la feuille — c'est ce qu'on doit lire
    depuis l'autre bout de la pièce. L'interlettrage remplace les empattements
    du Canva : il donne la même solennité sans changer de police. */
 .titre{{
   font-size:9.4mm; font-weight:600; line-height:1;
-  letter-spacing:.13em; text-transform:uppercase; color:{OCRE};
+  letter-spacing:.13em; text-transform:uppercase; color:{BORDEAUX};
 }}
 .marque{{
   margin-top:2.2mm;
@@ -255,8 +236,11 @@ header{{ text-align:center; margin-bottom:6mm; }}
 }}
 .appui{{ margin-top:1mm; font-size:3mm; color:{ENCRE}; }}
 .groupes{{ margin-top:2.6mm; display:flex; flex-direction:column; gap:2.4mm; }}
-.ligne{{ font-size:3.6mm; color:{DOUX}; }}
-.ligne b{{ font-size:4.6mm; font-weight:600; color:{ENCRE};
+/* La durée et son prix sont ce qu'une cliente cherche sur cette feuille :
+   ils passent devant l'abonnement, par la taille et par l'encre pleine, et
+   non par une couleur de plus. */
+.ligne{{ font-size:4mm; color:{ENCRE}; }}
+.ligne b{{ font-size:6.4mm; font-weight:600; color:{ENCRE};
   font-variant-numeric:tabular-nums; }}
 .abo{{
   margin-top:.8mm; font-size:3.2mm; color:{ENCRE};
@@ -301,7 +285,7 @@ footer{{
   <div class="cadre" aria-hidden="true"></div>
 
   <header>
-    <div class="logo"><span></span></div>
+    <img class="logo" src="data:image/png;base64,{b64(LOGO)}" alt="" width="300" height="300">
     <h1 class="titre">Tarifs massage</h1>
     <p class="marque">marieemassage</p>
   </header>
