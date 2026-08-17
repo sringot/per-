@@ -69,16 +69,16 @@ header{ text-align:center; margin-bottom:6mm; }
 }
 
 /* ---- Les soins ---- */
-.soins{ display:flex; flex-direction:column; gap:4.4mm; }
+.soins{ display:flex; flex-direction:column; gap:4mm; }
 .soin{ display:grid; grid-template-columns:26mm 1fr; gap:6mm; align-items:start; }
 /* Vignette rectangulaire, comme sur le Canva : le disque est la forme du
    site, mais ici les cinq vignettes forment une colonne, et un rectangle
    arrondi la tient mieux qu'un cercle. */
 .vignette{
-  width:26mm; height:33mm; border-radius:3.4mm;
+  width:26mm; height:28mm; border-radius:3.4mm;
   background:var(--fond); display:grid; place-items:center;
 }
-.mono{ width:14mm; height:14.5mm; display:block; background:var(--encre); }
+.mono{ width:13.4mm; height:13.9mm; display:block; background:var(--encre); }
 .corps{ padding-top:1.5mm; }
 .corps h2{
   display:flex; align-items:center; gap:3mm;
@@ -94,22 +94,28 @@ header{ text-align:center; margin-bottom:6mm; }
 }
 .sous{
   margin-top:1mm;
-  font-size:2.7mm; font-weight:500; letter-spacing:.13em;
+  font-size:3.1mm; font-weight:500; letter-spacing:.11em;
   text-transform:uppercase; color:#565049;
 }
-.appui{ margin-top:1mm; font-size:3mm; color:#2A2320; }
-.groupes{ margin-top:2.6mm; display:flex; flex-direction:column; gap:2.4mm; }
+.appui{ margin-top:1mm; font-size:3.3mm; color:#2A2320; }
+.groupes{ margin-top:2.4mm; display:flex; flex-direction:column; gap:2.2mm; }
 /* La durée et son prix sont ce qu'une cliente cherche sur cette feuille :
    ils passent devant l'abonnement, par la taille et par l'encre pleine, et
    non par une couleur de plus. */
 .ligne{ font-size:4mm; color:#2A2320; }
 .ligne b{ font-size:6.4mm; font-weight:600; color:#2A2320;
   font-variant-numeric:tabular-nums; }
+/* L'abonnement était à 12 px, lisible sur un écran mais pas sur un mur.
+   Il monte à 14 px et se pose sur un aplat de sa propre teinte : ce fond
+   le détache du papier et le rattache au prix qu'il prolonge, ce qu'une
+   ligne de texte nue ne faisait ni l'un ni l'autre. */
 .abo{
-  margin-top:.8mm; font-size:3.2mm; color:#2A2320;
-  display:flex; align-items:baseline; gap:2.5mm;
+  margin-top:1.2mm; padding:1.5mm 3mm; border-radius:2.4mm;
+  background:color-mix(in srgb, var(--fond) 20%, #FCF0E2);
+  font-size:3.7mm; color:#2A2320;
+  display:inline-flex; align-items:baseline; gap:2.5mm;
 }
-.abo em{ font-style:normal; font-size:2.7mm; color:#565049; }
+.abo em{ font-style:normal; font-size:3.3mm; color:#565049; }
 
 /* ---- Le pack et l'offre de découverte ----
    Marie trouvait que le pack ressortait trop : il ne s'adresse qu'aux
@@ -119,7 +125,7 @@ header{ text-align:center; margin-bottom:6mm; }
 .pack,.decouverte{ flex:1; border-radius:4mm; padding:4mm 5.5mm; }
 .pack{ background:color-mix(in srgb, #6A2F3C 11%, #FCF0E2); }
 .pack b{ display:block; font-size:3.8mm; font-weight:600; color:#6A2F3C; }
-.pack span{ display:block; margin-top:.8mm; font-size:2.9mm; color:#565049; }
+.pack span{ display:block; margin-top:.8mm; font-size:3.2mm; color:#565049; }
 .decouverte{
   background:#6A2F3C; color:#FFF;
   display:flex; align-items:center; justify-content:center; gap:3.4mm;
