@@ -301,7 +301,7 @@ footer{{
 
   <header>
     <img class="logo" src="data:image/png;base64,{b64(LOGO)}" alt="" width="300" height="300">
-    <h1 class="titre">Tarifs massage</h1>
+    <h1 class="titre">Tarifs Massage</h1>
     <p class="marque">marieemassage</p>
   </header>
 
