@@ -45,7 +45,7 @@ SOINS = [
      '#7E3D49', '#F8E2AF',
      [(('1 heure', 60), None)]),
     ('madero', 'Madéro', 'Soin corps remodelant',
-     '#D15929', '#FDF5E8',
+     '#A47864', '#FDF5E8',
      [(('1 heure', 70), (5, 300))]),
     ('drainage', 'Drainage lymphatique', 'Méthode Nathalie Duarte',
      '#E39E99', '#6B3132',
@@ -209,12 +209,17 @@ header{{ text-align:center; margin-bottom:6mm; }}
 
 /* ---- Les soins ---- */
 .soins{{ display:flex; flex-direction:column; gap:4mm; }}
-.soin{{ display:grid; grid-template-columns:26mm 1fr; gap:6mm; align-items:start; }}
+.soin{{ display:grid; grid-template-columns:26mm 1fr; gap:6mm; align-items:stretch; }}
 /* Vignette rectangulaire, comme sur le Canva : le disque est la forme du
    site, mais ici les cinq vignettes forment une colonne, et un rectangle
-   arrondi la tient mieux qu'un cercle. */
+   arrondi la tient mieux qu'un cercle.
+
+   Sa hauteur suit celle de son rang plutôt que d'être fixe : c'est la seule
+   façon d'obtenir le même écart entre toutes les vignettes, puisque les
+   rangs eux-mêmes ne peuvent pas être égaux — le relaxant a deux durées et
+   deux abonnements là où le Kobido n'a qu'un prix. */
 .vignette{{
-  width:26mm; height:28mm; border-radius:3.4mm;
+  width:26mm; min-height:28mm; border-radius:3.4mm;
   background:var(--fond); display:grid; place-items:center;
 }}
 .mono{{ width:13.4mm; height:13.9mm; display:block; background:var(--encre); }}
