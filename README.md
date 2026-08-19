@@ -1,6 +1,6 @@
 # Marie Massage — site vitrine (V2, « les bulles »)
 
-Site vitrine statique pour **Marie Massage**, masseuse bien-être à Voisins-le-Bretonneux.
+Site vitrine statique pour **Marie Massage**, masseuse bien-être à Montigny-le-Bretonneux.
 
 > ⚠️ **En cours.** Les textes de présentation viennent de Marie ; il reste du
 > lorem ipsum sur les avis et les descriptions de soins, et les tarifs sont
@@ -527,7 +527,7 @@ clientèle, et non « Marie ». Treize signes au lieu de cinq : l'échelle
 typographique est recalée pour qu'il tienne sur une ligne dès 320 px de large,
 sans quoi il se couperait en plein milieu du mot.
 
-> Le `<h1>` ne contient donc plus « massage à Voisins-le-Bretonneux ». Ce n'est
+> Le `<h1>` ne contient donc plus « massage à Montigny-le-Bretonneux ». Ce n'est
 > pas perdu pour le référencement : le titre d'onglet, la ligne d'accroche
 > juste dessous et les données structurées le portent toujours.
 

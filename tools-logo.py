@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Découpe le pictogramme du logo fourni et fabrique les fichiers du site.
+"""
+
+⚠️ Ce script découpe l'ancien logo (le M ocre sans disque). Le logo officiel
+de Marie est désormais un fichier à part, préparé par tools-logo-officiel.py,
+et c'est lui que servent la page d'accueil et les favicons. Ce script-ci
+n'est gardé que pour l'historique de la V1 ; ce qu'il produit n'est plus
+affiché nulle part.
+Découpe le pictogramme du logo fourni et fabrique les fichiers du site.
 
 Le fichier livré (`logov2.png`) a un **fond opaque** : le M orange est posé
 sur un halo de la même couleur. Posé tel quel dans l'en-tête, il afficherait

@@ -6,13 +6,18 @@
    s'ouvrent depuis la bulle qu'on touche — la bulle grandit
    jusqu'à remplir l'écran.
 
-   Même charte que la V1 : Figtree, socle crème, ocre, relief doux.
+   Même charte que la V1 : Figtree, socle crème, relief doux — l'accent
+   est le bordeaux du logo de Marie.
    ========================================================= */
 
 /* ---------- 1. VARIABLES ---------- */
 :root{
-  --ochre:      #AC4B28;
-  --ochre-d:    #8E3A1E;
+  /* L'accent du site est celui du logo officiel de Marie : le bordeaux de
+     son disque, relevé sur le fichier. Il a remplacé l'ocre, qui ne venait
+     de nulle part dans son identité. La variable ne dit plus une teinte
+     mais un rôle — la prochaine fois qu'elle change, son nom reste vrai. */
+  --accent:     #6A2F3C;
+  --accent-d:   #4B212B;
   --green:      #3F4A38;
   --herb:       #9A8B5F;
   --sage:       #A7AE9B;
@@ -48,11 +53,11 @@
      **crème lavé de 13 % de la teinte**, celui du haut des panneaux : le
      lavis assombrit le fond, et trois d'entre elles y retombaient à
      4,1-4,2:1. */
-  --moi-i:      #7E3D49;  --moi-t:      #7E3D49;   /* bordeaux */
+  --moi-i:      #A47864;  --moi-t:      #805E4E;   /* mocha     */
   --lieu-i:     #898D7F;  --lieu-t:     #67695F;   /* sauge     */
   --massages-i: #988968;  --massages-t: #786C52;   /* jaune     */
   --avis-i:     #B37D79;  --avis-t:     #875E5B;   /* rose      */
-  --rdv-i:      #AC4B28;  --rdv-t:      #A24626;   /* ocre      */
+  --rdv-i:      #6A2F3C;  --rdv-t:      #6A2F3C;   /* bordeaux  */
 
   --ease:       cubic-bezier(.22,.68,.28,1);
   --ease-out:   cubic-bezier(.16,1,.3,1);
@@ -115,7 +120,7 @@ body::after{
   transform:translateY(-200%); transition:transform .3s var(--ease);
 }
 .evitement:focus{ transform:none; }
-:focus-visible{ outline:2.5px solid var(--ochre); outline-offset:4px; border-radius:6px; }
+:focus-visible{ outline:2.5px solid var(--accent); outline-offset:4px; border-radius:6px; }
 
 /* ---------- 3. L'ACCUEIL ----------
    Composition décentrée : la photo se pose à gauche, le nom et les bulles
@@ -290,11 +295,11 @@ body::after{
   border-radius:50%;
   background:var(--card);
   box-shadow:var(--nm-out);
-  color:var(--teinte,var(--ochre));
+  color:var(--teinte,var(--accent));
   /* Un souffle de la teinte dans le disque lui-même. À 8 %, le relief
      doux tient encore — au-delà, le disque cesse de partager le fond et
      l'illusion de creux tombe. */
-  background-color:color-mix(in srgb, var(--teinte,var(--ochre)) 8%, var(--card));
+  background-color:color-mix(in srgb, var(--teinte,var(--accent)) 8%, var(--card));
   transition:box-shadow .3s var(--ease), transform .35s var(--ease-out),
              background-color .3s var(--ease);
 }
@@ -313,13 +318,13 @@ body::after{
   .bulle:hover{ color:var(--green); }
   .bulle:hover .bulle__rond{
     box-shadow:var(--nm-out-lg); transform:translateY(-4px);
-    background-color:color-mix(in srgb, var(--teinte,var(--ochre)) 12%, var(--card));
+    background-color:color-mix(in srgb, var(--teinte,var(--accent)) 12%, var(--card));
   }
 }
 .bulle:active .bulle__rond{ box-shadow:var(--nm-in); transform:translateY(0) scale(.96); }
 
 /* La bulle du rendez-vous est la seule pleine : c'est l'action. */
-.bulle--phare .bulle__rond{ background:var(--ochre); color:var(--white); }
+.bulle--phare .bulle__rond{ background:var(--accent); color:var(--white); }
 .bulle--phare{ color:var(--green); }
 
 /* Entrée en cascade, une bulle après l'autre. */
@@ -386,7 +391,7 @@ body::after{
    colorée. C'est le geste qui porte la couleur, pas le décor. */
 .panneau::before{
   content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:var(--teinte,var(--ochre));
+  background:var(--teinte,var(--accent));
   opacity:.16;
   transition:opacity .9s var(--ease) .25s;
 }
@@ -399,7 +404,7 @@ body::after{
   content:''; position:absolute; inset:0 0 auto; height:clamp(190px,38vh,360px);
   z-index:0; pointer-events:none;
   background:linear-gradient(180deg,
-    color-mix(in srgb, var(--teinte,var(--ochre)) 13%, transparent) 0,
+    color-mix(in srgb, var(--teinte,var(--accent)) 13%, transparent) 0,
     transparent 100%);
 }
 /* Le contenu passe au-dessus des deux voiles. */
@@ -429,7 +434,7 @@ body::after{
    courant — il n'a jamais été à l'ocre annoncé. */
 .feuille .sur-titre{
   font-size:.7rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
-  color:var(--teinte-t,var(--ochre)); margin-bottom:.7rem;
+  color:var(--teinte-t,var(--accent)); margin-bottom:.7rem;
 }
 .feuille h2{
   font-size:clamp(1.7rem,5.5vw,2.5rem);
@@ -440,6 +445,22 @@ body::after{
 .feuille p{ color:var(--ink-soft); }
 .feuille p + p{ margin-top:.8rem; }
 .chapo + p{ margin-top:1rem; }
+
+/* Le M du logo, en très grand derrière le panneau. C'est un masque et non
+   une image : sa couleur suit alors la teinte de la rubrique, comme les
+   monogrammes des soins. À 6 % il ne se lit pas comme un motif — on voit
+   une page habitée plutôt qu'un aplat, ce qui est tout ce qu'on lui
+   demande. Assez faible pour ne rien coûter au contraste du texte : relevé
+   sur le rendu, le plus juste des textes du panneau reste à 4,9:1. */
+.filigrane{
+  position:absolute; z-index:0; pointer-events:none;
+  right:-8%; top:clamp(4rem,14vh,9rem);
+  width:min(80%,440px); aspect-ratio:100/103.2;
+  background:var(--teinte,var(--accent));
+  opacity:.06;
+  -webkit-mask:url('../img/logo.svg') center/contain no-repeat;
+          mask:url('../img/logo.svg') center/contain no-repeat;
+}
 
 /* --- Le panneau « Moi » ---
    Le plus intime du site, et celui qui décide : la barrière de confiance
@@ -477,10 +498,28 @@ body::after{
   width:1.6rem; height:1.6rem; border-radius:50%;
   display:grid; place-items:center;
   font-size:.72rem; font-weight:600;
-  color:var(--teinte-t,var(--ochre));
-  background:color-mix(in srgb, var(--teinte,var(--ochre)) 13%, var(--card));
+  color:var(--teinte-t,var(--accent));
+  background:color-mix(in srgb, var(--teinte,var(--accent)) 13%, var(--card));
 }
 .etapes b{ font-weight:600; color:var(--ink); }
+
+/* Le seul bloc du panneau qui écarte des gens : il doit se lire avant
+   qu'on ait fini de décider, donc il est en relief et non en creux comme
+   le cadre légal plus bas. */
+.moi__reserve{
+  display:flex; flex-direction:column; gap:.15rem;
+  margin-top:1.6rem; padding:.85rem 1.1rem; border-radius:14px;
+  background:color-mix(in srgb, var(--teinte,var(--accent)) 13%, var(--card));
+}
+.moi__reserve b{
+  font-weight:600; font-size:.95rem; color:var(--teinte-t,var(--accent));
+}
+.moi__reserve span{ font-size:.84rem; color:var(--ink-soft); }
+
+/* Deux clichés côte à côte, en portrait : ce sont des photos verticales,
+   les forcer en 4/3 les recadrerait sur le mur plutôt que sur les mains. */
+.attente--seance{ grid-template-columns:repeat(2,1fr); }
+.attente--seance .attente__cadre{ aspect-ratio:3/4; }
 
 .moi__cadre{
   margin-top:1.8rem; padding:.9rem 1.1rem; border-radius:14px;
@@ -492,7 +531,7 @@ body::after{
 }
 .moi__anciennete{ font-weight:600; color:var(--green); }
 .moi__liens a{
-  color:var(--teinte-t,var(--ochre));
+  color:var(--teinte-t,var(--accent));
   border-bottom:1px solid color-mix(in srgb, currentColor 35%, transparent);
 }
 
@@ -507,7 +546,7 @@ body::after{
 .attente__cadre{
   aspect-ratio:4/3; border-radius:14px;
   display:grid; place-items:center; text-align:center;
-  color:color-mix(in srgb, var(--ink-soft) 70%, var(--card));
+  color:var(--ink-soft);
   font-size:.72rem; letter-spacing:.06em;
   background:color-mix(in srgb, var(--ink) 4%, var(--card));
   border:1.5px dashed color-mix(in srgb, var(--ink) 18%, var(--card));
@@ -809,6 +848,26 @@ body::after{
   font-size:.76rem; color:var(--ink-soft);
 }
 
+/* Les offres qui ne portent pas sur un seul soin. Deux poids : le pack
+   s'adresse aux habituées et reste au niveau du tableau, la remise fait
+   franchir la porte une première fois et prend l'aplat — le même partage
+   que sur l'affiche de la pièce de massage. */
+.offres{
+  display:grid; gap:.7rem; margin-top:1.2rem;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+}
+.offre{
+  display:flex; flex-direction:column; gap:.2rem;
+  padding:.9rem 1.2rem; border-radius:16px;
+  background:color-mix(in srgb, var(--accent) 10%, var(--card));
+}
+.offre b{ font-weight:600; font-size:.95rem; color:var(--accent); }
+.offre span{ font-size:.8rem; color:var(--ink-soft); }
+.offre--phare{ background:var(--accent); }
+.offre--phare b{ font-size:1.6rem; line-height:1.1; color:var(--white); }
+.offre--phare span{ color:color-mix(in srgb, var(--white) 88%, var(--accent)); }
+
+
 /* En tableau, une offre et son forfait sont sur la même ligne visuelle : il
    leur faut la même hauteur. Le forfait porte une seconde ligne (« au lieu
    de … ») que la séance n'a pas — sans plancher commun, les deux durées du
@@ -852,7 +911,7 @@ body::after{
   font-size:.8rem; color:var(--ink-soft);
 }
 .astuce svg{
-  width:16px; height:16px; flex:none; color:var(--teinte,var(--ochre));
+  width:16px; height:16px; flex:none; color:var(--teinte,var(--accent));
   fill:none; stroke:currentColor; stroke-width:1.8;
   stroke-linecap:round; stroke-linejoin:round;
 }
@@ -876,7 +935,7 @@ body::after{
 /* --- Les avis --- */
 .note{ display:flex; align-items:baseline; gap:.6rem; margin-bottom:1.4rem; }
 .note b{ font-size:1.9rem; font-weight:600; color:var(--green); letter-spacing:-.03em; }
-.note span{ color:var(--teinte-t,var(--ochre)); font-size:.8rem; letter-spacing:.12em; }
+.note span{ color:var(--teinte-t,var(--accent)); font-size:.8rem; letter-spacing:.12em; }
 .note small{ font-size:.78rem; color:var(--ink-soft); }
 
 .avis{ display:grid; gap:.7rem; }
@@ -887,20 +946,49 @@ body::after{
 /* --- Le rendez-vous --- */
 .feuille--rdv{ text-align:center; }
 .feuille--rdv .chapo{ margin-inline:auto; max-width:30ch; }
+/* --- Les deux voies de réservation ---
+   Côte à côte dès qu'il y a la place : les présenter l'une sous l'autre
+   ferait de la seconde un repli, alors que ce sont deux portes égales. */
+.voies{
+  display:grid; gap:1rem; margin-top:1.6rem;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+}
+.voie{
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+  padding:1.2rem 1.3rem 1.4rem; border-radius:20px; box-shadow:var(--nm-out);
+}
+.voie h3{
+  font-size:.72rem; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--teinte-t,var(--accent));
+}
+.voie p{ margin-top:.5rem; font-size:.86rem; color:var(--ink-soft); }
+.voie .numero{ font-size:clamp(1.4rem,5vw,1.9rem); margin:.9rem 0 .9rem; }
+.voie .appel{ margin-top:auto; }
+.voie__actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; margin-top:auto; }
+.appel--fin{ min-height:46px; padding:.7rem 1.4rem; font-size:.9rem; }
+/* Un bouton désactivé annonce une porte fermée ; un lien vers « # » fait
+   croire qu'elle s'ouvre. */
+.appel[disabled]{
+  background:color-mix(in srgb, var(--accent) 22%, var(--card));
+  color:var(--ink);
+  cursor:default;
+}
+.voie__note{ margin-top:.6rem; font-size:.74rem; }
+
 .numero{
   display:block; margin:1.6rem 0 1.1rem;
   font-size:clamp(1.8rem,7vw,2.6rem); font-weight:600;
   letter-spacing:-.02em; color:var(--green);
   transition:color .25s var(--ease);
 }
-.numero:hover{ color:var(--ochre); }
+.numero:hover{ color:var(--accent); }
 .appel{
   display:inline-flex; align-items:center; justify-content:center;
   min-height:52px; padding:.9rem 2.2rem; border-radius:999px;
-  background:var(--ochre); color:var(--white); font-weight:500;
+  background:var(--accent); color:var(--white); font-weight:500;
   transition:background .25s var(--ease), transform .2s var(--ease);
 }
-.appel:hover{ background:var(--ochre-d); }
+.appel:hover{ background:var(--accent-d); }
 .appel:active{ transform:scale(.98); }
 .feuille--rdv .details{ justify-content:center; }
 .ailleurs{ display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem 1.4rem; margin-top:1.8rem; }
@@ -909,7 +997,7 @@ body::after{
   padding:.5rem 0; border-bottom:1px solid var(--line);
   transition:color .25s var(--ease), border-color .25s var(--ease);
 }
-.ailleurs a:hover{ color:var(--ochre); border-bottom-color:var(--ochre); }
+.ailleurs a:hover{ color:var(--accent); border-bottom-color:var(--accent); }
 
 /* ---------- 5 bis. LES PAGES ANNEXES ----------
    Mentions légales et 404 partagent cette feuille, mais n'ont ni bulles ni
@@ -935,16 +1023,16 @@ body::after{
    « Erreur 404 » s'affichait en noir, à la taille du corps. */
 .annexe .sur-titre{
   font-size:.7rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
-  color:var(--ochre); margin-bottom:.7rem;
+  color:var(--accent); margin-bottom:.7rem;
 }
 .annexe p{ color:var(--ink-soft); }
 .annexe .chapo{ font-size:1.02rem; color:var(--ink); }
 .annexe p + p{ margin-top:.7rem; }
 .annexe code{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:.86em; color:var(--ochre);
+  font-size:.86em; color:var(--accent);
 }
-.annexe a:not(.appel){ color:var(--ochre); border-bottom:1px solid var(--line); }
+.annexe a:not(.appel){ color:var(--accent); border-bottom:1px solid var(--line); }
 .annexe ul{ margin-top:.6rem; padding-left:1.1rem; list-style:disc; }
 .annexe li{ color:var(--ink-soft); margin-top:.3rem; }
 .annexe--404{ text-align:center; max-width:34rem; }
@@ -956,7 +1044,7 @@ body::after{
   text-align:center; font-size:.7rem; color:var(--ink-soft);
 }
 .pied a{ border-bottom:1px solid var(--line); }
-.pied a:hover{ color:var(--ochre); border-bottom-color:var(--ochre); }
+.pied a:hover{ color:var(--accent); border-bottom-color:var(--accent); }
 /* Ni `opacity` ici : à .7 la mention « soins de bien-être, non
    thérapeutiques » tombait à 3,1:1 pour 11 px — or c'est la phrase qui
    distingue une pratique de bien-être d'un acte médical. */

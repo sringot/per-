@@ -24,6 +24,8 @@ faces = ["@font-face{font-family:'Figtree';font-style:normal;font-weight:400 600
 MIME = {'.svg': 'image/svg+xml', '.png': 'image/png',
         '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp'}
 
+COMMENTAIRE = r'<!--.*?-->'
+
 def inline_illus(html):
     """Intègre tout visuel local en data: URI.
 
@@ -41,7 +43,19 @@ def inline_illus(html):
         return f'{attr}="data:{MIME[f.suffix.lower()]};base64,{b64}"'
     # `srcset` autant que `src` : depuis que le portrait sert une découpe
     # par format, oublier le second laissait l'image mobile introuvable.
-    return re.sub(r'(?:src|srcset)="(assets/img/[\w./-]+)"', sub, html)
+    motif = r'(?:src|srcset)="(assets/img/[\w./-]+)"'
+
+    # Les commentaires sont mis de côté pendant le balayage. Un commentaire
+    # qui montre le balisage à écrire plus tard y cite des fichiers qui
+    # n'existent pas encore, et le script s'arrêtait dessus — une note
+    # destinée à un humain ne doit pas casser la construction.
+    notes = []
+    def garde(m):
+        notes.append(m.group(0))
+        return f'\x00{len(notes) - 1}\x00'
+    html = re.sub(COMMENTAIRE, garde, html, flags=re.S)
+    html = re.sub(motif, sub, html)
+    return re.sub(r'\x00(\d+)\x00', lambda m: notes[int(m.group(1))], html)
 
 def inline_css(css):
     """Intègre les visuels appelés depuis le CSS (`url(../img/…)`).
@@ -77,7 +91,10 @@ body = inline_illus(body)
 # pointeraient vers des fichiers que l'artifact ne sert pas.
 body = re.sub(r'<script src="assets/js/v2\.js"[^>]*></script>', '', body)
 
-if 'assets/img/' in body or '../img/' in css or '../fonts/' in css:
+# Le garde-fou lit le même texte que le balayage : sans quoi un chemin
+# cité dans un commentaire le déclencherait alors qu'il n'est pas rendu.
+nu = re.sub(COMMENTAIRE, '', body, flags=re.S)
+if 'assets/img/' in nu or '../img/' in css or '../fonts/' in css:
     raise SystemExit('un chemin de visuel n’a pas été embarqué')
 
 # L'artifact suit le thème du lecteur ; le site n'a qu'un mode clair.

@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marie Massage — Masseuse bien-être à Voisins-le-Bretonneux</title>
-  <meta name="description" content="Marie Massage, masseuse bien-être à Voisins-le-Bretonneux. Kobido, relaxant, deep tissus, madérothérapie, drainage lymphatique. Sur rendez-vous, par téléphone.">
+  <title>Marie Massage — Masseuse bien-être à Montigny-le-Bretonneux</title>
+  <meta name="description" content="Marie Massage, masseuse bien-être à Montigny-le-Bretonneux. Kobido, relaxant, deep tissus, madérothérapie, drainage lymphatique. Sur rendez-vous, par téléphone.">
   <link rel="canonical" href="https://sringot.github.io/per-/">
 
   <!-- Aperçu du lien partagé. TODO : vrai domaine à la mise en ligne. -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Marie Massage">
   <meta property="og:locale" content="fr_FR">
-  <meta property="og:title" content="Marie Massage — Masseuse bien-être à Voisins-le-Bretonneux">
+  <meta property="og:title" content="Marie Massage — Masseuse bien-être à Montigny-le-Bretonneux">
   <meta property="og:description" content="Vous accueillir, vous masser, et vous permettre de décrocher un moment.">
   <meta property="og:url" content="https://sringot.github.io/per-/">
   <meta property="og:image" content="https://sringot.github.io/per-/assets/img/partage.jpg">
@@ -34,16 +34,16 @@
     "@context": "https://schema.org",
     "@type": "HealthAndBeautyBusiness",
     "name": "Marie Massage",
-    "description": "Masseuse bien-être à Voisins-le-Bretonneux. Kobido, relaxant, deep tissus, madérothérapie, drainage lymphatique.",
+    "description": "Masseuse bien-être à Montigny-le-Bretonneux. Kobido, relaxant, deep tissus, madérothérapie, drainage lymphatique.",
     "url": "https://sringot.github.io/per-/",
     "image": "https://sringot.github.io/per-/assets/img/partage.jpg",
-    "telephone": "+33600000000",
+    "telephone": "+33631183481",
     "email": "contact@mariemassage.fr",
     "priceRange": "€€",
     "address": {
       "@type": "PostalAddress",
-      "addressLocality": "Voisins-le-Bretonneux",
-      "postalCode": "78960",
+      "addressLocality": "Montigny-le-Bretonneux",
+      "postalCode": "78180",
       "addressCountry": "FR"
     },
     "openingHoursSpecification": [{
@@ -67,13 +67,17 @@
 
   <div class="halo" aria-hidden="true"></div>
 
-  <img class="logo" src="assets/img/logo-mark.png" alt="" width="281" height="300"
+  <!-- Le logo officiel, inséré tel quel. Le fichier livré par Marie est un
+       carré blanc avec le disque au milieu : tools-logo-officiel.py le
+       recadre au disque et le détoure, sinon ses angles se verraient sur le
+       socle crème. -->
+  <img class="logo" src="assets/img/logo-officiel.png" alt="" width="300" height="300"
        draggable="false" fetchpriority="high" decoding="async">
 
   <figure class="portrait">
     <picture>
       <source media="(max-width:760px)" srcset="assets/img/marie-hero-m.webp" width="700" height="938">
-      <img src="assets/img/marie-hero.webp" alt="Marie, masseuse bien-être à Voisins-le-Bretonneux"
+      <img src="assets/img/marie-hero.webp" alt="Marie, masseuse bien-être à Montigny-le-Bretonneux"
            width="1040" height="1394" draggable="false" fetchpriority="high" decoding="async">
     </picture>
   </figure>
@@ -86,8 +90,8 @@
 
   <h1 class="titre">marieemassage</h1>
   <!-- Le nom de la commune est insécable : sans cela il se coupe sur son
-       trait d'union (« Voisins-le- / Bretonneux »), ce qui se lit mal. -->
-  <p class="accroche">Masseuse bien-être à <span class="insecable">Voisins-le-Bretonneux</span></p>
+       trait d'union (« Montigny-le- / Bretonneux »), ce qui se lit mal. -->
+  <p class="accroche">Masseuse bien-être à <span class="insecable">Montigny-le-Bretonneux</span></p>
 
   </div><!-- /.mot -->
 
@@ -143,6 +147,10 @@
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
+  <!-- Le M du logo en filigrane, comme sur l'accueil mais à l'échelle de la
+       page. Frère du `.panneau > *` : posé avant `.feuille`, il passe donc
+       dessous sans avoir à lui inventer un z-index. -->
+  <div class="filigrane" aria-hidden="true"></div>
   <div class="feuille">
     <p class="sur-titre">À propos</p>
     <h2 id="moi-t">Masser, par plaisir</h2>
@@ -156,6 +164,11 @@
       décrocher un moment.
     </p>
 
+    <p class="moi__reserve">
+      <b>Massages réservés aux femmes</b>
+      <span>Par une femme, pour les femmes.</span>
+    </p>
+
     <!-- ⚠️ EN ATTENTE DE MARIE. C'est le bloc qui décide : une inconnue va
          se déshabiller chez elle, et rien pour l'instant ne dit que Marie a
          appris. Trois ou quatre lignes suffisent — école et année.
@@ -167,19 +180,20 @@
       <li><b>[Formation drainage lymphatique]</b><span>[École] · [année]</span></li>
     </ul>
 
-    <!-- ⚠️ EN ATTENTE : une photo d'elle en situation, ou de ses mains au
-         travail. Pas son portrait, déjà vu sur l'accueil. -->
-    <div class="attente attente--une" aria-hidden="true">
-      <div class="attente__cadre"><span>Photo de Marie en séance</span></div>
-    </div>
-
-    <h3 class="moi__h">Comment ça se passe</h3>
-    <!-- ⚠️ EN ATTENTE : à confirmer avec Marie, le déroulé réel. -->
-    <ol class="etapes">
-      <li><b>On échange quelques minutes</b> sur ce dont vous avez besoin ce jour-là.</li>
-      <li><b>Le massage</b>, [durée] dans une pièce dédiée, à votre rythme.</li>
-      <li><b>Vous repartez quand vous voulez</b> — [ce qu'elle propose après].</li>
-    </ol>
+    <!-- ⚠️ EN ATTENTE des deux photos de Marie en séance. Elles existent —
+         elles ont été montrées — mais ne sont pas encore dans le dépôt.
+         Une fois poussées, `tools-photos.py` les recadre au format portrait
+         et ce bloc devient :
+           <ul class="clichés">
+             <li><img src="assets/img/marie-seance-1.webp" …></li>
+             <li><img src="assets/img/marie-seance-2.webp" …></li>
+           </ul>
+         `aria-hidden` : un lecteur d'écran n'a rien à annoncer d'une image
+         absente. -->
+    <ul class="attente attente--seance" aria-hidden="true">
+      <li class="attente__cadre"><span>Marie en séance</span></li>
+      <li class="attente__cadre"><span>Marie en séance</span></li>
+    </ul>
 
     <p class="moi__cadre">
       Je ne soigne pas&nbsp;: je détends. Mes massages sont des soins de
@@ -187,9 +201,6 @@
     </p>
 
     <p class="moi__liens">
-      <!-- ⚠️ EN ATTENTE : « je masse depuis X ans ». Un chiffre vaut trois
-           paragraphes — c'est ce qu'on cherche en premier. -->
-      <span class="moi__anciennete">Je masse depuis&nbsp;[X]&nbsp;ans</span>
       <a href="https://www.instagram.com/marieemassage/" rel="me noopener" target="_blank">
         @marieemassage sur Instagram
       </a>
@@ -223,9 +234,7 @@
 
     <ul class="details">
       <li>Linge frais à chaque séance</li>
-      <li>Huiles végétales bio</li>
       <li>Musique &amp; lumière tamisées</li>
-      <li>Parking gratuit</li>
     </ul>
   </div>
 </section>
@@ -332,7 +341,7 @@
           <span class="soin__face soin__face--arriere">
             <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
             <span class="soin__titre">Drainage lymphatique</span>
-            <span class="soin__sous">Jambes légères</span>
+            <span class="soin__sous">Méthode Nathalie Duarte</span>
             <span class="soin__desc">Des pressions douces et rythmées qui relancent la lymphe. Les jambes se dégonflent, la lourdeur s'en va.</span>
           </span>
           </span>
@@ -388,6 +397,20 @@
       </table>
     </div>
     <p class="tableau__note">Un forfait s'applique au soin choisi&nbsp;; le tarif indiqué couvre l'ensemble des séances.</p>
+
+    <!-- Les deux offres qui ne tiennent pas dans le tableau : elles ne
+         portent pas sur un soin mais sur plusieurs, ou sur une première
+         fois. Mêmes valeurs que l'affiche de la pièce de massage. -->
+    <ul class="offres">
+      <li class="offre">
+        <b>Pack combiné — 390&nbsp;€</b>
+        <span>Madéro &amp; drainage lymphatique, 6&nbsp;séances</span>
+      </li>
+      <li class="offre offre--phare">
+        <b>−10&nbsp;€</b>
+        <span>sur votre massage inédit</span>
+      </li>
+    </ul>
     </div><!-- /.tarifs -->
 
   </div>
@@ -420,19 +443,41 @@
   </button>
   <div class="feuille feuille--rdv">
     <p class="sur-titre">Rendez-vous</p>
-    <h2 id="rdv-t">On s'appelle&nbsp;?</h2>
+    <h2 id="rdv-t">Deux façons<br>de réserver</h2>
     <p class="chapo">
-      Les rendez-vous se prennent uniquement par téléphone&nbsp;: on convient
-      ensemble du soin et du créneau.
+      En ligne à toute heure, ou de vive voix si vous préférez qu'on choisisse
+      le soin ensemble.
     </p>
 
-    <!-- TODO : numéro fictif -->
-    <a class="numero" href="tel:+33600000000">06&nbsp;00&nbsp;00&nbsp;00&nbsp;00</a>
-    <a class="appel" href="tel:+33600000000">Appeler Marie</a>
+    <div class="voies">
+      <section class="voie">
+        <h3>En ligne</h3>
+        <p>Le planning à jour, et le créneau retenu dans la foulée.</p>
+        <!-- ⚠️ EN ATTENTE du lien Treatwell de Marie. Le remplacement tient
+             en une ligne : mettre à la place de ce bouton
+               <a class="appel" href="[lien Treatwell]" target="_blank"
+                  rel="noopener">Voir les disponibilités</a>
+             puis supprimer la note qui suit. Un bouton désactivé plutôt
+             qu'un lien vers « # » : un lien mort est pire qu'une porte
+             annoncée fermée. -->
+        <button class="appel" type="button" disabled>Voir les disponibilités</button>
+        <p class="voie__note">Réservation en ligne bientôt ouverte.</p>
+      </section>
+
+      <section class="voie">
+        <h3>Par téléphone</h3>
+        <p>Pour poser une question avant de venir, ou décider à deux.</p>
+        <a class="numero" href="tel:+33631183481">06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</a>
+        <p class="voie__actions">
+          <a class="appel appel--fin" href="tel:+33631183481">Appeler</a>
+          <a class="appel appel--fin" href="sms:+33631183481">Écrire un message</a>
+        </p>
+      </section>
+    </div>
 
     <ul class="details">
       <li>Lun – Sam · 9h – 20h</li>
-      <li>Voisins-le-Bretonneux (78960)</li>
+      <li>Montigny-le-Bretonneux (78180)</li>
       <li>Adresse exacte communiquée au rendez-vous</li>
     </ul>
 

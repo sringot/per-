@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Prépare le logo officiel de Marie pour le web et l'impression.
 
+Sort le logo détouré et les deux favicons, tous depuis le même fichier :
+c'est ce qui garantit qu'ils ne divergeront pas.
+
 Le fichier qu'elle fournit est un carré blanc de 1254 px avec le disque
 posé au milieu. Tel quel, ses angles blancs se verraient sur le socle crème
 de l'affiche : on le recadre au disque et on le détoure.
@@ -17,6 +20,12 @@ from PIL import Image, ImageDraw
 
 ROOT = pathlib.Path(__file__).parent
 DEST = ROOT / 'assets/img/logo-officiel.png'
+# Le favicon est le logo : le régénérer d'ici évite qu'il reste sur une
+# ancienne version le jour où le logo change.
+FAVICONS = [('assets/img/favicon.png', 32), ('assets/img/favicon-180.png', 180)]
+# Le socle du site. iOS compose l'icône d'accueil sur du noir si elle est
+# transparente : celle de 180 px est donc aplatie sur ce fond.
+SOCLE = (0xFC, 0xF0, 0xE2)
 # Le logo est imprimé à 14 mm, soit 165 px à 300 dpi. Le double laisse de la
 # marge, et le fichier est embarqué en base64 dans l'affiche : inutile de
 # transporter les 1254 px d'origine.
@@ -61,6 +70,16 @@ def main():
     coupe.resize((COTE, COTE), Image.LANCZOS).save(DEST, optimize=True)
     print(f'{DEST.relative_to(ROOT)} — {coupe.size[0]}×{coupe.size[1]} px recadrés '
           f'→ {COTE}×{COTE}, {DEST.stat().st_size // 1024} Ko')
+
+    for rel, taille in FAVICONS:
+        icone = coupe.resize((taille, taille), Image.LANCZOS)
+        if taille >= 180:
+            plat = Image.new('RGB', icone.size, SOCLE)
+            plat.paste(icone, mask=icone.getchannel('A'))
+            icone = plat
+        chemin = ROOT / rel
+        icone.save(chemin, optimize=True)
+        print(f'{rel} — {taille}×{taille}, {chemin.stat().st_size // 1024} Ko')
 
 
 if __name__ == '__main__':
