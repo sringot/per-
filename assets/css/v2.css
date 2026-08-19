@@ -517,9 +517,20 @@ body::after{
 .moi__reserve span{ font-size:.84rem; color:var(--ink-soft); }
 
 /* Deux clichés côte à côte, en portrait : ce sont des photos verticales,
-   les forcer en 4/3 les recadrerait sur le mur plutôt que sur les mains. */
-.attente--seance{ grid-template-columns:repeat(2,1fr); }
-.attente--seance .attente__cadre{ aspect-ratio:3/4; }
+   les forcer en 4/3 les recadrerait sur le mur plutôt que sur les mains.
+   Le rapport est posé sur le conteneur autant que sur l'image, pour que la
+   grille garde sa hauteur avant même que les fichiers soient arrivés. */
+.cliches{
+  display:grid; grid-template-columns:repeat(2,1fr); gap:.6rem;
+  margin-top:1.6rem;
+}
+.cliches li{ border-radius:16px; overflow:hidden; box-shadow:var(--nm-out); }
+/* `height:auto` n'est pas décoratif : les balises portent `width` et
+   `height` pour réserver la place avant chargement, et cet attribut pose une
+   hauteur en dur. `aspect-ratio` ne s'applique que si l'une des deux
+   dimensions est libre — sans ça les images sortaient à 827 px de haut dans
+   un cadre de 173 px de large. */
+.cliches img{ width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; }
 
 .moi__cadre{
   margin-top:1.8rem; padding:.9rem 1.1rem; border-radius:14px;

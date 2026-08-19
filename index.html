@@ -180,19 +180,18 @@
       <li><b>[Formation drainage lymphatique]</b><span>[École] · [année]</span></li>
     </ul>
 
-    <!-- ⚠️ EN ATTENTE des deux photos de Marie en séance. Elles existent —
-         elles ont été montrées — mais ne sont pas encore dans le dépôt.
-         Une fois poussées, `tools-photos.py` les recadre au format portrait
-         et ce bloc devient :
-           <ul class="clichés">
-             <li><img src="assets/img/marie-seance-1.webp" …></li>
-             <li><img src="assets/img/marie-seance-2.webp" …></li>
-           </ul>
-         `aria-hidden` : un lecteur d'écran n'a rien à annoncer d'une image
-         absente. -->
-    <ul class="attente attente--seance" aria-hidden="true">
-      <li class="attente__cadre"><span>Marie en séance</span></li>
-      <li class="attente__cadre"><span>Marie en séance</span></li>
+    <!-- Marie au travail. C'est la seule preuve visuelle du site qu'elle
+         masse vraiment : le portrait de l'accueil montre qui elle est, pas
+         ce qu'elle fait. Chargement différé — le panneau est fermé à
+         l'ouverture de la page, ces deux images n'ont aucune raison d'être
+         téléchargées avant qu'on y entre. -->
+    <ul class="cliches">
+      <li><img src="assets/img/marie-seance-1.webp" width="620" height="827"
+               loading="lazy" decoding="async"
+               alt="Marie, penchée sur la table, masse le dos d'une cliente."></li>
+      <li><img src="assets/img/marie-seance-2.webp" width="620" height="827"
+               loading="lazy" decoding="async"
+               alt="Marie travaille du bout des doigts le long de la colonne vertébrale."></li>
     </ul>
 
     <p class="moi__cadre">

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Découpe le portrait de Marie aux formats attendus par les gabarits.
+"""Prépare les photos du site aux formats attendus par les gabarits.
 
 Une seule photo alimente trois emplacements, chacun avec son propre
 rapport d'aspect. Recadrer à la main donnerait trois fichiers qu'on ne
@@ -17,6 +17,17 @@ from PIL import Image
 ROOT   = pathlib.Path(__file__).parent
 SOURCE = ROOT / 'assets/img/marie-source.png'
 DEST   = ROOT / 'assets/img'
+
+# Les deux clichés de Marie en séance, pour le panneau « Moi ». Ils arrivent
+# déjà cadrés en 3/4, celui du gabarit : rien à recadrer, seulement à
+# convertir. Ils font 2 Mo de PNG chacun, ce qui est hors de question sur une
+# page ouverte au téléphone.
+#
+# 620 px de large : le cadre le plus grand fait 265 px sur grand écran, et
+# 620 couvre le double pour les écrans à forte densité sans payer plus.
+SEANCES = [('seance-source-1.png', 'marie-seance-1.webp'),
+           ('seance-source-2.png', 'marie-seance-2.webp')]
+SEANCE_LARGEUR = 620
 
 # Repères relevés sur la photo (fractions de largeur / hauteur).
 VISAGE_X, VISAGE_Y = 0.55, 0.40
@@ -74,6 +85,18 @@ def main():
     for nom, rapport, largeur, part, visee in FORMATS:
         im = recadre(src, rapport, part, visee)
         im = im.resize((largeur, round(largeur / rapport)), Image.LANCZOS)
+        chemin = DEST / nom
+        im.save(chemin, quality=82, method=6)
+        print(f'  {nom:22s} {im.size[0]}×{im.size[1]}  '
+              f'{chemin.stat().st_size / 1024:.1f} Ko')
+
+    for source, nom in SEANCES:
+        src = DEST / source
+        if not src.exists():
+            raise SystemExit(f'photo introuvable : {src}')
+        im = Image.open(src).convert('RGB')
+        haut = round(SEANCE_LARGEUR * im.height / im.width)
+        im = im.resize((SEANCE_LARGEUR, haut), Image.LANCZOS)
         chemin = DEST / nom
         im.save(chemin, quality=82, method=6)
         print(f'  {nom:22s} {im.size[0]}×{im.size[1]}  '
