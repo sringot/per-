@@ -14,7 +14,9 @@ et redimensionner le fichier d'origine.
     python3 tools-logo-officiel.py "new logo.png"
 """
 import pathlib
+import subprocess
 import sys
+import tempfile
 
 from PIL import Image, ImageDraw
 
@@ -35,6 +37,12 @@ COTE = 300
 # du disque, qui est sombre.
 SEUIL = 16
 
+# Le M seul, détaché de son disque, pour le filigrane des panneaux. Le M du
+# logo officiel n'a pas le même dessin que l'ancien : ses jambages s'évasent
+# vers le bas et ses têtes sont plus petites et plus rapprochées. Le
+# filigrane portait donc encore l'ancien tracé.
+SIGNE = ROOT / 'assets/img/logo-m.svg'
+
 
 def cadre_du_disque(im):
     """Étendue réelle du dessin dans le carré blanc.
@@ -51,6 +59,53 @@ def cadre_du_disque(im):
     if not xs or not ys:
         raise SystemExit('aucun dessin trouvé : le fond n\'est pas uni ?')
     return min(xs), min(ys), max(xs) + 1, max(ys) + 1
+
+
+def signe(disque):
+    """Détoure le M de son disque et le vectorise.
+
+    Le M est le seul aplat clair du logo : on sépare sur la distance à sa
+    couleur plutôt que sur un seuil de luminosité, qui attraperait aussi le
+    bord adouci du disque.
+    """
+    px = disque.convert('RGB').load()
+    w, h = disque.size
+    # Couleur du M, relevée au centre d'un de ses jambages plutôt que
+    # supposée : elle suit le fichier si Marie le change.
+    encre = px[int(w * .32), int(h * .62)]
+    binaire = Image.new('1', disque.size, 1)   # 1 = blanc = fond, pour potrace
+    bp = binaire.load()
+    boite = [w, h, 0, 0]
+    # Le bord du disque est adouci : sur quelques pixels il traverse toutes
+    # les valeurs entre le bordeaux et le blanc, dont une qui passe à moins
+    # de 90 du rose. Sans cette bordure exclue, l'anneau entier était pris
+    # pour du M et le cadrage couvrait l'image entière.
+    cx, cy = w / 2, h / 2
+    dedans = .96 ** 2
+    for y in range(h):
+        dy = (y - cy) / cy
+        for x in range(w):
+            dx = (x - cx) / cx
+            if dx * dx + dy * dy > dedans:
+                continue
+            if sum(abs(a - b) for a, b in zip(px[x, y], encre)) < 90:
+                bp[x, y] = 0
+                boite = [min(boite[0], x), min(boite[1], y),
+                         max(boite[2], x), max(boite[3], y)]
+    marge = 4
+    binaire = binaire.crop((max(boite[0] - marge, 0), max(boite[1] - marge, 0),
+                            min(boite[2] + marge, w), min(boite[3] + marge, h)))
+
+    with tempfile.TemporaryDirectory() as tmp:
+        pbm = pathlib.Path(tmp) / 'm.pbm'
+        svg = pathlib.Path(tmp) / 'm.svg'
+        binaire.save(pbm)
+        subprocess.run(['potrace', str(pbm), '-s', '-o', str(svg),
+                        '--turdsize', '8',      # ignore les îlots de bruit
+                        '--alphamax', '1.2',    # coins arrondis : le dessin l'est
+                        '--opttolerance', '.4'], check=True)
+        SIGNE.write_text(svg.read_text(), encoding='utf-8')
+    return binaire.size
 
 
 def main():
@@ -80,6 +135,10 @@ def main():
         chemin = ROOT / rel
         icone.save(chemin, optimize=True)
         print(f'{rel} — {taille}×{taille}, {chemin.stat().st_size // 1024} Ko')
+
+    w, h = signe(coupe)
+    print(f'{SIGNE.relative_to(ROOT)} — M détouré {w}×{h} px, '
+          f'{SIGNE.stat().st_size // 1024} Ko')
 
 
 if __name__ == '__main__':
