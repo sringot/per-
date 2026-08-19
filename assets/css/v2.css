@@ -18,11 +18,6 @@
      mais un rôle — la prochaine fois qu'elle change, son nom reste vrai. */
   --accent:     #6A2F3C;
   --accent-d:   #4B212B;
-  --green:      #3F4A38;
-  --herb:       #9A8B5F;
-  --sage:       #A7AE9B;
-  --yellow:     #F2E7B3;
-
   /* Le socle est **relevé sur l'image de fond** (sa teinte médiane), et non
      choisi à part : tout le langage de relief repose sur des surfaces qui
      partagent la couleur du fond. Resté au crème d'avant, plus gris que
@@ -119,7 +114,7 @@ body::after{
 
 .evitement{
   position:fixed; top:.6rem; left:.6rem; z-index:99;
-  background:var(--green); color:var(--white);
+  background:var(--accent); color:var(--white);
   padding:.6rem 1rem; border-radius:999px;
   transform:translateY(-200%); transition:transform .3s var(--ease);
 }
@@ -243,7 +238,7 @@ body::after{
 .titre{
   font-size:clamp(1.75rem,6.6vw,3.5rem);
   font-weight:600; line-height:1; letter-spacing:-.035em;
-  color:var(--green);
+  color:var(--ink);
   /* Un seul mot : il ne peut pas se couper aux espaces. À très fort
      agrandissement il vaut mieux qu'il se coupe que qu'il déborde. */
   overflow-wrap:anywhere;
@@ -312,7 +307,7 @@ body::after{
 /* Réservé aux vrais pointeurs : sur iOS, `:hover` reste collé au dernier
    élément touché et la bulle restait soulevée après l'appui. */
 @media (hover:hover) and (pointer:fine){
-  .bulle:hover{ color:var(--green); }
+  .bulle:hover{ color:var(--ink); }
   .bulle:hover .bulle__rond{
     box-shadow:var(--nm-out-lg); transform:translateY(-4px);
     background-color:color-mix(in srgb, var(--teinte,var(--accent)) 12%, var(--card));
@@ -322,7 +317,7 @@ body::after{
 
 /* La bulle du rendez-vous est la seule pleine : c'est l'action. */
 .bulle--phare .bulle__rond{ background:var(--accent); color:var(--white); }
-.bulle--phare{ color:var(--green); }
+.bulle--phare{ color:var(--ink); }
 
 /* Entrée en cascade, une bulle après l'autre. */
 .bulle{ opacity:0; animation:monte .7s var(--ease-out) forwards; }
@@ -417,7 +412,7 @@ body::after{
   position:fixed; top:clamp(.9rem,2.5vh,1.6rem); right:var(--pad); z-index:2;
   width:44px; height:44px; border-radius:50%;
   display:grid; place-items:center;
-  background:var(--card); box-shadow:var(--nm-out); color:var(--green);
+  background:var(--card); box-shadow:var(--nm-out); color:var(--ink);
   transition:box-shadow .25s var(--ease), transform .25s var(--ease);
 }
 .fermer svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
@@ -442,7 +437,7 @@ body::after{
 .feuille h2{
   font-size:clamp(1.7rem,5.5vw,2.5rem);
   font-weight:600; line-height:1.06; letter-spacing:-.03em;
-  color:var(--green); margin-bottom:1.1rem;
+  color:var(--ink); margin-bottom:1.1rem;
 }
 .chapo{ font-size:1.02rem; color:var(--ink); }
 .feuille p{ color:var(--ink-soft); }
@@ -477,7 +472,7 @@ body::after{
    parcours de formation, le déroulé d'une séance, et le cadre posé — ce
    que c'est, ce que ce n'est pas. */
 .moi__h{
-  font-size:1.05rem; font-weight:600; color:var(--green);
+  font-size:1.05rem; font-weight:600; color:var(--ink);
   margin:2rem 0 .7rem;
 }
 
@@ -491,7 +486,7 @@ body::after{
   display:flex; flex-direction:column; gap:.1rem;
   padding:.7rem .95rem; border-radius:14px; box-shadow:var(--nm-out);
 }
-.parcours b{ font-weight:600; font-size:.9rem; color:var(--green); }
+.parcours b{ font-weight:600; font-size:.9rem; color:var(--ink); }
 .parcours span{ font-size:.76rem; color:var(--ink-soft); }
 
 /* Le déroulé, numéroté : c'est l'inconnu qui bloque une première
@@ -549,7 +544,7 @@ body::after{
   display:flex; flex-wrap:wrap; align-items:center; gap:.5rem 1.2rem;
   margin-top:1.8rem; font-size:.84rem;
 }
-.moi__anciennete{ font-weight:600; color:var(--green); }
+.moi__anciennete{ font-weight:600; color:var(--ink); }
 .moi__liens a{
   color:var(--teinte-t,var(--accent));
   border-bottom:1px solid color-mix(in srgb, currentColor 35%, transparent);
@@ -814,7 +809,7 @@ body::after{
    variables de couleur : le monogramme du tableau vient du même masque que
    celui de la carte, et la palette n'a qu'une seule source. */
 .bloc-h{
-  font-size:1.05rem; font-weight:600; color:var(--green);
+  font-size:1.05rem; font-weight:600; color:var(--ink);
   margin:2.4rem 0 .9rem;
 }
 .tableau table{
@@ -834,7 +829,7 @@ body::after{
   vertical-align:top;
 }
 .tableau tbody th{
-  text-align:left; font-weight:600; color:var(--green);
+  text-align:left; font-weight:600; color:var(--ink);
   white-space:nowrap;
 }
 /* Le monogramme de la carte, en petit. `--marque` est la même teinte poussée
@@ -954,7 +949,7 @@ body::after{
 
 /* --- Les avis --- */
 .note{ display:flex; align-items:baseline; gap:.6rem; margin-bottom:1.4rem; }
-.note b{ font-size:1.9rem; font-weight:600; color:var(--green); letter-spacing:-.03em; }
+.note b{ font-size:1.9rem; font-weight:600; color:var(--ink); letter-spacing:-.03em; }
 .note span{ color:var(--teinte-t,var(--accent)); font-size:.8rem; letter-spacing:.12em; }
 .note small{ font-size:.78rem; color:var(--ink-soft); }
 
@@ -998,7 +993,7 @@ body::after{
 .numero{
   display:block; margin:1.6rem 0 1.1rem;
   font-size:clamp(1.8rem,7vw,2.6rem); font-weight:600;
-  letter-spacing:-.02em; color:var(--green);
+  letter-spacing:-.02em; color:var(--ink);
   transition:color .25s var(--ease);
 }
 .numero:hover{ color:var(--accent); }
@@ -1013,7 +1008,7 @@ body::after{
 .feuille--rdv .details{ justify-content:center; }
 .ailleurs{ display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem 1.4rem; margin-top:1.8rem; }
 .ailleurs a{
-  font-size:.84rem; color:var(--green);
+  font-size:.84rem; color:var(--ink);
   padding:.5rem 0; border-bottom:1px solid var(--line);
   transition:color .25s var(--ease), border-color .25s var(--ease);
 }
@@ -1032,10 +1027,10 @@ body::after{
 .annexe h1{
   font-size:clamp(1.9rem,6vw,2.8rem);
   font-weight:600; line-height:1.06; letter-spacing:-.03em;
-  color:var(--green); margin-bottom:1.4rem;
+  color:var(--ink); margin-bottom:1.4rem;
 }
 .annexe h2{
-  font-size:1.05rem; font-weight:600; color:var(--green);
+  font-size:1.05rem; font-weight:600; color:var(--ink);
   margin:2.2rem 0 .5rem;
 }
 /* Le sur-titre et le chapô sont définis dans `.feuille`, qui n'existe que
