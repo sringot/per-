@@ -160,35 +160,28 @@ body::after{
   min-width:0;
 }
 
-/* --- Le fond ---
-   Une image, pas un aplat : crèmes très doux et formes organiques, avec le
-   pictogramme en filigrane. Elle vient de `fond-source.png` (1,6 Mo de PNG
-   pour un dégradé) ; `tools-fond.py` la ramène à **6 Ko** en WebP, sans
-   différence visible — un dégradé se compresse d'autant mieux qu'il est
-   lisse. Deux tailles : un téléphone n'a pas besoin de 1600 px.
+/* --- Le fond de l'accueil ---
+   Le même filigrane que les panneaux, à la même place et à la même teinte :
+   l'accueil et les rubriques doivent partager un fond, pas se ressembler.
 
-   La couche est **fixée à la fenêtre**, et non posée dans la scène : celle-ci
-   est bornée à 1180 px, le fond s'y serait arrêté et les bords d'un grand
-   écran seraient restés crème nu. Fixée, elle ne compte pas non plus dans le
-   débordement de la page.
+   Il remplace l'image de fond de la V2 — un dégradé crème de 6 Ko portant
+   l'ancien pictogramme. Le masque fait un kilo-octet, reste net à toutes les
+   tailles et sa couleur se règle depuis le CSS ; l'image imposait la sienne.
+   `tools-fond.py` et les deux `fond*.webp` ne servent donc plus.
 
-   Elle respire très lentement — une dérive sur `transform`, jamais sur
-   l'image elle-même : déplacer une couche déjà dessinée ne coûte qu'une
-   recomposition, la redessiner coûte une image entière. */
-.halo{
-  position:fixed; inset:-8%; z-index:0; pointer-events:none;
-  background:url('../img/fond-m.webp') center/cover no-repeat;
-  animation:derive 46s ease-in-out infinite alternate;
-}
-@media (min-width:700px) and (min-height:560px){
-  .halo{ background-image:url('../img/fond.webp'); }
-}
-@keyframes derive{
-  from{ transform:translate3d(0,0,0)      scale(1); }
-  to  { transform:translate3d(1.5%,-1%,0) scale(1.05); }
+   Fixé à la fenêtre plutôt que posé dans la scène : celle-ci est bornée à
+   1180 px, le fond s'y serait arrêté et les bords d'un grand écran seraient
+   restés crème nu. Fixé, il ne compte pas non plus dans le débordement. */
+/* Le repère est volontairement coupé par le bord droit de l'écran. En
+   position fixe il y débordait vraiment, et la page gagnait un défilement
+   horizontal de 31 px sur téléphone. La couche qui le porte occupe donc la
+   fenêtre entière et le recadre elle-même — le repère, lui, garde
+   exactement les règles des panneaux. */
+.filigrane-fond{
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
 }
 
-.scene > *:not(.halo){ position:relative; z-index:1; }
+.scene > *:not(.filigrane-fond){ position:relative; z-index:1; }
 
 /* Écran large : deux colonnes. Le pictogramme coiffe la photo, le nom et
    les bulles occupent la colonne de droite, centrés sur la hauteur. */
@@ -382,12 +375,18 @@ body::after{
      Les coordonnées sont posées par le JS au moment du clic. */
   clip-path:circle(0 at var(--x,50%) var(--y,90%));
   visibility:hidden;
-  transition:clip-path .55s var(--ease-out), visibility 0s linear .55s;
+  transition:clip-path .34s var(--ease-out), visibility 0s linear .34s;
 }
+/* Le disque s'ouvrait en 600 ms et le texte n'était pleinement lisible
+   qu'à 540 ms : mesuré, pas estimé. Sur un site où l'on ouvre cinq
+   onglets d'affilée, c'est une demi-seconde d'attente à chaque fois, et
+   ça se ressent comme une lenteur du site plutôt que comme une
+   animation. La séquence est ramenée à peu près de moitié — le geste
+   reste le même, il ne fait plus patienter. */
 .panneau.ouvert{
   clip-path:circle(150% at var(--x,50%) var(--y,90%));
   visibility:visible;
-  transition:clip-path .6s var(--ease-out), visibility 0s;
+  transition:clip-path .38s var(--ease-out), visibility 0s;
 }
 
 /* Le disque s'ouvre **dans la couleur de sa rubrique**, puis la couleur
@@ -397,7 +396,7 @@ body::after{
   content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
   background:var(--teinte,var(--accent));
   opacity:.16;
-  transition:opacity .9s var(--ease) .25s;
+  transition:opacity .6s var(--ease) .16s;
 }
 .panneau.ouvert::before{ opacity:0; }
 
@@ -428,7 +427,7 @@ body::after{
 .feuille{
   max-width:34rem; margin-inline:auto;
   opacity:0; transform:translateY(14px);
-  transition:opacity .4s var(--ease) .18s, transform .5s var(--ease-out) .18s;
+  transition:opacity .26s var(--ease) .06s, transform .34s var(--ease-out) .06s;
 }
 .panneau.ouvert .feuille{ opacity:1; transform:none; }
 
@@ -1116,7 +1115,6 @@ body::after{
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
-  .halo{ animation:none; transform:none; }
   .logo, .portrait, .titre, .accroche, .bulle{ opacity:1; }
   .portrait{ animation:none; }
 }

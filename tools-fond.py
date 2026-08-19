@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Prépare l'image de fond aux formats servis par le site.
+"""
+
+⚠️ Ce fond n'est plus servi. L'accueil porte désormais le même filigrane que
+les panneaux — le M du logo officiel en masque CSS, posé par v2.css. Ce
+script et les `fond*.webp` qu'il produit ne sont gardés que pour l'historique.
+Prépare l'image de fond aux formats servis par le site.
 
 `fond-source.png` fait 1536 × 1024 pour 1,6 Mo : c'est un aplat de crèmes
 et de formes très douces, donc du PNG qui code en 24 bits ce qui n'a
