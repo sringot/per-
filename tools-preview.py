@@ -66,7 +66,11 @@ css = inline_css((ROOT / 'assets/css/v2.css').read_text(encoding='utf-8'))
 js  = (ROOT / 'assets/js/v2.js').read_text(encoding='utf-8')
 
 src = (ROOT / 'index.html').read_text(encoding='utf-8')
-title = re.search(r'<title>(.*?)</title>', src, re.S).group(1)
+# Le titre du site porte la ville et la spécialité — utile pour Google,
+# encombrant comme nom d'aperçu. Et il bougera le jour où la ville change,
+# alors qu'un aperçu republié doit garder le même nom pour rester
+# reconnaissable. On s'en tient donc à la marque.
+title = 'marieemassage'
 body = re.search(r'<body[^>]*>(.*)</body>', src, re.S).group(1)
 body = inline_illus(body)
 # Feuille et script sont embarqués plus bas ; les balises d'origine
