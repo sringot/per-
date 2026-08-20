@@ -53,6 +53,13 @@
       p.style.setProperty('--y', `${r.top + r.height / 2}px`);
     }
 
+    // Les images du panneau n'ont d'adresse qu'à partir d'ici : tant qu'il
+    // est fermé, elles ne coûtent rien.
+    $$('img[data-src]', p).forEach(img => {
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    });
+
     p.removeAttribute('inert');
     p.classList.add('ouvert');
     fond.forEach(e => e.setAttribute('inert', ''));

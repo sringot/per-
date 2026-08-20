@@ -43,7 +43,9 @@ def inline_illus(html):
         return f'{attr}="data:{MIME[f.suffix.lower()]};base64,{b64}"'
     # `srcset` autant que `src` : depuis que le portrait sert une découpe
     # par format, oublier le second laissait l'image mobile introuvable.
-    motif = r'(?:src|srcset)="(assets/img/[\w./-]+)"'
+    # `data-src` autant que `src` : les photos du panneau « Moi » n'ont
+    # d'adresse que là, et l'aperçu doit quand même les embarquer.
+    motif = r'(?:data-src|src|srcset)="(assets/img/[\w./-]+)"'
 
     # Les commentaires sont mis de côté pendant le balayage. Un commentaire
     # qui montre le balisage à écrire plus tard y cite des fichiers qui

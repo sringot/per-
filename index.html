@@ -71,7 +71,7 @@
        carré blanc avec le disque au milieu : tools-logo-officiel.py le
        recadre au disque et le détoure, sinon ses angles se verraient sur le
        socle crème. -->
-  <img class="logo" src="assets/img/logo-officiel.png" alt="" width="300" height="300"
+  <img class="logo" src="assets/img/logo-officiel.webp" alt="" width="200" height="200"
        draggable="false" fetchpriority="high" decoding="async">
 
   <figure class="portrait">
@@ -182,15 +182,19 @@
 
     <!-- Marie au travail. C'est la seule preuve visuelle du site qu'elle
          masse vraiment : le portrait de l'accueil montre qui elle est, pas
-         ce qu'elle fait. Chargement différé — le panneau est fermé à
-         l'ouverture de la page, ces deux images n'ont aucune raison d'être
-         téléchargées avant qu'on y entre. -->
+         ce qu'elle fait.
+
+         L'adresse est dans `data-src`, pas dans `src` : `loading="lazy"` ne
+         suffisait pas. Le panneau est fermé mais il occupe la fenêtre, donc
+         le navigateur jugeait les deux images « proches de l'écran » et les
+         téléchargeait — 88 Ko à l'ouverture de la page pour du contenu que
+         personne n'a demandé. Le script les pose à l'ouverture du panneau. -->
     <ul class="cliches">
-      <li><img src="assets/img/marie-seance-1.webp" width="620" height="827"
-               loading="lazy" decoding="async"
+      <li><img data-src="assets/img/marie-seance-1.webp" width="620" height="827"
+               decoding="async"
                alt="Marie, penchée sur la table, masse le dos d'une cliente."></li>
-      <li><img src="assets/img/marie-seance-2.webp" width="620" height="827"
-               loading="lazy" decoding="async"
+      <li><img data-src="assets/img/marie-seance-2.webp" width="620" height="827"
+               decoding="async"
                alt="Marie travaille du bout des doigts le long de la colonne vertébrale."></li>
     </ul>
 

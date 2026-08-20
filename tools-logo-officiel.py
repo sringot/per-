@@ -22,6 +22,12 @@ from PIL import Image, ImageDraw
 
 ROOT = pathlib.Path(__file__).parent
 DEST = ROOT / 'assets/img/logo-officiel.png'
+# La version servie au navigateur. Le PNG de 300 px pèse 72 Ko et reste le
+# fichier le plus lourd du site, pour une image affichée à 52 px au plus ;
+# en WebP à 200 px il en fait 5. Le PNG est gardé pour l'affiche imprimée,
+# où l'on veut les pixels.
+DEST_WEB = ROOT / 'assets/img/logo-officiel.webp'
+COTE_WEB = 200
 # Le favicon est le logo : le régénérer d'ici évite qu'il reste sur une
 # ancienne version le jour où le logo change.
 FAVICONS = [('assets/img/favicon.png', 32), ('assets/img/favicon-180.png', 180)]
@@ -133,8 +139,16 @@ def main():
             plat.paste(icone, mask=icone.getchannel('A'))
             icone = plat
         chemin = ROOT / rel
-        icone.save(chemin, optimize=True)
-        print(f'{rel} — {taille}×{taille}, {chemin.stat().st_size // 1024} Ko')
+        # Deux aplats et un bord adouci : une palette de 32 couleurs les
+        # rend à l'identique pour moitié moins lourd.
+        methode = Image.FASTOCTREE if icone.mode == 'RGBA' else Image.MEDIANCUT
+        icone.quantize(colors=32, method=methode).save(chemin, optimize=True)
+        print(f'{rel} — {taille}×{taille}, {chemin.stat().st_size / 1024:.1f} Ko')
+
+    coupe.resize((COTE_WEB, COTE_WEB), Image.LANCZOS).save(
+        DEST_WEB, quality=86, method=6)
+    print(f'{DEST_WEB.relative_to(ROOT)} — {COTE_WEB}×{COTE_WEB}, '
+          f'{DEST_WEB.stat().st_size / 1024:.1f} Ko')
 
     w, h = signe(coupe)
     print(f'{SIGNE.relative_to(ROOT)} — M détouré {w}×{h} px, '
