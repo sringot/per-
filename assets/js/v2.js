@@ -54,7 +54,7 @@
   let declencheur = null;     // bulle d'où il est parti, pour y revenir
   let aPousse = false;        // a-t-on ajouté une entrée d'historique ?
 
-  /* Ce qui se déroule à l'ouverture d'un panneau, dans l'ordre où on le
+  /* Ce qui s'ouvre à l'ouverture d'un panneau, dans l'ordre où on le
      lit. Le rang est posé une fois pour toutes au chargement : l'animation
      est ensuite portée par la seule classe `ouvert`, donc elle se rejoue à
      chaque ouverture sans rien avoir à remettre à zéro.
@@ -67,7 +67,7 @@
                + '.tableau tbody tr:not(.t-desc),'
                + '.offres > li';
   panneaux.forEach(p => $$(ANIMES, p).forEach((el, i) => {
-    el.classList.add('deroule');
+    el.classList.add('ouvre');
     el.style.setProperty('--rang', i);
   }));
 
