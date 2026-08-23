@@ -54,6 +54,23 @@
   let declencheur = null;     // bulle d'où il est parti, pour y revenir
   let aPousse = false;        // a-t-on ajouté une entrée d'historique ?
 
+  /* Ce qui se déroule à l'ouverture d'un panneau, dans l'ordre où on le
+     lit. Le rang est posé une fois pour toutes au chargement : l'animation
+     est ensuite portée par la seule classe `ouvert`, donc elle se rejoue à
+     chaque ouverture sans rien avoir à remettre à zéro.
+
+     Les lignes du tableau sont prises une à une, mais ni `.tableau` ni
+     `.offres` : un parent qui se déroulerait en même temps que ses enfants
+     les rognerait deux fois. */
+  const ANIMES = '.feuille > *:not(.tarifs),'
+               + '.tarifs > :not(.tableau):not(.offres),'
+               + '.tableau tbody tr:not(.t-desc),'
+               + '.offres > li';
+  panneaux.forEach(p => $$(ANIMES, p).forEach((el, i) => {
+    el.classList.add('deroule');
+    el.style.setProperty('--rang', i);
+  }));
+
   /* Les descriptions du tableau des tarifs se replient quand on quitte le
      panneau : on retrouve la liste des prix telle qu'on l'avait découverte,
      pas l'état où on l'avait laissée. */

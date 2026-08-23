@@ -438,12 +438,37 @@ body::after{
 .fermer:hover{ box-shadow:var(--nm-out-lg); }
 .fermer:active{ box-shadow:var(--nm-in); transform:scale(.94); }
 
-.feuille{
-  max-width:34rem; margin-inline:auto;
-  opacity:0; transform:translateY(14px);
-  transition:opacity .26s var(--ease) .06s, transform .34s var(--ease-out) .06s;
+.feuille{ max-width:34rem; margin-inline:auto; }
+
+/* --- Le deroule du contenu ---
+   Le panneau montait d'un bloc : tout son contenu apparaissait d'une seule
+   piece. Il se decouvre maintenant ligne a ligne, du haut vers le bas,
+   chaque bloc decale sur le precedent — un titre, puis son chapo, puis les
+   prix un a un.
+
+   Le mouvement est un `clip-path` qui descend, et non une opacite seule :
+   le texte n'apparait pas en fondu, il se devoile. C'est ce qui donne
+   l'impression d'une bande qu'on deroule plutot que d'un rideau qui tombe
+   — le contenu est deja la, on leve ce qui le cachait.
+
+   Le rang vient du script, dans l'ordre du document : une suite de
+   `:nth-child` aurait cede au premier bloc ajoute, et le tableau n'a pas le
+   meme nombre de lignes que les autres panneaux. */
+@keyframes deroule{
+  from{ opacity:0; clip-path:inset(0 0 100% 0); transform:translateY(9px); }
+  to  { opacity:1; clip-path:inset(0 0 0 0);    transform:none; }
 }
-.panneau.ouvert .feuille{ opacity:1; transform:none; }
+.panneau.ouvert .deroule{
+  /* `backwards` et non `both` : l'element tient l'etat de depart pendant son
+     delai, puis rend la main a ses propres styles. Avec `both` il gardait un
+     `clip-path:inset(0)` a l'arret, qui rognait les ombres portees des
+     blocs en relief — les cartes du rendez-vous s'en trouvaient a plat. */
+  animation:deroule .72s var(--ease-out) backwards;
+  animation-delay:calc(var(--rang,0) * 80ms);
+}
+/* La description d'un soin se deroule aussi, mais sans attendre : c'est une
+   reponse a un appui, pas une entree en scene. */
+.tableau tr.t-desc:not([hidden]){ animation:deroule .38s var(--ease-out) backwards; }
 
 /* Deux classes, et non `.sur-titre` seul : le sur-titre est un `<p>` dans
    `.feuille`, et `.feuille p` (une classe + un élément) l'emportait sur
@@ -950,7 +975,14 @@ body::after{
 
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  /* Le délai autant que la durée : le déroulé du contenu tient son état de
+     départ — invisible — pendant son délai, qui monte à près d'une seconde
+     sur le dernier bloc. Neutraliser la seule durée laissait donc la page
+     vide tout ce temps pour qui demande moins de mouvement. */
+  *,*::before,*::after{
+    animation-duration:.01ms !important; animation-delay:0s !important;
+    transition-duration:.01ms !important; transition-delay:0s !important;
+  }
   .logo, .portrait, .titre, .accroche, .bulle{ opacity:1; }
   .portrait{ animation:none; }
 }
