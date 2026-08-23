@@ -176,7 +176,7 @@ body::after{
   position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
 }
 
-.scene > *:not(.filigrane-fond){ position:relative; z-index:1; }
+.scene > *:not(:where(.filigrane-fond)){ position:relative; z-index:1; }
 
 /* Écran large : deux colonnes. Le pictogramme coiffe la photo, le nom et
    les bulles occupent la colonne de droite, centrés sur la hauteur. */
@@ -364,7 +364,14 @@ body::after{
 .panneau{
   position:fixed; inset:0; z-index:50;
   background:var(--card);
-  overflow-y:auto; overscroll-behavior:contain;
+  /* Vertical seulement. Le filigrane est volontairement coupé par le bord
+     droit, et comme `overflow-y:auto` rend aussi l'axe horizontal
+     défilable, le panneau se laissait tirer de côté de 31 px sur
+     téléphone — la même cause que sur l'accueil, où une couche de
+     recadrage règle le problème. Ici c'est le panneau lui-même qui
+     recadre : rien n'a jamais à défiler latéralement dedans, et le
+     tableau des tarifs garde son propre défilement. */
+  overflow:hidden auto; overscroll-behavior:contain;
   padding:clamp(3.6rem,9vh,5.5rem) var(--pad) clamp(2rem,6vh,4rem);
   /* Fermé : réduit au disque de la bulle d'origine, donc invisible.
      Les coordonnées sont posées par le JS au moment du clic. */
@@ -405,8 +412,14 @@ body::after{
     color-mix(in srgb, var(--teinte,var(--accent)) 13%, transparent) 0,
     transparent 100%);
 }
-/* Le contenu passe au-dessus des deux voiles. */
-.panneau > *{ position:relative; z-index:1; }
+/* Le contenu passe au-dessus des deux voiles — sauf la couche du
+   filigrane, qui doit rester fixée à la fenêtre.
+
+   L'exception est dans `:where()`, qui ne compte pas dans la spécificité.
+   Écrite en `:not(.filigrane-fond)`, la règle passait à deux classes et
+   l'emportait alors sur `.fermer` : le bouton de fermeture repassait en
+   `relative`, se rangeait sous le contenu et devenait incliquable. */
+.panneau > *:not(:where(.filigrane-fond)){ position:relative; z-index:1; }
 
 .fermer{
   position:fixed; top:clamp(.9rem,2.5vh,1.6rem); right:var(--pad); z-index:2;

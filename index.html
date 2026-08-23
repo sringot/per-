@@ -147,10 +147,11 @@
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <!-- Le M du logo en filigrane, derrière le contenu. Frère du
-       `.panneau > *` : posé avant `.feuille`, il passe dessous sans qu'on
-       ait à lui inventer un z-index. Les cinq panneaux le portent. -->
-  <div class="filigrane" aria-hidden="true"></div>
+  <!-- Le M du logo en filigrane, derrière le contenu. La couche qui le
+       porte couvre la fenêtre et le recadre : le repère déborde du bord
+       droit à dessein, et sans ce recadrage le panneau se laissait tirer
+       de côté au doigt. Les cinq panneaux la portent. -->
+  <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
   <div class="feuille">
     <p class="sur-titre">À propos</p>
     <h2 id="moi-t">Masser, par plaisir</h2>
@@ -215,7 +216,7 @@
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <div class="filigrane" aria-hidden="true"></div>
+  <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
   <div class="feuille">
     <p class="sur-titre">Le lieu</p>
     <h2 id="lieu-t">Une parenthèse<br>hors du temps</h2>
@@ -247,7 +248,7 @@
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <div class="filigrane" aria-hidden="true"></div>
+  <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
   <div class="feuille feuille--soins">
     <p class="sur-titre">Les massages</p>
     <h2 id="massages-t">Cinq soins,<br>cinq univers</h2>
@@ -425,7 +426,7 @@
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <div class="filigrane" aria-hidden="true"></div>
+  <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
   <div class="feuille">
     <p class="sur-titre">Retours clientes</p>
     <h2 id="avis-t">Elles en parlent<br>mieux que moi</h2>
@@ -447,7 +448,7 @@
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <div class="filigrane" aria-hidden="true"></div>
+  <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
   <div class="feuille feuille--rdv">
     <p class="sur-titre">Rendez-vous</p>
     <h2 id="rdv-t">Deux façons<br>de réserver</h2>
