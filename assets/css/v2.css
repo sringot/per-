@@ -120,6 +120,12 @@ body::after{
 }
 .evitement:focus{ transform:none; }
 :focus-visible{ outline:2.5px solid var(--accent); outline-offset:4px; border-radius:6px; }
+/* Après un appui au doigt ou à la souris, pas d'anneau — même quand c'est
+   le script qui a posé le focus. Voir la note de v2.js : les moteurs ne
+   s'accordent pas sur ce cas, et sur iOS l'anneau restait affiché après
+   avoir simplement touché un bouton. Le lien d'évitement fait exception :
+   il n'existe que pour le clavier. */
+[data-pointeur] :focus-visible:not(.evitement){ outline:none; }
 
 /* ---------- 3. L'ACCUEIL ----------
    Composition décentrée : la photo se pose à gauche, le nom et les bulles

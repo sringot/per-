@@ -29,6 +29,27 @@
   // panneau couvre l'écran. `clip-path` ne masque qu'à l'œil : sans cela,
   // la tabulation sortait du panneau et parcourait la page en dessous.
   const fond = [$('.scene'), $('.pied'), $('.evitement')].filter(Boolean);
+  /* ---------- D'où vient le focus ----------
+     `:focus-visible` est censé ne montrer l'anneau qu'au clavier. Les
+     moteurs ne s'accordent pas sur le cas qui nous concerne : ouvrir un
+     panneau pose le focus sur la fermeture par script, et le refermer le
+     repose sur la bulle. Chromium n'affiche alors rien après un appui au
+     doigt ; Safari, si — l'anneau restait sur le bouton après l'avoir
+     touché.
+
+     On tranche donc nous-mêmes, plutôt que de s'en remettre à l'heuristique
+     de chacun : `data-pointeur` marque une interaction au doigt ou à la
+     souris, et le CSS masque l'anneau tant qu'il est là. Une touche de
+     navigation le retire — `keydown` précède le déplacement du focus, la
+     bulle suivante retrouve donc son anneau. */
+  const racine = document.documentElement;
+  const CLAVIER = new Set(['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft',
+                           'ArrowRight', 'Home', 'End', 'Enter', ' ']);
+  addEventListener('pointerdown', () => racine.setAttribute('data-pointeur', ''), true);
+  addEventListener('keydown', e => {
+    if (CLAVIER.has(e.key)) racine.removeAttribute('data-pointeur');
+  }, true);
+
   let ouvert = null;          // panneau affiché, ou null
   let declencheur = null;     // bulle d'où il est parti, pour y revenir
   let aPousse = false;        // a-t-on ajouté une entrée d'historique ?
