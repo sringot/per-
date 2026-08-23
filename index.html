@@ -257,103 +257,6 @@
       sa façon de prendre soin de vous.
     </p>
 
-    <p class="astuce">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg>
-      Touchez une carte pour découvrir le soin.
-    </p>
-
-    <!-- Les cartes de la planche de Marie. Chaque carte se retourne au
-         toucher : le monogramme devant, la description derrière.
-         Le monogramme est un masque CSS, pas une image — sa couleur reste
-         ainsi pilotée par les variables, comme le reste de la charte.
-         Les tarifs viennent de Marie ; les descriptions restent à écrire. -->
-    <ul class="soins">
-      <li class="soin soin--kobido">
-        <button class="soin__carte" type="button" aria-expanded="false">
-          <span class="soin__pivot">
-          <span class="soin__face soin__face--avant">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__signe" aria-hidden="true"></span>
-            <span class="soin__nom">Kobido</span>
-          </span>
-          <span class="soin__face soin__face--arriere">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__titre">Kobido</span>
-            <span class="soin__sous">Lifting japonais du visage</span>
-            <span class="soin__desc">Un modelage du visage venu du Japon, tout en pressions et en lissages. Le grain de peau s'affine, les traits se détendent.</span>
-          </span>
-          </span>
-        </button>
-      </li>
-      <li class="soin soin--relaxant">
-        <button class="soin__carte" type="button" aria-expanded="false">
-          <span class="soin__pivot">
-          <span class="soin__face soin__face--avant">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__signe" aria-hidden="true"></span>
-            <span class="soin__nom">Relaxant</span>
-          </span>
-          <span class="soin__face soin__face--arriere">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__titre">Relaxant</span>
-            <span class="soin__sous">Massage corps complet</span>
-            <span class="soin__desc">Des manœuvres lentes et enveloppantes, du dos aux jambes. Celui qu'on choisit quand on a surtout besoin de déposer les armes.</span>
-          </span>
-          </span>
-        </button>
-      </li>
-      <li class="soin soin--deep-tissus">
-        <button class="soin__carte" type="button" aria-expanded="false">
-          <span class="soin__pivot">
-          <span class="soin__face soin__face--avant">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__signe" aria-hidden="true"></span>
-            <span class="soin__nom">Deep Tissus</span>
-          </span>
-          <span class="soin__face soin__face--arriere">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__titre">Deep Tissus</span>
-            <span class="soin__sous">Tensions profondes</span>
-            <span class="soin__desc">Un travail appuyé, muscle par muscle, sur les zones nouées. Pour les dos qui ont passé la semaine devant un écran.</span>
-          </span>
-          </span>
-        </button>
-      </li>
-      <li class="soin soin--madero">
-        <button class="soin__carte" type="button" aria-expanded="false">
-          <span class="soin__pivot">
-          <span class="soin__face soin__face--avant">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__signe" aria-hidden="true"></span>
-            <span class="soin__nom">Madéro</span>
-          </span>
-          <span class="soin__face soin__face--arriere">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__titre">Madéro</span>
-            <span class="soin__sous">Soin corps remodelant</span>
-            <span class="soin__desc">Des outils en bois qui roulent et pétrissent. Un soin tonique, qui relance la circulation.</span>
-          </span>
-          </span>
-        </button>
-      </li>
-      <li class="soin soin--drainage">
-        <button class="soin__carte" type="button" aria-expanded="false">
-          <span class="soin__pivot">
-          <span class="soin__face soin__face--avant">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__signe" aria-hidden="true"></span>
-            <span class="soin__nom">Drainage lymphatique</span>
-          </span>
-          <span class="soin__face soin__face--arriere">
-            <span class="soin__tourne" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.4v4.9h-4.9"/></svg></span>
-            <span class="soin__titre">Drainage lymphatique</span>
-            <span class="soin__sous">Méthode Nathalie Duarte</span>
-            <span class="soin__desc">Des pressions douces et rythmées qui relancent la lymphe. Les jambes se dégonflent, la lourdeur s'en va.</span>
-          </span>
-          </span>
-        </button>
-      </li>
-    </ul>
 
     <!-- Le bloc des tarifs est un enfant à part de la feuille : celle-ci
          borne ses paragraphes à une longueur de ligne lisible, et le tableau
@@ -361,6 +264,9 @@
          ligne l'un sous l'autre. -->
     <div class="tarifs">
     <h3 class="bloc-h" id="tarifs-t">Les tarifs</h3>
+    <!-- Les cartes qui se retournaient portaient l'invitation à toucher ;
+         sans elles, rien ne dit plus que le « i » s'ouvre. -->
+    <p class="tableau__aide">Le <b>i</b> de chaque soin ouvre sa description.</p>
     <!-- Le tableau plutôt que le dos des cartes : on lit des prix côte à
          côte, pas un par un. En retourner cinq pour en comparer deux, c'était
          demander de retenir un chiffre en changeant d'écran. -->
@@ -375,29 +281,44 @@
         </thead>
         <tbody>
       <tr class="soin--kobido">
-        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Kobido</th>
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Kobido<button class="t-info" type="button" aria-expanded="false" aria-controls="d-kobido" aria-label="Description du kobido"><span aria-hidden="true">i</span></button></th>
         <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">60&nbsp;€</b></span></td>
         <td data-col="En forfait"><span class="t-l t-l--vide">Pas de forfait</span></td>
       </tr>
+      <tr class="t-desc soin--kobido" id="d-kobido" hidden>
+        <td colspan="3"><b>Lifting japonais du visage.</b> Un modelage du visage venu du Japon, tout en pressions et en lissages. Le grain de peau s'affine, les traits se détendent.</td>
+      </tr>
       <tr class="soin--relaxant">
-        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Relaxant</th>
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Relaxant<button class="t-info" type="button" aria-expanded="false" aria-controls="d-relaxant" aria-label="Description du relaxant"><span aria-hidden="true">i</span></button></th>
         <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">60&nbsp;€</b></span><span class="t-l"><span class="t-l__nom">1 h 30</span><b class="t-l__prix">90&nbsp;€</b></span></td>
         <td data-col="En forfait"><span class="t-l" data-unite="60" data-lot="3" data-prix="150"><span class="t-l__nom">3&nbsp;séances&nbsp;de&nbsp;1&nbsp;h</span><b class="t-l__prix">150&nbsp;€</b><em class="t-avant"></em></span><span class="t-l" data-unite="90" data-lot="3" data-prix="240"><span class="t-l__nom">3&nbsp;séances&nbsp;de&nbsp;1&nbsp;h&nbsp;30</span><b class="t-l__prix">240&nbsp;€</b><em class="t-avant"></em></span></td>
       </tr>
+      <tr class="t-desc soin--relaxant" id="d-relaxant" hidden>
+        <td colspan="3"><b>Massage corps complet.</b> Des manœuvres lentes et enveloppantes, du dos aux jambes. Celui qu'on choisit quand on a surtout besoin de déposer les armes.</td>
+      </tr>
       <tr class="soin--deep-tissus">
-        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Deep Tissus</th>
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Deep Tissus<button class="t-info" type="button" aria-expanded="false" aria-controls="d-deep-tissus" aria-label="Description du deep tissus"><span aria-hidden="true">i</span></button></th>
         <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">70&nbsp;€</b></span></td>
         <td data-col="En forfait"><span class="t-l" data-unite="70" data-lot="3" data-prix="180"><span class="t-l__nom">3&nbsp;séances</span><b class="t-l__prix">180&nbsp;€</b><em class="t-avant"></em></span></td>
       </tr>
+      <tr class="t-desc soin--deep-tissus" id="d-deep-tissus" hidden>
+        <td colspan="3"><b>Tensions profondes.</b> Un travail appuyé, muscle par muscle, sur les zones nouées. Pour les dos qui ont passé la semaine devant un écran.</td>
+      </tr>
       <tr class="soin--madero">
-        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Madéro</th>
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Madéro<button class="t-info" type="button" aria-expanded="false" aria-controls="d-madero" aria-label="Description du madéro"><span aria-hidden="true">i</span></button></th>
         <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">70&nbsp;€</b></span></td>
         <td data-col="En forfait"><span class="t-l" data-unite="70" data-lot="5" data-prix="300"><span class="t-l__nom">5&nbsp;séances</span><b class="t-l__prix">300&nbsp;€</b><em class="t-avant"></em></span></td>
       </tr>
+      <tr class="t-desc soin--madero" id="d-madero" hidden>
+        <td colspan="3"><b>Soin corps remodelant.</b> Des outils en bois qui roulent et pétrissent. Un soin tonique, qui relance la circulation.</td>
+      </tr>
       <tr class="soin--drainage">
-        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Drainage lymphatique</th>
+        <th scope="row"><span class="t-signe" aria-hidden="true"></span>Drainage lymphatique<button class="t-info" type="button" aria-expanded="false" aria-controls="d-drainage" aria-label="Description du drainage lymphatique"><span aria-hidden="true">i</span></button></th>
         <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">80&nbsp;€</b></span></td>
         <td data-col="En forfait"><span class="t-l" data-unite="80" data-lot="5" data-prix="350"><span class="t-l__nom">5&nbsp;séances</span><b class="t-l__prix">350&nbsp;€</b><em class="t-avant"></em></span></td>
+      </tr>
+      <tr class="t-desc soin--drainage" id="d-drainage" hidden>
+        <td colspan="3"><b>Méthode Nathalie Duarte.</b> Des pressions douces et rythmées qui relancent la lymphe. Les jambes se dégonflent, la lourdeur s'en va.</td>
       </tr>
         </tbody>
       </table>

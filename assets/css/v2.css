@@ -608,22 +608,10 @@ body::after{
    `tools-cartes.py`, jamais saisis à la main. Le monogramme est posé en
    **masque** : le fichier SVG ne porte aucune couleur, c'est le CSS qui
    la donne — une teinte se change donc ici, sans retoucher les dessins. */
-/* Cinq cartes dans les 34 rem d'une feuille de lecture donnent des
-   vignettes de 96 px : illisibles. Ce panneau-ci s'élargit, le texte au
-   dessus des cartes gardant sa longueur de ligne. */
-.feuille--soins{ max-width:min(72rem,100%); }
-.feuille--soins > :not(.soins){ max-width:34rem; }
 /* Le tableau n'est pas de la prose : il lui faut la largeur de ses colonnes,
-   pas une longueur de ligne de lecture. */
-.feuille--soins > .tarifs{ max-width:min(46rem,100%); }
-
-.soins{
-  margin-top:1.8rem;
-  display:grid; gap:clamp(.55rem,2.4vw,1rem);
-  grid-template-columns:repeat(2,minmax(0,1fr));
-}
-@media (min-width:600px){ .soins{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
-@media (min-width:1000px){ .soins{ grid-template-columns:repeat(5,minmax(0,1fr)); } }
+   pas une longueur de ligne de lecture. Le reste du panneau garde la sienne. */
+.feuille--soins{ max-width:min(46rem,100%); }
+.feuille--soins > :not(.tarifs){ max-width:34rem; }
 
 /* Relevé sur la planche de référence par tools-cartes.py.
    `--signe-c` est la couleur du monogramme, `--texte` la même teinte
@@ -639,185 +627,6 @@ body::after{
 .soin--deep-tissus{ --fond:#FAE1AB; --signe-c:#D59C40; --texte:#825F27; --marque:#B38336; --signe:url(../img/soins/deep-tissus.svg); }
 .soin--madero     { --fond:#A47864; --signe-c:#FDF5E8; --texte:#191817; --marque:#8E8982; --signe:url(../img/soins/madero.svg); }
 .soin--drainage   { --fond:#E39E99; --signe-c:#BF585A; --texte:#6B3132; --marque:#BF585A; --signe:url(../img/soins/drainage.svg); }
-
-/* La perspective est portée par le conteneur, la rotation par la carte :
-   sur le même élément, la perspective s'appliquerait à la carte elle-même
-   et le retournement paraîtrait plat. */
-/* --- Le retournement ---
-   Deux mouvements, donc deux éléments : la carte s'élève et se repose,
-   le pivot tourne. Sur un seul élément c'est impossible — `transform`
-   est une propriété unique, une seule durée, et l'élévation doit
-   culminer à mi-course quand la rotation, elle, avance tout droit. */
-.soin__carte{
-  position:relative; display:block; width:100%;
-  /* .62, comme les cartes de la planche de Marie (330 × 530). Le format
-     d'avant, plus trapu, ne laissait pas la place au Relaxant et à ses deux
-     durées : son dos débordait de 21 px. */
-  aspect-ratio:.62;
-  perspective:1100px;
-  transform:translateY(0) scale(1);
-  transition:transform .34s var(--ease-out);
-}
-/* L'envol : posé au moment de l'appui, retiré à mi-parcours. La carte
-   monte vers l'oeil pendant qu'elle tourne, puis se repose — le geste de
-   quelqu'un qui prend une carte, la retourne, et la remet sur la table. */
-.soin__carte.envol{ transform:translateY(-14px) scale(1.045); }
-.soin__carte:active{ transform:translateY(0) scale(.98); }
-
-.soin__pivot{
-  position:absolute; inset:0;
-  transform-style:preserve-3d;
-  /* Souplesse **symétrique**, et non la sortie rapide du reste du site :
-     avec `ease-out`, la carte franchissait les 90° en 110 ms puis rampait
-     600 ms. Comme les deux faces sont cachées de part et d'autre de cet
-     angle, elle restait un quart de seconde parfaitement invisible.
-     Une courbe symétrique fait coïncider la moitié du temps avec la
-     moitié de la rotation — d'où le retard de `visibility`, à .3s. */
-  transition:transform .62s cubic-bezier(.45,0,.55,1);
-  transform:rotateY(0);
-}
-/* Toutes les variantes déclarent la **même suite** de fonctions. Avec des
-   suites différentes, le navigateur ne peut plus interpoler fonction par
-   fonction : il décompose les matrices, et une rotation d'exactement 180°
-   s'y lit comme un aplatissement — la carte s'écrasait au lieu de tourner. */
-.soin__carte[aria-expanded="true"] .soin__pivot{ transform:rotateY(180deg); }
-
-/* Les survols sont réservés aux vrais pointeurs. iOS garde `:hover` collé
-   au dernier élément touché : après un appui, la carte restait posée à
-   189° — visiblement de travers, son texte fuyant — et flottait 5 px
-   au-dessus de ses quatre voisines. */
-@media (hover:hover) and (pointer:fine){
-  .soin__carte:hover{ transform:translateY(-5px) scale(1); }
-  .soin__carte:hover .soin__pivot{ transform:rotateY(-9deg); }
-  .soin__carte[aria-expanded="true"]:hover{ transform:translateY(-5px) scale(1); }
-  .soin__carte[aria-expanded="true"]:hover .soin__pivot{ transform:rotateY(189deg); }
-  .soin__carte:hover .soin__tourne{ opacity:.95; }
-}
-
-/* Amorce : à la première ouverture du panneau, une carte entrouvre son dos
-   puis se referme. Sur un écran tactile, rien d'autre ne dit qu'une carte
-   se retourne — et une carte qui ne bouge jamais n'a l'air que d'une image.
-
-   C'est une simple classe posée puis retirée, pas une `@keyframes` : une
-   animation prend la main sur `transform`, et un appui pendant qu'elle
-   court ne déclenchait plus aucune transition — la carte sautait d'un coup
-   à 180°. Avec une classe, l'appui ne fait que redonner une cible à la
-   transition déjà en place. */
-.soin__carte.amorce .soin__pivot{ transform:rotateY(-26deg); }
-
-/* --- Les deux faces --- */
-.soin__face{
-  position:absolute; inset:0;
-  display:flex; flex-direction:column;
-  padding:clamp(.8rem,3vw,1.15rem);
-  border-radius:16px;
-  background:var(--fond); color:var(--texte);
-  box-shadow:0 14px 28px -20px rgba(42,35,32,.6);
-  /* Sans cela, la face cachée transparaît à travers celle de devant. */
-  -webkit-backface-visibility:hidden; backface-visibility:hidden;
-  /* Le lecteur d'écran, lui, ne voit pas les faces : il faut le lui dire.
-     Le changement est retardé jusqu'au milieu du retournement, sinon la
-     face partante disparaît avant d'avoir fini de tourner. */
-  visibility:hidden;
-  transition:box-shadow .34s var(--ease-out), visibility 0s linear .31s;
-}
-/* Monogramme au centre, nom en bas : en simple pile centrée, un nom sur
-   deux lignes (« Drainage lymphatique ») remontait le monogramme et les
-   cinq cartes ne s'alignaient plus. */
-.soin__face--avant{
-  visibility:visible;
-  display:grid; grid-template-rows:1fr auto; justify-items:center;
-  align-items:center; gap:.7rem;
-}
-.soin__face--arriere{ transform:rotateY(180deg); text-align:left; }
-.soin__carte[aria-expanded="true"] .soin__face--avant  { visibility:hidden; }
-.soin__carte[aria-expanded="true"] .soin__face--arriere{ visibility:visible; }
-
-/* L'ombre suit l'élévation : une carte qui monte projette plus loin et
-   plus doux. C'est ce qui la fait décoller de la page. */
-.soin__carte.envol .soin__face{ box-shadow:0 32px 48px -22px rgba(42,35,32,.55); }
-
-/* Un reflet balaie la carte pendant qu'elle est de chant : c'est ce qui
-   lui donne l'air d'une surface, et non d'un rectangle de couleur. */
-.soin__face::before{
-  content:''; position:absolute; inset:0; border-radius:inherit;
-  pointer-events:none; opacity:0; z-index:2;
-  background:linear-gradient(105deg,
-    transparent 32%, rgba(255,255,255,.32) 50%, transparent 68%);
-  transition:opacity .3s var(--ease);
-}
-.soin__carte.envol .soin__face::before{ opacity:1; }
-
-/* Le contenu de la face qui arrive se pose juste après elle. Sans ce
-   décalage, tout paraît d'un bloc à la seconde où la carte passe les 90° :
-   on voit un basculement, pas une lecture qui s'ouvre.
-
-   L'échelon passe par une variable, et non par `transition-delay` posé
-   directement sur `:nth-child` : les règles d'état, plus spécifiques,
-   l'écraseraient — tout le contenu arriverait au même instant, et le
-   contenu qui part attendrait un tiers de seconde avant de s'effacer. */
-.soin__face > *{
-  --pose:.33s;
-  transition:opacity .3s var(--ease), transform .45s var(--ease-out);
-}
-.soin__face > :nth-child(2){ --pose:.39s; }
-.soin__face > :nth-child(3){ --pose:.45s; }
-.soin__face > :nth-child(4){ --pose:.51s; }
-
-
-.soin__carte[aria-expanded="true"]  .soin__face--avant   > *,
-.soin__carte[aria-expanded="false"] .soin__face--arriere > *{
-  opacity:0; transform:translateY(12px); transition-delay:0s;
-}
-.soin__carte[aria-expanded="true"]  .soin__face--arriere > *,
-.soin__carte[aria-expanded="false"] .soin__face--avant   > *{
-  opacity:1; transform:none; transition-delay:var(--pose);
-}
-
-/* Le pictogramme « ça se retourne », dans le coin de chaque face. Sur la
-   face avant il invite, sur la face arrière il indique le retour. */
-.soin__tourne{
-  position:absolute; top:.6rem; right:.6rem;
-  width:22px; height:22px; opacity:.6;
-}
-.soin__tourne svg{
-  width:100%; height:100%;
-  fill:none; stroke:currentColor; stroke-width:1.8;
-  stroke-linecap:round; stroke-linejoin:round;
-}
-.soin__carte:hover .soin__tourne{ opacity:.95; }
-
-/* Le monogramme : un masque, donc une couleur pilotée par le CSS. */
-.soin__signe{
-  width:58%; aspect-ratio:1; flex:none;
-  background:var(--signe-c);
-  -webkit-mask:var(--signe) center/contain no-repeat;
-          mask:var(--signe) center/contain no-repeat;
-}
-/* Le pictogramme de retournement occupe le coin haut-droit : sans cette
-   réserve, « Drainage lymphatique » passait dessous. */
-.soin__titre, .soin__sous{ padding-right:1.7rem; }
-.soin__nom{
-  font-size:clamp(.68rem,2.4vw,.78rem); font-weight:600;
-  letter-spacing:.14em; text-transform:uppercase; text-align:center;
-  line-height:1.3;
-}
-.soin__titre{
-  font-size:clamp(.86rem,3vw,1rem); font-weight:600; line-height:1.15;
-  letter-spacing:-.01em;
-}
-.soin__sous{
-  margin-top:.15rem;
-  font-size:clamp(.6rem,2vw,.68rem); font-weight:500;
-  letter-spacing:.06em; text-transform:uppercase;
-}
-
-
-/* --- La description au dos --- */
-.soin__desc{
-  margin-top:.55rem;
-  font-size:clamp(.72rem,2.5vw,.8rem); line-height:1.45;
-}
 
 /* --- Le tableau des tarifs ---
    Sous la grille, une seule fois. On lit des prix **côte à côte** : les
@@ -861,6 +670,31 @@ body::after{
   -webkit-mask:var(--signe) center/contain no-repeat;
           mask:var(--signe) center/contain no-repeat;
 }
+/* Le « i » qui ouvre la description du soin. Il porte la teinte de son
+   soin en fond très dilué — assez pour qu'on le rattache à la ligne, assez
+   peu pour que l'encre y reste à plus de 10:1. La lettre est décorative :
+   c'est `aria-label` qui nomme le bouton. */
+.t-info{
+  width:26px; height:26px; border-radius:50%;
+  display:inline-grid; place-items:center;
+  vertical-align:-.42em; margin-left:.5rem;
+  font-size:.78rem; font-weight:600; font-style:italic; line-height:1;
+  color:var(--ink);
+  background:color-mix(in srgb, var(--fond) 26%, var(--card));
+  transition:background .25s var(--ease);
+}
+@media (hover:hover) and (pointer:fine){
+  .t-info:hover{ background:color-mix(in srgb, var(--fond) 42%, var(--card)); }
+}
+/* La description prend une ligne à elle, sous celle du soin : logée dans la
+   cellule du nom, elle aurait allongé la colonne et décalé les prix. */
+.tableau tr.t-desc[hidden]{ display:none; }
+.t-desc td{
+  padding-top:0; padding-bottom:1rem;
+  font-size:.86rem; color:var(--ink-soft); max-width:52ch;
+}
+.t-desc b{ font-weight:600; color:var(--ink); }
+
 /* Une offre : sa durée (ou son nombre de séances) et son prix. Le Relaxant
    en a deux par cellule, d'où la liste plutôt qu'une ligne de tableau de
    plus — une cellule fusionnée ne survivrait pas au réempilement. */
@@ -880,6 +714,18 @@ body::after{
 .tableau__note{
   margin-top:1rem;
   font-size:.76rem; color:var(--ink-soft);
+}
+.tableau__aide{
+  margin:-.4rem 0 1rem;
+  font-size:.78rem; color:var(--ink-soft);
+}
+/* Le « i » cité dans la phrase prend l'allure du bouton, en plus petit :
+   on reconnaît alors dans le tableau ce qu'on vient de lire. */
+.tableau__aide b{
+  display:inline-grid; place-items:center;
+  width:19px; height:19px; border-radius:50%; vertical-align:-.3em;
+  font-size:.68rem; font-weight:600; font-style:italic; line-height:1;
+  color:var(--ink); background:color-mix(in srgb, var(--ink) 10%, var(--card));
 }
 
 /* Les offres qui ne portent pas sur un seul soin. Deux poids : le pack
@@ -937,33 +783,9 @@ body::after{
   /* La ligne d'offre s'étale : intitulé à gauche, prix à droite. */
   .t-l{ justify-content:space-between; }
   .t-avant{ text-align:right; }
-}
-
-.astuce{
-  display:flex; align-items:center; gap:.45rem;
-  margin-top:1.4rem;
-  font-size:.8rem; color:var(--ink-soft);
-}
-.astuce svg{
-  width:16px; height:16px; flex:none; color:var(--teinte,var(--accent));
-  fill:none; stroke:currentColor; stroke-width:1.8;
-  stroke-linecap:round; stroke-linejoin:round;
-}
-
-/* Retourner une carte est un geste de confort, pas une information :
-   sans mouvement, on échange simplement les deux faces. */
-@media (prefers-reduced-motion:reduce){
-  .soin__carte, .soin__carte:hover, .soin__carte:active, .soin__carte.envol,
-  .soin__pivot,
-  .soin__carte:hover .soin__pivot,
-  .soin__carte.amorce .soin__pivot,
-  .soin__carte[aria-expanded="true"] .soin__pivot,
-  .soin__carte[aria-expanded="true"]:hover .soin__pivot{ transform:none; }
-  .soin__face--arriere{ transform:none; }
-  .soin__face, .soin__face > *{ transition:none; }
-  .soin__face > *{ opacity:1 !important; transform:none !important; }
-  .soin__face::before{ display:none; }
-  .soin__carte[aria-expanded="true"] .soin__face--arriere{ z-index:1; }
+  /* Réempilée, chaque ligne prend un filet : la description en hériterait
+     et se détacherait de son soin au lieu de le prolonger. */
+  .tableau tbody tr.t-desc{ border-top:0; padding-top:0; margin-top:-.4rem; }
 }
 
 /* --- Les avis --- */

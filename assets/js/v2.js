@@ -54,6 +54,17 @@
   let declencheur = null;     // bulle d'où il est parti, pour y revenir
   let aPousse = false;        // a-t-on ajouté une entrée d'historique ?
 
+  /* Les descriptions du tableau des tarifs se replient quand on quitte le
+     panneau : on retrouve la liste des prix telle qu'on l'avait découverte,
+     pas l'état où on l'avait laissée. */
+  function replie(p) {
+    $$('.t-info[aria-expanded="true"]', p).forEach(b => {
+      b.setAttribute('aria-expanded', 'false');
+      const d = document.getElementById(b.getAttribute('aria-controls'));
+      if (d) d.hidden = true;
+    });
+  }
+
   /* ---------- Ouvrir / fermer ---------- */
 
   function ouvrir(id, bulle) {
@@ -92,8 +103,7 @@
     // la navigation au clavier dans le panneau.
     p.querySelector('.fermer').focus({ preventScroll: true });
     p.scrollTop = 0;
-    cartes(p).forEach(c => c.setAttribute('aria-expanded', 'false'));
-    amorcer(p);
+    replie(p);
 
     if (location.hash !== '#' + id) {
       memorise({ panneau: id }, '#' + id);
@@ -105,9 +115,7 @@
     if (!ouvert) return;
     ouvert.classList.remove('ouvert');
     ouvert.setAttribute('inert', '');
-    // Les cartes retournées reviennent à l'endroit : rouvrir « Massages »
-    // et les retrouver sur le dos donnerait l'impression d'un état en plan.
-    cartes(ouvert).forEach(c => c.setAttribute('aria-expanded', 'false'));
+    replie(ouvert);
     // Le fond redevient atteignable **avant** qu'on y remette le focus.
     fond.forEach(e => e.removeAttribute('inert'));
     bulles.forEach(b => b.setAttribute('aria-expanded', 'false'));
@@ -169,48 +177,6 @@
   const depart = location.hash.slice(1);
   if (depart) ouvrir(depart, bulles.find(b => b.dataset.ouvre === depart));
 
-  /* ---------- Les cartes de soins ----------
-     Un appui retourne la carte. Tout l'état tient dans `aria-expanded` :
-     le CSS s'en sert pour la rotation, et un lecteur d'écran y lit la
-     même chose que ce qu'on voit. Deux sources de vérité pour un seul
-     état, c'est une de trop.
-
-     `cartes()` et `amorcer()` sont appelées depuis `ouvrir()` et
-     `fermer()`, et non branchées sur la croix et sur la bulle : accrochées
-     aux déclencheurs, elles se taisaient dès qu'on fermait autrement — par
-     le bouton « retour », ou en arrivant sur une adresse partagée. */
-  function cartes(p) { return $$('.soin__carte', p); }
-
-  let amorceFaite = false;
-  function amorcer(p) {
-    const carte = p.querySelector('.soin__carte');
-    if (!carte || amorceFaite) return;
-    amorceFaite = true;
-    // Une carte entrouvre son dos puis se referme. Sur un écran tactile il
-    // n'y a pas de survol : rien d'autre ne dirait qu'une carte se
-    // retourne. Une seule fois, sur une seule carte — le geste doit se
-    // remarquer, pas s'imposer.
-    setTimeout(() => carte.classList.add('amorce', 'envol'), 500);
-    setTimeout(() => carte.classList.remove('amorce', 'envol'), 1250);
-  }
-
-  $$('.soin__carte').forEach(carte => {
-    let repos = null;
-    carte.addEventListener('click', () => {
-      // L'amorce vise le même `transform` : la retirer ici évite qu'elle
-      // reprenne la main si l'on appuie pendant qu'elle joue.
-      carte.classList.remove('amorce');
-      const ouverte = carte.getAttribute('aria-expanded') === 'true';
-      carte.setAttribute('aria-expanded', String(!ouverte));
-
-      // L'envol monte puis redescend : deux états, donc une classe posée
-      // puis retirée à mi-parcours. Une transition ne sait aller que d'un
-      // point à un autre — elle ne peut pas culminer en chemin.
-      clearTimeout(repos);
-      carte.classList.add('envol');
-      repos = setTimeout(() => carte.classList.remove('envol'), 310);
-    });
-  });
 
   /* ---------- L'économie des forfaits ----------
      Jamais écrite : elle se déduit du prix à la séance, du nombre de
@@ -255,4 +221,18 @@
   /* ---------- Année du pied de page ---------- */
   const an = $('#annee');
   if (an) an.textContent = new Date().getFullYear();
+  /* Le « i » de chaque soin : la description est dans la page, on ne fait
+     que la montrer. `aria-expanded` porte l'état, `aria-controls` désigne la
+     ligne — un lecteur d'écran annonce donc l'un et trouve l'autre. */
+  $$('.t-info').forEach(bouton => {
+    bouton.addEventListener('click', () => {
+      const d = document.getElementById(bouton.getAttribute('aria-controls'));
+      if (!d) return;
+      const ouvre = bouton.getAttribute('aria-expanded') !== 'true';
+      bouton.setAttribute('aria-expanded', String(ouvre));
+      d.hidden = !ouvre;
+    });
+  });
+
+
 })();
