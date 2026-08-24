@@ -25,6 +25,10 @@ def b64(rel):
 POLICE = b64('assets/fonts/figtree-400-latin.woff2')
 LOGO = b64('assets/img/logo-officiel.webp')
 PHOTO = b64('assets/img/marie-hero-m.webp')
+# Le portrait posé, pour la seule pastille de la maquette D : à 50 px de
+# côté, une scène à deux personnages ne se lit plus — on n'y voit qu'une
+# tache sombre. Un visage, si.
+PORTRAIT = b64('assets/img/marie-moi.webp')
 SIGNE = b64('assets/img/logo-m.svg')
 
 # Les tracés viennent d'index.html — les mêmes icônes que le site, pas des
@@ -54,8 +58,10 @@ def bulle(cle, phare=False):
 
 LOGO_IMG = (f'<img class="logo" src="data:image/webp;base64,{LOGO}" alt="" '
             f'width="200" height="200">')
-PHOTO_IMG = (f'<img src="data:image/webp;base64,{PHOTO}" alt="Marie" '
+PHOTO_IMG = (f'<img src="data:image/webp;base64,{PHOTO}" alt="Marie en séance" '
              f'width="700" height="938">')
+PORTRAIT_IMG = (f'<img src="data:image/webp;base64,{PORTRAIT}" alt="Marie" '
+                f'width="620" height="827">')
 FILIGRANE = '<span class="filigrane" aria-hidden="true"></span>'
 
 FAITS = ('<p class="faits"><span>Réservé aux femmes</span>'
@@ -131,7 +137,7 @@ D = f'''
       <h2 class="titre">marieemassage</h2>
       <p class="sous">Masseuse bien-être · Montigny-le-Bretonneux</p>
     </div>
-    <figure class="pastille">{PHOTO_IMG}</figure>
+    <figure class="pastille">{PORTRAIT_IMG}</figure>
   </header>
   <p class="accroche">{ACCROCHE}</p>
   <nav class="rangs">
@@ -422,7 +428,7 @@ h1{{ font-size:clamp(2rem,6vw,3.1rem); line-height:1.04; letter-spacing:-.035em;
 .ec--d .sous{{ margin:.4cqh 0 0; font-size:2.7cqw; color:var(--ink-soft); line-height:1.2 }}
 .ec--d .pastille{{ margin:0; width:13cqw; aspect-ratio:1; border-radius:50%; overflow:hidden;
                    box-shadow:var(--nm-out); flex:none }}
-.ec--d .pastille img{{ width:100%; height:100%; object-fit:cover; object-position:50% 34%; display:block }}
+.ec--d .pastille img{{ width:100%; height:100%; object-fit:cover; object-position:50% 42%; display:block }}
 .ec--d .accroche{{ font-size:5.4cqw; line-height:1.25; color:var(--ink); max-width:16ch;
                    letter-spacing:-.02em }}
 .ec--d .rangs{{ display:flex; flex-direction:column; gap:1.8cqh; flex:1 }}

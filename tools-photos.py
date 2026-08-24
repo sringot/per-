@@ -1,66 +1,80 @@
 #!/usr/bin/env python3
 """Prépare les photos du site aux formats attendus par les gabarits.
 
-Une seule photo alimente trois emplacements, chacun avec son propre
-rapport d'aspect. Recadrer à la main donnerait trois fichiers qu'on ne
-saurait plus régénérer : le cadrage est donc décrit ici, en fractions de
-l'image d'origine, et le script produit les fichiers.
+Deux photographies alimentent le site : une scène de massage, qui tient
+l'accueil, et un portrait posé, qui reste dans « Moi ». Chaque emplacement
+a son propre rapport d'aspect. Recadrer à la main donnerait des fichiers
+qu'on ne saurait plus régénérer : le cadrage est décrit ici, en fractions
+de l'image d'origine, et le script produit les fichiers.
 
-Le point de visée est le **visage**, pas le centre de l'image : un
-recadrage centré coupait le haut du crâne sur le format le plus carré.
+Le point de visée n'est jamais le centre de l'image : sur le portrait
+c'est le visage — un recadrage centré coupait le haut du crâne sur le
+format le plus carré — et sur la scène c'est le point entre le visage de
+Marie et ses mains.
 
     python3 tools-photos.py
 """
 import pathlib
 from PIL import Image
 
-ROOT   = pathlib.Path(__file__).parent
-SOURCE = ROOT / 'assets/img/marie-source.png'
-DEST   = ROOT / 'assets/img'
+ROOT = pathlib.Path(__file__).parent
+DEST = ROOT / 'assets/img'
 
-# Les deux clichés de Marie en séance, pour le panneau « Moi ». Ils arrivent
-# déjà cadrés en 3/4, celui du gabarit : rien à recadrer, seulement à
-# convertir. Ils font 2 Mo de PNG chacun, ce qui est hors de question sur une
-# page ouverte au téléphone.
+# Le cliché de Marie en séance qui reste propre au panneau « Moi ». Il
+# arrive déjà cadré en 3/4, celui du gabarit : rien à recadrer, seulement à
+# convertir. Il fait 2 Mo de PNG, ce qui est hors de question sur une page
+# ouverte au téléphone.
+#
+# Le second cliché de la série ne passe plus par ici : il est devenu la
+# photo de l'accueil, et il est donc recadré comme les autres, plus bas.
 #
 # 620 px de large : le cadre le plus grand fait 265 px sur grand écran, et
 # 620 couvre le double pour les écrans à forte densité sans payer plus.
-SEANCES = [('seance-source-1.png', 'marie-seance-1.webp'),
-           ('seance-source-2.png', 'marie-seance-2.webp')]
+SEANCES = [('seance-source-2.png', 'marie-seance-2.webp')]
 SEANCE_LARGEUR = 620
 
-# Repères relevés sur la photo (fractions de largeur / hauteur).
+# Repères relevés sur les photos (fractions de largeur / hauteur).
+# Le portrait posé : le visage est haut et à droite du centre.
 VISAGE_X, VISAGE_Y = 0.55, 0.40
+# La photo en séance : deux personnes, pas une. La visée est prise entre le
+# visage de Marie et ses mains — c'est le geste qui fait l'image, et viser
+# le seul visage repoussait les mains hors du cadre sur les formats courts.
+SEANCE_X, SEANCE_Y = 0.52, 0.44
 
-# nom, rapport, largeur finale, part de l'image gardée, visée verticale
-# (la visée par défaut convient aux formats hauts ; un bandeau large doit
-#  viser plus haut, sinon le crâne sort du cadre)
+# source, nom, rapport, largeur finale, part de l'image gardée, visée
+# (chaque découpe nomme sa source : l'accueil et le panneau « Moi » ne
+#  montrent plus la même photographie, et une visée unique ne pouvait pas
+#  convenir à un portrait posé comme à une scène à deux personnages)
 FORMATS = [
-    # Arche de l'accueil. Plus haute que large, et **plus haute qu'avant** :
-    # sur téléphone la photo descend maintenant jusqu'au nom, et c'est cette
-    # hauteur gagnée qui laisse grandir la colonne de bulles à côté.
-    ('marie-hero.webp',     1 / 1.34, 1040, 0.98, VISAGE_Y),
-    # Page « à propos » : portrait 4/5.
-    ('marie-portrait.webp',  4 / 5,    800, 0.92, VISAGE_Y),
-    # Héros sur téléphone : l'arche y est large et basse. Recadrer la
-    # version verticale à cette hauteur rognait les côtés et cassait la
-    # composition ; cette découpe-ci est cadrée pour ce format.
-    # Cadrée large mais pas en bandeau : c'est le conteneur qui découpe
-    # la bande finale, via `object-position`. Une découpe 16/9 ne pouvait
-    # pas contenir la tête entière, la photo d'origine étant verticale.
-    # Toute la largeur disponible : moins on zoome, moins la tête occupe
-    # de hauteur une fois rendue, et plus la bande visible peut être basse.
-    ('marie-hero-large.webp', 4 / 3,   930, 1.00, 0.385),
-    # V2 : le portrait garde l'arche de la V1, donc le même rapport que
-    # `marie-hero.webp` — celui-ci sert tel quel sur grand écran. Sur
-    # téléphone le cadre est plus petit : moins de pixels suffisent pour
-    # la même netteté apparente, pour la moitié du poids.
-    ('marie-hero-m.webp',   1 / 1.34,   700, 0.98, VISAGE_Y),
+    # Arche de l'accueil. La photo en séance a presque exactement le
+    # rapport de l'arche (0,750 contre 0,746) : elle y entre entière, on ne
+    # rogne que 2 % pour absorber l'écart.
+    ('seance-source-1.png', 'marie-hero.webp',   1 / 1.34, 1040, 0.98,
+     SEANCE_X, SEANCE_Y),
+    # Même cadrage sur téléphone, moins de pixels : le cadre y est plus
+    # petit, et la netteté apparente est la même pour la moitié du poids.
+    ('seance-source-1.png', 'marie-hero-m.webp', 1 / 1.34,  700, 0.98,
+     SEANCE_X, SEANCE_Y),
+    # Portrait posé, gardé pour le panneau « Moi » et les partages.
+    ('marie-source.png', 'marie-portrait.webp',  4 / 5,     800, 0.92,
+     VISAGE_X, VISAGE_Y),
+    # Le même portrait au rapport des vignettes de « Moi ». Depuis que la
+    # scène de massage tient l'accueil, elle ne peut plus servir aussi de
+    # vignette : c'est le visage de Marie qui prend sa place, et il lui faut
+    # le 3/4 de l'autre vignette pour que la paire s'aligne.
+    ('marie-source.png', 'marie-moi.webp',       3 / 4,     620, 0.92,
+     VISAGE_X, VISAGE_Y),
+    # Découpe large du portrait. Cadrée large mais pas en bandeau : c'est
+    # le conteneur qui découpe la bande finale, via `object-position`. Une
+    # découpe 16/9 ne pouvait pas contenir la tête entière, la photo
+    # d'origine étant verticale.
+    ('marie-source.png', 'marie-hero-large.webp', 4 / 3,    930, 1.00,
+     VISAGE_X, 0.385),
 ]
 
 
-def recadre(im, rapport, part, visee_y):
-    """Recadre autour du visage, en gardant `part` de la dimension limitante."""
+def recadre(im, rapport, part, visee_x, visee_y):
+    """Recadre autour du point visé, en gardant `part` de la dimension limitante."""
     W, H = im.size
     # Plus grande boîte au bon rapport qui tienne dans l'image.
     if W / H > rapport:
@@ -70,20 +84,23 @@ def recadre(im, rapport, part, visee_y):
         w = W * part
         h = w / rapport
 
-    cx, cy = W * VISAGE_X, H * visee_y
+    cx, cy = W * visee_x, H * visee_y
     x = min(max(cx - w / 2, 0), W - w)
     y = min(max(cy - h / 2, 0), H - h)
     return im.crop((round(x), round(y), round(x + w), round(y + h)))
 
 
 def main():
-    if not SOURCE.exists():
-        raise SystemExit(f'photo introuvable : {SOURCE}')
-    src = Image.open(SOURCE).convert('RGB')
-    print(f'source : {src.size[0]}×{src.size[1]}')
-
-    for nom, rapport, largeur, part, visee in FORMATS:
-        im = recadre(src, rapport, part, visee)
+    ouvertes = {}
+    for source, nom, rapport, largeur, part, vx, vy in FORMATS:
+        if source not in ouvertes:
+            chemin_src = DEST / source
+            if not chemin_src.exists():
+                raise SystemExit(f'photo introuvable : {chemin_src}')
+            ouvertes[source] = Image.open(chemin_src).convert('RGB')
+            print(f'source : {source} — '
+                  f'{ouvertes[source].size[0]}×{ouvertes[source].size[1]}')
+        im = recadre(ouvertes[source], rapport, part, vx, vy)
         im = im.resize((largeur, round(largeur / rapport)), Image.LANCZOS)
         chemin = DEST / nom
         im.save(chemin, quality=82, method=6)
