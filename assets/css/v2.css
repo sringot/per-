@@ -438,37 +438,23 @@ body::after{
 .fermer:hover{ box-shadow:var(--nm-out-lg); }
 .fermer:active{ box-shadow:var(--nm-in); transform:scale(.94); }
 
-.feuille{ max-width:34rem; margin-inline:auto; }
-
-/* --- Le deroule du contenu ---
-   Le panneau montait d'un bloc : tout son contenu apparaissait d'une seule
-   piece. Il se decouvre maintenant ligne a ligne, du haut vers le bas,
-   chaque bloc decale sur le precedent — un titre, puis son chapo, puis les
-   prix un a un.
-
-   Le mouvement est un `clip-path` qui descend, et non une opacite seule :
-   le texte n'apparait pas en fondu, il se devoile. C'est ce qui donne
-   l'impression d'une bande qu'on deroule plutot que d'un rideau qui tombe
-   — le contenu est deja la, on leve ce qui le cachait.
-
-   Le rang vient du script, dans l'ordre du document : une suite de
-   `:nth-child` aurait cede au premier bloc ajoute, et le tableau n'a pas le
-   meme nombre de lignes que les autres panneaux. */
-@keyframes deroule{
-  from{ opacity:0; clip-path:inset(0 0 100% 0); transform:translateY(9px); }
-  to  { opacity:1; clip-path:inset(0 0 0 0);    transform:none; }
+/* --- L'entrée du contenu ---
+   Courte et d'un bloc. Le contenu a été révélé un moment ligne à ligne :
+   c'était joli à la première ouverture, long dès la deuxième. Il monte
+   maintenant d'un souffle, le temps que le disque du panneau finisse de
+   s'ouvrir — assez pour que rien n'apparaisse d'un coup sec, trop peu pour
+   qu'on ait à l'attendre. */
+.feuille{
+  max-width:34rem; margin-inline:auto;
+  opacity:0; transform:translateY(10px);
+  transition:opacity .18s var(--ease), transform .26s var(--ease-out);
 }
-.panneau.ouvert .deroule{
-  /* `backwards` et non `both` : l'element tient l'etat de depart pendant son
-     delai, puis rend la main a ses propres styles. Avec `both` il gardait un
-     `clip-path:inset(0)` a l'arret, qui rognait les ombres portees des
-     blocs en relief — les cartes du rendez-vous s'en trouvaient a plat. */
-  animation:deroule .72s var(--ease-out) backwards;
-  animation-delay:calc(var(--rang,0) * 80ms);
-}
-/* La description d'un soin se deroule aussi, mais sans attendre : c'est une
-   reponse a un appui, pas une entree en scene. */
-.tableau tr.t-desc:not([hidden]){ animation:deroule .38s var(--ease-out) backwards; }
+.panneau.ouvert .feuille{ opacity:1; transform:none; }
+
+/* La description d'un soin arrive de la même façon, en plus bref encore :
+   c'est une réponse à un appui, pas une entrée en scène. */
+@keyframes parait{ from{ opacity:0; transform:translateY(6px); } }
+.tableau tr.t-desc:not([hidden]){ animation:parait .22s var(--ease-out); }
 
 /* Deux classes, et non `.sur-titre` seul : le sur-titre est un `<p>` dans
    `.feuille`, et `.feuille p` (une classe + un élément) l'emportait sur
@@ -723,15 +709,20 @@ body::after{
 /* Une offre : sa durée (ou son nombre de séances) et son prix. Le Relaxant
    en a deux par cellule, d'où la liste plutôt qu'une ligne de tableau de
    plus — une cellule fusionnée ne survivrait pas au réempilement. */
+/* Le prix se cale à droite de sa colonne, à toutes les largeurs. Posé
+   simplement à la suite du libellé, il commençait là où celui-ci finissait :
+   « 1 h 60 € » et « 1 h 30 90 € » ne tombaient donc pas au même endroit, et
+   les cinq forfaits s'étalaient sur 65 px d'écart. Un tableau de prix se lit
+   en colonne — c'est même la seule raison d'en faire un tableau. */
 .t-l{
   display:flex; align-items:baseline; flex-wrap:wrap;
-  gap:.15rem .6rem;
+  justify-content:space-between; gap:.15rem .6rem;
 }
 .t-l + .t-l{ margin-top:.55rem; }
 .t-l__nom { color:var(--ink-soft); white-space:nowrap; }
 .t-l__prix{ font-weight:600; color:var(--ink); white-space:nowrap; }
 .t-avant{
-  flex-basis:100%;
+  flex-basis:100%; text-align:right;
   font-style:normal; font-size:.8em; color:var(--ink-soft);
 }
 .t-avant:empty{ display:none; }
@@ -805,9 +796,6 @@ body::after{
     font-size:.62rem; font-weight:500; letter-spacing:.12em;
     text-transform:uppercase; color:var(--ink-soft);
   }
-  /* La ligne d'offre s'étale : intitulé à gauche, prix à droite. */
-  .t-l{ justify-content:space-between; }
-  .t-avant{ text-align:right; }
   /* Réempilée, chaque ligne prend un filet : la description en hériterait
      et se détacherait de son soin au lieu de le prolonger. */
   .tableau tbody tr.t-desc{ border-top:0; padding-top:0; margin-top:-.4rem; }
