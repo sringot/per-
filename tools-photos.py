@@ -51,10 +51,24 @@ FORMATS = [
     # rogne que 2 % pour absorber l'écart.
     ('seance-source-1.png', 'marie-hero.webp',   1 / 1.34, 1040, 0.98,
      SEANCE_X, SEANCE_Y),
-    # Même cadrage sur téléphone, moins de pixels : le cadre y est plus
-    # petit, et la netteté apparente est la même pour la moitié du poids.
+    # Le même cadrage pour le téléphone couché et la tablette, où la photo
+    # garde son arche mais dans un cadre plus petit.
     ('seance-source-1.png', 'marie-hero-m.webp', 1 / 1.34,  700, 0.98,
      SEANCE_X, SEANCE_Y),
+    # Téléphone debout : la photo occupe l'écran entier, et l'écran est deux
+    # fois plus haut que large. Découper au rapport de l'écran plutôt que de
+    # laisser le navigateur rogner une image en 3/4 change tout : sur la
+    # découpe en 3/4 servie à 700 px, il n'en montrait que 433 de large — pour
+    # 1170 pixels d'écran sur un téléphone récent, soit un agrandissement de
+    # 2,7. Ici les 669 px sont tous vus, et ce sont ceux de la source, sans
+    # réduction intermédiaire.
+    #
+    # 0,462 est le rapport de l'écran de référence (390 × 844). La largeur
+    # n'est pas choisie : c'est tout ce que la source contient à ce rapport.
+    # Le jour où Marie fournit une photo plus définie, c'est ce nombre qui
+    # monte, et lui seul.
+    ('seance-source-1.png', 'marie-hero-plein.webp', 390 / 844, 669, 1.00,
+     SEANCE_X, .5),
     # Portrait posé, gardé pour le panneau « Moi » et les partages.
     ('marie-source.png', 'marie-portrait.webp',  4 / 5,     800, 0.92,
      VISAGE_X, VISAGE_Y),

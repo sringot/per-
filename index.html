@@ -76,6 +76,14 @@
 
   <figure class="portrait">
     <picture>
+      <!-- Téléphone debout : la photo prend l'écran entier. On sert la
+           découpe déjà au rapport de l'écran, sinon le navigateur rogne les
+           côtés d'une image en 3/4 et n'en affiche que 62 % de la largeur —
+           433 px pour 1170 pixels d'écran. Le média est le même que celui
+           qui déclenche la composition plein écran dans la feuille de style :
+           les deux doivent basculer ensemble. -->
+      <source media="(max-width:699px) and (orientation:portrait)"
+              srcset="assets/img/marie-hero-plein.webp" width="669" height="1448">
       <source media="(max-width:819px)" srcset="assets/img/marie-hero-m.webp" width="700" height="938">
       <img src="assets/img/marie-hero.webp" alt="Marie, penchée sur la table, masse le dos d'une cliente."
            width="1040" height="1394" draggable="false" fetchpriority="high" decoding="async">
