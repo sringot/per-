@@ -440,50 +440,35 @@ body::after{
 
 .feuille{ max-width:34rem; margin-inline:auto; }
 
-/* --- L'ouverture du contenu ---
-   Chaque bloc se découvre par un balayage horizontal, de gauche à droite,
-   décalé de 90 ms sur le précédent : le panneau s'ouvre comme un paquet
-   qu'on déballe, bande après bande.
+/* --- Le deroule du contenu ---
+   Le panneau montait d'un bloc : tout son contenu apparaissait d'une seule
+   piece. Il se decouvre maintenant ligne a ligne, du haut vers le bas,
+   chaque bloc decale sur le precedent — un titre, puis son chapo, puis les
+   prix un a un.
 
-   Le balayage est un dégradé qui glisse, pas une coupe nette : c'est son
-   bord flou qui fait la différence entre un déballage et un volet. Le
-   contenu accompagne le mouvement de quelques pixels vers la gauche, comme
-   s'il se posait derrière le voile qui s'en va.
-
-   Le masque est déclaré dans les images-clés, et non sur l'élément : un
-   masque clippe à la boîte, et resté en place il rognait les ombres portées
-   des blocs en relief. Ici il n'existe que le temps de l'animation —
-   `backwards` tient l'état de départ pendant le délai, puis l'élément
-   retrouve ses propres styles, masque compris, c'est-à-dire aucun.
+   Le mouvement est un `clip-path` qui descend, et non une opacite seule :
+   le texte n'apparait pas en fondu, il se devoile. C'est ce qui donne
+   l'impression d'une bande qu'on deroule plutot que d'un rideau qui tombe
+   — le contenu est deja la, on leve ce qui le cachait.
 
    Le rang vient du script, dans l'ordre du document : une suite de
-   `:nth-child` aurait cédé au premier bloc ajouté, et le tableau n'a pas le
-   même nombre de lignes que les autres panneaux. */
-@keyframes ouvre{
-  from{
-        -webkit-mask-image:linear-gradient(90deg,#000 0 48%,rgba(0,0,0,.45) 68%,transparent 100%);
-                mask-image:linear-gradient(90deg,#000 0 48%,rgba(0,0,0,.45) 68%,transparent 100%);
-        -webkit-mask-size:320% 100%;  mask-size:320% 100%;
-        -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
-        -webkit-mask-position:100% 0; mask-position:100% 0;
-        transform:translateX(14px);
-  }
-  to{
-        -webkit-mask-image:linear-gradient(90deg,#000 0 48%,rgba(0,0,0,.45) 68%,transparent 100%);
-                mask-image:linear-gradient(90deg,#000 0 48%,rgba(0,0,0,.45) 68%,transparent 100%);
-        -webkit-mask-size:320% 100%;  mask-size:320% 100%;
-        -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
-        -webkit-mask-position:0 0; mask-position:0 0;
-        transform:none;
-  }
+   `:nth-child` aurait cede au premier bloc ajoute, et le tableau n'a pas le
+   meme nombre de lignes que les autres panneaux. */
+@keyframes deroule{
+  from{ opacity:0; clip-path:inset(0 0 100% 0); transform:translateY(9px); }
+  to  { opacity:1; clip-path:inset(0 0 0 0);    transform:none; }
 }
-.panneau.ouvert .ouvre{
-  animation:ouvre .85s var(--ease-out) backwards;
-  animation-delay:calc(var(--rang,0) * 90ms);
+.panneau.ouvert .deroule{
+  /* `backwards` et non `both` : l'element tient l'etat de depart pendant son
+     delai, puis rend la main a ses propres styles. Avec `both` il gardait un
+     `clip-path:inset(0)` a l'arret, qui rognait les ombres portees des
+     blocs en relief — les cartes du rendez-vous s'en trouvaient a plat. */
+  animation:deroule .72s var(--ease-out) backwards;
+  animation-delay:calc(var(--rang,0) * 80ms);
 }
-/* La description d'un soin s'ouvre du même geste, mais sans attendre : c'est
-   une réponse à un appui, pas une entrée en scène. */
-.tableau tr.t-desc:not([hidden]){ animation:ouvre .45s var(--ease-out) backwards; }
+/* La description d'un soin se deroule aussi, mais sans attendre : c'est une
+   reponse a un appui, pas une entree en scene. */
+.tableau tr.t-desc:not([hidden]){ animation:deroule .38s var(--ease-out) backwards; }
 
 /* Deux classes, et non `.sur-titre` seul : le sur-titre est un `<p>` dans
    `.feuille`, et `.feuille p` (une classe + un élément) l'emportait sur
@@ -718,7 +703,7 @@ body::after{
   width:26px; height:26px; border-radius:50%;
   display:inline-grid; place-items:center;
   vertical-align:-.42em; margin-left:.5rem;
-  font-size:.78rem; font-weight:600; font-style:italic; line-height:1;
+  font-size:.78rem; font-weight:600; line-height:1;
   color:var(--ink);
   background:color-mix(in srgb, var(--fond) 26%, var(--card));
   transition:background .25s var(--ease);
@@ -764,7 +749,7 @@ body::after{
 .tableau__aide b{
   display:inline-grid; place-items:center;
   width:19px; height:19px; border-radius:50%; vertical-align:-.3em;
-  font-size:.68rem; font-weight:600; font-style:italic; line-height:1;
+  font-size:.68rem; font-weight:600; line-height:1;
   color:var(--ink); background:color-mix(in srgb, var(--ink) 10%, var(--card));
 }
 
