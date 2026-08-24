@@ -75,7 +75,9 @@ FAITS_LIGNE = ('<p class="faits-ligne">Réservé aux femmes · Dès 60&nbsp;€ 
 ACCROCHE = 'Une heure pour vous, dans une pièce pensée pour ça.'
 
 # Le vrai site porte ce pied de page sous l'accueil : sans lui, les
-# maquettes montreraient un bas d'écran plus vide qu'il ne l'est.
+# maquettes montreraient un bas d'écran plus vide qu'il ne l'est. Il tient
+# sur une ligne — la mention « soins de bien-être, non thérapeutiques » a
+# quitté l'accueil pour les seules mentions légales.
 PIED = '<p class="pied">© 2026 Marie Massage · Mentions légales</p>'
 
 # ---------------------------------------------------------------- maquettes
