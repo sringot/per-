@@ -685,10 +685,15 @@ body::after{
    soin en fond très dilué — assez pour qu'on le rattache à la ligne, assez
    peu pour que l'encre y reste à plus de 10:1. La lettre est décorative :
    c'est `aria-label` qui nomme le bouton. */
+/* Le nom et son « i » sur une seule ligne souple : le bouton est poussé au
+   bord droit de la colonne. Posé à la suite du nom, il tombait là où
+   celui-ci finissait — cinq positions différentes, de « Kobido » à
+   « Drainage lymphatique ». Au bord, il rejoint la colonne des prix. */
+.t-soin{ display:flex; align-items:center; }
 .t-info{
-  width:26px; height:26px; border-radius:50%;
+  width:26px; height:26px; border-radius:50%; flex:none;
   display:inline-grid; place-items:center;
-  vertical-align:-.42em; margin-left:.5rem;
+  margin-left:auto;
   font-size:.78rem; font-weight:600; line-height:1;
   color:var(--ink);
   background:color-mix(in srgb, var(--fond) 26%, var(--card));
