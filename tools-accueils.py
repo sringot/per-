@@ -97,6 +97,7 @@ A = f'''
 B = f'''
 <div class="ec ec--b">
   <figure class="fond">{PHOTO_IMG}</figure>
+  <span class="flou" aria-hidden="true"></span>
   {LOGO_IMG}
   <div class="voile">
     <h2 class="titre">marieemassage</h2>
@@ -378,14 +379,32 @@ h1{{ font-size:clamp(2rem,6vw,3.1rem); line-height:1.04; letter-spacing:-.035em;
 .ec--b .fond img{{ width:100%; height:100%; object-fit:cover; object-position:50% 26%; display:block }}
 .ec--b .logo{{ position:absolute; top:4cqh; left:var(--pad); width:12cqw;
                filter:drop-shadow(0 .6cqw 1.6cqw rgba(42,35,32,.45)) }}
+/* Le bas de la photo part au flou avant de passer sous le voile. La couche
+   est posée entre l'image et le voile — elle ne trouble donc que la
+   photographie, pas le texte — et son masque éteint le flou vers le haut,
+   si bien qu'il n'y a jamais de bord net à l'endroit où il s'arrête.
+
+   Le flou seul ne suffit pas à porter du texte clair : c'est le voile
+   au-dessus qui garantit le contraste. Le flou, lui, calme le fond pour
+   que les lettres ne se posent pas sur des plis de rideau. */
+.ec--b .flou{{
+  position:absolute; inset:auto 0 0 0; height:44%;
+  -webkit-backdrop-filter:blur(4.2cqw); backdrop-filter:blur(4.2cqw);
+  -webkit-mask-image:linear-gradient(to top, #000 34%, rgba(0,0,0,.45) 68%, transparent 100%);
+  mask-image:linear-gradient(to top, #000 34%, rgba(0,0,0,.45) 68%, transparent 100%);
+  pointer-events:none;
+}}
+
 /* Le voile monte haut et s'éteint par paliers : sur une seule bascule, la
-   photo s'assombrissait d'un coup et la coupure se voyait comme une barre. */
+   photo s'assombrissait d'un coup et la coupure se voyait comme une barre.
+   Il est allégé depuis que le flou l'accompagne : le fond troublé demande
+   moins d'encre pour que le texte reste lisible. */
 .ec--b .voile{{
   position:absolute; inset:auto 0 0 0; padding:24cqh var(--pad) 6.5cqh;
   display:flex; flex-direction:column; gap:1.7cqh;
   background:linear-gradient(to top,
-    rgba(30,24,21,.95) 0%, rgba(30,24,21,.93) 26%, rgba(30,24,21,.80) 46%,
-    rgba(30,24,21,.52) 66%, rgba(30,24,21,.22) 84%, rgba(30,24,21,0) 100%);
+    rgba(30,24,21,.90) 0%, rgba(30,24,21,.87) 26%, rgba(30,24,21,.70) 46%,
+    rgba(30,24,21,.42) 66%, rgba(30,24,21,.16) 84%, rgba(30,24,21,0) 100%);
 }}
 .ec--b .titre, .ec--b .accroche{{ color:#FDF6EE }}
 .ec--b .accroche{{ color:#E4D8CC }}

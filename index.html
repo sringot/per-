@@ -76,11 +76,18 @@
 
   <figure class="portrait">
     <picture>
-      <source media="(max-width:760px)" srcset="assets/img/marie-hero-m.webp" width="700" height="938">
+      <source media="(max-width:819px)" srcset="assets/img/marie-hero-m.webp" width="700" height="938">
       <img src="assets/img/marie-hero.webp" alt="Marie, penchée sur la table, masse le dos d'une cliente."
            width="1040" height="1394" draggable="false" fetchpriority="high" decoding="async">
     </picture>
   </figure>
+
+  <!-- Sur téléphone, la photo occupe l'écran entier et le texte se pose
+       dessus : ce voile en porte la lisibilité. Il est en deux couches —
+       un flou qui calme les plis du rideau, puis un dégradé sombre qui
+       fait le contraste. Sur grand écran la photo reprend son arche et le
+       voile disparaît. -->
+  <span class="voile" aria-hidden="true"></span>
 
   <!-- Le nom et la ligne d'accroche forment un bloc : ils se déplacent
        ensemble d'une composition à l'autre. La navigation, elle, est un
@@ -89,9 +96,19 @@
   <div class="mot">
 
   <h1 class="titre">marieemassage</h1>
+  <!-- Une promesse, pas une étiquette de métier : « masseuse bien-être à
+       Montigny » disait ce qu'elle est, pas ce qu'on vient y chercher. Le
+       métier et la ville n'ont pas disparu — ils sont juste en dessous,
+       avec les deux autres faits qui décidaient d'un rendez-vous et qui
+       attendaient jusqu'ici derrière un clic. -->
+  <p class="accroche">Une heure pour vous, dans une pièce pensée pour ça.</p>
   <!-- Le nom de la commune est insécable : sans cela il se coupe sur son
        trait d'union (« Montigny-le- / Bretonneux »), ce qui se lit mal. -->
-  <p class="accroche">Masseuse bien-être à <span class="insecable">Montigny-le-Bretonneux</span></p>
+  <p class="faits">
+    <span>Réservé aux femmes</span>
+    <span>Dès 60&nbsp;€</span>
+    <span class="insecable">Montigny-le-Bretonneux</span>
+  </p>
 
   </div><!-- /.mot -->
 

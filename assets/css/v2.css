@@ -182,11 +182,21 @@ body::after{
   position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
 }
 
-.scene > *:not(:where(.filigrane-fond)){ position:relative; z-index:1; }
+/* La photo et son voile sont les deux couches de fond de l'accueil sur
+   téléphone : elles restent au-dessous du texte, que la règle suivante
+   remonte. `:where()` ne pèse rien dans la spécificité — c'est ce qui
+   permet d'allonger cette liste sans que la règle prenne le dessus sur
+   les styles des éléments qu'elle vise. */
+.scene > *:not(:where(.filigrane-fond, .portrait, .voile)){ position:relative; z-index:1; }
 
 /* Écran large : deux colonnes. Le pictogramme coiffe la photo, le nom et
-   les bulles occupent la colonne de droite, centrés sur la hauteur. */
-@media (min-width:700px) and (min-height:560px){
+   les bulles occupent la colonne de droite, centrés sur la hauteur.
+
+   Le seuil est à 820 px et non à 700. Entre les deux, la colonne de droite
+   n'était plus assez large pour cinq bulles en ligne : sur une tablette de
+   768 px la page débordait de 132 px sur le côté. La composition d'origine
+   — l'arche et la colonne de bulles à son flanc — y tient sans forcer. */
+@media (min-width:820px) and (min-height:560px){
   .scene{
     grid-template-columns:auto minmax(0,1fr);
     grid-template-areas:
@@ -255,7 +265,24 @@ body::after{
   /* Deux lignes de longueur voisine plutôt qu'une longue et un mot seul. */
   text-wrap:balance;
 }
+/* Les trois faits qui décidaient d'un rendez-vous et qu'il fallait aller
+   chercher dans « Moi » et « Massages ». Ils prennent la forme des bulles
+   — même socle, même relief — pour qu'on les lise comme des repères et non
+   comme une phrase de plus. */
+.faits{
+  display:flex; flex-wrap:wrap; gap:.4rem;
+  font-size:clamp(.62rem,1.9vw,.72rem); line-height:1;
+}
+.faits span{
+  padding:.4rem .65rem; border-radius:2rem;
+  background:var(--card); box-shadow:var(--nm-out);
+  color:var(--ink-soft); white-space:nowrap;
+}
 .insecable{ white-space:nowrap; }
+
+/* Le voile n'existe que sur téléphone, où la photo occupe l'écran entier.
+   Ailleurs la photo garde son arche et rien ne se pose dessus. */
+.voile{ display:none; }
 
 /* ---------- 4. LES BULLES ---------- */
 
@@ -334,9 +361,10 @@ body::after{
 .bulle:nth-child(5){ animation-delay:.62s }
 @keyframes monte{ from{ opacity:0; transform:translateY(16px) scale(.9) } to{ opacity:1; transform:none } }
 
-.logo, .portrait, .titre, .accroche{ opacity:0; animation:monte .8s var(--ease-out) forwards; }
+.logo, .portrait, .titre, .accroche, .faits{ opacity:0; animation:monte .8s var(--ease-out) forwards; }
 .titre   { animation-delay:.14s }
 .accroche{ animation-delay:.22s }
+.faits   { animation-delay:.26s }
 /* Les deux animations de la photo sont déclarées ensemble : `animation`
    est un raccourci, et une seconde règle en aurait écrasé la première —
    la respiration ne jouait jamais. La seconde prend la suite de l'entrée. */
@@ -351,7 +379,7 @@ body::after{
    Ce bloc est **après** les règles de base des bulles, et non dans la
    requête média du haut : à spécificité égale c'est la dernière déclaration
    qui l'emporte, et la colonne du téléphone reprenait le dessus. */
-@media (min-width:700px) and (min-height:560px){
+@media (min-width:820px) and (min-height:560px){
   .portrait{
     width:auto; height:clamp(240px,42vh,460px);
     align-self:center; aspect-ratio:1/1.34;
@@ -360,6 +388,11 @@ body::after{
   .bulles{
     flex-direction:row; align-items:flex-start; justify-content:flex-start;
     height:auto; align-self:start;
+    /* Le retour à la ligne est le filet de sécurité : dans une fenêtre
+       haute et étroite, la photo prend sa hauteur maximale et laisse moins
+       de place à côté. Mieux vaut deux rangées de bulles qu'une rangée qui
+       sort de l'écran. */
+    flex-wrap:wrap;
     gap:clamp(.7rem,2.6vw,1.5rem);
   }
   .bulle{ gap:.5rem; width:clamp(64px,17vw,86px); }
@@ -966,6 +999,118 @@ body::after{
   .bulle__nom{ text-align:right; }
 }
 
+/* ---------- 7 bis. TÉLÉPHONE DEBOUT : LA PHOTO PREND L'ÉCRAN ----------
+   La composition retenue avec Marie. La photo quitte son arche et occupe
+   la fenêtre entière ; le nom, la promesse et les bulles se posent en bas,
+   sur un voile.
+
+   Ce bloc arrive **après** tout le reste, y compris les écrans courts :
+   à spécificité égale c'est la dernière déclaration qui l'emporte, et les
+   réglages du petit téléphone reprenaient sinon le dessus.
+
+   Il ne vise que le téléphone **debout**. Couché, la fenêtre est deux fois
+   plus large que haute : une photo verticale n'y garderait qu'un bandeau
+   horizontal de 41 % de sa hauteur, coupé au niveau des bras. L'arche de
+   la composition d'origine y reste la bonne réponse. */
+@media (max-width:699px) and (orientation:portrait){
+  /* La grille n'a plus de photo à placer : une colonne suffit. Le logo est
+     poussé en haut par sa marge automatique, tout le reste tombe en bas. */
+  .scene{
+    display:flex; flex-direction:column; justify-content:flex-end;
+    gap:clamp(.5rem,1.5vh,.9rem);
+    padding-bottom:clamp(.4rem,1.2vh,.8rem);
+  }
+  .logo{
+    margin-bottom:auto;
+    /* Le pictogramme se pose sur la photo, pas sur le crème : sans cette
+       ombre portée il disparaît dès que le rideau est clair derrière lui. */
+    filter:drop-shadow(0 2px 10px rgba(30,24,21,.5));
+  }
+  .scene .filigrane-fond{ display:none; }
+
+  .portrait{
+    position:fixed; inset:0; z-index:0;
+    width:auto; height:auto; align-self:auto;
+    border-radius:0; box-shadow:none;
+    /* Ni respiration ni glissement : les deux déplacent la photo de
+       quelques pixels, ce qui découvrirait le bord de l'écran. Elle paraît
+       simplement. */
+    animation:parait-fond .9s var(--ease-out) both;
+  }
+  .portrait picture{ height:100%; }
+
+  /* Deux couches, dans cet ordre : un flou qui calme les plis du rideau,
+     puis un dégradé sombre qui porte le contraste. Le flou seul ne
+     suffirait pas à tenir du texte clair ; le dégradé seul poserait les
+     lettres sur une image nette et agitée.
+
+     Le flou est en `::before` placé **derrière** le fond de son parent
+     (`z-index:-1`) : posé devant, il aurait troublé le dégradé lui-même au
+     lieu de la seule photographie. */
+  /* La hauteur est en pixels, pas en `vh`. Le bloc qu'elle doit couvrir —
+     nom, promesse, faits, bulles, pied de page — mesure à peu près la même
+     chose sur tous les téléphones : le haut du nom se tient entre 256 et
+     298 px du bas de l'écran, de 320 × 653 à 430 × 932. Réglé en `vh`, le
+     voile suivait la fenêtre et non le texte : sur un petit écran son bord
+     transparent tombait pile sur le nom, à 1,45:1. */
+  .voile{
+    display:block; position:fixed; inset:auto 0 0 0; z-index:0;
+    height:min(72vh, 480px); pointer-events:none;
+    background:linear-gradient(to top,
+      rgba(30,24,21,.93)  0%, rgba(30,24,21,.90) 30%, rgba(30,24,21,.86) 55%,
+      rgba(30,24,21,.80) 67%, rgba(30,24,21,.52) 80%, rgba(30,24,21,.24) 90%,
+      rgba(30,24,21,0)  100%);
+  }
+  .voile::before{
+    content:''; position:absolute; inset:0; z-index:-1;
+    -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+    /* Le masque éteint le flou vers le haut : sans lui, la couche s'arrête
+       net et la coupure se voit comme une barre en travers de la photo. */
+    -webkit-mask-image:linear-gradient(to top, #000 34%, rgba(0,0,0,.45) 68%, transparent 100%);
+            mask-image:linear-gradient(to top, #000 34%, rgba(0,0,0,.45) 68%, transparent 100%);
+  }
+
+  /* Le texte passe en clair. Ces valeurs sont relevées sur le rendu et non
+     choisies : le pire pixel sous chaque bloc est mesuré sur la photo
+     floutée telle qu'elle s'affiche. */
+  .titre   { color:#FDF6EE; }
+  .accroche{ color:#E4D8CC; max-width:none; }
+  .faits span{ background:rgba(253,246,238,.14); box-shadow:none; color:#F3E8DC; }
+
+  /* Les bulles reprennent la ligne : la colonne n'avait de sens que
+     collée au flanc de l'arche. */
+  .bulles{
+    flex-direction:row; align-items:flex-start; justify-content:space-between;
+    height:auto; gap:.25rem;
+  }
+  /* Les cinq bulles se partagent la largeur au lieu d'en réclamer une
+     chacune : à 320 px, cinq largeurs assez grandes pour « Rendez-vous »
+     sur une ligne faisaient 345 px, et la dernière sortait de l'écran. Le
+     libellé passe sur deux lignes plutôt que la bulle hors du cadre. */
+  .bulle{ color:#E4D8CC; flex:1 1 0; width:auto; min-width:0; }
+  .bulle__rond{
+    width:min(100%, clamp(46px,15vw,64px));
+    background:rgba(253,246,238,.93); box-shadow:none;
+  }
+  .bulle--phare{ color:#FDF6EE; }
+  .bulle--phare .bulle__rond{
+    background:var(--accent); box-shadow:0 0 0 2px rgba(253,246,238,.85);
+  }
+  @media (hover:hover) and (pointer:fine){
+    .bulle:hover{ color:#FDF6EE; }
+    .bulle:hover .bulle__rond{ box-shadow:0 0 0 3px rgba(253,246,238,.5); }
+  }
+
+  .pied{ position:relative; z-index:1; color:#CFC1B4; }
+  .pied a{ border-bottom-color:rgba(253,246,238,.32); }
+  .pied a:hover{ color:#FDF6EE; border-bottom-color:#FDF6EE; }
+}
+/* L'état d'arrivée est écrit, pas déduit : la photo part d'un `opacity:0`
+   déclaré dans ses propres styles, et une image-clé qui ne dirait que
+   `from` la laisserait retomber dessus à la fin — la photo restait alors
+   invisible et l'accueil s'affichait sur le crème nu. */
+@keyframes parait-fond{ from{ opacity:0 } to{ opacity:1 } }
+
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */
 @media (prefers-reduced-motion:reduce){
   /* Le délai autant que la durée : le déroulé du contenu tient son état de
@@ -976,6 +1121,6 @@ body::after{
     animation-duration:.01ms !important; animation-delay:0s !important;
     transition-duration:.01ms !important; transition-delay:0s !important;
   }
-  .logo, .portrait, .titre, .accroche, .bulle{ opacity:1; }
+  .logo, .portrait, .titre, .accroche, .faits, .bulle{ opacity:1; }
   .portrait{ animation:none; }
 }
