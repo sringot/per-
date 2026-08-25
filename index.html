@@ -200,6 +200,16 @@
         @marieemassage sur Instagram
       </a>
     </p>
+
+    <!-- La relance. Chaque panneau se terminait sur son dernier paragraphe,
+         et la seule chose à faire ensuite était de le refermer. On lisait
+         les tarifs, on décidait, et l'écran ne proposait rien. La phrase
+         reprend ce qu'on vient de lire ; le bouton ouvre le rendez-vous
+         sans repasser par l'accueil. -->
+    <p class="suite">
+      <span>Envie d’essayer&nbsp;?</span>
+      <button class="appel" type="button" data-ouvre="rdv">Prendre rendez-vous</button>
+    </p>
   </div>
 </section>
 
@@ -228,10 +238,26 @@
       <li class="attente__cadre"><span>Photo du cabinet</span></li>
     </ul>
 
+    <!-- Le panneau s'appelle « Le lieu » et ne disait pas où. C'est
+         pourtant la seule raison de l'ouvrir. La formule sur l'adresse est
+         la même que dans le panneau rendez-vous : elle ne s'y trouvait que
+         là, deux clics plus loin que la question. -->
     <ul class="details">
+      <li>Montigny-le-Bretonneux (78180)</li>
+      <li>Adresse exacte communiquée au rendez-vous</li>
       <li>Linge frais à chaque séance</li>
       <li>Musique &amp; lumière tamisées</li>
     </ul>
+
+    <!-- La relance. Chaque panneau se terminait sur son dernier paragraphe,
+         et la seule chose à faire ensuite était de le refermer. On lisait
+         les tarifs, on décidait, et l'écran ne proposait rien. La phrase
+         reprend ce qu'on vient de lire ; le bouton ouvre le rendez-vous
+         sans repasser par l'accueil. -->
+    <p class="suite">
+      <span>L’adresse vous est donnée à la réservation.</span>
+      <button class="appel" type="button" data-ouvre="rdv">Prendre rendez-vous</button>
+    </p>
   </div>
 </section>
 
@@ -331,6 +357,16 @@
     </ul>
     </div><!-- /.tarifs -->
 
+    <!-- La relance. Chaque panneau se terminait sur son dernier paragraphe,
+         et la seule chose à faire ensuite était de le refermer. On lisait
+         les tarifs, on décidait, et l'écran ne proposait rien. La phrase
+         reprend ce qu'on vient de lire ; le bouton ouvre le rendez-vous
+         sans repasser par l'accueil. -->
+    <p class="suite">
+      <span>Vous savez lequel il vous faut&nbsp;?</span>
+      <button class="appel" type="button" data-ouvre="rdv">Prendre rendez-vous</button>
+    </p>
+
   </div>
 </section>
 
@@ -353,6 +389,16 @@
       <li data-note="5"><q>Duis aute irure dolor in reprehenderit in voluptate velit esse.</q><cite>Prénom N. · Drainage</cite></li>
       <li data-note="4"><q>Excepteur sint occaecat cupidatat non proident, sunt in culpa.</q><cite>Prénom N. · Dos &amp; nuque</cite></li>
     </ul>
+
+    <!-- La relance. Chaque panneau se terminait sur son dernier paragraphe,
+         et la seule chose à faire ensuite était de le refermer. On lisait
+         les tarifs, on décidait, et l'écran ne proposait rien. La phrase
+         reprend ce qu'on vient de lire ; le bouton ouvre le rendez-vous
+         sans repasser par l'accueil. -->
+    <p class="suite">
+      <span>À votre tour&nbsp;?</span>
+      <button class="appel" type="button" data-ouvre="rdv">Prendre rendez-vous</button>
+    </p>
   </div>
 </section>
 
@@ -363,30 +409,16 @@
   <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
   <div class="feuille feuille--rdv">
     <p class="sur-titre">Rendez-vous</p>
-    <h2 id="rdv-t">Deux façons<br>de réserver</h2>
+    <h2 id="rdv-t">Prendre<br>rendez-vous</h2>
     <p class="chapo">
-      En ligne à toute heure, ou de vive voix si vous préférez qu'on choisisse
-      le soin ensemble.
+      Un appel ou un message, et on convient d'un créneau ensemble — c'est
+      aussi l'occasion de choisir le soin à deux si vous hésitez.
     </p>
 
     <div class="voies">
       <section class="voie">
-        <h3>En ligne</h3>
-        <p>Le planning à jour, et le créneau retenu dans la foulée.</p>
-        <!-- ⚠️ EN ATTENTE du lien Treatwell de Marie. Le remplacement tient
-             en une ligne : mettre à la place de ce bouton
-               <a class="appel" href="[lien Treatwell]" target="_blank"
-                  rel="noopener">Voir les disponibilités</a>
-             puis supprimer la note qui suit. Un bouton désactivé plutôt
-             qu'un lien vers « # » : un lien mort est pire qu'une porte
-             annoncée fermée. -->
-        <button class="appel" type="button" disabled>Voir les disponibilités</button>
-        <p class="voie__note">Réservation en ligne bientôt ouverte.</p>
-      </section>
-
-      <section class="voie">
         <h3>Par téléphone</h3>
-        <p>Pour poser une question avant de venir, ou décider à deux.</p>
+        <p>Du lundi au samedi, de 9&nbsp;h à 20&nbsp;h.</p>
         <a class="numero" href="tel:+33631183481">06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</a>
         <p class="voie__actions">
           <a class="appel appel--fin" href="tel:+33631183481">Appeler</a>
@@ -395,8 +427,25 @@
       </section>
     </div>
 
+    <!-- ⚠️ EN ATTENTE du lien Treatwell de Marie. Il y avait ici une
+         seconde voie « En ligne » avec un bouton désactivé et la mention
+         « bientôt ouverte ». Un panneau intitulé « Deux façons de réserver »
+         qui en montre une morte est pire que d'en annoncer une seule : on
+         appuie sur le plus gros bouton de l'écran et rien ne se passe.
+
+         Pour la rétablir le jour où le lien existe : remettre une
+         `<section class="voie">` avant celle du téléphone, avec
+
+           <h3>En ligne</h3>
+           <p>Le planning à jour, et le créneau retenu dans la foulée.</p>
+           <a class="appel" href="[lien Treatwell]" target="_blank"
+              rel="noopener">Voir les disponibilités</a>
+
+         puis rendre au titre son « Deux façons de réserver » et supprimer
+         la ligne ci-dessous. -->
+    <p class="bientot">La réservation en ligne arrive bientôt.</p>
+
     <ul class="details">
-      <li>Lun – Sam · 9h – 20h</li>
       <li>Montigny-le-Bretonneux (78180)</li>
       <li>Adresse exacte communiquée au rendez-vous</li>
     </ul>
@@ -423,20 +472,6 @@
      ============================================================ -->
 <nav class="bulles" id="bulles" aria-label="Navigation principale">
 
-  <button class="bulle" type="button" data-ouvre="moi" aria-expanded="false" aria-controls="moi">
-    <span class="bulle__rond">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.4" r="3.9"/><path d="M4.6 20.2a7.4 7.4 0 0 1 14.8 0"/></svg>
-    </span>
-    <span class="bulle__nom">Moi</span>
-  </button>
-
-  <button class="bulle" type="button" data-ouvre="lieu" aria-expanded="false" aria-controls="lieu">
-    <span class="bulle__rond">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V9.6L12 4l8 5.6V20"/><path d="M9.4 20v-5.4h5.2V20"/></svg>
-    </span>
-    <span class="bulle__nom">Le lieu</span>
-  </button>
-
   <button class="bulle" type="button" data-ouvre="massages" aria-expanded="false" aria-controls="massages">
     <span class="bulle__rond">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 13.4V5.6a1.6 1.6 0 0 1 3.2 0v5.2"/><path d="M11.8 10.4V6.4a1.6 1.6 0 0 1 3.2 0v4.4"/><path d="M15 10.8V8.2a1.5 1.5 0 0 1 3 0v6.2a5.6 5.6 0 0 1-5.6 5.6H11a5 5 0 0 1-4.3-2.5L5 14.7a1.5 1.5 0 0 1 2.4-1.8Z"/></svg>
@@ -451,6 +486,20 @@
     <span class="bulle__nom">Avis</span>
   </button>
 
+  <button class="bulle" type="button" data-ouvre="lieu" aria-expanded="false" aria-controls="lieu">
+    <span class="bulle__rond">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V9.6L12 4l8 5.6V20"/><path d="M9.4 20v-5.4h5.2V20"/></svg>
+    </span>
+    <span class="bulle__nom">Le lieu</span>
+  </button>
+
+  <button class="bulle" type="button" data-ouvre="moi" aria-expanded="false" aria-controls="moi">
+    <span class="bulle__rond">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.4" r="3.9"/><path d="M4.6 20.2a7.4 7.4 0 0 1 14.8 0"/></svg>
+    </span>
+    <span class="bulle__nom">Moi</span>
+  </button>
+
   <button class="bulle bulle--phare" type="button" data-ouvre="rdv" aria-expanded="false" aria-controls="rdv">
     <span class="bulle__rond">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h3l2 5-2.4 1.4a12 12 0 0 0 5 5L15 13l5 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4 6.2 2 2 0 0 1 6 4Z"/></svg>
@@ -458,7 +507,7 @@
     <span class="bulle__nom">Rendez-vous</span>
   </button>
 
-  </nav>
+</nav>
 
 <footer class="pied">
   <p>© <span id="annee">2026</span> Marie Massage · <a href="mentions-legales.html">Mentions légales</a></p>

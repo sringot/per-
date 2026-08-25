@@ -88,8 +88,9 @@
     // Le disque part du centre de la bulle : sans ces coordonnées,
     // l'ouverture se ferait depuis le milieu de l'écran et le geste
     // perdrait son lien avec ce qu'on vient de toucher.
-    if (bulle) {
-      const r = bulle.querySelector('.bulle__rond').getBoundingClientRect();
+    const rond = bulle && bulle.querySelector('.bulle__rond');
+    if (rond) {
+      const r = rond.getBoundingClientRect();
       p.style.setProperty('--x', `${r.left + r.width / 2}px`);
       p.style.setProperty('--y', `${r.top + r.height / 2}px`);
     }
@@ -157,8 +158,17 @@
 
   /* ---------- Branchements ---------- */
 
-  bulles.forEach(b => {
-    b.addEventListener('click', () => ouvrir(b.dataset.ouvre, b));
+  /* Tout ce qui porte `data-ouvre` ouvre une rubrique : les cinq bulles de
+     la barre, et les relances posées en fin de panneau. Celles-ci passent
+     par la bulle correspondante plutôt que par elles-mêmes — le panneau
+     s'ouvre alors depuis la barre, comme toujours, et le focus a où revenir
+     à la fermeture. Rendu à son propre bouton, il serait retourné dans un
+     panneau entre-temps refermé, donc inerte. */
+  $$('[data-ouvre]').forEach(e => {
+    e.addEventListener('click', () => {
+      const id = e.dataset.ouvre;
+      ouvrir(id, bulles.find(b => b.dataset.ouvre === id) || null);
+    });
   });
 
   panneaux.forEach(p => {
