@@ -28,6 +28,10 @@
   // Ce qui doit disparaître du clavier et des lecteurs d'écran quand un
   // panneau couvre l'écran. `clip-path` ne masque qu'à l'œil : sans cela,
   // la tabulation sortait du panneau et parcourait la page en dessous.
+  // La barre de navigation n'en fait **pas** partie : c'est tout l'intérêt
+  // de l'avoir sortie de `.scene`. Elle reste au-dessus du panneau ouvert,
+  // atteignable au doigt comme à la tabulation, et c'est par elle qu'on
+  // passe d'une rubrique à l'autre sans refermer.
   const fond = [$('.scene'), $('.pied'), $('.evitement')].filter(Boolean);
   /* ---------- D'où vient le focus ----------
      `:focus-visible` est censé ne montrer l'anneau qu'au clavier. Les
@@ -74,7 +78,12 @@
     // d'évitement — arrivait ici, ne trouvait pas de bouton de fermeture,
     // et l'erreur emportait tout le reste du script.
     if (!p || !p.classList.contains('panneau') || ouvert === p) return;
-    if (ouvert) fermer({ silencieux: true });
+    // Passer d'une rubrique à l'autre ne doit pas empiler une entrée de
+    // plus : avec une barre toujours là, on en change souvent, et le bouton
+    // « retour » aurait rejoué la visite rubrique par rubrique au lieu de
+    // ramener à l'accueil. On remplace l'entrée courante.
+    const changement = ouvert !== null;
+    if (ouvert) fermer();
 
     // Le disque part du centre de la bulle : sans ces coordonnées,
     // l'ouverture se ferait depuis le milieu de l'écran et le geste
@@ -105,9 +114,11 @@
     p.scrollTop = 0;
     replie(p);
 
+    racine.classList.add('a-panneau');
+
     if (location.hash !== '#' + id) {
-      memorise({ panneau: id }, '#' + id);
-      aPousse = true;
+      if (changement) remplace('#' + id);
+      else { memorise({ panneau: id }, '#' + id); aPousse = true; }
     }
   }
 
@@ -125,6 +136,7 @@
     if (declencheur) declencheur.focus({ preventScroll: true });
     ouvert = null;
     declencheur = null;
+    racine.classList.remove('a-panneau');
   }
 
   // Fermeture demandée par l'utilisateur (croix, Échap, voile).
@@ -177,6 +189,21 @@
   const depart = location.hash.slice(1);
   if (depart) ouvrir(depart, bulles.find(b => b.dataset.ouvre === depart));
 
+
+  /* ---------- La place que prend la barre ----------
+     Mesurée plutôt que devinée : elle dépend de la taille des libellés, qui
+     suit celle du texte choisie dans le système. Le pied de page et le
+     contenu des panneaux s'arrêtent au-dessus grâce à cette valeur ; une
+     constante écrite dans la feuille de style aurait menti dès qu'on
+     agrandit le texte, et la dernière ligne serait passée sous la barre. */
+  const barre = $('.bulles');
+  if (barre) {
+    const mesure = () => racine.style.setProperty(
+      '--barre', `${Math.round(barre.getBoundingClientRect().height)}px`);
+    mesure();
+    if (window.ResizeObserver) new ResizeObserver(mesure).observe(barre);
+    else addEventListener('resize', mesure);
+  }
 
   /* ---------- L'économie des forfaits ----------
      Jamais écrite : elle se déduit du prix à la séance, du nombre de

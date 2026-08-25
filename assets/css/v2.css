@@ -141,7 +141,7 @@ body::after{
   grid-template-columns:minmax(0,1fr) auto;
   grid-template-areas:
     "logo  logo"
-    "photo bulles"
+    "photo photo"
     "mot   mot";
   align-content:center; justify-items:start;
   column-gap:clamp(.7rem,3vw,1.2rem);
@@ -154,7 +154,6 @@ body::after{
 .logo    { grid-area:logo; }
 .portrait{ grid-area:photo; }
 .mot     { grid-area:mot; }
-.bulles  { grid-area:bulles; }
 .mot{
   display:flex; flex-direction:column; align-items:flex-start;
   gap:clamp(.3rem,1vh,.6rem);
@@ -201,8 +200,7 @@ body::after{
     grid-template-columns:auto minmax(0,1fr);
     grid-template-areas:
       "logo  mot"
-      "photo mot"
-      "photo bulles";
+      "photo mot";
     align-content:center; align-items:center; justify-items:start;
     column-gap:clamp(2rem,5vw,4.5rem);
     row-gap:clamp(.6rem,1.8vh,1.2rem);
@@ -296,15 +294,35 @@ body::after{
 .bulle[data-ouvre="avis"],     #avis    { --teinte:var(--avis-i);     --teinte-t:var(--avis-t); }
 .bulle[data-ouvre="rdv"],      #rdv     { --teinte:var(--rdv-i);      --teinte-t:var(--rdv-t); }
 
+/* La barre est fixée au bas de la fenêtre et passe **au-dessus** des
+   panneaux (z-index 60 contre 50) : c'est le même élément sur l'accueil et
+   à l'intérieur d'une rubrique. Changer de rubrique ne demande donc plus de
+   refermer d'abord.
+
+   Sa hauteur est publiée dans `--barre`, mesurée au chargement par le
+   script : le pied de page et les panneaux s'en servent pour réserver la
+   place. Une valeur écrite ici à la main aurait menti dès que la taille du
+   texte du système change. */
 .bulles{
-  display:flex; flex-direction:column; align-items:center;
-  justify-content:space-between;
-  /* Espacement calé pour que la colonne fasse la hauteur de la photo :
-     plus haute, elle dictait la hauteur de la rangée et la photo cessait
-     de descendre jusqu'au nom. */
-  gap:clamp(.2rem,.6vh,.5rem);
-  height:100%;
+  position:fixed; inset:auto 0 0 0; z-index:60;
+  display:flex; align-items:flex-start; justify-content:center;
+  gap:clamp(.3rem,2.6vw,1.5rem);
+  padding:.5rem var(--pad) calc(.5rem + env(safe-area-inset-bottom, 0px));
 }
+/* Le socle de la barre. Il n'apparaît qu'au-dessus d'un panneau : sur
+   l'accueil, les bulles se posent sur le voile de la photo et n'ont besoin
+   de rien. Le dégradé va jusqu'à la transparence vers le haut pour que le
+   contenu qui défile s'y dissolve au lieu de buter sur une arête. */
+.bulles::before{
+  content:''; position:absolute; inset:-1.6rem 0 0; z-index:-1;
+  background:linear-gradient(to top,
+    var(--card) 0%, var(--card) 58%, color-mix(in srgb, var(--card) 55%, transparent) 82%,
+    color-mix(in srgb, var(--card) 0%, transparent) 100%);
+  opacity:0; transition:opacity .3s var(--ease);
+  pointer-events:none;
+}
+.a-panneau .bulles::before{ opacity:1; }
+
 .bulle{
   display:flex; flex-direction:column; align-items:center; gap:.22rem;
   /* Assez large pour que « Rendez-vous » tienne sur une ligne : à deux
@@ -352,6 +370,18 @@ body::after{
 .bulle--phare .bulle__rond{ background:var(--accent); color:var(--white); }
 .bulle--phare{ color:var(--ink); }
 
+/* La rubrique ouverte. Le disque se creuse au lieu de saillir — le même
+   relief que l'appui, tenu : on lit « celle-ci est enfoncée » sans avoir à
+   apprendre un code de couleur. Le libellé passe à l'encre pleine. */
+.bulle[aria-expanded="true"]{ color:var(--ink); }
+.bulle[aria-expanded="true"] .bulle__rond{
+  box-shadow:var(--nm-in);
+  background-color:color-mix(in srgb, var(--teinte,var(--accent)) 16%, var(--card));
+}
+.bulle--phare[aria-expanded="true"] .bulle__rond{
+  background:var(--accent-d); box-shadow:var(--nm-in);
+}
+
 /* Entrée en cascade, une bulle après l'autre. */
 .bulle{ opacity:0; animation:monte .7s var(--ease-out) forwards; }
 .bulle:nth-child(1){ animation-delay:.30s }
@@ -385,18 +415,8 @@ body::after{
     align-self:center; aspect-ratio:1/1.34;
   }
   .mot{ gap:clamp(.5rem,1.5vh,1rem); align-self:end; }
-  .bulles{
-    flex-direction:row; align-items:flex-start; justify-content:flex-start;
-    height:auto; align-self:start;
-    /* Le retour à la ligne est le filet de sécurité : dans une fenêtre
-       haute et étroite, la photo prend sa hauteur maximale et laisse moins
-       de place à côté. Mieux vaut deux rangées de bulles qu'une rangée qui
-       sort de l'écran. */
-    flex-wrap:wrap;
-    gap:clamp(.7rem,2.6vw,1.5rem);
-  }
-  .bulle{ gap:.5rem; width:clamp(64px,17vw,86px); }
-  .bulle__rond{ width:clamp(54px,15vw,74px); }
+  .bulle{ gap:.5rem; width:clamp(64px,10vw,86px); }
+  .bulle__rond{ width:clamp(54px,7vw,74px); }
 }
 
 /* ---------- 5. LES PANNEAUX ---------- */
@@ -990,12 +1010,17 @@ body::after{
   /* Téléphone couché : la hauteur manque, la largeur abonde. Le libellé
      passe **à côté** du rond au lieu de dessous — la colonne perd un tiers
      de sa hauteur et gagne une largeur dont on dispose. */
-  .bulles{ align-items:flex-end; gap:.35rem; }
+  /* Couché, la hauteur manque et la largeur abonde : le libellé passe à
+     côté du rond au lieu de dessous, et la barre perd un tiers de sa
+     hauteur — celle-là même qui manque au reste de l'écran. */
   .bulle{
     flex-direction:row-reverse; align-items:center;
     width:auto; gap:.45rem;
   }
-  .bulle__rond{ width:clamp(36px,8vh,48px); }
+  /* 44 px est le plancher tactile, pas une préférence : à 36 px la cible
+     descendait sous le minimum recommandé, et c'est en tenant son téléphone
+     couché qu'on vise le plus mal. */
+  .bulle__rond{ width:clamp(44px,8vh,48px); }
   .bulle__nom{ text-align:right; }
 }
 
@@ -1077,28 +1102,33 @@ body::after{
   .accroche{ color:#E4D8CC; max-width:none; }
   .faits span{ background:rgba(253,246,238,.14); box-shadow:none; color:#F3E8DC; }
 
-  /* Les bulles reprennent la ligne : la colonne n'avait de sens que
-     collée au flanc de l'arche. */
-  .bulles{
-    flex-direction:row; align-items:flex-start; justify-content:space-between;
-    height:auto; gap:.25rem;
-  }
   /* Les cinq bulles se partagent la largeur au lieu d'en réclamer une
      chacune : à 320 px, cinq largeurs assez grandes pour « Rendez-vous »
      sur une ligne faisaient 345 px, et la dernière sortait de l'écran. Le
      libellé passe sur deux lignes plutôt que la bulle hors du cadre. */
-  .bulle{ color:#E4D8CC; flex:1 1 0; width:auto; min-width:0; }
-  .bulle__rond{
-    width:min(100%, clamp(46px,15vw,64px));
+  .bulles{ justify-content:space-between; gap:.25rem; }
+  .bulle{ flex:1 1 0; width:auto; min-width:0; }
+  .bulle__rond{ width:min(100%, clamp(46px,15vw,64px)); }
+
+  /* La barre a deux peaux, parce qu'elle a deux fonds. Sur l'accueil elle
+     repose sur le voile sombre de la photo : disques clairs, libellés
+     clairs, pas de relief — un relief doux suppose une surface de la
+     couleur du fond, et il n'y en a pas ici. Dès qu'un panneau s'ouvre, la
+     barre retrouve son socle crème et son relief : c'est la règle générale
+     qui reprend, et il n'y a rien à défaire. */
+  html:not(.a-panneau) .bulle{ color:#E4D8CC; }
+  html:not(.a-panneau) .bulle__rond{
     background:rgba(253,246,238,.93); box-shadow:none;
   }
-  .bulle--phare{ color:#FDF6EE; }
-  .bulle--phare .bulle__rond{
+  html:not(.a-panneau) .bulle--phare{ color:#FDF6EE; }
+  html:not(.a-panneau) .bulle--phare .bulle__rond{
     background:var(--accent); box-shadow:0 0 0 2px rgba(253,246,238,.85);
   }
   @media (hover:hover) and (pointer:fine){
-    .bulle:hover{ color:#FDF6EE; }
-    .bulle:hover .bulle__rond{ box-shadow:0 0 0 3px rgba(253,246,238,.5); }
+    html:not(.a-panneau) .bulle:hover{ color:#FDF6EE; }
+    html:not(.a-panneau) .bulle:hover .bulle__rond{
+      box-shadow:0 0 0 3px rgba(253,246,238,.5); transform:translateY(-3px);
+    }
   }
 
   .pied{ position:relative; z-index:1; color:#CFC1B4; }
@@ -1110,6 +1140,14 @@ body::after{
    `from` la laisserait retomber dessus à la fin — la photo restait alors
    invisible et l'accueil s'affichait sur le crème nu. */
 @keyframes parait-fond{ from{ opacity:0 } to{ opacity:1 } }
+
+/* La place que la barre occupe, réservée partout où du contenu pourrait
+   passer dessous. `--barre` est mesurée par le script au chargement et à
+   chaque redimensionnement ; la valeur écrite ici n'est qu'un premier jet,
+   utilisé le temps que le script s'exécute. */
+:root{ --barre:96px; }
+body{ padding-bottom:var(--barre); }
+.panneau{ padding-bottom:var(--barre); }
 
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */
 @media (prefers-reduced-motion:reduce){
