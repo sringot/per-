@@ -965,21 +965,7 @@ body::after{
 .annexe--404{ text-align:center; max-width:34rem; }
 .annexe--404 .chapo{ margin-bottom:2rem; }
 
-/* ---------- 5 bis. LA RELANCE EN FIN DE PANNEAU ----------
-   Une rubrique se terminait sur son dernier paragraphe : on lisait les
-   tarifs, on choisissait son soin, et l'écran ne proposait rien d'autre
-   que de le refermer. Cette ligne reprend ce qu'on vient de lire et donne
-   la suite. Elle est la même partout — c'est ce qui la rend prévisible :
-   au troisième panneau on sait où elle est. */
-.suite{
-  display:flex; flex-wrap:wrap; align-items:center;
-  justify-content:space-between; gap:.8rem 1rem;
-  margin-top:2rem; padding-top:1.4rem;
-  border-top:1px solid var(--line);
-}
-.suite > span{ color:var(--ink-soft); }
-.suite .appel{ flex:none; }
-
+/* ---------- 5 bis. DÉTAIL DU RENDEZ-VOUS ---------- */
 /* La ligne d'attente du rendez-vous en ligne. Discrète : c'est une
    information, pas une action — l'ancien bouton désactivé, lui, se
    présentait comme la principale. */
