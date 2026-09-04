@@ -215,18 +215,29 @@
       J'ai créé une pièce entièrement dédiée aux massages, pensée pour vous
       accueillir dans une atmosphère agréable et chaleureuse.
     </p>
-    <p>
+
+    <!-- Il n'y a qu'une photographie de la pièce : elle prend donc l'arche
+         de l'accueil, à pleine largeur, plutôt que d'être une vignette parmi
+         d'autres — trois petits cadres tiennent une série, un seul se noie.
+         La forme est celle du portrait de l'accueil, et elle tombe juste :
+         on regarde la pièce comme par une porte.
+
+         Elle arrive après le chapô, avant le reste : c'est ce qu'on vient
+         voir en ouvrant « Le lieu ».
+
+         `data-src` et non `src` : le panneau est fermé mais occupe la
+         fenêtre, et le navigateur téléchargeait les images qu'il croyait
+         proches de l'écran. Le script la pose à l'ouverture. -->
+    <figure class="piece">
+      <img data-src="assets/img/cabinet.webp" width="1080" height="1447"
+           decoding="async"
+           alt="La pièce de massage : la table dressée de linge, une échelle
+                de serviettes, une lampe et des lumières tamisées.">
+    </figure>
+
+    <p class="piece__mot">
       Un petit espace où, pendant une heure, le monde peut bien attendre un peu.
     </p>
-    <!-- Cadres en attente : les vraies photos du cabinet remplaceront ces
-         blocs. Ils sont là pour que la place soit réservée dès maintenant,
-         et pour qu'on voie tout de suite ce qui manque. `aria-hidden` : un
-         lecteur d'écran n'a rien à annoncer d'une image absente. -->
-    <ul class="attente" aria-hidden="true">
-      <li class="attente__cadre"><span>Photo du cabinet</span></li>
-      <li class="attente__cadre"><span>Photo du cabinet</span></li>
-      <li class="attente__cadre"><span>Photo du cabinet</span></li>
-    </ul>
 
     <!-- Le panneau s'appelle « Le lieu » et ne disait pas où. C'est
          pourtant la seule raison de l'ouvrir. La formule sur l'adresse est

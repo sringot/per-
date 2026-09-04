@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Prépare les photos du site aux formats attendus par les gabarits.
 
-Deux photographies alimentent le site : une scène de massage, qui tient
-l'accueil, et un portrait posé, qui reste dans « Moi ». Chaque emplacement
-a son propre rapport d'aspect. Recadrer à la main donnerait des fichiers
+Trois photographies alimentent le site : une scène de massage, qui tient
+l'accueil, un portrait posé, qui reste dans « Moi », et la pièce de
+massage, qui tient « Le lieu ». Chaque emplacement a son propre rapport
+d'aspect. Recadrer à la main donnerait des fichiers
 qu'on ne saurait plus régénérer : le cadrage est décrit ici, en fractions
 de l'image d'origine, et le script produit les fichiers.
 
@@ -78,6 +79,20 @@ FORMATS = [
     # le 3/4 de l'autre vignette pour que la paire s'aligne.
     ('marie-source.png', 'marie-moi.webp',       3 / 4,     620, 0.92,
      VISAGE_X, VISAGE_Y),
+    # La pièce de massage, seule image du panneau « Le lieu ». Il n'y en a
+    # qu'une : elle prend donc l'arche de l'accueil, à pleine largeur, plutôt
+    # qu'une vignette parmi d'autres. Son rapport (0,750) est celui de
+    # l'arche à un demi pour cent près — elle y entre entière, on ne rogne
+    # que cinq pixels de largeur.
+    #
+    # 1080 px, soit tout ce que la source contient à ce rapport : le cadre
+    # fait 480 px sur grand écran et la largeur de l'écran sur téléphone, ce
+    # qui demande jusqu'à 1026 pixels réels sur un écran à forte densité.
+    # Réduire davantage aurait fait agrandir le navigateur, et le panneau ne
+    # charge son image qu'à l'ouverture — elle ne pèse rien tant que
+    # personne ne demande à voir la pièce.
+    ('cabinet-source.png', 'cabinet.webp',        1 / 1.34, 1080, 1.00,
+     .5, .5),
     # Découpe large du portrait. Cadrée large mais pas en bandeau : c'est
     # le conteneur qui découpe la bande finale, via `object-position`. Une
     # découpe 16/9 ne pouvait pas contenir la tête entière, la photo
