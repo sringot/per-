@@ -304,7 +304,7 @@ body::after{
    place. Une valeur écrite ici à la main aurait menti dès que la taille du
    texte du système change. */
 .bulles{
-  position:fixed; inset:auto 0 0 0; z-index:60;
+  position:fixed; inset:auto 0 var(--pied) 0; z-index:60;
   display:flex; align-items:flex-start; justify-content:center;
   gap:clamp(.3rem,2.6vw,1.5rem);
   padding:.5rem var(--pad) calc(.5rem + env(safe-area-inset-bottom, 0px));
@@ -314,7 +314,10 @@ body::after{
    de rien. Le dégradé va jusqu'à la transparence vers le haut pour que le
    contenu qui défile s'y dissolve au lieu de buter sur une arête. */
 .bulles::before{
-  content:''; position:absolute; inset:-1.6rem 0 0; z-index:-1;
+  /* Le socle descend jusqu'au bas de la fenêtre, sous le pied de page :
+     au-dessus d'un panneau, la bande qui reste entre la barre et le bord
+     laisserait sinon voir le contenu défiler. */
+  content:''; position:absolute; inset:-1.6rem 0 calc(-1 * var(--pied)) 0; z-index:-1;
   background:linear-gradient(to top,
     var(--card) 0%, var(--card) 58%, color-mix(in srgb, var(--card) 55%, transparent) 82%,
     color-mix(in srgb, var(--card) 0%, transparent) 100%);
@@ -1144,7 +1147,7 @@ body::after{
     }
   }
 
-  .pied{ position:relative; z-index:1; color:#CFC1B4; }
+  .pied{ color:#CFC1B4; }
   .pied a{ border-bottom-color:rgba(253,246,238,.32); }
   .pied a:hover{ color:#FDF6EE; border-bottom-color:#FDF6EE; }
 }
@@ -1158,11 +1161,16 @@ body::after{
    passer dessous. `--barre` est mesurée par le script au chargement et à
    chaque redimensionnement ; la valeur écrite ici n'est qu'un premier jet,
    utilisé le temps que le script s'exécute. */
-:root{ --barre:96px; }
-body{ padding-bottom:var(--barre); }
+:root{ --barre:96px; --pied:34px; }
+body{ padding-bottom:calc(var(--barre) + var(--pied)); }
+/* Le pied de page ferme l'écran, sous la barre — c'est l'ordre de la
+   maquette retenue. Fixé comme elle, sinon il resterait dans le flux
+   au-dessus d'elle. Son plan est sous celui des panneaux : une rubrique
+   ouverte le recouvre, la mention légale n'a rien à faire par-dessus. */
+.pied{ position:fixed; inset:auto 0 0 0; z-index:40; }
 /* Un souffle en plus de la hauteur de la barre : sans lui, le bouton de
    relance venait toucher les bulles en bas de course. */
-.panneau{ padding-bottom:calc(var(--barre) + .9rem); }
+.panneau{ padding-bottom:calc(var(--barre) + var(--pied) + .9rem); }
 
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */
 @media (prefers-reduced-motion:reduce){

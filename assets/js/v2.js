@@ -191,18 +191,21 @@
 
 
   /* ---------- La place que prend la barre ----------
-     Mesurée plutôt que devinée : elle dépend de la taille des libellés, qui
-     suit celle du texte choisie dans le système. Le pied de page et le
-     contenu des panneaux s'arrêtent au-dessus grâce à cette valeur ; une
-     constante écrite dans la feuille de style aurait menti dès qu'on
-     agrandit le texte, et la dernière ligne serait passée sous la barre. */
-  const barre = $('.bulles');
-  if (barre) {
-    const mesure = () => racine.style.setProperty(
-      '--barre', `${Math.round(barre.getBoundingClientRect().height)}px`);
+     Mesurées plutôt que devinées : elles dépendent de la taille des
+     libellés, qui suit celle du texte choisie dans le système. La barre se
+     pose au-dessus du pied de page, et le contenu des panneaux s'arrête
+     au-dessus des deux. Des constantes écrites dans la feuille de style
+     auraient menti dès qu'on agrandit le texte, et la dernière ligne serait
+     passée dessous. */
+  const bas = [['--barre', $('.bulles')], ['--pied', $('.pied')]].filter(x => x[1]);
+  if (bas.length) {
+    const mesure = () => bas.forEach(([nom, el]) => racine.style.setProperty(
+      nom, `${Math.round(el.getBoundingClientRect().height)}px`));
     mesure();
-    if (window.ResizeObserver) new ResizeObserver(mesure).observe(barre);
-    else addEventListener('resize', mesure);
+    if (window.ResizeObserver) {
+      const o = new ResizeObserver(mesure);
+      bas.forEach(([, el]) => o.observe(el));
+    } else addEventListener('resize', mesure);
   }
 
   /* ---------- L'économie des forfaits ----------
