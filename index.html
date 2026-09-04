@@ -161,12 +161,18 @@
          se déshabiller chez elle, et rien pour l'instant ne dit que Marie a
          appris. Trois ou quatre lignes suffisent — école et année.
          Supprimer les crochets une fois renseigné. -->
+    <!-- La liste est retirée de la page tant qu'elle n'est pas renseignée :
+         quatre crochets vides en disent moins que rien sur la formation de
+         Marie, et donnent d'un site en ligne l'image d'un brouillon. Elle
+         revient en supprimant les deux lignes de commentaire qui
+         l'entourent, une fois les écoles et les années remplies.
     <ul class="parcours">
       <li><b>[Diplôme principal]</b><span>[École] · [année]</span></li>
       <li><b>[Formation kobido]</b><span>[École] · [année]</span></li>
       <li><b>[Formation madérothérapie]</b><span>[École] · [année]</span></li>
       <li><b>[Formation drainage lymphatique]</b><span>[École] · [année]</span></li>
     </ul>
+    -->
 
     <!-- Marie au travail. C'est la seule preuve visuelle du site qu'elle
          masse vraiment : le portrait de l'accueil montre qui elle est, pas
@@ -358,16 +364,32 @@
     <p class="sur-titre">Retours clientes</p>
     <h2 id="avis-t">Elles en parlent<br>mieux que moi</h2>
 
-    <p class="note"><b id="note-moy">—</b> <span id="note-etoiles" aria-hidden="true"></span>
-      <small><span id="note-nb">—</span> avis</small></p>
+    <!-- ⚠️ EN ATTENTE DES PREMIERS AVIS. Il y avait ici quatre témoignages
+         en lorem ipsum et une note de 4,8/5 calculée dessus. Une visiteuse
+         qui lit « Lorem ipsum dolor » ne croit plus rien du reste de la
+         page, et une note moyenne inventée est un argument de vente faux.
+         L'état d'attente ci-dessous dit la vérité — une activité qui
+         commence — et ne coûte aucune confiance.
 
-    <!-- TODO : vrais témoignages, déposés par QR code -->
-    <ul class="avis" id="avis-liste">
-      <li data-note="5"><q>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</q><cite>Prénom N. · Kobido</cite></li>
-      <li data-note="5"><q>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</q><cite>Prénom N. · Relaxation</cite></li>
-      <li data-note="5"><q>Duis aute irure dolor in reprehenderit in voluptate velit esse.</q><cite>Prénom N. · Drainage</cite></li>
-      <li data-note="4"><q>Excepteur sint occaecat cupidatat non proident, sunt in culpa.</q><cite>Prénom N. · Dos &amp; nuque</cite></li>
-    </ul>
+         Pour les vrais avis : rétablir le bloc de la note
+
+           <p class="note"><b id="note-moy">—</b>
+             <span id="note-etoiles" aria-hidden="true"></span>
+             <small><span id="note-nb">—</span> avis</small></p>
+
+         puis une <ul class="avis" id="avis-liste"> dont chaque
+         <li data-note="5"><q>…</q><cite>Prénom N. · Soin</cite></li>
+         porte sa note. La moyenne, les étoiles et le compte se calculent
+         tout seuls à partir des `data-note` — rien à écrire en dur. -->
+    <p class="attente-avis">
+      Marie vient d’ouvrir sa pièce de massage&nbsp;: les premiers retours
+      arriveront ici, tels qu’ils seront écrits.
+    </p>
+    <p>
+      En attendant, le mieux reste d’essayer — et de lui dire ce que vous en
+      avez pensé.
+    </p>
+
   </div>
 </section>
 

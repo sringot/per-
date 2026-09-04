@@ -3,3 +3,7 @@ Thumbs.db
 node_modules/
 __pycache__/
 *.pyc
+
+# Cache de compilation Python : régénéré à chaque exécution.
+__pycache__/
+*.pyc

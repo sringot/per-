@@ -115,7 +115,8 @@ body::after{
 .evitement{
   position:fixed; top:.6rem; left:.6rem; z-index:99;
   background:var(--accent); color:var(--white);
-  padding:.6rem 1rem; border-radius:999px;
+  padding:.7rem 1.1rem; border-radius:999px; min-height:44px;
+  display:inline-flex; align-items:center;
   transform:translateY(-200%); transition:transform .3s var(--ease);
 }
 .evitement:focus{ transform:none; }
@@ -267,12 +268,15 @@ body::after{
    chercher dans « Moi » et « Massages ». Ils prennent la forme des bulles
    — même socle, même relief — pour qu'on les lise comme des repères et non
    comme une phrase de plus. */
+/* 11,5 px et non 12 : c'est la plus grande taille à laquelle les trois
+   faits tiennent encore sur une seule ligne à 390 px — le format de
+   référence, et la composition validée. Ils partaient de 9,9 px. */
 .faits{
-  display:flex; flex-wrap:wrap; gap:.4rem;
-  font-size:clamp(.62rem,1.9vw,.72rem); line-height:1;
+  display:flex; flex-wrap:wrap; gap:.3rem;
+  font-size:clamp(.72rem,2.2vw,.82rem); line-height:1;
 }
 .faits span{
-  padding:.4rem .65rem; border-radius:2rem;
+  padding:.45rem .58rem; border-radius:2rem;
   background:var(--card); box-shadow:var(--nm-out);
   color:var(--ink-soft); white-space:nowrap;
 }
@@ -354,8 +358,14 @@ body::after{
   fill:none; stroke:currentColor; stroke-width:1.6;
   stroke-linecap:round; stroke-linejoin:round;
 }
+/* 11,2 px au plancher, contre 9,6 auparavant : le libellé d'une bulle est
+   le seul mot qui nomme la rubrique, sur l'élément le plus touché du site.
+   Il ne monte pas à 12 px comme le reste : c'est un libellé sous une icône,
+   pas du texte qu'on lit — les systèmes eux-mêmes tiennent leurs barres
+   d'onglets entre 10 et 12 px — et à 12 px « Rendez-vous » se coupait en
+   deux lignes, ce qui déséquilibrait la rangée entière. */
 .bulle__nom{
-  font-size:clamp(.6rem,1.9vw,.76rem); font-weight:500;
+  font-size:clamp(.7rem,2vw,.78rem); font-weight:500;
   letter-spacing:.02em; line-height:1.15; text-align:center;
 }
 /* Réservé aux vrais pointeurs : sur iOS, `:hover` reste collé au dernier
@@ -516,8 +526,13 @@ body::after{
    `.feuille`, et `.feuille p` (une classe + un élément) l'emportait sur
    une classe unique. Sa couleur retombait donc sur celle du texte
    courant — il n'a jamais été à l'ocre annoncé. */
+/* Plancher typographique : rien sous 12 px sur le site. Les sur-titres, les
+   en-têtes du tableau et les prix barrés descendaient à 10,2 px — lisibles
+   pour qui les a écrits, beaucoup moins pour une clientèle qui n'a pas
+   vingt ans. Les capitales espacées paraissent plus grandes qu'elles ne
+   sont, ce qui les avait fait passer inaperçues. */
 .feuille .sur-titre{
-  font-size:.7rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+  font-size:.78rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
   color:var(--teinte-t,var(--accent)); margin-bottom:.7rem;
 }
 .feuille h2{
@@ -587,7 +602,7 @@ body::after{
   content:counter(etape);
   width:1.6rem; height:1.6rem; border-radius:50%;
   display:grid; place-items:center;
-  font-size:.72rem; font-weight:600;
+  font-size:.78rem; font-weight:600;
   color:var(--teinte-t,var(--accent));
   background:color-mix(in srgb, var(--teinte,var(--accent)) 13%, var(--card));
 }
@@ -720,7 +735,7 @@ body::after{
 }
 .tableau thead th{
   text-align:left; font-weight:500; color:var(--ink-soft);
-  font-size:.64rem; letter-spacing:.12em; text-transform:uppercase;
+  font-size:.75rem; letter-spacing:.1em; text-transform:uppercase;
   padding:0 1rem .5rem 0; white-space:nowrap;
 }
 .tableau tbody th, .tableau tbody td{
@@ -751,14 +766,23 @@ body::after{
    celui-ci finissait — cinq positions différentes, de « Kobido » à
    « Drainage lymphatique ». Au bord, il rejoint la colonne des prix. */
 .t-soin{ display:flex; align-items:center; }
+/* Le disque reste à 26 px — c'est un repère, pas un bouton d'action — mais
+   la zone qui répond au doigt en fait 44, le minimum recommandé. Le
+   rembourrage est transparent et compensé par une marge négative : rien ne
+   bouge à l'écran, et la ligne du soin garde sa hauteur. C'est le seul
+   accès à la description des soins, il ne peut pas être le plus difficile
+   à viser de la page. */
 .t-info{
   width:26px; height:26px; border-radius:50%; flex:none;
   display:inline-grid; place-items:center;
   margin-left:auto;
-  font-size:.78rem; font-weight:600; line-height:1;
+  font-size:.82rem; font-weight:600; line-height:1;
   color:var(--ink);
   background:color-mix(in srgb, var(--fond) 26%, var(--card));
   transition:background .25s var(--ease);
+  /* La boîte reste de 26 px, le rembourrage déborde dessus. */
+  box-sizing:content-box; padding:9px; margin:-9px -9px -9px auto;
+  background-clip:content-box;
 }
 @media (hover:hover) and (pointer:fine){
   .t-info:hover{ background:color-mix(in srgb, var(--fond) 42%, var(--card)); }
@@ -789,7 +813,7 @@ body::after{
 .t-l__prix{ font-weight:600; color:var(--ink); white-space:nowrap; }
 .t-avant{
   flex-basis:100%; text-align:right;
-  font-style:normal; font-size:.8em; color:var(--ink-soft);
+  font-style:normal; font-size:.95em; color:var(--ink-soft);
 }
 .t-avant:empty{ display:none; }
 .t-l--vide{ color:var(--ink-soft); }
@@ -805,8 +829,8 @@ body::after{
    on reconnaît alors dans le tableau ce qu'on vient de lire. */
 .tableau__aide b{
   display:inline-grid; place-items:center;
-  width:19px; height:19px; border-radius:50%; vertical-align:-.3em;
-  font-size:.68rem; font-weight:600; line-height:1;
+  width:21px; height:21px; border-radius:50%; vertical-align:-.35em;
+  font-size:.75rem; font-weight:600; line-height:1;
   color:var(--ink); background:color-mix(in srgb, var(--ink) 10%, var(--card));
 }
 
@@ -859,12 +883,19 @@ body::after{
   .tableau tbody td::before{
     content:attr(data-col);
     display:block; margin-bottom:.3rem;
-    font-size:.62rem; font-weight:500; letter-spacing:.12em;
+    font-size:.75rem; font-weight:500; letter-spacing:.1em;
     text-transform:uppercase; color:var(--ink-soft);
   }
   /* Réempilée, chaque ligne prend un filet : la description en hériterait
      et se détacherait de son soin au lieu de le prolonger. */
   .tableau tbody tr.t-desc{ border-top:0; padding-top:0; margin-top:-.4rem; }
+}
+
+/* L'état d'attente des avis. Il est écrit comme une phrase, pas comme un
+   avertissement technique : une activité qui démarre n'a pas d'avis, ce
+   n'est pas une anomalie à signaler. */
+.attente-avis{
+  font-size:1.02rem; color:var(--ink); margin-bottom:.9rem;
 }
 
 /* --- Les avis --- */
@@ -893,7 +924,7 @@ body::after{
   padding:1.2rem 1.3rem 1.4rem; border-radius:20px; box-shadow:var(--nm-out);
 }
 .voie h3{
-  font-size:.72rem; font-weight:600; letter-spacing:.14em;
+  font-size:.78rem; font-weight:600; letter-spacing:.14em;
   text-transform:uppercase; color:var(--teinte-t,var(--accent));
 }
 .voie p{ margin-top:.5rem; font-size:.86rem; color:var(--ink-soft); }
@@ -908,7 +939,7 @@ body::after{
   color:var(--ink);
   cursor:default;
 }
-.voie__note{ margin-top:.6rem; font-size:.74rem; }
+.voie__note{ margin-top:.6rem; font-size:.78rem; }
 
 .numero{
   display:block; margin:1.6rem 0 1.1rem;
@@ -957,7 +988,7 @@ body::after{
    dans les panneaux : sur ces pages-ci ils retombaient au texte courant —
    « Erreur 404 » s'affichait en noir, à la taille du corps. */
 .annexe .sur-titre{
-  font-size:.7rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+  font-size:.78rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
   color:var(--accent); margin-bottom:.7rem;
 }
 .annexe p{ color:var(--ink-soft); }
@@ -981,10 +1012,27 @@ body::after{
   margin-top:1rem; font-size:.82rem; color:var(--ink-soft);
 }
 
+
+/* Les liens de contact sont des cibles, pas des mots dans un paragraphe :
+   le numéro, les deux adresses et le lien Instagram tenaient sur 16 à 39 px
+   de haut. Ils reçoivent un rembourrage vertical compensé par une marge
+   négative — la zone qui répond au doigt grandit, la mise en page ne bouge
+   pas. Le lien des mentions légales, secondaire, vise le plancher de 24 px
+   plutôt que celui de 44 : l'amener à 44 aurait doublé la hauteur du pied
+   de page pour la ligne la moins touchée du site. */
+.numero, .ailleurs a, .moi__liens a{
+  display:inline-flex; align-items:center; min-height:44px;
+}
+.ailleurs a, .moi__liens a{ padding-block:.35rem; margin-block:-.35rem; }
+.pied a{
+  display:inline-flex; align-items:center; min-height:24px;
+  padding-block:.25rem; margin-block:-.25rem;
+}
+
 /* ---------- 6. PIED DE PAGE ---------- */
 .pied{
   padding:0 var(--pad) clamp(.9rem,2.5vh,1.4rem);
-  text-align:center; font-size:.7rem; color:var(--ink-soft);
+  text-align:center; font-size:.76rem; color:var(--ink-soft);
 }
 .pied a{ border-bottom:1px solid var(--line); }
 .pied a:hover{ color:var(--accent); border-bottom-color:var(--accent); }
@@ -1013,13 +1061,17 @@ body::after{
   .logo{ width:clamp(28px,5vh,44px); margin-bottom:0; }
   .bulle{ width:clamp(56px,16vw,72px); }
   .bulle__rond{ width:clamp(42px,12vw,60px); }
-  .bulle__nom{ font-size:clamp(.56rem,1.7vw,.7rem); }
+  .bulle__nom{ font-size:clamp(.7rem,1.9vw,.76rem); }
 }
 @media (max-height:520px){
   /* Téléphone couché : la colonne devient courte et large, et la photo
      étirée dessus donnerait un bandeau. Elle reprend ici son rapport
      d'arche et se cale en bas, contre le nom. */
-  .portrait{ width:min(100%, 34vh); aspect-ratio:1/1.34; align-self:end; }
+  /* 31 vh et non 34 : le plancher typographique a fait grandir les faits
+     et les libellés des bulles, et l'accueil dépassait de 6 px sur un
+     téléphone couché — six pixels perdus, puisque rien ne défile ici.
+     C'est la photo qui cède, comme chaque fois que la hauteur manque. */
+  .portrait{ width:min(100%, 31vh); aspect-ratio:1/1.34; align-self:end; }
   .logo{ width:clamp(22px,3.6vh,34px); }
   .titre{ font-size:clamp(1.5rem,4.2vh,2.4rem); }
   .accroche{ display:none; }
@@ -1122,7 +1174,11 @@ body::after{
      chacune : à 320 px, cinq largeurs assez grandes pour « Rendez-vous »
      sur une ligne faisaient 345 px, et la dernière sortait de l'écran. Le
      libellé passe sur deux lignes plutôt que la bulle hors du cadre. */
-  .bulles{ justify-content:space-between; gap:.25rem; }
+  /* La barre resserre ses marges latérales : à la marge courante, chaque
+     bulle ne disposait que de 68 px et « Rendez-vous » se coupait en deux
+     dès 390 px — la rangée perdait son alignement pour un seul mot. Les
+     bulles y gagnent huit pixels chacune. */
+  .bulles{ justify-content:space-between; gap:.2rem; padding-inline:.55rem; }
   .bulle{ flex:1 1 0; width:auto; min-width:0; }
   .bulle__rond{ width:min(100%, clamp(46px,15vw,64px)); }
 
@@ -1173,6 +1229,16 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
 .panneau{ padding-bottom:calc(var(--barre) + var(--pied) + .9rem); }
 
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */
+/* Très court : un téléphone couché de 360 px de haut. La photo cède encore,
+   et la scène resserre ses marges — mais aucun texte ne rétrécit : le
+   plancher de 12 px vaut pour toutes les tailles d'écran, c'est justement
+   là qu'on lit le plus mal. */
+@media (max-height:400px){
+  .scene{ padding-block:.5rem; }
+  .portrait{ width:min(100%, 26vh); }
+  .logo{ width:clamp(20px,3.2vh,30px); }
+}
+
 @media (prefers-reduced-motion:reduce){
   /* Le délai autant que la durée : le déroulé du contenu tient son état de
      départ — invisible — pendant son délai, qui monte à près d'une seconde
