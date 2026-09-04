@@ -634,14 +634,14 @@ body::after{
 }
 
 /* --- La pièce de massage ---
-   Une seule image pour tout le panneau : elle prend l'arche de l'accueil,
-   à pleine largeur. Trois petits cadres tenaient une série ; un seul cadre
-   de la même taille se serait noyé au milieu du texte.
+   Une seule image pour tout le panneau, carrée et à pleine largeur. Trois
+   petits cadres tenaient une série ; un seul cadre de la même taille se
+   serait noyé au milieu du texte.
 
-   Le rapport n'est pas déclaré ici : le fichier est découpé à celui de
-   l'arche par `tools-photos.py`, et `height:auto` laisse l'image le porter
-   elle-même — une hauteur en dur dans la balise, posée pour réserver la
-   place avant chargement, l'emporterait sinon. */
+   Le rapport n'est pas déclaré ici : le fichier est découpé au carré par
+   `tools-photos.py`, et `height:auto` laisse l'image le porter elle-même —
+   une hauteur en dur dans la balise, posée pour réserver la place avant
+   chargement, l'emporterait sinon. */
 .piece{
   /* Bornée à 30 rem et non à la largeur de la feuille : au-delà, l'arche
      devient plus haute que la fenêtre d'un ordinateur portable et l'on ne
@@ -649,12 +649,12 @@ body::after{
      occupait sur grand écran une part plus petite que sur téléphone, ce qui
      est exactement l'inverse de la mettre en valeur. */
   margin:1.8rem auto 0; width:100%; max-width:30rem;
-  border-radius:min(50vw,290px) min(50vw,290px) var(--r-lg) var(--r-lg);
+  border-radius:var(--r-lg);
   overflow:hidden; box-shadow:var(--nm-out-lg);
 }
 .piece img{ width:100%; height:auto; display:block; }
 /* La phrase qui suit l'image lui sert de légende : elle est centrée sous
-   l'arche et non calée à gauche comme le reste du texte. */
+   le cadre et non calée à gauche comme le reste du texte. */
 .piece__mot{
   margin-top:1.1rem; text-align:center;
   color:var(--ink-soft); text-wrap:balance;

@@ -79,20 +79,23 @@ FORMATS = [
     # le 3/4 de l'autre vignette pour que la paire s'aligne.
     ('marie-source.png', 'marie-moi.webp',       3 / 4,     620, 0.92,
      VISAGE_X, VISAGE_Y),
-    # La pièce de massage, seule image du panneau « Le lieu ». Il n'y en a
-    # qu'une : elle prend donc l'arche de l'accueil, à pleine largeur, plutôt
-    # qu'une vignette parmi d'autres. Son rapport (0,750) est celui de
-    # l'arche à un demi pour cent près — elle y entre entière, on ne rogne
-    # que cinq pixels de largeur.
+    # La pièce de massage, seule image du panneau « Le lieu ». Carré, à
+    # pleine largeur : une image unique ne se traite pas comme une vignette
+    # d'une série.
     #
-    # 1080 px, soit tout ce que la source contient à ce rapport : le cadre
-    # fait 480 px sur grand écran et la largeur de l'écran sur téléphone, ce
-    # qui demande jusqu'à 1026 pixels réels sur un écran à forte densité.
-    # Réduire davantage aurait fait agrandir le navigateur, et le panneau ne
+    # La visée est haute — 0,42 et non le centre. Le carré ne garde que
+    # trois quarts de la hauteur de la source, et centré il coupait la
+    # suspension en rotin par le milieu ; c'est elle qui tient le haut du
+    # cadre et donne son caractère à la pièce. À 0,42 elle passe entière,
+    # et le tapis reste au pied de la table.
+    #
+    # 1080 px, soit toute la largeur de la source : le cadre fait 480 px sur
+    # grand écran et la largeur de l'écran sur téléphone, ce qui demande
+    # jusqu'à 1026 pixels réels sur un écran à forte densité. Le panneau ne
     # charge son image qu'à l'ouverture — elle ne pèse rien tant que
     # personne ne demande à voir la pièce.
-    ('cabinet-source.png', 'cabinet.webp',        1 / 1.34, 1080, 1.00,
-     .5, .5),
+    ('cabinet-source.png', 'cabinet.webp',        1 / 1,    1080, 1.00,
+     .5, .42),
     # Découpe large du portrait. Cadrée large mais pas en bandeau : c'est
     # le conteneur qui découpe la bande finale, via `object-position`. Une
     # découpe 16/9 ne pouvait pas contenir la tête entière, la photo
