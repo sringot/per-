@@ -580,15 +580,30 @@ body::after{
 /* Chaque ligne : l'intitulé en tête, l'école et l'année en dessous. C'est
    la lecture en diagonale qui compte — on cherche « est-ce qu'elle a
    appris », pas le détail. */
-.parcours{
-  display:grid; gap:.5rem; margin-top:1.6rem;
+/* Le titre des sections de « Moi ». Le panneau enchaînait des paragraphes
+   sans jamais dire qu'on changeait de sujet. */
+.moi__titre{
+  margin-top:2rem; font-size:1.05rem; font-weight:600; letter-spacing:-.01em;
 }
-.parcours li{
-  display:flex; flex-direction:column; gap:.1rem;
-  padding:.7rem .95rem; border-radius:14px; box-shadow:var(--nm-out);
+
+/* Le parcours. C'étaient six cartes en relief : sur ce site, le relief
+   annonce quelque chose qu'on touche — les bulles, les boutons — et ces
+   cartes-là ne faisaient rien. Une liste séparée de filets fins se lit pour
+   ce qu'elle est, une suite de qualifications, et n'invite pas au doigt.
+
+   La seconde ligne est facultative : une formation dont on ne cite pas
+   l'école s'affiche seule, sans trou ni tiret. C'est ce qui permet de
+   compléter le bloc au fil de l'eau sans qu'il ait l'air inachevé. */
+.parcours{ display:grid; margin-top:.9rem; }
+.parcours li{ padding:.7rem 0; }
+.parcours li + li{ border-top:1px solid var(--line); }
+.parcours b{
+  display:block; font-weight:600; font-size:.95rem; color:var(--ink);
 }
-.parcours b{ font-weight:600; font-size:.9rem; color:var(--ink); }
-.parcours span{ font-size:.76rem; color:var(--ink-soft); }
+.parcours span{
+  display:block; margin-top:.15rem;
+  font-size:.82rem; color:var(--ink-soft);
+}
 
 /* Le déroulé, numéroté : c'est l'inconnu qui bloque une première
    réservation, pas le prix. */
