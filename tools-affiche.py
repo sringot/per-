@@ -44,8 +44,12 @@ SOINS = [
     ('kobido', 'Kobido', 'Lifting japonais du visage',
      '#7E3D49', '#F8E2AF',
      [(('1 heure', 60), None)]),
+    # Terracotta et non mocha : c'est la couleur de la planche fournie par
+    # Marie, et celle de ses publications. Le site avait porté un moment le
+    # Pantone Mocha Mousse ici, à la demande ; il s'écartait alors de sa
+    # propre charte sur ce seul soin.
     ('madero', 'Madéro', 'Soin corps remodelant',
-     '#A47864', '#FDF5E8',
+     '#D15929', '#FDF5E8',
      [(('1 heure', 70), (5, 300))]),
     ('drainage', 'Drainage lymphatique', 'Méthode Nathalie Duarte',
      '#E39E99', '#6B3132',
