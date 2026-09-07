@@ -765,10 +765,25 @@ body::after{
 /* Le monogramme de la carte, en petit. `--marque` est la même teinte poussée
    jusqu'à 3:1 sur le socle du site : hors de sa carte, elle n'a plus le fond
    coloré qui la faisait ressortir. */
+/* Le monogramme du soin, sur sa carte — en miniature.
+
+   Il était posé nu, à 17 px, dans une teinte grisée tirée de la carte
+   (`--marque`). Or ces cinq monogrammes sur leur aplat sont l'identité
+   visuelle de Marie : c'est ce qu'elle publie, en grand, sur son compte.
+   Réduits à une petite forme grise, ils ne disaient plus rien.
+
+   La vignette reprend le rapport de ses cartes — plus haute que large — et
+   ses deux couleurs : l'aplat en fond, le monogramme dedans. Le nom du soin
+   est juste à côté, donc la vignette ne porte aucune information à elle
+   seule : c'est un repère, pas un pictogramme à déchiffrer. */
 .t-signe{
-  display:inline-block; vertical-align:-.18em;
-  width:1.05em; height:1.05em; margin-right:.5rem;
-  background:var(--marque);
+  flex:none; width:26px; height:34px; margin-right:.6rem;
+  border-radius:5px; background:var(--fond);
+  display:inline-grid; place-items:center;
+}
+.t-signe::before{
+  content:''; width:64%; height:64%;
+  background:var(--signe-c);
   -webkit-mask:var(--signe) center/contain no-repeat;
           mask:var(--signe) center/contain no-repeat;
 }
