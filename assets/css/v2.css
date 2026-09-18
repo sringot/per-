@@ -652,9 +652,12 @@ body::after{
    un cadre de 173 px de large. */
 .cliches img{ width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; }
 
+/* La mention de bien-être. Elle était creusée dans la page — or sur ce
+   site un creux, c'est un bouton enfoncé. Un filet au-dessus suffit à la
+   détacher du texte courant sans lui donner l'air d'un élément actif. */
 .moi__cadre{
-  margin-top:1.8rem; padding:.9rem 1.1rem; border-radius:14px;
-  font-size:.84rem; box-shadow:var(--nm-in);
+  margin-top:2rem; padding-top:1.1rem; border-top:1px solid var(--line);
+  font-size:.84rem; color:var(--ink-soft);
 }
 .moi__liens{
   display:flex; flex-wrap:wrap; align-items:center; gap:.5rem 1.2rem;
@@ -693,13 +696,17 @@ body::after{
   color:var(--ink-soft); text-wrap:balance;
 }
 
+/* Les informations pratiques. C'étaient des pastilles en relief — quatre
+   dans « Le lieu », deux dans le rendez-vous — qui avaient l'air de boutons
+   et n'en étaient pas. Ce sont des faits : ils se lisent en liste, séparés
+   par un point médian, et ne réclament plus rien. */
 .details{
-  display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.6rem;
+  display:grid; gap:.55rem; margin-top:1.8rem;
+  font-size:.88rem; color:var(--ink-soft);
 }
-.details li{
-  font-size:.78rem; color:var(--ink-soft);
-  padding:.45rem .9rem; border-radius:999px; box-shadow:var(--nm-out);
-}
+/* Une colonne, sans puce ni séparateur. Posés en ligne avec un point
+   médian entre eux, ces quatre faits passaient à la ligne sur un téléphone
+   et le point se retrouvait en tête de ligne, comme une puce égarée. */
 
 /* --- La liste des soins --- */
 /* --- Les cartes de soins ---
@@ -963,13 +970,29 @@ body::after{
 /* --- Les deux voies de réservation ---
    Côte à côte dès qu'il y a la place : les présenter l'une sous l'autre
    ferait de la seconde un repli, alors que ce sont deux portes égales. */
+/* Les deux façons de réserver, sans boîte.
+
+   Elles étaient posées sur deux cartes en relief. Sur ce site le relief
+   annonce ce qu'on touche — les bulles, les boutons — et une carte qui
+   porte deux phrases et un bouton n'est pas touchable elle-même : elle
+   ajoutait seulement deux cadres à un panneau qui n'a que soixante-huit
+   mots. Un filet fin et de l'air séparent aussi bien, et l'œil va alors
+   aux boutons, qui sont ce qu'on cherche.
+
+   Le rembourrage latéral disparaît avec la carte : le texte reprend toute
+   la largeur de la feuille au lieu d'être enfermé dans une colonne. */
 .voies{
-  display:grid; gap:1rem; margin-top:1.6rem;
+  display:grid; gap:2.4rem; margin-top:2rem;
   grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
 }
 .voie{
   display:flex; flex-direction:column; align-items:center; text-align:center;
-  padding:1.2rem 1.3rem 1.4rem; border-radius:20px; box-shadow:var(--nm-out);
+}
+.voie + .voie{ padding-top:2.4rem; border-top:1px solid var(--line); }
+/* Côte à côte sur écran large, le filet passe à gauche. */
+@media (min-width:640px){
+  .voies{ gap:2rem; align-items:start; }
+  .voie + .voie{ padding-top:0; border-top:0; border-left:1px solid var(--line); padding-left:2rem; }
 }
 .voie h3{
   font-size:.78rem; font-weight:600; letter-spacing:.14em;
@@ -977,8 +1000,8 @@ body::after{
 }
 .voie p{ margin-top:.5rem; font-size:.86rem; color:var(--ink-soft); }
 .voie .numero{ font-size:clamp(1.4rem,5vw,1.9rem); margin:.9rem 0 .9rem; }
-.voie .appel{ margin-top:auto; }
-.voie__actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; margin-top:auto; }
+.voie .appel{ margin-top:1.4rem; }
+.voie__actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; margin-top:1.4rem; }
 .appel--fin{ min-height:46px; padding:.7rem 1.4rem; font-size:.9rem; }
 
 .numero{
