@@ -980,14 +980,6 @@ body::after{
 .voie .appel{ margin-top:auto; }
 .voie__actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; margin-top:auto; }
 .appel--fin{ min-height:46px; padding:.7rem 1.4rem; font-size:.9rem; }
-/* Un bouton désactivé annonce une porte fermée ; un lien vers « # » fait
-   croire qu'elle s'ouvre. */
-.appel[disabled]{
-  background:color-mix(in srgb, var(--accent) 22%, var(--card));
-  color:var(--ink);
-  cursor:default;
-}
-.voie__note{ margin-top:.6rem; font-size:.78rem; }
 
 .numero{
   display:block; margin:1.6rem 0 1.1rem;
@@ -1053,13 +1045,12 @@ body::after{
 .annexe--404 .chapo{ margin-bottom:2rem; }
 
 /* ---------- 5 bis. DÉTAIL DU RENDEZ-VOUS ---------- */
-/* La ligne d'attente du rendez-vous en ligne. Discrète : c'est une
-   information, pas une action — l'ancien bouton désactivé, lui, se
-   présentait comme la principale. */
-.bientot{
-  margin-top:1rem; font-size:.82rem; color:var(--ink-soft);
+/* L'école des formations, dite une fois au-dessus de la liste. L'agrément
+   FFMBE y est en gras : c'est le seul label vérifiable du site. */
+.parcours__ecole{
+  margin-top:.9rem; font-size:.88rem; color:var(--ink-soft);
 }
-
+.parcours__ecole b{ font-weight:600; color:var(--ink); }
 
 /* Les liens de contact sont des cibles, pas des mots dans un paragraphe :
    le numéro, les deux adresses et le lien Instagram tenaient sur 16 à 39 px

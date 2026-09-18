@@ -174,13 +174,25 @@
          une formation dont on ne cite pas l'école vaut mieux qu'un crochet
          vide, et le bloc n'a pas l'air inachevé en attendant. -->
     <h3 class="moi__titre">Mon parcours</h3>
+    <!-- L'école est la même pour les trois certificats : elle est dite une
+         fois, en tête, plutôt que répétée en petit sous chaque ligne. C'est
+         aussi ce qui met l'agrément FFMBE en évidence — c'est le seul label
+         vérifiable du site, et il valait mieux qu'une mention grise.
+
+         ⚠️ Deux formations n'ont pas encore de certificat : le relaxant et
+         le deep tissus. Leurs lignes s'affichent sans année, ce que la mise
+         en forme prévoit. -->
+    <p class="parcours__ecole">
+      Formations suivies à <b>La Maison du Lotus</b>, centre de formation aux
+      massages bien-être <b>agréé FFMBE</b>, à Voisins-le-Bretonneux.
+    </p>
     <ul class="parcours">
       <li><b>Professionnelle du paramédical</b><span>Mon métier au quotidien, toujours en exercice</span></li>
       <li><b>Massage relaxant</b></li>
       <li><b>Deep tissus</b></li>
-      <li><b>Kobido</b><span>Lifting japonais du visage</span></li>
-      <li><b>Madérothérapie</b></li>
-      <li><b>Drainage lymphatique</b><span>Méthode Nathalie Duarte</span></li>
+      <li><b>Kobido</b><span>Formation certifiée en 2026</span></li>
+      <li><b>Madérothérapie</b><span>Formation certifiée en 2026</span></li>
+      <li><b>Drainage lymphatique</b><span>Formation au massage drainant, certifiée en 2024</span></li>
     </ul>
 
     <!-- Marie au travail. C'est la seule preuve visuelle du site qu'elle
@@ -409,13 +421,23 @@
   <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
   <div class="feuille feuille--rdv">
     <p class="sur-titre">Rendez-vous</p>
-    <h2 id="rdv-t">Prendre<br>rendez-vous</h2>
+    <h2 id="rdv-t">Deux façons<br>de réserver</h2>
     <p class="chapo">
-      Un appel ou un message, et on convient d'un créneau ensemble — c'est
-      aussi l'occasion de choisir le soin à deux si vous hésitez.
+      En ligne à toute heure, ou de vive voix si vous préférez qu'on choisisse
+      le soin ensemble.
     </p>
 
     <div class="voies">
+      <section class="voie">
+        <h3>En ligne</h3>
+        <p>Le planning à jour, et le créneau retenu dans la foulée.</p>
+        <!-- Lien fourni par Marie. `target="_blank"` : le planning Treatwell
+             est un parcours de réservation à lui seul, on ne quitte pas le
+             site en plein milieu pour y entrer. `rel="noopener"` va avec. -->
+        <a class="appel" href="https://widget.treatwell.fr/salon/marieemassge/"
+           target="_blank" rel="noopener">Voir les disponibilités</a>
+      </section>
+
       <section class="voie">
         <h3>Par téléphone</h3>
         <p>Du lundi au samedi, de 9&nbsp;h à 20&nbsp;h.</p>
@@ -426,24 +448,6 @@
         </p>
       </section>
     </div>
-
-    <!-- ⚠️ EN ATTENTE du lien Treatwell de Marie. Il y avait ici une
-         seconde voie « En ligne » avec un bouton désactivé et la mention
-         « bientôt ouverte ». Un panneau intitulé « Deux façons de réserver »
-         qui en montre une morte est pire que d'en annoncer une seule : on
-         appuie sur le plus gros bouton de l'écran et rien ne se passe.
-
-         Pour la rétablir le jour où le lien existe : remettre une
-         `<section class="voie">` avant celle du téléphone, avec
-
-           <h3>En ligne</h3>
-           <p>Le planning à jour, et le créneau retenu dans la foulée.</p>
-           <a class="appel" href="[lien Treatwell]" target="_blank"
-              rel="noopener">Voir les disponibilités</a>
-
-         puis rendre au titre son « Deux façons de réserver » et supprimer
-         la ligne ci-dessous. -->
-    <p class="bientot">La réservation en ligne arrive bientôt.</p>
 
     <ul class="details">
       <li>Montigny-le-Bretonneux (78180)</li>
