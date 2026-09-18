@@ -795,7 +795,25 @@ body::after{
    bord droit de la colonne. Posé à la suite du nom, il tombait là où
    celui-ci finissait — cinq positions différentes, de « Kobido » à
    « Drainage lymphatique ». Au bord, il rejoint la colonne des prix. */
+/* Le nom du soin et ce qu'il est, l'un sous l'autre.
+
+   Le tableau n'affichait que les noms : Kobido, Deep Tissus, Madéro,
+   Drainage lymphatique. Quatre mots sur cinq ne disent rien à qui n'a
+   jamais pris de massage, et il fallait ouvrir les cinq « i » pour
+   comprendre le menu — c'est-à-dire cinq gestes avant la première idée.
+
+   La phrase qui les explique existait déjà : elle ouvrait la description
+   cachée, en gras, et elle est visible en permanence sur l'affiche que
+   Marie a validée. Elle remonte donc sous le nom, et la description ne la
+   répète plus. Le « i » cesse d'être le seul moyen de comprendre pour
+   devenir ce qu'il devrait être : « en savoir plus ». */
 .t-soin{ display:flex; align-items:center; }
+.t-soin__mot{ flex:1; min-width:0; }
+.t-soin__quoi{
+  display:block; margin-top:.12rem;
+  font-style:normal; font-weight:400; font-size:.8rem; line-height:1.3;
+  color:var(--ink-soft);
+}
 /* Le disque reste à 26 px — c'est un repère, pas un bouton d'action — mais
    la zone qui répond au doigt en fait 44, le minimum recommandé. Le
    rembourrage est transparent et compensé par une marge négative : rien ne
