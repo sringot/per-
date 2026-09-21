@@ -152,49 +152,6 @@
       décrocher un moment.
     </p>
 
-    <p class="moi__reserve">
-      <b>Massages réservés aux femmes</b>
-      <span>Par une femme, pour les femmes.</span>
-    </p>
-
-    <!-- Le bloc qui décide : une inconnue va se déshabiller chez elle, et
-         c'est ici qu'elle apprend que Marie a appris. Il portait quatre
-         crochets vides — [École] · [année] — retirés parce qu'ils donnaient
-         d'un site en ligne l'image d'un brouillon.
-
-         Il revient avec ce que le site sait déjà pour de vrai : l'activité
-         paramédicale, que Marie mentionne elle-même plus haut, les quatre
-         techniques qu'elle pratique, et la méthode nommée du drainage, qui
-         figure sur sa fiche de tarifs.
-
-         ⚠️ IL MANQUE LES ÉCOLES ET LES ANNÉES. Chaque ligne accepte un
-         second élément qui les porte :
-           <li><b>Kobido</b><span>École · 2024</span></li>
-         La ligne sans `span` s'affiche seule et proprement — c'est fait pour :
-         une formation dont on ne cite pas l'école vaut mieux qu'un crochet
-         vide, et le bloc n'a pas l'air inachevé en attendant. -->
-    <h3 class="moi__titre">Mon parcours</h3>
-    <!-- L'école est la même pour les trois certificats : elle est dite une
-         fois, en tête, plutôt que répétée en petit sous chaque ligne. C'est
-         aussi ce qui met l'agrément FFMBE en évidence — c'est le seul label
-         vérifiable du site, et il valait mieux qu'une mention grise.
-
-         ⚠️ Deux formations n'ont pas encore de certificat : le relaxant et
-         le deep tissus. Leurs lignes s'affichent sans année, ce que la mise
-         en forme prévoit. -->
-    <p class="parcours__ecole">
-      Formations suivies à <b>La Maison du Lotus</b>, centre de formation aux
-      massages bien-être <b>agréé FFMBE</b>, à Voisins-le-Bretonneux.
-    </p>
-    <ul class="parcours">
-      <li><b>Professionnelle du paramédical</b><span>Mon métier au quotidien, toujours en exercice</span></li>
-      <li><b>Massage relaxant</b></li>
-      <li><b>Deep tissus</b></li>
-      <li><b>Kobido</b><span>Formation certifiée en 2026</span></li>
-      <li><b>Madérothérapie</b><span>Formation certifiée en 2026</span></li>
-      <li><b>Drainage lymphatique</b><span>Formation au massage drainant, certifiée en 2024</span></li>
-    </ul>
-
     <!-- Marie au travail. C'est la seule preuve visuelle du site qu'elle
          masse vraiment : le portrait de l'accueil montre qui elle est, pas
          ce qu'elle fait.
@@ -216,6 +173,42 @@
                decoding="async"
                alt="Marie travaille du bout des doigts le long de la colonne vertébrale."></li>
     </ul>
+
+    <p class="moi__reserve">
+      <b>Massages réservés aux femmes</b>
+      <span>Par une femme, pour les femmes.</span>
+    </p>
+
+    <h3 class="bloc-h">Mon parcours</h3>
+    <!-- Par ordre chronologique, comme Marie le demande : le métier d'abord,
+         puis les formations par date, celle qui vient en dernier.
+
+         Chaque ligne accepte plusieurs `<span>` : le drainage en porte deux,
+         une par méthode. Une ligne sans `span` s'affiche seule et proprement.
+
+         ⚠️ EN ATTENTE. Le diplôme du massage relaxant n'est pas arrivé
+         jusqu'ici — sa ligne attend sa date.
+
+         ⚠️ À OUVRIR À PARTIR DU MERCREDI 23 SEPTEMBRE 2026, pas avant : la
+         certification n'existe pas encore, et une qualification annoncée
+         avant d'être obtenue est une fausse mention sur un site professionnel.
+         Il suffit de sortir la ligne de ce commentaire :
+           <span>Méthode Nathalie Duarte, certifiée en 2026</span>
+    -->
+    <ul class="parcours">
+      <li><b>Professionnelle du paramédical</b><span>Mon métier au quotidien, toujours en exercice</span></li>
+      <li><b>Massage relaxant</b></li>
+      <li><b>Drainage lymphatique</b><span>Méthode Vodder, certifiée par La Maison du Lotus en 2024</span></li>
+      <li><b>Kobido</b><span>Certifiée par La Maison du Lotus en 2026</span></li>
+      <li><b>Madérothérapie</b><span>Certifiée par La Maison du Lotus en 2026</span></li>
+      <li><b>Deep tissus</b><span>Formation prévue début 2027</span></li>
+    </ul>
+
+    <p class="parcours__ecole">
+      La Maison du Lotus est un centre de formation aux massages bien-être
+      <b>agréé FFMBE</b>, à Voisins-le-Bretonneux.
+    </p>
+
 
     <p class="moi__cadre">
       Je ne soigne pas&nbsp;: je détends. Mes massages sont des soins de

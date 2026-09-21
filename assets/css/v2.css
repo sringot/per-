@@ -48,11 +48,16 @@
      **crème lavé de 13 % de la teinte**, celui du haut des panneaux : le
      lavis assombrit le fond, et trois d'entre elles y retombaient à
      4,1-4,2:1. */
-  --moi-i:      #A47864;  --moi-t:      #805E4E;   /* mocha     */
-  --lieu-i:     #898D7F;  --lieu-t:     #67695F;   /* sauge     */
-  --massages-i: #988968;  --massages-t: #786C52;   /* jaune     */
-  --avis-i:     #B37D79;  --avis-t:     #875E5B;   /* rose      */
-  --rdv-i:      #6A2F3C;  --rdv-t:      #6A2F3C;   /* bordeaux  */
+  /* Une troisième valeur par rubrique, `-h` : l'encre d'un titre de section.
+     Les bandeaux sont lavés de 20 % de la teinte, plus foncés que les 13 %
+     sur lesquels les valeurs `-t` avaient été calculées — quatre d'entre
+     elles y retombaient à 3,8-4,2:1. Celles-ci sont relevées par le même
+     calcul, sur le fond réel du bandeau. */
+  --moi-i:      #A47864;  --moi-t:      #805E4E;  --moi-h:      #79594A;
+  --lieu-i:     #898D7F;  --lieu-t:     #67695F;  --lieu-h:      #606359;   /* sauge     */
+  --massages-i: #988968;  --massages-t: #786C52;  --massages-h:      #6A6049;   /* jaune     */
+  --avis-i:     #B37D79;  --avis-t:     #875E5B;  --avis-h:      #7D5855;   /* rose      */
+  --rdv-i:      #6A2F3C;  --rdv-t:      #6A2F3C;  --rdv-h:      #6A2F3C;   /* bordeaux  */
 
   /* Le filigrane des panneaux. Une seule teinte pour les cinq, à dessein :
      c'est le même fond partout, pas un accord par rubrique. */
@@ -292,11 +297,11 @@ body::after{
    qu'une rubrique se reconnaît avant même d'être lue. Le disque reste
    crème et seul le tracé se colore — cinq ronds pleins et vifs sur
    l'accueil basculeraient du côté de l'application pour enfants. */
-.bulle[data-ouvre="moi"],      #moi     { --teinte:var(--moi-i);      --teinte-t:var(--moi-t); }
-.bulle[data-ouvre="lieu"],     #lieu    { --teinte:var(--lieu-i);     --teinte-t:var(--lieu-t); }
-.bulle[data-ouvre="massages"], #massages{ --teinte:var(--massages-i); --teinte-t:var(--massages-t); }
-.bulle[data-ouvre="avis"],     #avis    { --teinte:var(--avis-i);     --teinte-t:var(--avis-t); }
-.bulle[data-ouvre="rdv"],      #rdv     { --teinte:var(--rdv-i);      --teinte-t:var(--rdv-t); }
+.bulle[data-ouvre="moi"],      #moi     { --teinte:var(--moi-i);      --teinte-t:var(--moi-t); --teinte-h:var(--moi-h); }
+.bulle[data-ouvre="lieu"],     #lieu    { --teinte:var(--lieu-i);     --teinte-t:var(--lieu-t); --teinte-h:var(--lieu-h); }
+.bulle[data-ouvre="massages"], #massages{ --teinte:var(--massages-i); --teinte-t:var(--massages-t); --teinte-h:var(--massages-h); }
+.bulle[data-ouvre="avis"],     #avis    { --teinte:var(--avis-i);     --teinte-t:var(--avis-t); --teinte-h:var(--avis-h); }
+.bulle[data-ouvre="rdv"],      #rdv     { --teinte:var(--rdv-i);      --teinte-t:var(--rdv-t); --teinte-h:var(--rdv-h); }
 
 /* La barre est fixée au bas de la fenêtre et passe **au-dessus** des
    panneaux (z-index 60 contre 50) : c'est le même élément sur l'accueil et
@@ -582,10 +587,6 @@ body::after{
    appris », pas le détail. */
 /* Le titre des sections de « Moi ». Le panneau enchaînait des paragraphes
    sans jamais dire qu'on changeait de sujet. */
-.moi__titre{
-  margin-top:2rem; font-size:1.05rem; font-weight:600; letter-spacing:-.01em;
-}
-
 /* Le parcours. C'étaient six cartes en relief : sur ce site, le relief
    annonce quelque chose qu'on touche — les bulles, les boutons — et ces
    cartes-là ne faisaient rien. Une liste séparée de filets fins se lit pour
@@ -745,9 +746,28 @@ body::after{
    Chaque ligne porte la classe de son soin (`.soin--kobido`…), donc ses
    variables de couleur : le monogramme du tableau vient du même masque que
    celui de la carte, et la palette n'a qu'une seule source. */
+/* Le titre d'une section, dans un bandeau à la teinte de sa rubrique.
+
+   Les sections s'enchaînaient sans rien pour les séparer : « Mon parcours »
+   et « Les tarifs » avaient le poids d'un paragraphe en gras, et on ne
+   voyait pas qu'on changeait de sujet. Le bandeau reprend la couleur que la
+   rubrique porte déjà partout — sa bulle, son panneau — donc il signale sans
+   introduire une couleur de plus.
+
+   L'encre est la valeur `-t` de la teinte : celle qui a été calculée pour
+   rester au-dessus de 4,5:1 sur un fond lavé de cette même teinte. */
 .bloc-h{
-  font-size:1.05rem; font-weight:600; color:var(--ink);
-  margin:2.4rem 0 .9rem;
+  display:block; margin:2.6rem 0 1rem;
+  padding:.6rem .95rem; border-radius:12px;
+  background:color-mix(in srgb, var(--teinte,var(--accent)) 20%, var(--card));
+  color:var(--teinte-h,var(--accent));
+  font-size:1.02rem; font-weight:600; letter-spacing:-.01em;
+  /* Un filet plein de la teinte, à gauche. Le lavis seul ressemblait au
+     bloc « réservé aux femmes », qui porte la même couleur à 13 % : deux
+     pavés teintés l'un sous l'autre, et la hiérarchie se perdait. Le filet
+     n'appartient qu'aux titres de section — on les repère sans les lire. */
+  border-left:4px solid var(--teinte,var(--accent));
+  border-top-left-radius:4px; border-bottom-left-radius:4px;
 }
 .tableau table{
   width:100%; border-collapse:collapse;
