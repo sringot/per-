@@ -705,6 +705,9 @@ body::after{
   display:grid; gap:.55rem; margin-top:1.8rem;
   font-size:.88rem; color:var(--ink-soft);
 }
+/* Les horaires ouvrent la liste et sont les seuls en encre pleine : dans
+   « Le lieu », c'est le fait qu'on vient chercher, les autres l'entourent. */
+.details b{ font-weight:600; color:var(--ink); }
 /* Une colonne, sans puce ni séparateur. Posés en ligne avec un point
    médian entre eux, ces quatre faits passaient à la ligne sur un téléphone
    et le point se retrouvait en tête de ligne, comme une puce égarée. */
@@ -924,9 +927,47 @@ body::after{
 }
 .offre b{ font-weight:600; font-size:.95rem; color:var(--accent); }
 .offre span{ font-size:.8rem; color:var(--ink-soft); }
-.offre--phare{ background:var(--accent); }
+.offre--phare{ background:var(--accent); position:relative; }
 .offre--phare b{ font-size:1.6rem; line-height:1.1; color:var(--white); }
 .offre--phare span{ color:color-mix(in srgb, var(--white) 88%, var(--accent)); }
+/* « au lieu de 450 € », écrit par le script à partir de la composition du
+   pack. Vide, la ligne n'existe pas — un pack sans économie ne doit pas
+   réserver une ligne blanche sous son prix. */
+.offre__avant{
+  font-style:normal; font-size:.8rem; color:var(--ink-soft);
+}
+.offre__avant:empty{ display:none; }
+/* Le « i » de la remise. Il reprend celui des soins — même disque, même
+   zone de 44 px — mais posé dans l'angle de l'aplat : la carte est une
+   colonne, et le bouton y aurait pris une ligne à lui seul. Les couleurs
+   viennent du blanc et non de `--fond`, qui n'existe pas ici.
+
+   Le disque est plein et le « i » prend le bordeaux : un voile blanc sur
+   l'aplat ne donnait que 1,2:1 — mesuré, pas estimé. Le rapport est ici de
+   9,9:1, et le disque se détache comme un bouton au lieu de se fondre.
+   `background-color` et non le raccourci `background` : celui-ci remet
+   `background-clip` à sa valeur initiale, et le disque cessait d'être borné
+   au carré de 26 px — il s'affichait à 44, rembourrage compris.
+
+   Le glyphe reprend la couleur du bouton : `.offre--phare span` vise tous
+   les `span` de la carte, y compris celui du « i », et le peignait en blanc
+   cassé sur un disque blanc. */
+.offre--phare .t-info{
+  position:absolute; top:.2rem; right:.35rem; margin:0;
+  background-color:var(--white);
+  color:var(--accent);
+}
+.offre--phare .t-info span{ color:inherit; }
+@media (hover:hover) and (pointer:fine){
+  .offre--phare .t-info:hover{
+    background-color:color-mix(in srgb, var(--white) 88%, var(--accent));
+  }
+}
+.offre__cond{
+  margin-top:.5rem; padding-top:.5rem;
+  border-top:1px solid color-mix(in srgb, var(--white) 28%, transparent);
+  line-height:1.45;
+}
 
 
 /* En tableau, une offre et son forfait sont sur la même ligne visuelle : il
@@ -1019,6 +1060,15 @@ body::after{
   text-transform:uppercase; color:var(--teinte-t,var(--accent));
 }
 .voie p{ margin-top:.5rem; font-size:.86rem; color:var(--ink-soft); }
+/* « (via Treatwell) » : la précision demandée par Marie, tenue en second
+   plan. Elle se distingue en quittant les capitales et l'interlettrage du
+   titre, pas en rapetissant : le titre fait déjà 12,5 px, et la réduire
+   d'un tiers la faisait tomber à 8,7 px — mesuré, illisible sur un
+   téléphone. Même taille, autre voix. */
+.voie__via{
+  text-transform:none; font-weight:500; letter-spacing:.01em;
+  color:var(--ink-soft); white-space:nowrap;
+}
 .voie .numero{ font-size:clamp(1.4rem,5vw,1.9rem); margin:.9rem 0 .9rem; }
 .voie .appel{ margin-top:1.4rem; }
 .voie__actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; margin-top:1.4rem; }

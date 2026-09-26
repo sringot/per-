@@ -224,6 +224,22 @@
     if (cible) cible.textContent = `au lieu de ${u * n} €`;
   });
 
+  /* ---------- L'économie du pack combiné ----------
+     Même principe que les forfaits ci-dessus, pour une offre qui mélange
+     deux soins : `data-lots="70:3,80:3"` dit ce que le pack contient, et le
+     prix de référence s'en déduit. Aucun des deux nombres n'est écrit deux
+     fois dans la page. */
+  $$('.offre[data-lots][data-prix]').forEach(o => {
+    const plein = o.dataset.lots.split(',').reduce((somme, lot) => {
+      const [prix, nb] = lot.split(':').map(v => parseFloat(v));
+      return somme + prix * nb;
+    }, 0);
+    const p = parseFloat(o.dataset.prix);
+    const cible = $('.offre__avant', o);
+    if (!cible || isNaN(plein) || isNaN(p) || plein <= p) return;
+    cible.textContent = `au lieu de ${plein} €`;
+  });
+
   /* ---------- Synthèse des avis ----------
      Jamais écrite en dur : la moyenne et le nombre viennent des avis
      présents dans la page. Ajouter un <li data-note="…"> suffit. */

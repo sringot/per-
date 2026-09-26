@@ -261,7 +261,17 @@
          pourtant la seule raison de l'ouvrir. La formule sur l'adresse est
          la même que dans le panneau rendez-vous : elle ne s'y trouvait que
          là, deux clics plus loin que la question. -->
+    <!-- Les horaires demandés par Marie. Ils ouvrent la liste : c'est la
+         première chose qu'on cherche en ouvrant « Le lieu », avant même la
+         ville.
+
+         « 18 h (dernier créneau de la journée) » est lu comme l'heure du
+         dernier rendez-vous, donc celle où il commence — c'est le sens de sa
+         phrase. Écrit tel quel, « de 11 h à 18 h » se comprendrait comme une
+         fermeture à 18 h, et un 1 h 30 réservé à 17 h 30 tomberait à côté. -->
     <ul class="details">
+      <li><b>Mercredi et samedi, de 11&nbsp;h à 18&nbsp;h</b></li>
+      <li>18&nbsp;h est le dernier rendez-vous de la journée</li>
       <li>Montigny-le-Bretonneux (78180)</li>
       <li>Adresse exacte communiquée au rendez-vous</li>
       <li>Linge frais à chaque séance</li>
@@ -277,7 +287,7 @@
   <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
   <div class="feuille feuille--soins">
     <p class="sur-titre">Les massages</p>
-    <h2 id="massages-t">Cinq soins,<br>cinq univers</h2>
+    <h2 id="massages-t">Quatre soins,<br>quatre univers</h2>
     <p class="chapo">
       Parce qu'on n'a pas tous les mêmes envies ni les mêmes besoins, chacun a
       sa façon de prendre soin de vous.
@@ -322,14 +332,12 @@
       <tr class="t-desc soin--relaxant" id="d-relaxant" hidden>
         <td colspan="3">Des manœuvres lentes et enveloppantes, du dos aux jambes. Celui qu'on choisit quand on a surtout besoin de déposer les armes.</td>
       </tr>
-      <tr class="soin--deep-tissus">
-        <th scope="row"><span class="t-soin"><span class="t-signe" aria-hidden="true"></span><span class="t-soin__mot">Deep Tissus<em class="t-soin__quoi">Tensions profondes</em></span><button class="t-info" type="button" aria-expanded="false" aria-controls="d-deep-tissus" aria-label="Description du deep tissus"><span aria-hidden="true">i</span></button></span></th>
-        <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">70&nbsp;€</b></span></td>
-        <td data-col="En forfait"><span class="t-l" data-unite="70" data-lot="3" data-prix="180"><span class="t-l__nom">3&nbsp;séances</span><b class="t-l__prix">180&nbsp;€</b><em class="t-avant"></em></span></td>
-      </tr>
-      <tr class="t-desc soin--deep-tissus" id="d-deep-tissus" hidden>
-        <td colspan="3">Un travail appuyé, muscle par muscle, sur les zones nouées. Pour les dos qui ont passé la semaine devant un écran.</td>
-      </tr>
+      <!-- Le deep tissus est retiré du tableau à la demande de Marie : la
+           formation est prévue pour début 2027, elle ne le pratique pas
+           encore. Sa ligne reste dans « Mon parcours », où elle annonce la
+           formation à venir sans l'offrir à la réservation. Les deux lignes
+           supprimées ici (le soin et sa description) sont à reprendre telles
+           quelles le jour où elle le proposera. -->
       <tr class="soin--madero">
         <th scope="row"><span class="t-soin"><span class="t-signe" aria-hidden="true"></span><span class="t-soin__mot">Madéro<em class="t-soin__quoi">Soin corps remodelant</em></span><button class="t-info" type="button" aria-expanded="false" aria-controls="d-madero" aria-label="Description du madéro"><span aria-hidden="true">i</span></button></span></th>
         <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">70&nbsp;€</b></span></td>
@@ -339,7 +347,7 @@
         <td colspan="3">Des outils en bois qui roulent et pétrissent. Un soin tonique, qui relance la circulation.</td>
       </tr>
       <tr class="soin--drainage">
-        <th scope="row"><span class="t-soin"><span class="t-signe" aria-hidden="true"></span><span class="t-soin__mot">Drainage lymphatique<em class="t-soin__quoi">Méthode Nathalie Duarte</em></span><button class="t-info" type="button" aria-expanded="false" aria-controls="d-drainage" aria-label="Description du drainage lymphatique"><span aria-hidden="true">i</span></button></span></th>
+        <th scope="row"><span class="t-soin"><span class="t-signe" aria-hidden="true"></span><span class="t-soin__mot">Drainage lymphatique<em class="t-soin__quoi">Jambes légères, circulation relancée</em></span><button class="t-info" type="button" aria-expanded="false" aria-controls="d-drainage" aria-label="Description du drainage lymphatique"><span aria-hidden="true">i</span></button></span></th>
         <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">80&nbsp;€</b></span></td>
         <td data-col="En forfait"><span class="t-l" data-unite="80" data-lot="5" data-prix="350"><span class="t-l__nom">5&nbsp;séances</span><b class="t-l__prix">350&nbsp;€</b><em class="t-avant"></em></span></td>
       </tr>
@@ -355,13 +363,27 @@
          portent pas sur un soin mais sur plusieurs, ou sur une première
          fois. Mêmes valeurs que l'affiche de la pièce de massage. -->
     <ul class="offres">
-      <li class="offre">
+      <!-- « 3 séances de chaque », comme Marie l'a précisé. Le prix de
+           référence n'est pas écrit : `data-lots` donne la composition du
+           pack (3 séances à 70 €, 3 à 80 €) et le script en tire le « au lieu
+           de ». Un tarif qui change met le gain à jour tout seul. -->
+      <li class="offre" data-prix="390" data-lots="70:3,80:3">
         <b>Pack combiné — 390&nbsp;€</b>
-        <span>Madéro &amp; drainage lymphatique, 6&nbsp;séances</span>
+        <span>3&nbsp;séances de madérothérapie et 3&nbsp;de drainage lymphatique</span>
+        <em class="offre__avant"></em>
       </li>
+      <!-- La remise portait « sur votre massage inédit » : personne ne sait
+           ce qu'est un massage inédit. Le libellé dit maintenant la condition,
+           et le « i » ouvre les termes exacts — mêmes gestes que le « i » des
+           soins, juste au-dessus. -->
       <li class="offre offre--phare">
         <b>−10&nbsp;€</b>
-        <span>sur votre massage inédit</span>
+        <span>sur un massage que vous n'avez jamais essayé</span>
+        <button class="t-info" type="button" aria-expanded="false"
+                aria-controls="d-remise" aria-label="Conditions de la remise"><span aria-hidden="true">i</span></button>
+        <span class="offre__cond" id="d-remise" hidden>Hors premier
+          rendez-vous&nbsp;: si l'envie vous prend d'essayer un massage que
+          vous n'avez encore jamais fait chez moi, il est à −10&nbsp;€.</span>
       </li>
     </ul>
     </div><!-- /.tarifs -->
@@ -422,7 +444,7 @@
 
     <div class="voies">
       <section class="voie">
-        <h3>En ligne</h3>
+        <h3>En ligne <span class="voie__via">(via Treatwell)</span></h3>
         <p>Le planning à jour, et le créneau retenu dans la foulée.</p>
         <!-- Lien fourni par Marie. `target="_blank"` : le planning Treatwell
              est un parcours de réservation à lui seul, on ne quitte pas le
@@ -433,7 +455,11 @@
 
       <section class="voie">
         <h3>Par téléphone</h3>
-        <p>Du lundi au samedi, de 9&nbsp;h à 20&nbsp;h.</p>
+        <!-- Formulée à la première personne, comme Marie l'a demandée : ce
+             n'est pas un horaire d'ouverture mais le moment où elle décroche,
+             et le SMS est nommé pour celles que l'appel arrête. -->
+        <p>En m'appelant du lundi au samedi, de 9&nbsp;h à 20&nbsp;h. Par SMS
+           aussi, si vous préférez&nbsp;: je réponds dès que je suis disponible.</p>
         <a class="numero" href="tel:+33631183481">06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</a>
         <p class="voie__actions">
           <a class="appel appel--fin" href="tel:+33631183481">Appeler</a>
@@ -447,9 +473,14 @@
       <li>Adresse exacte communiquée au rendez-vous</li>
     </ul>
 
+    <!-- L'adresse contact@mariemassage.fr est retirée : Marie ne l'a pas
+         reconnue (« c'est quoi ? c'est le site ? »), et une adresse affichée
+         dont personne ne relève la boîte avale les messages sans que
+         l'expéditrice le sache. Le téléphone, le SMS, Treatwell et Instagram
+         couvrent déjà les quatre façons de la joindre. À remettre le jour où
+         une vraie adresse existe. -->
     <p class="ailleurs">
       <a href="https://www.instagram.com/marieemassage/" target="_blank" rel="noopener">@marieemassage</a>
-      <a href="mailto:contact@mariemassage.fr">contact@mariemassage.fr</a>
     </p>
   </div>
 </section>
