@@ -712,10 +712,12 @@ body::after{
    médian entre eux, ces quatre faits passaient à la ligne sur un téléphone
    et le point se retrouvait en tête de ligne, comme une puce égarée. */
 
-/* --- La liste des soins --- */
 /* --- Les cartes de soins ---
-   Cinq cartes reprises de la planche de Marie. Chacune se retourne au
-   toucher : le monogramme devant, la description derrière.
+   Les cartes de la planche de Marie, revenues. Elles ne se retournent plus
+   sur place : toucher une carte ouvre sa fiche, qui prend le panneau et se
+   referme par la flèche du haut. Le retournement montrait la description
+   mais pas le prix, et il fallait retourner quatre cartes pour comparer
+   deux chiffres.
 
    Les couleurs et les monogrammes sont relevés sur la planche par
    `tools-cartes.py`, jamais saisis à la main. Le monogramme est posé en
@@ -724,7 +726,140 @@ body::after{
 /* Le tableau n'est pas de la prose : il lui faut la largeur de ses colonnes,
    pas une longueur de ligne de lecture. Le reste du panneau garde la sienne. */
 .feuille--soins{ max-width:min(46rem,100%); }
-.feuille--soins > :not(.tarifs){ max-width:34rem; }
+.feuille--soins > :not(.tarifs):not(.soins){ max-width:34rem; }
+
+.soins{
+  margin-top:1.8rem;
+  display:grid; gap:clamp(.55rem,2.4vw,.9rem);
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+@media (min-width:620px){ .soins{ grid-template-columns:repeat(4,minmax(0,1fr)); } }
+
+/* .62, le format des cartes de la planche (330 × 530). */
+.soin__carte{
+  position:relative; display:flex; flex-direction:column; width:100%;
+  aspect-ratio:.62; padding:clamp(.75rem,3vw,1rem);
+  border-radius:16px;
+  background:var(--fond); color:var(--texte);
+  box-shadow:0 14px 28px -20px rgba(42,35,32,.6);
+  transition:transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
+}
+/* Le monogramme occupe le haut de la carte, comme sur la planche. */
+.soin__signe{
+  flex:1; min-height:0;
+  background:var(--signe-c);
+  -webkit-mask:var(--signe) center/contain no-repeat;
+  mask:var(--signe) center/contain no-repeat;
+}
+.soin__nom{
+  margin-top:.5rem; font-size:clamp(.88rem,3.4vw,1rem); font-weight:600;
+  letter-spacing:-.01em; line-height:1.2; text-align:left;
+}
+/* Le seul mot qui dit que la carte s'ouvre. Sans lui, quatre aplats colorés
+   ne se distinguent pas d'une illustration — c'est le reproche qu'on
+   faisait déjà aux cartes qui se retournaient. */
+/* .76rem et non .74 : le plancher de lisibilité du site est à 12 px, et
+   .74rem tombait à 11,8 — mesuré. */
+.soin__voir{
+  margin-top:.15rem; font-size:.76rem; font-weight:500; letter-spacing:.06em;
+  text-transform:uppercase; text-align:left; opacity:.72;
+}
+@media (hover:hover) and (pointer:fine){
+  .soin__carte:hover{
+    transform:translateY(-5px);
+    box-shadow:0 22px 34px -20px rgba(42,35,32,.62);
+  }
+}
+.soin__carte:active{ transform:translateY(0) scale(.975); }
+
+/* --- La fiche d'un soin ---
+   Elle remplace la planche dans le panneau plutôt que de s'ouvrir par
+   dessus : un second voile au-dessus d'un panneau déjà ouvert donnait deux
+   fermetures à l'écran, et on ne savait plus laquelle ramenait où. */
+.fiche{
+  max-width:34rem; margin-inline:auto;
+  animation:fiche-entre .34s var(--ease-out) both;
+}
+@keyframes fiche-entre{
+  from{ opacity:0; transform:translateY(14px); }
+  to  { opacity:1; transform:none; }
+}
+/* La flèche de retour. Posée dans le flux et non fixée : la croix de
+   fermeture occupe déjà l'angle opposé, et deux boutons flottants aux deux
+   coins se lisent comme un choix entre deux sorties. */
+.fiche__retour{
+  display:inline-flex; align-items:center; gap:.4rem;
+  min-height:44px; padding:.4rem .8rem .4rem .5rem; margin-left:-.5rem;
+  border-radius:999px; font-size:.86rem; font-weight:500;
+  color:var(--teinte-t,var(--accent));
+  transition:background .25s var(--ease);
+}
+.fiche__retour svg{
+  width:18px; height:18px; fill:none; stroke:currentColor;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+@media (hover:hover) and (pointer:fine){
+  .fiche__retour:hover{ background:color-mix(in srgb, var(--accent) 8%, transparent); }
+}
+
+/* Le monogramme en grand, dans la couleur du soin : c'est ce qui relie la
+   fiche à la carte qu'on vient de toucher. */
+.fiche__blason{
+  margin-top:1.2rem; border-radius:20px;
+  background:var(--fond);
+  aspect-ratio:2.4; display:grid; place-items:center;
+  padding:clamp(1.1rem,5vw,1.8rem);
+}
+.fiche__signe{
+  width:100%; height:100%;
+  background:var(--signe-c);
+  -webkit-mask:var(--signe) center/contain no-repeat;
+  mask:var(--signe) center/contain no-repeat;
+}
+.fiche__nom{
+  margin-top:1.4rem; font-size:clamp(1.5rem,6vw,2rem); font-weight:600;
+  letter-spacing:-.025em; line-height:1.1;
+}
+.fiche__sous{
+  margin-top:.25rem; font-size:.94rem; color:var(--teinte-t,var(--accent));
+  font-weight:500;
+}
+.fiche__desc{ margin-top:1.1rem; color:var(--ink-soft); }
+
+/* Les prix, recopiés du tableau. Deux blocs au plus : la séance et le
+   forfait — le second n'apparaît pas quand le soin n'en a pas. */
+.fiche__prix{ display:grid; gap:.9rem; margin-top:1.8rem; }
+.fiche__bloc{
+  padding:.9rem 1.1rem; border-radius:14px;
+  background:color-mix(in srgb, var(--teinte,var(--accent)) 10%, var(--card));
+}
+.fiche__bloc h4{
+  font-size:.72rem; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--teinte-t,var(--accent));
+  margin-bottom:.45rem;
+}
+.fiche__bloc .t-l{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem; }
+.fiche__bloc .t-l__nom{ flex:1; }
+/* En relief mais pas en bordeaux : l'aplat bordeaux plein ne sert qu'à
+   réserver, sur tout le site. Un second bouton de cette couleur au bas
+   d'une fiche mettait « voir les autres massages » au même rang que
+   « prendre rendez-vous ». Le relief suffit à dire qu'on peut appuyer —
+   c'est la règle du site. */
+.fiche__autres{
+  margin-top:2rem; width:100%; min-height:48px;
+  padding:.8rem 1.2rem; border-radius:999px;
+  background:var(--card); box-shadow:var(--nm-out);
+  color:var(--ink); font-weight:500;
+  transition:box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+@media (hover:hover) and (pointer:fine){
+  .fiche__autres:hover{ box-shadow:var(--nm-out-lg); }
+}
+.fiche__autres:active{ box-shadow:var(--nm-in); transform:scale(.99); }
+
+@media (prefers-reduced-motion:reduce){
+  .fiche{ animation:none; }
+}
 
 /* Relevé sur la planche de référence par tools-cartes.py.
    `--signe-c` est la couleur du monogramme, `--texte` la même teinte

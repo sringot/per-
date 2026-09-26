@@ -285,13 +285,55 @@
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
   <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
-  <div class="feuille feuille--soins">
+  <!-- Deux vues dans le même panneau : la planche de cartes, et la fiche
+       d'un soin. On passe de l'une à l'autre sans refermer le panneau, et
+       la flèche de retour ramène à la planche — c'est le geste d'un
+       catalogue, pas celui d'une nouvelle page. -->
+  <div class="feuille feuille--soins" data-vue="liste">
     <p class="sur-titre">Les massages</p>
     <h2 id="massages-t">Quatre soins,<br>quatre univers</h2>
     <p class="chapo">
       Parce qu'on n'a pas tous les mêmes envies ni les mêmes besoins, chacun a
       sa façon de prendre soin de vous.
     </p>
+
+    <!-- Les cartes de la planche de Marie. Chacune ne porte que son
+         monogramme et son nom : c'est une couverture, pas une fiche. Le
+         détail et le prix sont derrière, et `data-soin` dit quelle ligne du
+         tableau les contient — aucun prix n'est écrit deux fois.
+
+         Le deep tissus n'a pas de carte tant qu'il n'est pas au tableau :
+         la planche se déduit des soins proposés, elle ne les devance pas. -->
+    <ul class="soins">
+      <li class="soin soin--kobido">
+        <button class="soin__carte" type="button" data-soin="kobido" aria-label="Kobido — voir le détail et le prix">
+          <span class="soin__signe" aria-hidden="true"></span>
+          <span class="soin__nom">Kobido</span>
+          <span class="soin__voir" aria-hidden="true">Voir</span>
+        </button>
+      </li>
+      <li class="soin soin--relaxant">
+        <button class="soin__carte" type="button" data-soin="relaxant" aria-label="Relaxant — voir le détail et le prix">
+          <span class="soin__signe" aria-hidden="true"></span>
+          <span class="soin__nom">Relaxant</span>
+          <span class="soin__voir" aria-hidden="true">Voir</span>
+        </button>
+      </li>
+      <li class="soin soin--madero">
+        <button class="soin__carte" type="button" data-soin="madero" aria-label="Madéro — voir le détail et le prix">
+          <span class="soin__signe" aria-hidden="true"></span>
+          <span class="soin__nom">Madéro</span>
+          <span class="soin__voir" aria-hidden="true">Voir</span>
+        </button>
+      </li>
+      <li class="soin soin--drainage">
+        <button class="soin__carte" type="button" data-soin="drainage" aria-label="Drainage — voir le détail et le prix">
+          <span class="soin__signe" aria-hidden="true"></span>
+          <span class="soin__nom">Drainage</span>
+          <span class="soin__voir" aria-hidden="true">Voir</span>
+        </button>
+      </li>
+    </ul>
 
 
     <!-- Le bloc des tarifs est un enfant à part de la feuille : celle-ci
@@ -389,6 +431,26 @@
     </div><!-- /.tarifs -->
 
   </div>
+
+  <!-- La fiche d'un soin. Une seule pour les quatre : son contenu est
+       recopié depuis la ligne du tableau au moment où l'on touche une carte
+       — le nom, le sous-titre, la description et les prix n'existent donc
+       qu'à un seul endroit dans la page. Changer un tarif dans le tableau
+       change la fiche, sans que personne ait à y penser. -->
+  <article class="fiche" id="fiche" aria-labelledby="fiche-nom" hidden>
+    <button class="fiche__retour" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+      <span>Tous les massages</span>
+    </button>
+    <div class="fiche__blason">
+      <span class="fiche__signe" aria-hidden="true"></span>
+    </div>
+    <h3 class="fiche__nom" id="fiche-nom"></h3>
+    <p class="fiche__sous"></p>
+    <p class="fiche__desc"></p>
+    <div class="fiche__prix"></div>
+    <button class="fiche__autres" type="button">Voir les autres massages</button>
+  </article>
 </section>
 
 <section class="panneau" id="avis" aria-labelledby="avis-t" inert>

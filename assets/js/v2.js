@@ -137,6 +137,10 @@
     ouvert = null;
     declencheur = null;
     racine.classList.remove('a-panneau');
+    // Le panneau des massages se rouvre sur sa planche, jamais sur la fiche
+    // qu'on y avait laissée : on retrouve la rubrique telle qu'on l'a
+    // découverte, comme les descriptions du tableau que `replie` referme.
+    reinitFiche();
   }
 
   // Fermeture demandée par l'utilisateur (croix, Échap, voile).
@@ -166,17 +170,30 @@
   });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && ouvert) demandeFermeture();
+    if (e.key !== 'Escape') return;
+    // Échap défait un cran à la fois : la fiche d'un soin d'abord, le
+    // panneau ensuite. Fermer tout d'un coup faisait perdre la planche à
+    // qui voulait seulement revenir aux autres massages.
+    if (ficheCle) { montreListe(true); return; }
+    if (ouvert) demandeFermeture();
   });
 
   // Bouton « retour » du téléphone : il doit refermer le panneau,
   // pas quitter le site.
-  window.addEventListener('popstate', () => {
+  window.addEventListener('popstate', e => {
     const id = location.hash.slice(1);
     const p = id && document.getElementById(id);
     if (p && p.classList.contains('panneau')) {
       aPousse = false;
       ouvrir(id, bulles.find(b => b.dataset.ouvre === id));
+      // Une fiche de soin est une étape d'historique à part entière : le
+      // bouton « retour » du téléphone doit ramener à la planche, pas
+      // refermer les massages d'un coup.
+      if (id === 'massages') {
+        const cle = e.state && e.state.fiche;
+        fichePoussee = false;
+        if (cle) montreFiche(cle, false); else montreListe(false);
+      }
     } else {
       aPousse = false;
       fermer();
@@ -223,6 +240,115 @@
     const cible = $('.t-avant', f);
     if (cible) cible.textContent = `au lieu de ${u * n} €`;
   });
+
+  /* ---------- La planche de cartes et les fiches ----------
+     Une carte par soin, et une seule fiche pour tous : son contenu est
+     recopié depuis la ligne du tableau au moment où l'on touche la carte.
+     Le nom, le sous-titre, la description et les prix n'existent donc qu'à
+     un seul endroit dans la page — écrits deux fois, ils auraient fini par
+     se contredire, et c'est un prix affiché qui aurait menti.
+
+     La fiche remplace la planche dans le panneau au lieu de s'ouvrir par
+     dessus : deux couches superposées donnaient deux fermetures à l'écran,
+     et plus aucune ne disait où elle ramenait. */
+  const panneauSoins = $('#massages');
+  const feuilleSoins = $('.feuille--soins');
+  const laFiche      = $('#fiche');
+  let ficheCle     = null;   // soin affiché, ou null
+  let fichePoussee = false;  // une entrée d'historique lui a-t-elle été posée ?
+
+  function remplitFiche(cle) {
+    if (!panneauSoins || !laFiche) return false;
+    // `:not(.t-desc)` : la ligne du soin et celle de sa description portent
+    // la même classe de soin, et sans ce filtre c'est la description qui
+    // arrivait en premier — une fiche sans nom ni prix.
+    const ligne = $(`tr.soin--${cle}:not(.t-desc)`, panneauSoins);
+    if (!ligne) return false;
+    const lDesc = $(`tr.t-desc.soin--${cle}`, panneauSoins);
+
+    // La classe du soin porte sa couleur, son monogramme et son encre.
+    laFiche.className = 'fiche soin--' + cle;
+
+    const mot  = $('.t-soin__mot', ligne);
+    const quoi = $('.t-soin__quoi', ligne);
+    $('.fiche__nom', laFiche).textContent  = mot ? mot.firstChild.textContent.trim() : '';
+    $('.fiche__sous', laFiche).textContent = quoi ? quoi.textContent.trim() : '';
+    const td = lDesc && $('td', lDesc);
+    $('.fiche__desc', laFiche).textContent = td ? td.textContent.trim() : '';
+
+    // Les prix sont clonés, pas réécrits : « au lieu de … » est déjà calculé
+    // sur la ligne du tableau, il suit la copie sans qu'on y pense.
+    const prix = $('.fiche__prix', laFiche);
+    prix.textContent = '';
+    $$('td[data-col]', ligne).forEach(cellule => {
+      const bloc = document.createElement('div');
+      bloc.className = 'fiche__bloc';
+      const h = document.createElement('h4');
+      h.textContent = cellule.dataset.col;
+      bloc.appendChild(h);
+      $$('.t-l', cellule).forEach(l => bloc.appendChild(l.cloneNode(true)));
+      prix.appendChild(bloc);
+    });
+    return true;
+  }
+
+  /* Masquer la vue qu'on quitte lui fait perdre le focus, et le navigateur
+     le réattribue de lui-même au panneau — le premier conteneur défilable
+     au-dessus. Ce rattrapage est interne, sans pile JS, et il tombe *après*
+     la fin de notre fonction : posé dans la foulée, notre focus était
+     écrasé une milliseconde plus tard, et la tabulation repartait du haut
+     du panneau. On attend donc l'image suivante pour le poser — mesuré au
+     `focusin`, c'est le seul ordre qui tienne. */
+  const focusApres = el => {
+    if (el) requestAnimationFrame(() => el.focus({ preventScroll: true }));
+  };
+
+  function montreFiche(cle, pousse) {
+    if (!remplitFiche(cle)) return;
+    feuilleSoins.hidden = true;
+    laFiche.hidden = false;
+    ficheCle = cle;
+    panneauSoins.scrollTop = 0;
+    // Le focus part sur le retour : c'est la sortie de la fiche, comme la
+    // croix est celle du panneau.
+    focusApres($('.fiche__retour', laFiche));
+    if (pousse) {
+      memorise({ panneau: 'massages', fiche: cle }, '#massages');
+      fichePoussee = true;
+    }
+  }
+
+  function montreListe(retour) {
+    if (!ficheCle) return;
+    // On **revient en arrière** plutôt que d'empiler : sans cela, le bouton
+    // « retour » du téléphone rouvrait la fiche qu'on venait de quitter.
+    if (retour && fichePoussee) { fichePoussee = false; history.back(); return; }
+    const cle = ficheCle;
+    ficheCle = null;
+    laFiche.hidden = true;
+    feuilleSoins.hidden = false;
+    panneauSoins.scrollTop = 0;
+    // Le focus retourne sur la carte d'où l'on venait, pas en tête de page.
+    focusApres($(`.soin__carte[data-soin="${cle}"]`));
+  }
+
+  // Remise à zéro silencieuse, appelée quand le panneau se referme : ni
+  // focus ni historique, il n'y a plus personne pour les recevoir.
+  function reinitFiche() {
+    if (!ficheCle) return;
+    ficheCle = null;
+    fichePoussee = false;
+    laFiche.hidden = true;
+    feuilleSoins.hidden = false;
+  }
+
+  $$('.soin__carte').forEach(carte => {
+    carte.addEventListener('click', () => montreFiche(carte.dataset.soin, true));
+  });
+  if (laFiche) {
+    $('.fiche__retour', laFiche).addEventListener('click', () => montreListe(true));
+    $('.fiche__autres', laFiche).addEventListener('click', () => montreListe(true));
+  }
 
   /* ---------- L'économie du pack combiné ----------
      Même principe que les forfaits ci-dessus, pour une offre qui mélange
