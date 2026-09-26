@@ -24,7 +24,7 @@ import subprocess
 import tempfile
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 ROOT      = pathlib.Path(__file__).parent
 SOURCE    = ROOT / 'reference-cartes-soins.png'
@@ -35,8 +35,20 @@ DEST      = ROOT / 'assets/img/soins'
 HAUT, BAS = 0.10, 0.76
 
 # Agrandissement avant vectorisation : potrace suit l'escalier des pixels,
-# et à 150 px de haut cet escalier se voit. Interpolé ×5, il s'efface.
-ZOOM = 5
+# et à 150 px de haut cet escalier se voit.
+#
+# ⚠️ L'agrandissement seul ne suffit pas, et c'est l'erreur qu'a portée ce
+# script jusqu'ici : sur un masque **binaire**, LANCZOS n'a rien à
+# interpoler — il n'y a que du noir et du blanc — et le seuillage qui suit
+# rend l'escalier d'origine, simplement cinq fois plus gros. Les tracés
+# obtenus étaient franchement crénelés, visibles à l'œil sur les cartes.
+#
+# Le flou entre les deux est ce qui manquait : il transforme la marche
+# d'escalier en rampe, et le seuil coupe la rampe à mi-hauteur — là où
+# passe le contour réel. Son rayon est proportionnel au zoom, donc au pas
+# de l'escalier qu'il doit effacer.
+ZOOM = 8
+FLOU = ZOOM * .75
 
 NOMS = ['kobido', 'relaxant', 'deep-tissus', 'madero', 'drainage']
 
@@ -167,9 +179,9 @@ def trace(masque):
         masque.save(pbm)
         subprocess.run(
             ['potrace', str(pbm), '-s', '-o', str(svg),
-             '--turdsize', '8',      # ignore les îlots de bruit
-             '--alphamax', '1.2',    # coins arrondis : le dessin l'est
-             '--opttolerance', '.4'],
+             '--turdsize', str(8 * ZOOM),  # ignore les îlots de bruit
+             '--alphamax', '1.334',  # coins arrondis : le dessin l'est
+             '--opttolerance', '.6'],
             check=True)
         return svg.read_text()
 
@@ -200,7 +212,12 @@ def main():
               max(xs.min() - marge, 0):xs.max() + marge]
 
         img = Image.fromarray(np.where(m, 0, 255).astype('uint8'), 'L')
-        img = img.resize((img.width * ZOOM, img.height * ZOOM), Image.LANCZOS)
+        # BILINEAR et non LANCZOS : sur un masque binaire, LANCZOS sonne —
+        # il crée un liseré clair le long de chaque bord, que le seuil
+        # retaille en dents. Agrandir platement puis flouter donne une rampe
+        # propre.
+        img = img.resize((img.width * ZOOM, img.height * ZOOM), Image.BILINEAR)
+        img = img.filter(ImageFilter.GaussianBlur(FLOU))
         img = img.point(lambda v: 0 if v < 128 else 255).convert('1')
 
         svg = trace(img)

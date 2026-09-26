@@ -726,7 +726,31 @@ body::after{
 /* Le tableau n'est pas de la prose : il lui faut la largeur de ses colonnes,
    pas une longueur de ligne de lecture. Le reste du panneau garde la sienne. */
 .feuille--soins{ max-width:min(46rem,100%); }
-.feuille--soins > :not(.tarifs):not(.soins){ max-width:34rem; }
+.feuille--soins > :not(.soins){ max-width:34rem; }
+/* La fiche tarifs, elle, garde la largeur des colonnes du tableau : ce
+   n'est pas de la prose, et bornée à 34 rem « 1 h 30 » et « 90 € »
+   passaient à la ligne l'un sous l'autre. */
+.fiche--tarifs{ max-width:min(46rem,100%); }
+
+/* L'entrée de la fiche tarifs, sous la planche. En relief neutre, comme le
+   retour : le bordeaux plein reste réservé à la réservation. */
+.soins__tarifs{
+  display:flex; align-items:center; justify-content:center; gap:.5rem;
+  width:100%; min-height:48px; margin-top:1.4rem;
+  padding:.8rem 1.2rem; border-radius:999px;
+  background:var(--card); box-shadow:var(--nm-out);
+  color:var(--ink); font-weight:500;
+  transition:box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+.soins__tarifs svg{
+  width:16px; height:16px; flex:none; fill:none; stroke:currentColor;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  color:var(--teinte-t,var(--accent));
+}
+@media (hover:hover) and (pointer:fine){
+  .soins__tarifs:hover{ box-shadow:var(--nm-out-lg); }
+}
+.soins__tarifs:active{ box-shadow:var(--nm-in); transform:scale(.99); }
 
 .soins{
   margin-top:1.8rem;
@@ -833,9 +857,14 @@ body::after{
   padding:.9rem 1.1rem; border-radius:14px;
   background:color-mix(in srgb, var(--teinte,var(--accent)) 10%, var(--card));
 }
+/* .76rem (12,2 px) et l'encre foncée des bandeaux : à .72rem et avec
+   `--teinte-t`, ces deux libellés tombaient à 11,5 px et 4,19:1 — sous les
+   deux planchers du site. `--teinte-t` est calculée sur le crème nu, or ce
+   bloc est teinté ; c'est `--teinte-h`, calculée sur un fond lavé, qu'il
+   lui faut. */
 .fiche__bloc h4{
-  font-size:.72rem; font-weight:600; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--teinte-t,var(--accent));
+  font-size:.76rem; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--teinte-h,var(--accent));
   margin-bottom:.45rem;
 }
 .fiche__bloc .t-l{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem; }
@@ -1379,6 +1408,29 @@ body::after{
     display:flex; flex-direction:column; justify-content:flex-end;
     gap:clamp(.5rem,1.5vh,.9rem);
     padding-bottom:clamp(.4rem,1.2vh,.8rem);
+  }
+
+  /* --- Le texte prend le même ancrage que la barre ---
+     La photo, le voile, la barre de bulles et le pied de page sont tous en
+     position fixe. Le nom et l'accroche, eux, restaient dans le flux, au
+     bas d'une scène haute de `100svh` — et la place de la barre leur était
+     laissée par le `padding-bottom` du `body`. Deux repères différents
+     pour des éléments qui se touchent : tant que les deux coïncident, le
+     texte s'arrête à huit pixels des bulles et tout va bien.
+
+     Ils ne coïncident pas partout. Dans le navigateur interne d'Instagram,
+     la barre d'outils du bas rogne la fenêtre visible — celle qui sert de
+     repère aux éléments fixes — sans changer celle qui sert à la mise en
+     page. La barre de bulles remontait donc de sa hauteur, le texte non,
+     et les bulles se posaient en travers du nom.
+
+     Le texte passe au même ancrage : il ne peut plus dériver par rapport à
+     ce qu'il doit éviter, quelle que soit la façon dont le navigateur
+     compte sa fenêtre. */
+  .mot{
+    position:fixed; left:0; right:0; z-index:1;
+    bottom:calc(var(--pied,34px) + var(--barre,96px) + clamp(.4rem,1.2vh,.8rem));
+    padding-inline:var(--pad);
   }
   .logo{
     margin-bottom:auto;

@@ -174,7 +174,7 @@
     // Échap défait un cran à la fois : la fiche d'un soin d'abord, le
     // panneau ensuite. Fermer tout d'un coup faisait perdre la planche à
     // qui voulait seulement revenir aux autres massages.
-    if (ficheCle) { montreListe(true); return; }
+    if (vueCle) { montreListe(true); return; }
     if (ouvert) demandeFermeture();
   });
 
@@ -190,9 +190,9 @@
       // bouton « retour » du téléphone doit ramener à la planche, pas
       // refermer les massages d'un coup.
       if (id === 'massages') {
-        const cle = e.state && e.state.fiche;
-        fichePoussee = false;
-        if (cle) montreFiche(cle, false); else montreListe(false);
+        const cle = e.state && e.state.vue;
+        vuePoussee = false;
+        if (cle) montreVue(cle, false); else montreListe(false);
       }
     } else {
       aPousse = false;
@@ -254,8 +254,11 @@
   const panneauSoins = $('#massages');
   const feuilleSoins = $('.feuille--soins');
   const laFiche      = $('#fiche');
-  let ficheCle     = null;   // soin affiché, ou null
-  let fichePoussee = false;  // une entrée d'historique lui a-t-elle été posée ?
+  const vueTarifs    = $('#tarifs-vue');
+  // Trois vues dans le panneau : la planche (null), la fiche tarifs
+  // ('tarifs'), ou la fiche d'un soin (sa clé).
+  let vueCle     = null;
+  let vuePoussee = false;  // une entrée d'historique lui a-t-elle été posée ?
 
   function remplitFiche(cle) {
     if (!panneauSoins || !laFiche) return false;
@@ -303,52 +306,61 @@
     if (el) requestAnimationFrame(() => el.focus({ preventScroll: true }));
   };
 
-  function montreFiche(cle, pousse) {
-    if (!remplitFiche(cle)) return;
+  function montreVue(cle, pousse) {
+    if (cle !== 'tarifs' && !remplitFiche(cle)) return;
+    const cible = cle === 'tarifs' ? vueTarifs : laFiche;
     feuilleSoins.hidden = true;
-    laFiche.hidden = false;
-    ficheCle = cle;
+    laFiche.hidden    = cle === 'tarifs';
+    vueTarifs.hidden  = cle !== 'tarifs';
+    vueCle = cle;
     panneauSoins.scrollTop = 0;
-    // Le focus part sur le retour : c'est la sortie de la fiche, comme la
+    // Le focus part sur le retour : c'est la sortie de la vue, comme la
     // croix est celle du panneau.
-    focusApres($('.fiche__retour', laFiche));
+    focusApres($('.fiche__retour', cible));
     if (pousse) {
-      memorise({ panneau: 'massages', fiche: cle }, '#massages');
-      fichePoussee = true;
+      memorise({ panneau: 'massages', vue: cle }, '#massages');
+      vuePoussee = true;
     }
   }
 
   function montreListe(retour) {
-    if (!ficheCle) return;
+    if (!vueCle) return;
     // On **revient en arrière** plutôt que d'empiler : sans cela, le bouton
-    // « retour » du téléphone rouvrait la fiche qu'on venait de quitter.
-    if (retour && fichePoussee) { fichePoussee = false; history.back(); return; }
-    const cle = ficheCle;
-    ficheCle = null;
+    // « retour » du téléphone rouvrait la vue qu'on venait de quitter.
+    if (retour && vuePoussee) { vuePoussee = false; history.back(); return; }
+    const cle = vueCle;
+    vueCle = null;
     laFiche.hidden = true;
+    vueTarifs.hidden = true;
     feuilleSoins.hidden = false;
     panneauSoins.scrollTop = 0;
-    // Le focus retourne sur la carte d'où l'on venait, pas en tête de page.
-    focusApres($(`.soin__carte[data-soin="${cle}"]`));
+    // Le focus retourne sur ce qui a ouvert la vue, pas en tête de page.
+    focusApres(cle === 'tarifs'
+      ? $('.soins__tarifs')
+      : $(`.soin__carte[data-soin="${cle}"]`));
   }
 
   // Remise à zéro silencieuse, appelée quand le panneau se referme : ni
   // focus ni historique, il n'y a plus personne pour les recevoir.
   function reinitFiche() {
-    if (!ficheCle) return;
-    ficheCle = null;
-    fichePoussee = false;
+    if (!vueCle) return;
+    vueCle = null;
+    vuePoussee = false;
     laFiche.hidden = true;
+    vueTarifs.hidden = true;
     feuilleSoins.hidden = false;
   }
 
   $$('.soin__carte').forEach(carte => {
-    carte.addEventListener('click', () => montreFiche(carte.dataset.soin, true));
+    carte.addEventListener('click', () => montreVue(carte.dataset.soin, true));
   });
-  if (laFiche) {
-    $('.fiche__retour', laFiche).addEventListener('click', () => montreListe(true));
-    $('.fiche__autres', laFiche).addEventListener('click', () => montreListe(true));
-  }
+  const boutonTarifs = $('.soins__tarifs');
+  if (boutonTarifs) boutonTarifs.addEventListener('click', () => montreVue('tarifs', true));
+  // Les deux vues portent les mêmes sorties : la flèche du haut et le
+  // bouton du bas ramènent l'une comme l'autre à la planche.
+  $$('.fiche__retour, .fiche__autres').forEach(b => {
+    b.addEventListener('click', () => montreListe(true));
+  });
 
   /* ---------- L'économie du pack combiné ----------
      Même principe que les forfaits ci-dessus, pour une offre qui mélange
