@@ -44,6 +44,11 @@ CARTE_LARGEUR = 600
 BANDEAU_RAPPORT = 16 / 9
 BANDEAU_LARGEUR = 900
 
+# Texture sans lettre, pour les encadrés de prix : même cadrage que le
+# bandeau, en 2:1 — les encadrés sont plus allongés encore.
+TEXTURE_RAPPORT = 2
+TEXTURE_LARGEUR = 800
+
 QUALITE = 80
 
 
@@ -77,9 +82,20 @@ def main():
         chemin_b = DEST / f'{nom}-bandeau.webp'
         bandeau.save(chemin_b, quality=QUALITE, method=6)
 
+        # La texture seule, sans la lettre, pour le fond des encadrés de prix
+        # de la fiche : une bande horizontale au milieu, là où se trouve le
+        # monogramme sur la carte — la même lumière que le bandeau au-dessus.
+        texte_h = round(W / TEXTURE_RAPPORT)
+        haut_t = int(min(max(cy - texte_h / 2, 0), H - texte_h))
+        tex = fond.crop((0, haut_t, W, haut_t + texte_h))
+        tex = tex.resize((TEXTURE_LARGEUR, round(TEXTURE_LARGEUR / TEXTURE_RAPPORT)), Image.LANCZOS)
+        chemin_t = DEST / f'{nom}-texture.webp'
+        tex.save(chemin_t, quality=QUALITE, method=6)
+
         print(f'{nom:12s} monogramme y {y0 / H:.2f}-{y1 / H:.2f}  '
               f'carte {chemin.stat().st_size / 1024:.0f} Ko  '
-              f'bandeau {chemin_b.stat().st_size / 1024:.0f} Ko')
+              f'bandeau {chemin_b.stat().st_size / 1024:.0f} Ko  '
+              f'texture {chemin_t.stat().st_size / 1024:.0f} Ko')
 
 
 if __name__ == '__main__':

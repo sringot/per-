@@ -956,7 +956,16 @@ body::after{
 .fiche__prix{ display:grid; gap:.9rem; margin-top:1.8rem; }
 .fiche__bloc{
   padding:.9rem 1.1rem; border-radius:14px;
-  background:var(--prix-fond, color-mix(in srgb, var(--teinte,var(--accent)) 10%, var(--card)));
+  /* La texture de la carte, sans sa lettre — la même lumière que le bandeau
+     au-dessus — sous un voile de sa propre couleur. Le voile ne se voit pas
+     comme tel : il resserre l'écart entre les taches claires et les ombres
+     de la texture, assez pour que le texte tienne partout. Son dosage est
+     mesuré au pixel, soin par soin. `--prix-fond` reste en dessous, pour le
+     temps que l'image arrive. */
+  background:
+    linear-gradient(var(--prix-voile, transparent), var(--prix-voile, transparent)),
+    var(--prix-texture, none) center / cover no-repeat,
+    var(--prix-fond, color-mix(in srgb, var(--teinte,var(--accent)) 10%, var(--card)));
   color:var(--prix-encre, var(--ink));
 }
 /* Tout le texte de l'encadré prend son encre : les libellés, les durées,
@@ -1037,19 +1046,30 @@ body::after{
    framboise, le drainage du rose au brun rosé). Les monogrammes vectoriels
    de `img/soins/` ne servent plus au site. */
 .soin--kobido     { --fond:#6B0D24; --carte:url(../img/cartes/kobido.webp);
-                    --prix-fond:#6B0D24; --prix-encre:#E98D90; }
+                    --prix-fond:#6B0D24; --prix-encre:#FFECEC;
+                    --prix-texture:url(../img/cartes/kobido-texture.webp); --prix-voile:rgba(80,8,28,.49); }
 .soin--relaxant   { --fond:#909A80; --carte:url(../img/cartes/relaxant.webp);
-                    --prix-fond:#909A80; --prix-encre:#262812; }
+                    --prix-fond:#909A80; --prix-encre:#262812;
+                    --prix-texture:url(../img/cartes/relaxant-texture.webp); --prix-voile:rgba(196,202,178,.62); }
 .soin--madero     { --fond:#C85327; --carte:url(../img/cartes/madero.webp);
-                    --prix-fond:#BF4E24; --prix-encre:#FFFFFF; }
+                    --prix-fond:#BF4E24; --prix-encre:#FFFFFF;
+                    --prix-texture:url(../img/cartes/madero-texture.webp); --prix-voile:rgba(140,48,16,.73); }
 .soin--drainage   { --fond:#8F5442; --carte:url(../img/cartes/drainage.webp);
-                    --prix-fond:#8F5442; --prix-encre:#FFFFFF; }
-/* `--prix-fond` et `--prix-encre` : les encadrés de prix de la fiche, dans
-   la couleur de la carte. L'encre reprend la lettre de la carte quand elle
-   se lit en petit texte — le rose du kobido sur son framboise (5,1:1),
-   l'olive du relaxant assombri (5,1:1). Pour le madéro et le drainage, leur
-   lettre tombait à 2,7 et 2,1:1 : le texte passe en blanc, et l'orange du
-   madéro est foncé d'un cran pour que ce blanc tienne (4,9:1). */
+                    --prix-fond:#8F5442; --prix-encre:#FFFFFF;
+                    --prix-texture:url(../img/cartes/drainage-texture.webp); --prix-voile:rgba(90,44,32,.65); }
+/* `--prix-voile` : le voile posé sur la texture des encadrés. Son opacité
+   est le minimum calculé sur toute la bande de texture pour que le pire
+   pixel reste à 4,6:1 sous le texte, arrondi un peu au-dessus. La couleur du
+   voile est un ton plus sombre que la carte pour les textes blancs, plus
+   clair pour le texte olive : c'est ce qui permet le voile le plus léger.
+
+   `--prix-fond` et `--prix-encre` : les encadrés de prix de la fiche, dans
+   la couleur de la carte. L'encre est choisie pour demander le voile le
+   plus léger, donc laisser voir le plus de texture : un blanc rosé sur le
+   framboise (le rose de la lettre du kobido exigeait un voile à 77 %, qui
+   noyait la texture ; le blanc rosé se contente de 47 %), l'olive de la
+   lettre du relaxant, assombri, et du blanc sur le madéro et le drainage,
+   dont les lettres ne se lisaient pas en petit texte. */
 .soin--deep-tissus{ --fond:#A27529; --carte:url(../img/cartes/deep-tissus.webp); }
 
 /* --- Le tableau des tarifs ---
