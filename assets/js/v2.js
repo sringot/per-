@@ -517,6 +517,9 @@
       () => {
         feuilleSoins.hidden = true;
         laFiche.hidden = false;
+        // Sur la fiche, pas de croix : elle semblait ramener à la liste des
+        // massages et fermait toute la rubrique. Le retour est en haut.
+        panneauSoins.dataset.vue = 'fiche';
         panneauSoins.scrollTop = 0;
         // Le focus part sur le retour : c'est la sortie de la vue, comme la
         // croix est celle du panneau.
@@ -542,6 +545,7 @@
       carte,
       () => {
         laFiche.hidden = true;
+        delete panneauSoins.dataset.vue;
         feuilleSoins.hidden = false;
         panneauSoins.scrollTop = defilePlanche;
         // Le focus retourne sur ce qui a ouvert la vue, pas en tête de page.
@@ -556,6 +560,7 @@
     vueCle = null;
     vuePoussee = false;
     laFiche.hidden = true;
+    delete panneauSoins.dataset.vue;
     feuilleSoins.hidden = false;
   }
 

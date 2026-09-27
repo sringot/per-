@@ -587,6 +587,10 @@ body::after{
 }
 .fermer svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
 .fermer:hover{ box-shadow:var(--bulle-ombre-haute); }
+/* Sur la fiche d'un massage, pas de croix : on la prenait pour un retour
+   à la liste, et elle refermait toute la rubrique. « Tous les massages »
+   en haut et « Voir les autres massages » en bas font ce retour. */
+.panneau[data-vue="fiche"] .fermer{ display:none; }
 .fermer:active{ box-shadow:var(--bulle-creux); transform:scale(.94); }
 
 /* --- Le fond des pages ---
