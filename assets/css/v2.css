@@ -570,7 +570,11 @@ body::after{
 .affiche{
   isolation:isolate; overflow:hidden;
   margin-inline:calc(-1 * var(--pad));
-  min-height:clamp(330px, 56vh, 520px);
+  /* Environ 150 px de texture au-dessus du sur-titre, quelle que soit
+     la fenêtre : la place de la croix de fermeture et une bande de matière,
+     pas davantage. À 56vh, il en restait 340 — un tiers d'écran vide avant
+     le premier mot. */
+  min-height:clamp(260px, 34vh, 320px);
   display:flex; flex-direction:column; justify-content:flex-end;
   padding:5.5rem var(--pad) clamp(1.2rem,3.5vh,2rem);
   background:var(--affiche-base);
@@ -587,14 +591,17 @@ body::after{
   background-image:var(--grain); background-size:220px;
   opacity:.28; mix-blend-mode:overlay;
 }
-/* Le fondu vers l'aplat : 60 % de la hauteur, pour que la moitié haute de
-   la texture reste entière. */
+/* Le fondu vers l'aplat. Il couvre 80 % de la hauteur : depuis que
+   l'affiche a été raccourcie, le sur-titre remontait au-dessus d'un fondu
+   limité à 60 %, sur la texture nue, et tombait à 3,4:1. Le haut reste
+   entier, là où passe la croix de fermeture. */
 .affiche::after{
-  content:''; position:absolute; inset:auto 0 0 0; height:60%; z-index:-1;
+  content:''; position:absolute; inset:auto 0 0 0; height:80%; z-index:-1;
   pointer-events:none;
   background:linear-gradient(to bottom,
     color-mix(in srgb, var(--affiche-fond) 0%, transparent) 0%,
-    color-mix(in srgb, var(--affiche-fond) 62%, transparent) 50%,
+    color-mix(in srgb, var(--affiche-fond) 58%, transparent) 38%,
+    color-mix(in srgb, var(--affiche-fond) 85%, transparent) 62%,
     var(--affiche-fond) 100%);
 }
 .affiche__texte{ width:100%; max-width:34rem; margin-inline:auto; }
@@ -609,7 +616,7 @@ body::after{
   color:var(--affiche-encre);
   text-wrap:balance;
 }
-.panneau--affiche .feuille{ margin-top:1.4rem; }
+.panneau--affiche .feuille{ margin-top:.5rem; }
 
 #lieu{ --affiche-base:var(--lieu-base); --affiche-fond:var(--lieu-fond); --affiche-encre:var(--lieu-encre); }
 :root[data-panneau="lieu"]{ --socle:var(--lieu-fond); }
