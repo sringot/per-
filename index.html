@@ -223,14 +223,27 @@
   </div>
 </section>
 
-<section class="panneau" id="lieu" aria-labelledby="lieu-t" inert>
+<section class="panneau panneau--affiche" id="lieu" aria-labelledby="lieu-t" inert>
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
+  <!-- L'affiche : la texture de Marie en pleine largeur, le titre posé
+       dessus comme sur ses posts. Elle se fond vers le bas dans l'aplat
+       vert pâle du panneau, là où l'on lit. La texture ne passe jamais
+       derrière un paragraphe — ses taches claires et ses ombres rendraient
+       le texte lisible ici, illisible dix pixels plus bas.
+
+       Plus de filigrane M sur ce panneau : la texture en tient lieu.
+       `data-src` : chargée à l'ouverture du panneau, comme ses photos. -->
+  <header class="affiche">
+    <img class="affiche__img" data-src="assets/img/fonds/vert.webp"
+         width="480" height="853" alt="" decoding="async">
+    <div class="affiche__texte">
+      <p class="sur-titre">Le lieu</p>
+      <h2 id="lieu-t">Une parenthèse<br>hors du temps</h2>
+    </div>
+  </header>
   <div class="feuille">
-    <p class="sur-titre">Le lieu</p>
-    <h2 id="lieu-t">Une parenthèse<br>hors du temps</h2>
     <p class="chapo">
       J'ai créé une pièce entièrement dédiée aux massages, pensée pour vous
       accueillir dans une atmosphère agréable et chaleureuse.

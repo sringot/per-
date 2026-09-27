@@ -29,7 +29,11 @@
   --line:       rgba(42,35,32,.10);
   --white:      #FFF;
 
-  --nm-light:   rgba(255,255,255,.95);
+  /* La lumière du relief doux est éteinte : elle faisait un halo blanc
+     autour de tout ce qui passait sur une image ou sur une page en couleur
+     — les bulles, les photos, les avis, les boutons. Le jeton reste, les
+     ombres qui l'emploient n'en gardent que la moitié sombre. */
+  --nm-light:   rgba(255,255,255,0);
   --nm-dark:    rgba(122,104,84,.18);
   --nm-out:     -5px -5px 12px var(--nm-light), 6px 7px 16px var(--nm-dark);
   --nm-out-lg:  -8px -8px 20px var(--nm-light), 10px 12px 26px var(--nm-dark);
@@ -39,6 +43,28 @@
   --bulle-ombre:       0 6px 14px -4px rgba(42,35,32,.24);
   --bulle-ombre-haute: 0 12px 22px -6px rgba(42,35,32,.28);
   --bulle-creux:       inset 0 2px 7px rgba(42,35,32,.22);
+
+  /* Le bruit du grain, généré par le navigateur. Partagé par le papier du
+     site et par les affiches, où il redonne aux textures le grain que leur
+     réduction a effacé. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  /* La police des grands titres. Figtree en attendant « 8 », la police des
+     posts de Marie : le jour où son projet Adobe Fonts existe, c'est cette
+     seule ligne qui change. */
+  --police-titre: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Les pages en couleur. Pour chacune : la médiane de sa texture (ce qu'on
+     voit le temps qu'elle arrive), l'aplat pâle où l'on lit — la texture
+     mêlée de blanc, pas de crème, sans quoi le vert tournait au beige — et
+     l'encre du titre, l'olive du monogramme du relaxant assombri jusqu'à
+     tenir sur la texture. */
+  --lieu-base:  #909A80;
+  --lieu-fond:  #D6DACF;
+  --lieu-encre: #33351A;
+
+  /* Le socle de la barre de bulles : crème, sauf sur une page en couleur. */
+  --socle: var(--card);
 
   --r-lg:       26px;
 
@@ -119,7 +145,7 @@ img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
 body::after{
   content:''; position:fixed; inset:0; z-index:999;
   pointer-events:none; opacity:.035;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-image:var(--grain);
 }
 
 .evitement{
@@ -333,8 +359,8 @@ body::after{
      laisserait sinon voir le contenu défiler. */
   content:''; position:absolute; inset:-1.6rem 0 calc(-1 * var(--pied)) 0; z-index:-1;
   background:linear-gradient(to top,
-    var(--card) 0%, var(--card) 58%, color-mix(in srgb, var(--card) 55%, transparent) 82%,
-    color-mix(in srgb, var(--card) 0%, transparent) 100%);
+    var(--socle) 0%, var(--socle) 58%, color-mix(in srgb, var(--socle) 55%, transparent) 82%,
+    color-mix(in srgb, var(--socle) 0%, transparent) 100%);
   opacity:0; transition:opacity .3s var(--ease);
   pointer-events:none;
 }
@@ -512,12 +538,76 @@ body::after{
   position:fixed; top:clamp(.9rem,2.5vh,1.6rem); right:var(--pad); z-index:2;
   width:44px; height:44px; border-radius:50%;
   display:grid; place-items:center;
-  background:var(--card); box-shadow:var(--nm-out); color:var(--ink);
+  /* L'ombre des bulles, sans lumière blanche : posée sur une texture, la
+     croix aurait porté le même halo que celui qu'on vient de leur retirer. */
+  background:var(--card); box-shadow:var(--bulle-ombre); color:var(--ink);
   transition:box-shadow .25s var(--ease), transform .25s var(--ease);
 }
 .fermer svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
-.fermer:hover{ box-shadow:var(--nm-out-lg); }
-.fermer:active{ box-shadow:var(--nm-in); transform:scale(.94); }
+.fermer:hover{ box-shadow:var(--bulle-ombre-haute); }
+.fermer:active{ box-shadow:var(--bulle-creux); transform:scale(.94); }
+
+/* --- L'affiche ---
+   Le haut d'une page en couleur, dans l'esprit des posts de Marie : sa
+   texture en pleine largeur, le titre posé dessus. Vers le bas la texture
+   se fond dans l'aplat pâle du panneau — c'est là, sur un fond uni, qu'on
+   lit. Le titre tombe dans la zone du fondu, que le dégradé éclaircit : le
+   fondu fait aussi office de voile sous les lettres.
+
+   Chaque page en couleur déclare trois valeurs : `--affiche-base` (la
+   médiane de la texture, visible le temps qu'elle arrive), `--affiche-fond`
+   (l'aplat où l'on lit) et `--affiche-encre` (le titre). */
+.panneau--affiche{ padding-top:0; background:var(--affiche-fond); }
+/* Le lavis de tête des panneaux crème n'a plus rien à faire ici : la
+   texture est déjà la couleur de la rubrique, en bien plus fort. */
+.panneau--affiche::after{ display:none; }
+
+.affiche{
+  isolation:isolate; overflow:hidden;
+  margin-inline:calc(-1 * var(--pad));
+  min-height:clamp(330px, 56vh, 520px);
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding:5.5rem var(--pad) clamp(1.2rem,3.5vh,2rem);
+  background:var(--affiche-base);
+}
+.affiche__img{
+  position:absolute; inset:0; z-index:-3;
+  width:100%; height:100%; object-fit:cover; object-position:50% 28%;
+}
+/* Le grain, par-dessus la texture réduite. En « overlay », il éclaircit les
+   clairs et fonce les sombres sans teinter : c'est ce que fait un grain
+   photographique, et c'est ce que portaient les fichiers d'origine. */
+.affiche::before{
+  content:''; position:absolute; inset:0; z-index:-2; pointer-events:none;
+  background-image:var(--grain); background-size:220px;
+  opacity:.28; mix-blend-mode:overlay;
+}
+/* Le fondu vers l'aplat : 60 % de la hauteur, pour que la moitié haute de
+   la texture reste entière. */
+.affiche::after{
+  content:''; position:absolute; inset:auto 0 0 0; height:60%; z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(to bottom,
+    color-mix(in srgb, var(--affiche-fond) 0%, transparent) 0%,
+    color-mix(in srgb, var(--affiche-fond) 62%, transparent) 50%,
+    var(--affiche-fond) 100%);
+}
+.affiche__texte{ width:100%; max-width:34rem; margin-inline:auto; }
+.affiche .sur-titre{
+  font-size:.78rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--affiche-encre); margin-bottom:.6rem;
+}
+.affiche h2{
+  font-family:var(--police-titre);
+  font-size:clamp(2.2rem, 9.5vw, 3.6rem);
+  font-weight:600; line-height:1.02; letter-spacing:-.035em;
+  color:var(--affiche-encre);
+  text-wrap:balance;
+}
+.panneau--affiche .feuille{ margin-top:1.4rem; }
+
+#lieu{ --affiche-base:var(--lieu-base); --affiche-fond:var(--lieu-fond); --affiche-encre:var(--lieu-encre); }
+:root[data-panneau="lieu"]{ --socle:var(--lieu-fond); }
 
 /* --- L'entrée du contenu ---
    Courte et d'un bloc. Le contenu a été révélé un moment ligne à ligne :
