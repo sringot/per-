@@ -547,7 +547,15 @@
       <a class="reserver__btn reserver__btn--plein" href="https://widget.treatwell.fr/salon/marieemassge/"
          target="_blank" rel="noopener">Réserver en ligne
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-      <a class="reserver__btn" href="sms:+33631183481">Envoyer un message</a>
+      <a class="reserver__btn" href="sms:+33631183481" data-secours="secours-sms">Envoyer un message</a>
+      <!-- Si l'appareil n'ouvre pas les messages — un ordinateur, l'aperçu
+           d'une application qui bloque ces liens —, le bouton ne doit pas
+           avoir l'air cassé : le numéro apparaît ici, prêt à copier. -->
+      <p class="reserver__secours" id="secours-sms" role="status" hidden>
+        Les messages ne se sont pas ouverts sur cet appareil. Écrivez au
+        <b>06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</b>
+        <button class="reserver__copier" type="button" data-copie="06 31 18 34 81">Copier le numéro</button>
+      </p>
       <!-- Formulée à la première personne, comme Marie l'a demandée : ce
            n'est pas un horaire d'ouverture mais le moment où elle répond.
            L'adresse contact@mariemassage.fr reste retirée : Marie ne l'a pas

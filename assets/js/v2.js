@@ -170,6 +170,45 @@
     b.addEventListener('click', () => ouvrir(b.dataset.ouvre, b));
   });
 
+  // « Envoyer un message » ouvre l'application de messages. Quand rien ne
+  // s'ouvre — un ordinateur sans messagerie, l'aperçu d'une application qui
+  // bloque ces liens —, le bouton semblait mort. Si la page n'a ni perdu le
+  // focus ni été masquée une seconde et demie après le geste, c'est
+  // qu'aucune application n'a pris la main : le numéro s'affiche, à copier.
+  $$('a[data-secours]').forEach(a => {
+    const secours = document.getElementById(a.dataset.secours);
+    if (!secours) return;
+    a.addEventListener('click', () => {
+      let parti = false;
+      const part = () => { parti = true; };
+      window.addEventListener('blur', part, { once: true });
+      document.addEventListener('visibilitychange', part, { once: true });
+      setTimeout(() => {
+        window.removeEventListener('blur', part);
+        document.removeEventListener('visibilitychange', part);
+        if (!parti) secours.hidden = false;
+      }, 1500);
+    });
+  });
+  $$('[data-copie]').forEach(b => {
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(b.dataset.copie);
+        b.textContent = 'Numéro copié';
+      } catch (e) {
+        // Presse-papiers refusé (un aperçu intégré, un navigateur ancien) :
+        // l'ancienne commande de copie sur le numéro sélectionné, et s'il
+        // le faut, la sélection seule — il reste alors à copier soi-même.
+        const r = document.createRange();
+        r.selectNodeContents(b.previousElementSibling);
+        const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+        let copie = false;
+        try { copie = document.execCommand('copy'); } catch (e2) {}
+        b.textContent = copie ? 'Numéro copié' : 'Numéro sélectionné';
+      }
+    });
+  });
+
   // Un lien vers une autre rubrique — « Voir les massages » dans le
   // rendez-vous — fait le même geste que sa bulle.
   $$('a[data-rubrique]').forEach(a => {

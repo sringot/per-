@@ -346,13 +346,14 @@ body::after{
    régulier — puis s'efface vers le haut, derrière les ronds. Sa couleur est
    celle de la page ouverte (`--fondu-bas`, posée par rubrique). */
 .bulles::before{
-  /* Il ne sert qu'aux noms : une bande de leur hauteur, calée sur le bas
-     de la barre, plus 20 px de fondu. Au-dessus, rien — le flou qui montait
-     derrière les ronds voilait les cartes pour rien. 15 px : la ligne d'un
-     nom au plus grand (.78rem × 1,15). */
+  /* Une bande de la hauteur des noms, calée sur le bas de la barre, plus
+     un fondu de 60 px qui remonte derrière le bas des ronds. Tout en haut,
+     il voilait les cartes pour rien ; à 20 px seulement, le contenu
+     arrivait net contre les ronds, coupé au lieu de s'effacer. 15 px : la
+     ligne d'un nom au plus grand (.78rem × 1,15). */
   content:''; position:absolute; z-index:-1;
   inset:auto 0 calc(-1 * var(--pied)) 0;
-  height:calc(var(--pied) + .5rem + env(safe-area-inset-bottom, 0px) + 15px + 20px);
+  height:calc(var(--pied) + .5rem + env(safe-area-inset-bottom, 0px) + 15px + 60px);
   pointer-events:none;
   /* Le fondu est fait de la texture de la page, pas d'un aplat : un aplat
      de sa couleur moyenne dessinait une bande lisse sur un fond granuleux.
@@ -369,8 +370,8 @@ body::after{
     linear-gradient(var(--fondu-voile), var(--fondu-voile)),
     var(--fondu-img, none) center bottom calc((var(--vh) - var(--img-h)) / 2) / var(--img-l) var(--img-h) no-repeat,
     var(--fondu-bas);
-  -webkit-mask-image:linear-gradient(transparent, #000 20px);
-          mask-image:linear-gradient(transparent, #000 20px);
+  -webkit-mask-image:linear-gradient(transparent, rgba(0,0,0,.55) 32px, #000 60px);
+          mask-image:linear-gradient(transparent, rgba(0,0,0,.55) 32px, #000 60px);
   opacity:0; transition:opacity .3s var(--ease);
 }
 @supports (height:100dvh){ .bulles::before{ --vh:100dvh; } }
@@ -1424,6 +1425,19 @@ body::after{
   .reserver__btn:hover{ background-color:color-mix(in srgb, var(--ink) 8%, transparent); }
   .reserver__btn--plein:hover{ background-color:#3A3430; }
 }
+.reserver__secours{
+  font-size:.92rem; line-height:1.6; text-align:center;
+  padding:.9rem 1rem; border-radius:16px;
+  background:color-mix(in srgb, var(--touche-trait) 18%, transparent);
+}
+.reserver__secours b{ white-space:nowrap; }
+.reserver__copier{
+  display:inline-flex; align-items:center; min-height:44px; margin-left:.4rem;
+  padding:0 1rem; border-radius:999px; font:inherit; font-weight:600;
+  color:var(--ink); background:none; box-shadow:inset 0 0 0 1.5px var(--ink); cursor:pointer;
+}
+.reserver__secours[hidden]{ display:none; }
+@media (min-width:640px){ .reserver__secours{ grid-column:1 / -1; } }
 .reserver__mot{ margin-top:.6rem; font-size:.92rem; line-height:1.6; text-align:center; }
 .reserver__mot a{ white-space:nowrap; }
 @media (min-width:640px){
