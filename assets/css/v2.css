@@ -1324,64 +1324,6 @@ body::after{
   color:var(--ink); background:color-mix(in srgb, var(--ink) 10%, var(--card));
 }
 
-/* Les offres qui ne portent pas sur un seul soin. Deux poids : le pack
-   s'adresse aux habituées et reste au niveau du tableau, la remise fait
-   franchir la porte une première fois et prend l'aplat — le même partage
-   que sur l'affiche de la pièce de massage. */
-.offres{
-  display:grid; gap:.7rem; margin-top:1.2rem;
-  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-}
-.offre{
-  display:flex; flex-direction:column; gap:.2rem;
-  padding:.9rem 1.2rem; border-radius:16px;
-  background:color-mix(in srgb, var(--accent) 10%, var(--card));
-}
-.offre b{ font-weight:600; font-size:.95rem; color:var(--accent); }
-.offre span{ font-size:.8rem; color:var(--ink-soft); }
-.offre--phare{ background:var(--accent); position:relative; }
-.offre--phare b{ font-size:1.6rem; line-height:1.1; color:var(--white); }
-.offre--phare span{ color:color-mix(in srgb, var(--white) 88%, var(--accent)); }
-/* « au lieu de 450 € », écrit par le script à partir de la composition du
-   pack. Vide, la ligne n'existe pas — un pack sans économie ne doit pas
-   réserver une ligne blanche sous son prix. */
-.offre__avant{
-  font-style:normal; font-size:.8rem; color:var(--ink-soft);
-}
-.offre__avant:empty{ display:none; }
-/* Le « i » de la remise. Il reprend celui des soins — même disque, même
-   zone de 44 px — mais posé dans l'angle de l'aplat : la carte est une
-   colonne, et le bouton y aurait pris une ligne à lui seul. Les couleurs
-   viennent du blanc et non de `--fond`, qui n'existe pas ici.
-
-   Le disque est plein et le « i » prend le bordeaux : un voile blanc sur
-   l'aplat ne donnait que 1,2:1 — mesuré, pas estimé. Le rapport est ici de
-   9,9:1, et le disque se détache comme un bouton au lieu de se fondre.
-   `background-color` et non le raccourci `background` : celui-ci remet
-   `background-clip` à sa valeur initiale, et le disque cessait d'être borné
-   au carré de 26 px — il s'affichait à 44, rembourrage compris.
-
-   Le glyphe reprend la couleur du bouton : `.offre--phare span` vise tous
-   les `span` de la carte, y compris celui du « i », et le peignait en blanc
-   cassé sur un disque blanc. */
-.offre--phare .t-info{
-  position:absolute; top:.2rem; right:.35rem; margin:0;
-  background-color:var(--white);
-  color:var(--accent);
-}
-.offre--phare .t-info span{ color:inherit; }
-@media (hover:hover) and (pointer:fine){
-  .offre--phare .t-info:hover{
-    background-color:color-mix(in srgb, var(--white) 88%, var(--accent));
-  }
-}
-.offre__cond{
-  margin-top:.5rem; padding-top:.5rem;
-  border-top:1px solid color-mix(in srgb, var(--white) 28%, transparent);
-  line-height:1.45;
-}
-
-
 /* En tableau, une offre et son forfait sont sur la même ligne visuelle : il
    leur faut la même hauteur. Le forfait porte une seconde ligne (« au lieu
    de … ») que la séance n'a pas — sans plancher commun, les deux durées du

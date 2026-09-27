@@ -367,35 +367,6 @@
         </div>
       </li>
     </ul>
-
-    <!-- Les deux offres, sous les cartes. Elles étaient dans la fiche
-         tarifs, retirée : elles ne portent pas sur un soin mais sur
-         plusieurs, ou sur une première fois, et n'ont donc pas leur place
-         dans une fiche de soin. Mêmes valeurs que l'affiche de la pièce. -->
-    <ul class="offres">
-      <!-- « 3 séances de chaque », comme Marie l'a précisé. Le prix de
-           référence n'est pas écrit : `data-lots` donne la composition du
-           pack (3 séances à 70 €, 3 à 80 €) et le script en tire le « au lieu
-           de ». Un tarif qui change met le gain à jour tout seul. -->
-      <li class="offre" data-prix="390" data-lots="70:3,80:3">
-        <b>Pack combiné — 390&nbsp;€</b>
-        <span>3&nbsp;séances de madérothérapie et 3&nbsp;de drainage lymphatique</span>
-        <em class="offre__avant"></em>
-      </li>
-      <!-- La remise portait « sur votre massage inédit » : personne ne sait
-           ce qu'est un massage inédit. Le libellé dit maintenant la condition,
-           et le « i » ouvre les termes exacts — mêmes gestes que le « i » des
-           soins, juste au-dessus. -->
-      <li class="offre offre--phare">
-        <b>−10&nbsp;€</b>
-        <span>sur un massage que vous n'avez jamais essayé</span>
-        <button class="t-info" type="button" aria-expanded="false"
-                aria-controls="d-remise" aria-label="Conditions de la remise"><span aria-hidden="true">i</span></button>
-        <span class="offre__cond" id="d-remise" hidden>Hors premier
-          rendez-vous&nbsp;: si l'envie vous prend d'essayer un massage que
-          vous n'avez encore jamais fait chez moi, il est à −10&nbsp;€.</span>
-      </li>
-    </ul>
   </div>
 
   <!-- Le tableau des tarifs n'est plus affiché : la fiche tarifs a été
