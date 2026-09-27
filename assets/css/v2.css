@@ -63,6 +63,22 @@
   --lieu-fond:  #D6DACF;
   --lieu-encre: #33351A;
 
+  /* Même règle pour les trois autres : l'encre du titre est la couleur de
+     la lettre que Marie a posée sur cette texture dans ses cartes — le D
+     vert foncé sur le brun, le T brun sur le doré. Seul le rouge fait
+     exception : sa lettre est rose clair, pensée pour la texture sombre,
+     et le titre tombe dans la zone où la texture s'éclaircit. Il prend le
+     framboise le plus profond de la texture. */
+  --moi-base:   #8F5442;
+  --moi-fond:   #DDCCC6;
+  --moi-encre:  #343419;
+  --avis-base:  #A27529;
+  --avis-fond:  #E3D6BF;
+  --avis-encre: #4E2300;
+  --rdv-base:   #6B0D24;
+  --rdv-fond:   #E1CFD3;
+  --rdv-encre:  #4A0719;
+
   /* Le socle de la barre de bulles : crème, sauf sur une page en couleur. */
   --socle: var(--card);
 
@@ -600,7 +616,7 @@ body::after{
   pointer-events:none;
   background:linear-gradient(to bottom,
     color-mix(in srgb, var(--affiche-fond) 0%, transparent) 0%,
-    color-mix(in srgb, var(--affiche-fond) 58%, transparent) 38%,
+    color-mix(in srgb, var(--affiche-fond) var(--fondu, 58%), transparent) 38%,
     color-mix(in srgb, var(--affiche-fond) 85%, transparent) 62%,
     var(--affiche-fond) 100%);
 }
@@ -618,8 +634,29 @@ body::after{
 }
 .panneau--affiche .feuille{ margin-top:.5rem; }
 
+#moi { --affiche-base:var(--moi-base);  --affiche-fond:var(--moi-fond);  --affiche-encre:var(--moi-encre); }
 #lieu{ --affiche-base:var(--lieu-base); --affiche-fond:var(--lieu-fond); --affiche-encre:var(--lieu-encre); }
+#avis{ --affiche-base:var(--avis-base); --affiche-fond:var(--avis-fond); --affiche-encre:var(--avis-encre); }
+#rdv { --affiche-base:var(--rdv-base);  --affiche-fond:var(--rdv-fond);  --affiche-encre:var(--rdv-encre);
+       /* La texture la plus sombre des quatre : à mi-hauteur de l'affiche,
+          là où passe le sur-titre, le fondu doit couvrir davantage. Au
+          réglage commun, « Rendez-vous » tombait à 3,1:1 sur grand écran. */
+       --fondu:90%; }
+:root[data-panneau="moi"] { --socle:var(--moi-fond); }
 :root[data-panneau="lieu"]{ --socle:var(--lieu-fond); }
+:root[data-panneau="avis"]{ --socle:var(--avis-fond); }
+:root[data-panneau="rdv"] { --socle:var(--rdv-fond); }
+
+/* Le gris du texte courant est calculé pour le crème. Sur un aplat teinté,
+   plus sombre, il tombait sous 4,5:1 : les pages en couleur prennent un
+   gris plus appuyé, de la même chaleur. */
+.panneau--affiche{ --ink-soft:#4E4843; }
+/* L'encre de rubrique de « Moi » est calculée pour le crème : sur son
+   aplat brun rosé, son lien Instagram tombait à 3,7:1. Même brun, assombri
+   jusqu'à 5,1:1. */
+#moi{ --teinte-t:#6A4A3C; }
+/* Rendez-vous est centré de haut en bas : son affiche aussi. */
+#rdv .affiche__texte{ text-align:center; }
 
 /* --- L'entrée du contenu ---
    Courte et d'un bloc. Le contenu a été révélé un moment ligne à ligne :
@@ -670,8 +707,8 @@ body::after{
    tools-logo-officiel.py — celui de la V1 avait les jambages droits et les
    têtes plus grandes, ce n'était pas le même dessin.
 
-   La teinte est fixe et ne suit pas la rubrique : les cinq panneaux doivent
-   porter exactement le même fond. À 6 % il ne se lit pas comme un motif — on
+   La teinte est fixe et ne suit pas la rubrique. Il ne reste que sur les
+   Massages : les quatre autres rubriques ont leur texture, qui en tient lieu. À 6 % il ne se lit pas comme un motif — on
    voit une page habitée plutôt qu'un aplat, ce qui est tout ce qu'on lui
    demande, et le contraste du texte n'en souffre pas. */
 .filigrane{
