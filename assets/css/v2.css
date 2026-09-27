@@ -712,7 +712,7 @@ body::after{
 }
 .panneau--clair .moi__reserve,
 .panneau--clair .etiquette,
-.panneau--clair .note{
+.panneau--clair .resume{
   background:
     linear-gradient(var(--touche-voile), var(--touche-voile)),
     var(--touche) center / cover no-repeat,
@@ -1369,15 +1369,35 @@ body::after{
    pas de cartes, comme « Sur place » du Lieu. Sur ordinateur, deux
    colonnes. Les étoiles sont un dessin : leur sens est dit par
    `aria-label`. */
-.note{
-  display:flex; flex-wrap:wrap; align-items:baseline; gap:.3rem 1rem;
-  width:fit-content; margin-top:1.6rem; padding:1rem 1.4rem; border-radius:16px;
-  box-shadow:0 14px 30px -22px rgba(40,20,10,.6);
+.resume{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center;
+  column-gap:clamp(1.2rem,5vw,2.4rem); row-gap:.8rem;
+  width:100%; max-width:30rem; margin-top:1.6rem; padding:1.2rem 1.4rem 1.3rem;
+  border-radius:18px; box-shadow:0 14px 30px -22px rgba(40,20,10,.6);
 }
-.note__chiffre{ font-size:1.1rem; font-weight:600; }
-.note__chiffre b{ font-size:2.4rem; letter-spacing:-.03em; line-height:1; }
-.note__etoiles{ font-size:1.15rem; letter-spacing:.12em; }
-.note small{ flex-basis:100%; font-size:.9rem; }
+.resume__titre{ grid-column:1 / -1; font-size:1.05rem; font-weight:600; }
+.resume__titre small{ display:block; font-size:.82rem; font-weight:500; }
+.resume__barres{ list-style:none; padding:0; margin:0; display:grid; gap:.3rem; }
+.resume__barres li{ display:grid; grid-template-columns:.9rem 1fr; align-items:center; gap:.6rem; }
+.resume__n{ font-size:.85rem; font-weight:600; text-align:center; }
+.resume__barre{
+  height:.55rem; border-radius:999px; overflow:hidden;
+  background:color-mix(in srgb, var(--ink) 16%, transparent);
+}
+.resume__barre > span{
+  display:block; height:100%; width:0; border-radius:inherit; background:var(--ink);
+  transition:width .6s var(--ease-out) .2s;
+}
+.resume__note{ display:flex; flex-direction:column; align-items:center; gap:.2rem; }
+.resume__note b{ font-size:clamp(3rem,13vw,3.8rem); font-weight:500; line-height:.95; letter-spacing:-.04em; }
+.resume__etoiles{ font-size:1rem; letter-spacing:.1em; }
+.resume__note small{ font-size:.88rem; }
+/* Lu par les lecteurs d'écran, invisible à l'œil : les barres n'ont pas
+   de texte, leur compte est dit ici. */
+.lecteur{
+  position:absolute; width:1px; height:1px; overflow:hidden;
+  clip-path:inset(50%); white-space:nowrap;
+}
 
 .avis{ display:grid; }
 .avis li{
@@ -1896,7 +1916,7 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   #avis .bloc > .sur-titre, #avis .bloc > h2{ grid-column:1; }
   #avis .bloc > .sur-titre{ grid-row:1; }
   #avis .bloc > h2{ grid-row:2 / span 2; }
-  #avis .bloc > .note{ grid-row:2; align-self:end; margin-top:0; }
+  #avis .bloc > .resume{ grid-row:2 / span 2; align-self:start; margin-top:.4rem; }
   /* Les avis, sur deux colonnes : chacun reste entier dans la sienne. */
   .avis{ display:block; columns:2; column-gap:clamp(3rem,6vw,7rem); }
   .avis li:last-child{ border-bottom:0; }

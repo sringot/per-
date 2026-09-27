@@ -500,10 +500,17 @@
     if (!notes.length) return;
 
     const moy = notes.reduce((a, b) => a + b, 0) / notes.length;
-    const arrondi = Math.round(moy * 10) / 10;
-    $('#note-moy').textContent = Number.isInteger(arrondi)
-      ? String(arrondi)
-      : arrondi.toFixed(1).replace('.', ',');
+    // Toujours une décimale, comme Google : « 5,0 » et non « 5 ».
+    $('#note-moy').textContent = (Math.round(moy * 10) / 10).toFixed(1).replace('.', ',');
+    // La répartition : une barre par nombre d'étoiles, longue de sa part
+    // des avis. Une note à demi-étoile compte dans l'étoile arrondie.
+    for (let e = 1; e <= 5; e++) {
+      const nb = notes.filter(x => Math.round(x) === e).length;
+      const barre = $(`[data-etoiles="${e}"]`);
+      if (barre) barre.style.width = `${(nb / notes.length) * 100}%`;
+      const compte = $(`[data-compte="${e}"]`);
+      if (compte) compte.textContent = nb;
+    }
     // Bornée : les avis sont destinés à être remplacés à la main, et une
     // note saisie hors barème (« 55 », ou un barème sur 10) rendait
     // `repeat()` négatif — l'exception emportait le reste du script.

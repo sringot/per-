@@ -475,14 +475,26 @@
       <p class="sur-titre">Retours clientes</p>
       <h2 id="avis-t">Elles en parlent<br>mieux que moi</h2>
 
-    <!-- La note, les étoiles et le nombre ne sont jamais écrits : ils se
-         calculent à partir des `data-note` de la liste ci-dessous. Pour un
-         nouvel avis, ajouter un <li data-note="…"> suffit. -->
-    <p class="note">
-      <span class="note__chiffre"><b id="note-moy">—</b>/5</span>
-      <span class="note__etoiles" id="note-etoiles" aria-hidden="true"></span>
-      <small><span id="note-nb">—</span> avis sur Google et Treatwell</small>
-    </p>
+    <!-- Le résumé, sur le modèle de celui de Google : la répartition des
+         notes à gauche, la moyenne à droite. Rien n'y est écrit en dur :
+         les barres, la moyenne, les étoiles et le nombre se calculent à
+         partir des `data-note` de la liste. Pour un nouvel avis, ajouter un
+         <li data-note="…"> suffit. -->
+    <div class="resume">
+      <p class="resume__titre">Résumé des avis <small>Google et Treatwell</small></p>
+      <ol class="resume__barres">
+        <li><span class="resume__n" aria-hidden="true">5</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="5"></span></span><span class="lecteur"><span data-compte="5">0</span> avis à 5 étoiles</span></li>
+        <li><span class="resume__n" aria-hidden="true">4</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="4"></span></span><span class="lecteur"><span data-compte="4">0</span> avis à 4 étoiles</span></li>
+        <li><span class="resume__n" aria-hidden="true">3</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="3"></span></span><span class="lecteur"><span data-compte="3">0</span> avis à 3 étoiles</span></li>
+        <li><span class="resume__n" aria-hidden="true">2</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="2"></span></span><span class="lecteur"><span data-compte="2">0</span> avis à 2 étoiles</span></li>
+        <li><span class="resume__n" aria-hidden="true">1</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="1"></span></span><span class="lecteur"><span data-compte="1">0</span> avis à 1 étoile</span></li>
+      </ol>
+      <p class="resume__note">
+        <b id="note-moy">—</b>
+        <span class="resume__etoiles" id="note-etoiles" aria-hidden="true"></span>
+        <small>(<span id="note-nb">—</span><span class="lecteur"> avis</span>)</small>
+      </p>
+    </div>
     </div>
 
     <!-- Les avis de Google et de Treatwell, recopiés mot pour mot, fautes
