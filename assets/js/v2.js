@@ -115,10 +115,6 @@
     replie(p);
 
     racine.classList.add('a-panneau');
-    // La rubrique ouverte, pour la feuille de style : la barre de bulles est
-    // hors du panneau, et son socle doit prendre la couleur de la page
-    // qu'elle recouvre — le vert pâle du Lieu, pas le crème des autres.
-    racine.dataset.panneau = id;
 
     if (location.hash !== '#' + id) {
       if (changement) remplace('#' + id);
@@ -141,7 +137,6 @@
     ouvert = null;
     declencheur = null;
     racine.classList.remove('a-panneau');
-    delete racine.dataset.panneau;
     // Le panneau des massages se rouvre sur sa planche, jamais sur la fiche
     // qu'on y avait laissée : on retrouve la rubrique telle qu'on l'a
     // découverte, comme les descriptions du tableau que `replie` referme.

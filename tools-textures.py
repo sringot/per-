@@ -1,48 +1,40 @@
 #!/usr/bin/env python3
-"""Prépare les textures de Marie pour le haut des rubriques.
+"""Prépare les textures de fond des pages Moi, Le lieu, Avis et Rendez-vous.
 
-Les sources sont dans `sources/fonds/` : cinq PNG de 900 × 1600, un fondu
-de lumière et d'ombres de feuillage, recouvert d'un grain fin. 2,5 Mo pièce.
+Les sources sont dans `sources/pages/`, une par page, créées par Marie au
+format téléphone (774 × 2033). `orange.png` n'a pas de page : l'orange reste
+la couleur de la seule carte Madéro.
 
-Une texture floue n'a pas besoin de ses 900 px : réduite à 480, elle ne
-perd rien de ce qu'on voit — des taches de lumière larges comme la main.
-Ce qu'elle perd, c'est son grain, qui disparaît dans la réduction. Il est
-recréé par le CSS, à la résolution de l'écran (voir `.affiche::before`),
-ce qui vaut mieux de toute façon : un grain servi en image puis agrandi
-par le navigateur devient une bouillie, un grain généré reste net.
-
-Résultat : une vingtaine de kilo-octets par texture au lieu de 2,5 Mo.
+Elles sont servies à leur largeur d'origine, sans flou ni réduction. Une
+première version les floutait et les réduisait à 480 px, en recréant le
+grain en CSS : c'était léger, mais la texture perdait sa force et son grain
+propre, et fondue dans un aplat pâle elle faisait sale. C'est justement
+le grain et la couleur pleine qu'on veut ici.
 
     python3 tools-textures.py
 """
 import pathlib
 
-from PIL import Image, ImageFilter
+from PIL import Image
 
 ROOT    = pathlib.Path(__file__).parent
-SOURCES = ROOT / 'sources/fonds'
-DEST    = ROOT / 'assets/img/fonds'
+SOURCES = ROOT / 'sources/pages'
+DEST    = ROOT / 'assets/img/pages'
 
-TEXTURES = ['vert', 'jaune', 'marron', 'orange', 'rouge']
-
-LARGEUR = 480
-# Un léger flou avant la réduction : le grain d'origine, simplement réduit,
-# laissait un fourmillement qui se battait avec le grain du CSS.
-FLOU = 2.5
-QUALITE = 78
+PAGES = ['moi', 'lieu', 'avis', 'rdv']
+QUALITE = 80
 
 
 def main():
     DEST.mkdir(parents=True, exist_ok=True)
-    for nom in TEXTURES:
-        src = SOURCES / f'fond-{nom}.png'
+    for page in PAGES:
+        src = SOURCES / f'{page}.png'
         if not src.exists():
             raise SystemExit(f'texture introuvable : {src}')
-        im = Image.open(src).convert('RGB').filter(ImageFilter.GaussianBlur(FLOU))
-        im = im.resize((LARGEUR, round(LARGEUR * im.height / im.width)), Image.LANCZOS)
-        chemin = DEST / f'{nom}.webp'
+        im = Image.open(src).convert('RGB')
+        chemin = DEST / f'{page}.webp'
         im.save(chemin, quality=QUALITE, method=6)
-        print(f'{nom:7s} {im.size[0]}×{im.size[1]}  {chemin.stat().st_size / 1024:.0f} Ko')
+        print(f'{page:5s} {im.size[0]}×{im.size[1]}  {chemin.stat().st_size / 1024:.0f} Ko')
 
 
 if __name__ == '__main__':

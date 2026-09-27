@@ -130,19 +130,15 @@
      qu'ils sont fermés.
      ============================================================ -->
 
-<section class="panneau panneau--affiche" id="moi" aria-labelledby="moi-t" inert>
+<section class="panneau panneau--texture" id="moi" aria-labelledby="moi-t" inert>
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <header class="affiche">
-    <img class="affiche__img" data-src="assets/img/fonds/marron.webp"
-         width="480" height="853" alt="" decoding="async">
-    <div class="affiche__texte">
+  <div class="texture-fond" aria-hidden="true"><img data-src="assets/img/pages/moi.webp" width="774" height="2033" alt="" decoding="async"></div>
+  <div class="feuille">
+    <div class="bloc">
       <p class="sur-titre">À propos</p>
       <h2 id="moi-t">Masser, par plaisir</h2>
-    </div>
-  </header>
-  <div class="feuille">
     <p class="chapo">
       En parallèle de mon activité principale dans le paramédical, j'ai choisi de
       consacrer une partie de mon temps à quelque chose que j'aime particulièrement&nbsp;:
@@ -152,6 +148,8 @@
       L'idée est simple&nbsp;: vous accueillir, vous masser, et vous permettre de
       décrocher un moment.
     </p>
+
+    </div>
 
     <!-- Marie au travail. C'est la seule preuve visuelle du site qu'elle
          masse vraiment : le portrait de l'accueil montre qui elle est, pas
@@ -175,11 +173,12 @@
                alt="Marie travaille du bout des doigts le long de la colonne vertébrale."></li>
     </ul>
 
-    <p class="moi__reserve">
+    <p class="bloc moi__reserve">
       <b>Massages réservés aux femmes</b>
       <span>Par une femme, pour les femmes.</span>
     </p>
 
+    <div class="bloc">
     <h3 class="bloc-h">Mon parcours</h3>
     <!-- Par ordre chronologique, comme Marie le demande : le métier d'abord,
          puis les formations par date, celle qui vient en dernier.
@@ -211,6 +210,9 @@
     </p>
 
 
+    </div>
+
+    <div class="bloc">
     <p class="moi__cadre">
       Je ne soigne pas&nbsp;: je détends. Mes massages sont des soins de
       bien-être, ils ne remplacent ni un kinésithérapeute ni un avis médical.
@@ -221,34 +223,25 @@
         @marieemassage sur Instagram
       </a>
     </p>
+    </div>
   </div>
 </section>
 
-<section class="panneau panneau--affiche" id="lieu" aria-labelledby="lieu-t" inert>
+<section class="panneau panneau--texture" id="lieu" aria-labelledby="lieu-t" inert>
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <!-- L'affiche : la texture de Marie en pleine largeur, le titre posé
-       dessus comme sur ses posts. Elle se fond vers le bas dans l'aplat
-       vert pâle du panneau, là où l'on lit. La texture ne passe jamais
-       derrière un paragraphe — ses taches claires et ses ombres rendraient
-       le texte lisible ici, illisible dix pixels plus bas.
-
-       Plus de filigrane M sur ce panneau : la texture en tient lieu.
-       `data-src` : chargée à l'ouverture du panneau, comme ses photos. -->
-  <header class="affiche">
-    <img class="affiche__img" data-src="assets/img/fonds/vert.webp"
-         width="480" height="853" alt="" decoding="async">
-    <div class="affiche__texte">
+  <div class="texture-fond" aria-hidden="true"><img data-src="assets/img/pages/lieu.webp" width="774" height="2033" alt="" decoding="async"></div>
+  <div class="feuille">
+    <div class="bloc">
       <p class="sur-titre">Le lieu</p>
       <h2 id="lieu-t">Une parenthèse<br>hors du temps</h2>
-    </div>
-  </header>
-  <div class="feuille">
     <p class="chapo">
       J'ai créé une pièce entièrement dédiée aux massages, pensée pour vous
       accueillir dans une atmosphère agréable et chaleureuse.
     </p>
+
+    </div>
 
     <!-- Il n'y a qu'une photographie de la pièce : elle est donc carrée et
          à pleine largeur, plutôt qu'une vignette parmi d'autres — trois
@@ -267,6 +260,7 @@
                 de serviettes, une lampe et des lumières tamisées.">
     </figure>
 
+    <div class="bloc">
     <p class="piece__mot">
       Un petit espace où, pendant une heure, le monde peut bien attendre un peu.
     </p>
@@ -291,6 +285,7 @@
       <li>Linge frais à chaque séance</li>
       <li>Musique &amp; lumière tamisées</li>
     </ul>
+    </div>
   </div>
 </section>
 
@@ -514,19 +509,15 @@
   </article>
 </section>
 
-<section class="panneau panneau--affiche" id="avis" aria-labelledby="avis-t" inert>
+<section class="panneau panneau--texture" id="avis" aria-labelledby="avis-t" inert>
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <header class="affiche">
-    <img class="affiche__img" data-src="assets/img/fonds/jaune.webp"
-         width="480" height="853" alt="" decoding="async">
-    <div class="affiche__texte">
+  <div class="texture-fond" aria-hidden="true"><img data-src="assets/img/pages/avis.webp" width="774" height="2033" alt="" decoding="async"></div>
+  <div class="feuille">
+    <div class="bloc">
       <p class="sur-titre">Retours clientes</p>
       <h2 id="avis-t">Elles en parlent<br>mieux que moi</h2>
-    </div>
-  </header>
-  <div class="feuille">
 
     <!-- ⚠️ EN ATTENTE DES PREMIERS AVIS. Il y avait ici quatre témoignages
          en lorem ipsum et une note de 4,8/5 calculée dessus. Une visiteuse
@@ -554,29 +545,28 @@
       avez pensé.
     </p>
 
+    </div>
   </div>
 </section>
 
-<section class="panneau panneau--affiche" id="rdv" aria-labelledby="rdv-t" inert>
+<section class="panneau panneau--texture" id="rdv" aria-labelledby="rdv-t" inert>
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
-  <header class="affiche">
-    <img class="affiche__img" data-src="assets/img/fonds/rouge.webp"
-         width="480" height="853" alt="" decoding="async">
-    <div class="affiche__texte">
+  <div class="texture-fond" aria-hidden="true"><img data-src="assets/img/pages/rdv.webp" width="774" height="2033" alt="" decoding="async"></div>
+  <div class="feuille feuille--rdv">
+    <div class="bloc">
       <p class="sur-titre">Rendez-vous</p>
       <h2 id="rdv-t">Deux façons<br>de réserver</h2>
-    </div>
-  </header>
-  <div class="feuille feuille--rdv">
     <p class="chapo">
       En ligne à toute heure, ou de vive voix si vous préférez qu'on choisisse
       le soin ensemble.
     </p>
 
+    </div>
+
     <div class="voies">
-      <section class="voie">
+      <section class="voie bloc">
         <h3>En ligne <span class="voie__via">(via Treatwell)</span></h3>
         <p>Le planning à jour, et le créneau retenu dans la foulée.</p>
         <!-- Lien fourni par Marie. `target="_blank"` : le planning Treatwell
@@ -586,7 +576,7 @@
            target="_blank" rel="noopener">Voir les disponibilités</a>
       </section>
 
-      <section class="voie">
+      <section class="voie bloc">
         <h3>Par téléphone</h3>
         <!-- Formulée à la première personne, comme Marie l'a demandée : ce
              n'est pas un horaire d'ouverture mais le moment où elle décroche,
@@ -601,6 +591,7 @@
       </section>
     </div>
 
+    <div class="bloc">
     <ul class="details">
       <li>Montigny-le-Bretonneux (78180)</li>
       <li>Adresse exacte communiquée au rendez-vous</li>
@@ -615,6 +606,7 @@
     <p class="ailleurs">
       <a href="https://www.instagram.com/marieemassage/" target="_blank" rel="noopener">@marieemassage</a>
     </p>
+    </div>
   </div>
 </section>
 
