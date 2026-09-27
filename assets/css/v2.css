@@ -34,6 +34,11 @@
   --nm-out:     -5px -5px 12px var(--nm-light), 6px 7px 16px var(--nm-dark);
   --nm-out-lg:  -8px -8px 20px var(--nm-light), 10px 12px 26px var(--nm-dark);
   --nm-in:      inset -3px -3px 8px var(--nm-light), inset 4px 4px 9px var(--nm-dark);
+  /* Les bulles n'ont que la moitié sombre du relief : sans lumière blanche,
+     pas de halo quand elles passent sur une image. */
+  --bulle-ombre:       0 6px 14px -4px rgba(42,35,32,.24);
+  --bulle-ombre-haute: 0 12px 22px -6px rgba(42,35,32,.28);
+  --bulle-creux:       inset 0 2px 7px rgba(42,35,32,.22);
 
   --r-lg:       26px;
 
@@ -349,7 +354,12 @@ body::after{
   display:grid; place-items:center;
   border-radius:50%;
   background:var(--card);
-  box-shadow:var(--nm-out);
+  /* Une ombre portée sombre, et plus l'ombre claire du relief doux : cette
+     lumière blanche en haut à gauche faisait un halo autour de chaque
+     bulle dès qu'elle passait au-dessus d'une photo ou d'une carte — sur
+     le crème elle se fondait, sur une texture elle se voyait. L'ombre
+     sombre suffit à détacher le disque du fond crème. */
+  box-shadow:var(--bulle-ombre);
   color:var(--teinte,var(--accent));
   /* Un souffle de la teinte dans le disque lui-même. À 8 %, le relief
      doux tient encore — au-delà, le disque cesse de partager le fond et
@@ -378,11 +388,11 @@ body::after{
 @media (hover:hover) and (pointer:fine){
   .bulle:hover{ color:var(--ink); }
   .bulle:hover .bulle__rond{
-    box-shadow:var(--nm-out-lg); transform:translateY(-4px);
+    box-shadow:var(--bulle-ombre-haute); transform:translateY(-4px);
     background-color:color-mix(in srgb, var(--teinte,var(--accent)) 12%, var(--card));
   }
 }
-.bulle:active .bulle__rond{ box-shadow:var(--nm-in); transform:translateY(0) scale(.96); }
+.bulle:active .bulle__rond{ box-shadow:var(--bulle-creux); transform:translateY(0) scale(.96); }
 
 /* La bulle du rendez-vous est la seule pleine : c'est l'action. */
 .bulle--phare .bulle__rond{ background:var(--accent); color:var(--white); }
@@ -393,11 +403,11 @@ body::after{
    apprendre un code de couleur. Le libellé passe à l'encre pleine. */
 .bulle[aria-expanded="true"]{ color:var(--ink); }
 .bulle[aria-expanded="true"] .bulle__rond{
-  box-shadow:var(--nm-in);
+  box-shadow:var(--bulle-creux);
   background-color:color-mix(in srgb, var(--teinte,var(--accent)) 16%, var(--card));
 }
 .bulle--phare[aria-expanded="true"] .bulle__rond{
-  background:var(--accent-d); box-shadow:var(--nm-in);
+  background:var(--accent-d); box-shadow:var(--bulle-creux);
 }
 
 /* Entrée en cascade, une bulle après l'autre. */
@@ -1531,13 +1541,17 @@ body::after{
     background:rgba(253,246,238,.93); box-shadow:none;
   }
   html:not(.a-panneau) .bulle--phare{ color:#FDF6EE; }
+  /* Plus d'anneau crème autour du rendez-vous, ni au survol : c'était un
+     halo blanc de plus sur la photo. Le disque bordeaux se distingue des
+     quatre autres par sa couleur même — c'est le seul qui ne soit pas
+     crème — et son icône reste blanche. */
   html:not(.a-panneau) .bulle--phare .bulle__rond{
-    background:var(--accent); box-shadow:0 0 0 2px rgba(253,246,238,.85);
+    background:var(--accent); box-shadow:none;
   }
   @media (hover:hover) and (pointer:fine){
     html:not(.a-panneau) .bulle:hover{ color:#FDF6EE; }
     html:not(.a-panneau) .bulle:hover .bulle__rond{
-      box-shadow:0 0 0 3px rgba(253,246,238,.5); transform:translateY(-3px);
+      box-shadow:none; transform:translateY(-3px);
     }
   }
 
