@@ -705,18 +705,18 @@ body::after{
    petites surfaces sur le blanc cassé — l'étiquette de Moi, les horaires
    du Lieu, l'attente des Avis, les boutons du Rendez-vous. Même recette
    que les encadrés de prix des fiches : une texture, sous un voile dosé au
-   pixel pour que l'encre tienne 4,6:1 au pire. Moi prend l'orange de la
-   carte Madéro, avec le voile et l'encre de sa fiche ; Le lieu le jaune
-   de Deep tissus, éclairci pour une encre noire. Les filets (parcours,
-   liste du Lieu) prennent un ton moyen de la même couleur. Les ronds de
-   la barre, eux, restent crème. */
+   pixel pour que l'encre tienne 4,6:1 au pire. Moi et Le lieu ont une
+   version pâle de l'orange de Madéro et du jaune de Deep tissus (voir
+   `tools-textures.py`) : en pleine couleur, elles pesaient trop. Encre
+   noire, sans voile. Les filets (parcours, liste du Lieu) prennent un ton
+   de la même couleur. Les ronds de la barre, eux, restent crème. */
 #moi{
-  --touche:url(../img/cartes/madero-texture.webp); --touche-fond:#BF4E24;
-  --touche-voile:rgba(140,48,16,.73); --touche-encre:#FFFFFF; --touche-trait:#D9733F;
+  --touche:url(../img/pages/moi-touche.webp); --touche-fond:#F7CBAA;
+  --touche-voile:transparent; --touche-encre:#1E1814; --touche-trait:#E6A57C;
 }
 #lieu{
-  --touche:url(../img/cartes/deep-tissus-texture.webp); --touche-fond:#CBA450;
-  --touche-voile:rgba(248,214,120,.5); --touche-encre:#1E1814; --touche-trait:#C9A24A;
+  --touche:url(../img/pages/lieu-touche.webp); --touche-fond:#F2E0A6;
+  --touche-voile:transparent; --touche-encre:#1E1814; --touche-trait:#D9BF76;
 }
 #avis{
   --touche:url(../img/pages/avis-touche.webp); --touche-fond:#6E4A10;

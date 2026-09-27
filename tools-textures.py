@@ -14,10 +14,14 @@ sont ramenées à `ADOUCI` de leur écart à la teinte médiane, le grain est
 gardé entier — un blanc cassé vivant, pas une photo de papier.
 
 **Les touches.** La couleur de chaque page ne tient plus le fond : elle
-revient en petites surfaces. Moi et Le lieu empruntent la texture d'une
-carte (l'orange de Madéro, le jaune de Deep tissus), déjà produite par
-`tools-cartes-images.py`. Avis et Rendez-vous gardent la leur : une bande
-de leur texture de page, en 2:1, comme les encadrés de prix des fiches.
+revient en petites surfaces. Avis et Rendez-vous : une bande de leur
+texture de page, en 2:1, comme les encadrés de prix des fiches.
+
+Moi et Le lieu : une version **pâle** de la texture d'une carte — l'orange
+de Madéro, le jaune de Deep tissus, produites par `tools-cartes-images.py`.
+En pleine couleur, elles pesaient trop sur le blanc cassé. Même séparation
+que pour le fond : la teinte devient une couleur pâle fixe, la lumière des
+taches est gardée à 35 %, le grain à 70 % — pâle, mais texturée.
 
     python3 tools-textures.py
 """
@@ -37,6 +41,11 @@ ADOUCI = .3
 RAYON  = 30
 
 TOUCHES = ['avis', 'rdv']
+# page : (carte d'origine, teinte pâle)
+PALES = {
+    'moi':  ('madero',      (247, 203, 170)),
+    'lieu': ('deep-tissus', (242, 224, 166)),
+}
 TOUCHE_RAPPORT = 2
 TOUCHE_LARGEUR = 800
 
@@ -73,6 +82,18 @@ def main():
         chemin = DEST / f'{page}-touche.webp'
         bande.save(chemin, quality=QUALITE, method=6)
         print(f'{page:6s} touche  {chemin.stat().st_size / 1024:.0f} Ko')
+
+    for page, (carte, pale) in PALES.items():
+        im = Image.open(ROOT / 'assets/img/cartes' / f'{carte}-texture.webp').convert('RGB')
+        a = np.asarray(im).astype(float)
+        taches = np.asarray(im.filter(ImageFilter.GaussianBlur(20))).astype(float)
+        grain = a - taches
+        mediane = np.median(a.reshape(-1, 3), axis=0)
+        lumiere = (taches - mediane).mean(axis=2, keepdims=True)
+        p = np.clip(np.array(pale) + .35 * lumiere + .7 * grain, 0, 255).astype('uint8')
+        chemin = DEST / f'{page}-touche.webp'
+        Image.fromarray(p).save(chemin, quality=QUALITE, method=6)
+        print(f'{page:6s} touche pâle  {chemin.stat().st_size / 1024:.0f} Ko')
 
 
 if __name__ == '__main__':
