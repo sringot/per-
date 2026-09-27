@@ -357,10 +357,15 @@ body::after{
   /* Le socle descend jusqu'au bas de la fenêtre, sous le pied de page :
      au-dessus d'un panneau, la bande qui reste entre la barre et le bord
      laisserait sinon voir le contenu défiler. */
-  content:''; position:absolute; inset:-1.6rem 0 calc(-1 * var(--pied)) 0; z-index:-1;
-  background:linear-gradient(to top,
-    var(--socle) 0%, var(--socle) 58%, color-mix(in srgb, var(--socle) 55%, transparent) 82%,
-    color-mix(in srgb, var(--socle) 0%, transparent) 100%);
+  /* Un aplat franc, bordé d'un filet, et plus un dégradé. Le dégradé
+     remontait d'une trentaine de pixels au-dessus de la barre : sur du texte
+     crème il passait inaperçu, sur les cartes de soins il faisait une brume
+     blanche qui délavait leur bas — le « Voir » s'y effaçait. Le contenu
+     s'arrête maintenant net au bord de la barre, comme sous une barre
+     d'onglets. */
+  content:''; position:absolute; inset:0 0 calc(-1 * var(--pied)) 0; z-index:-1;
+  background:var(--socle);
+  border-top:1px solid var(--line);
   opacity:0; transition:opacity .3s var(--ease);
   pointer-events:none;
 }
