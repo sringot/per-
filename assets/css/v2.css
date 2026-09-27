@@ -1396,6 +1396,7 @@ body::after{
   clip-path:inset(50%); white-space:nowrap;
 }
 
+#avis .avis__source{ margin-top:.9rem; font-size:.85rem; }
 .avis{ display:grid; }
 .avis li{
   display:flex; flex-direction:column; gap:.55rem;
@@ -1914,6 +1915,7 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   #avis .bloc > .sur-titre{ grid-row:1; }
   #avis .bloc > h2{ grid-row:2 / span 2; }
   #avis .bloc > .resume{ grid-row:2 / span 2; align-self:start; margin-top:.4rem; }
+  #avis .bloc > .avis__source{ grid-row:4; }
   /* Les avis, sur deux colonnes : chacun reste entier dans la sienne. */
   .avis{ display:block; columns:2; column-gap:clamp(3rem,6vw,7rem); }
   .avis li:last-child{ border-bottom:0; }
