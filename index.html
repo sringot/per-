@@ -513,55 +513,49 @@
   <div class="feuille feuille--rdv">
     <div class="bloc">
       <p class="sur-titre">Rendez-vous</p>
-      <h2 id="rdv-t">Deux façons<br>de réserver</h2>
-    <p class="chapo">
-      En ligne à toute heure, ou de vive voix si vous préférez qu'on choisisse
-      le soin ensemble.
-    </p>
-
+      <h2 id="rdv-t">Réserver,<br>en trois temps</h2>
     </div>
 
-    <div class="voies">
-      <section class="voie bloc">
-        <h3>En ligne <span class="voie__via">(via Treatwell)</span></h3>
-        <p>Le planning à jour, et le créneau retenu dans la foulée.</p>
-        <!-- Lien fourni par Marie. `target="_blank"` : le planning Treatwell
-             est un parcours de réservation à lui seul, on ne quitte pas le
-             site en plein milieu pour y entrer. `rel="noopener"` va avec. -->
-        <a class="appel" href="https://widget.treatwell.fr/salon/marieemassge/"
-           target="_blank" rel="noopener">Voir les disponibilités</a>
-      </section>
+    <!-- Les trois temps d'une réservation, sur une ligne comme le parcours de
+         la page Moi : quelqu'un qui découvre Marie sait ce qui l'attend avant
+         d'avoir à choisir un bouton. Les boutons viennent ensuite, ensemble. -->
+    <ol class="etapes">
+      <li>
+        <span class="etapes__n" aria-hidden="true">1</span>
+        <span class="etapes__texte"><b>Choisissez votre massage</b>
+          <span>Kobido, relaxant, madéro ou drainage.
+            <a class="lien-fort" href="#massages" data-rubrique="massages">Voir les massages</a></span></span>
+      </li>
+      <li>
+        <span class="etapes__n" aria-hidden="true">2</span>
+        <span class="etapes__texte"><b>Prenez votre créneau</b>
+          <span>Le mercredi ou le samedi, de 11&nbsp;h à 18&nbsp;h&nbsp;: en ligne, ou par message.</span></span>
+      </li>
+      <li>
+        <span class="etapes__n" aria-hidden="true">3</span>
+        <span class="etapes__texte"><b>Recevez l'adresse</b>
+          <span>À Montigny-le-Bretonneux&nbsp;: l'adresse exacte vous est communiquée au rendez-vous.</span></span>
+      </li>
+    </ol>
 
-      <section class="voie bloc">
-        <h3>Par téléphone</h3>
-        <!-- Formulée à la première personne, comme Marie l'a demandée : ce
-             n'est pas un horaire d'ouverture mais le moment où elle décroche,
-             et le SMS est nommé pour celles que l'appel arrête. -->
-        <p>En m'appelant du lundi au samedi, de 9&nbsp;h à 20&nbsp;h. Par SMS
-           aussi, si vous préférez&nbsp;: je réponds dès que je suis disponible.</p>
-        <a class="numero" href="tel:+33631183481">06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</a>
-        <p class="voie__actions">
-          <a class="appel appel--fin" href="tel:+33631183481">Appeler</a>
-          <a class="appel appel--fin" href="sms:+33631183481">Écrire un message</a>
-        </p>
-      </section>
-    </div>
-
-    <div class="bloc">
-    <ul class="details">
-      <li>Montigny-le-Bretonneux (78180)</li>
-      <li>Adresse exacte communiquée au rendez-vous</li>
-    </ul>
-
-    <!-- L'adresse contact@mariemassage.fr est retirée : Marie ne l'a pas
-         reconnue (« c'est quoi ? c'est le site ? »), et une adresse affichée
-         dont personne ne relève la boîte avale les messages sans que
-         l'expéditrice le sache. Le téléphone, le SMS, Treatwell et Instagram
-         couvrent déjà les quatre façons de la joindre. À remettre le jour où
-         une vraie adresse existe. -->
-    <p class="ailleurs">
-      <a href="https://www.instagram.com/marieemassage/" target="_blank" rel="noopener">@marieemassage</a>
-    </p>
+    <!-- Deux boutons, comme demandé : réserver en ligne et envoyer un
+         message. Le numéro reste écrit en dessous, pour qui veut appeler. -->
+    <div class="reserver">
+      <!-- Lien fourni par Marie. `target="_blank"` : le planning Treatwell
+           est un parcours de réservation à lui seul, on ne quitte pas le
+           site en plein milieu pour y entrer. `rel="noopener"` va avec. -->
+      <a class="reserver__btn reserver__btn--plein" href="https://widget.treatwell.fr/salon/marieemassge/"
+         target="_blank" rel="noopener">Réserver en ligne
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+      <a class="reserver__btn" href="sms:+33631183481">Envoyer un message</a>
+      <!-- Formulée à la première personne, comme Marie l'a demandée : ce
+           n'est pas un horaire d'ouverture mais le moment où elle répond.
+           L'adresse contact@mariemassage.fr reste retirée : Marie ne l'a pas
+           reconnue, et une boîte que personne ne relève avale les messages. -->
+      <p class="reserver__mot">Au <a href="tel:+33631183481">06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</a>,
+        du lundi au samedi de 9&nbsp;h à 20&nbsp;h&nbsp;: je réponds dès que je suis disponible.
+        Et sur Instagram, <a class="lien-fort" href="https://www.instagram.com/marieemassage/"
+        target="_blank" rel="noopener">@marieemassage</a>.</p>
     </div>
   </div>
 </section>

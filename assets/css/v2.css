@@ -587,20 +587,14 @@ body::after{
    remises à zéro à ce niveau — sans quoi les deux s'additionnaient. */
 .panneau--texture .feuille{ display:flex; flex-direction:column; gap:.9rem; }
 .panneau--texture .feuille > *{ margin:0; }
-/* Deux classes : `.moi__reserve` et `.voie` ont leurs propres fond, marge
-   et filet, qui doivent céder au bloc. */
+/* Deux classes : `.moi__reserve` a ses propres fond et marge, qui
+   doivent céder au bloc. */
 .panneau--texture .bloc{
   background:var(--card); border-radius:22px;
   padding:clamp(1.25rem,5vw,1.9rem);
   box-shadow:0 18px 40px -26px rgba(20,12,10,.55);
 }
 .bloc > :first-child{ margin-top:0; padding-top:0; border-top:0; }
-/* Les deux voies du rendez-vous sont chacune un bloc : le filet qui les
-   séparait n'a plus lieu d'être, l'écart entre blocs le remplace. */
-.panneau--texture .voies{ gap:.9rem; }
-.panneau--texture .voies .voie{
-  border:0; padding:clamp(1.25rem,5vw,1.9rem);
-}
 
 /* --- Les pages claires : Moi, Le lieu, Avis, Rendez-vous ---
    Plus de blocs : le texte est posé directement sur le blanc cassé, en
@@ -625,12 +619,6 @@ body::after{
   background:none; box-shadow:none; padding:0; border-radius:0;
 }
 .panneau--clair .feuille{ gap:clamp(3rem, 9vh, 5rem); }
-/* Les voies du rendez-vous étaient des blocs : leur rembourrage leur
-   restait (`.panneau--texture .voies .voie` pèse plus lourd que
-   `.panneau--clair .bloc`) et serrait les deux boutons au point de les
-   empiler. */
-.panneau--clair .voies{ gap:3rem; }
-.panneau--clair .voies .voie{ padding:0; }
 
 /* La phrase du lieu devient une citation, alignée à gauche comme tout le
    reste de la page : centrée, au-dessus d'une liste alignée à gauche, elle
@@ -710,7 +698,7 @@ body::after{
    en encre blanche ; Avis un doré clair, en encre noire. Leurs écarts de
    lumière sont bornés à la génération, sans voile. Les filets (parcours, liste du Lieu) prennent un terracotta
    plus clair. Les ronds de la barre, eux, restent crème. */
-#moi, #lieu{
+#moi, #lieu, #rdv{
   --touche:url(../img/pages/terracotta-touche.webp); --touche-fond:#924A31;
   --touche-voile:transparent; --touche-encre:#FFFFFF; --touche-trait:#C7805F;
 }
@@ -718,14 +706,9 @@ body::after{
   --touche:url(../img/pages/dore-touche.webp); --touche-fond:#CE9E4C;
   --touche-voile:transparent; --touche-encre:#1E1814;
 }
-#rdv{
-  --touche:url(../img/pages/rdv-touche.webp); --touche-fond:#56021A;
-  --touche-voile:rgba(60,4,18,.06); --touche-encre:#FFFFFF;
-}
 .panneau--clair .moi__reserve,
 .panneau--clair .etiquette,
-.panneau--clair .attente-avis,
-.panneau--clair .appel{
+.panneau--clair .attente-avis{
   background:
     linear-gradient(var(--touche-voile), var(--touche-voile)),
     var(--touche) center / cover no-repeat,
@@ -740,15 +723,6 @@ body::after{
 .panneau--clair .moi__reserve > *,
 .panneau--clair .etiquette > *{ color:inherit; }
 .panneau--clair .attente-avis{ padding:1.1rem 1.3rem; border-radius:16px; }
-/* Au survol, un voile sombre et non clair : il ne peut qu'ajouter au
-   contraste du texte blanc. */
-.panneau--clair .appel:hover{
-  background:
-    linear-gradient(rgba(0,0,0,.14), rgba(0,0,0,.14)),
-    linear-gradient(var(--touche-voile), var(--touche-voile)),
-    var(--touche) center / cover no-repeat,
-    var(--touche-fond);
-}
 .panneau--clair .parcours::before{ background:var(--touche-trait); }
 #lieu .infos li,
 #lieu .infos li:last-child{ border-color:var(--touche-trait); }
@@ -851,24 +825,6 @@ body::after{
   font-size:.82rem; color:var(--ink-soft);
 }
 
-/* Le déroulé, numéroté : c'est l'inconnu qui bloque une première
-   réservation, pas le prix. */
-.etapes{ counter-reset:etape; display:grid; gap:.7rem; list-style:none; }
-.etapes li{
-  counter-increment:etape;
-  display:grid; grid-template-columns:auto 1fr; gap:.75rem; align-items:start;
-  font-size:.9rem; color:var(--ink-soft);
-}
-.etapes li::before{
-  content:counter(etape);
-  width:1.6rem; height:1.6rem; border-radius:50%;
-  display:grid; place-items:center;
-  font-size:.78rem; font-weight:600;
-  color:var(--teinte-t,var(--accent));
-  background:color-mix(in srgb, var(--teinte,var(--accent)) 13%, var(--card));
-}
-.etapes b{ font-weight:600; color:var(--ink); }
-
 /* Le seul bloc du panneau qui écarte des gens : il doit se lire avant
    qu'on ait fini de décider, donc il est en relief et non en creux comme
    le cadre légal plus bas. */
@@ -943,21 +899,6 @@ body::after{
   margin-top:1.1rem; text-align:center;
   color:var(--ink-soft); text-wrap:balance;
 }
-
-/* Les informations pratiques. C'étaient des pastilles en relief — quatre
-   dans « Le lieu », deux dans le rendez-vous — qui avaient l'air de boutons
-   et n'en étaient pas. Ce sont des faits : ils se lisent en liste, séparés
-   par un point médian, et ne réclament plus rien. */
-.details{
-  display:grid; gap:.55rem; margin-top:1.8rem;
-  font-size:.88rem; color:var(--ink-soft);
-}
-/* Les horaires ouvrent la liste et sont les seuls en encre pleine : dans
-   « Le lieu », c'est le fait qu'on vient chercher, les autres l'entourent. */
-.details b{ font-weight:600; color:var(--ink); }
-/* Une colonne, sans puce ni séparateur. Posés en ligne avec un point
-   médian entre eux, ces quatre faits passaient à la ligne sur un téléphone
-   et le point se retrouvait en tête de ligne, comme une puce égarée. */
 
 /* --- Les cartes de soins ---
    Les cartes de la planche de Marie, revenues. Elles ne se retournent plus
@@ -1437,65 +1378,60 @@ body::after{
 .avis q{ display:block; font-size:.9rem; color:var(--ink); quotes:'«\00a0' '\00a0»'; }
 .avis cite{ display:block; margin-top:.45rem; font-style:normal; font-size:.76rem; color:var(--ink-soft); }
 
-/* --- Le rendez-vous --- */
-.feuille--rdv{ text-align:center; }
-.feuille--rdv .chapo{ margin-inline:auto; max-width:30ch; }
-/* --- Les deux voies de réservation ---
-   Côte à côte dès qu'il y a la place : les présenter l'une sous l'autre
-   ferait de la seconde un repli, alors que ce sont deux portes égales. */
-/* Les deux façons de réserver, sans boîte.
-
-   Elles étaient posées sur deux cartes en relief. Sur ce site le relief
-   annonce ce qu'on touche — les bulles, les boutons — et une carte qui
-   porte deux phrases et un bouton n'est pas touchable elle-même : elle
-   ajoutait seulement deux cadres à un panneau qui n'a que soixante-huit
-   mots. Un filet fin et de l'air séparent aussi bien, et l'œil va alors
-   aux boutons, qui sont ce qu'on cherche.
-
-   Le rembourrage latéral disparaît avec la carte : le texte reprend toute
-   la largeur de la feuille au lieu d'être enfermé dans une colonne. */
-.voies{
-  display:grid; gap:2.4rem; margin-top:2rem;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+/* --- Le rendez-vous : trois temps, puis deux boutons ---
+   Les étapes sur une ligne, comme le parcours de Moi : des pastilles
+   terracotta numérotées, reliées par un filet. Les boutons viennent après,
+   pleine largeur : réserver en ligne (plein, l'action principale) et
+   envoyer un message (en creux). Le numéro reste écrit dessous. */
+.etapes{ position:relative; display:grid; gap:2.2rem; list-style:none; padding:0; margin:0; }
+.etapes li{ position:relative; display:flex; gap:1.1rem; align-items:flex-start; }
+/* Le filet part de chaque pastille et rejoint la suivante : tiré d'un bout
+   à l'autre de la liste, il dépassait sous la dernière, le long de son
+   texte. */
+.etapes li:not(:last-child)::before{
+  content:''; position:absolute; left:21px; top:44px; bottom:-2.2rem; width:2px;
+  background:var(--touche-trait);
 }
-.voie{
-  display:flex; flex-direction:column; align-items:center; text-align:center;
+.etapes__n{
+  flex:none; display:grid; place-items:center; width:44px; height:44px; border-radius:50%;
+  background:var(--touche) center / cover no-repeat, var(--touche-fond);
+  color:var(--touche-encre); font-weight:600; font-size:1.05rem;
+  box-shadow:0 10px 20px -12px rgba(60,20,10,.7);
 }
-.voie + .voie{ padding-top:2.4rem; border-top:1px solid var(--line); }
-/* Côte à côte sur écran large, le filet passe à gauche. */
+.etapes__texte{ display:flex; flex-direction:column; gap:.25rem; padding-top:.55rem; }
+.etapes__texte b{ font-size:1.1rem; font-weight:600; }
+.etapes__texte > span{ font-size:.94rem; line-height:1.55; }
+
+.lien-fort{
+  font-weight:600; text-decoration:underline; text-decoration-thickness:1.5px;
+  text-underline-offset:.25em; text-decoration-color:var(--touche-trait);
+}
+.reserver{ display:grid; gap:.75rem; }
+.reserver__btn{
+  display:flex; align-items:center; justify-content:center; gap:.6rem;
+  min-height:56px; padding:.8rem 1.4rem; border-radius:999px;
+  font-size:1rem; font-weight:600; color:var(--ink);
+  box-shadow:inset 0 0 0 1.5px var(--ink);
+  transition:background-color .25s var(--ease), transform .2s var(--ease);
+}
+.reserver__btn svg{
+  width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.reserver__btn--plein{ background:var(--ink); color:#F6EDE2; box-shadow:0 16px 30px -20px rgba(20,12,10,.7); }
+.reserver__btn:active{ transform:scale(.98); }
+@media (hover:hover) and (pointer:fine){
+  .reserver__btn:hover{ background-color:color-mix(in srgb, var(--ink) 8%, transparent); }
+  .reserver__btn--plein:hover{ background-color:#3A3430; }
+}
+.reserver__mot{ margin-top:.6rem; font-size:.92rem; line-height:1.6; text-align:center; }
+.reserver__mot a{ white-space:nowrap; }
 @media (min-width:640px){
-  .voies{ gap:2rem; align-items:start; }
-  .voie + .voie{ padding-top:0; border-top:0; border-left:1px solid var(--line); padding-left:2rem; }
+  .reserver{ grid-template-columns:1fr 1fr; }
+  .reserver__mot{ grid-column:1 / -1; }
 }
-.voie h3{
-  font-size:.78rem; font-weight:600; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--teinte-t,var(--accent));
-}
-.voie p{ margin-top:.5rem; font-size:.86rem; color:var(--ink-soft); }
-/* « (via Treatwell) » : la précision demandée par Marie, tenue en second
-   plan. Elle se distingue en quittant les capitales et l'interlettrage du
-   titre, pas en rapetissant : le titre fait déjà 12,5 px, et la réduire
-   d'un tiers la faisait tomber à 8,7 px — mesuré, illisible sur un
-   téléphone. Même taille, autre voix. */
-.voie__via{
-  text-transform:none; font-weight:500; letter-spacing:.01em;
-  color:var(--ink-soft); white-space:nowrap;
-}
-.voie .numero{ font-size:clamp(1.4rem,5vw,1.9rem); margin:.9rem 0 .9rem; }
-.voie .appel{ margin-top:1.4rem; }
-.voie__actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; margin-top:1.4rem; }
-/* La marge d'un bouton seul ne vaut pas pour la paire : s'ils passent
-   l'un sous l'autre, elle les décalait. */
-.voie__actions .appel{ margin-top:0; }
-.appel--fin{ min-height:46px; padding:.7rem 1.4rem; font-size:.9rem; }
 
-.numero{
-  display:block; margin:1.6rem 0 1.1rem;
-  font-size:clamp(1.8rem,7vw,2.6rem); font-weight:600;
-  letter-spacing:-.02em; color:var(--ink);
-  transition:color .25s var(--ease);
-}
-.numero:hover{ color:var(--accent); }
+/* Le bouton du 404. */
 .appel{
   display:inline-flex; align-items:center; justify-content:center;
   min-height:52px; padding:.9rem 2.2rem; border-radius:999px;
@@ -1504,14 +1440,6 @@ body::after{
 }
 .appel:hover{ background:var(--accent-d); }
 .appel:active{ transform:scale(.98); }
-.feuille--rdv .details{ justify-content:center; }
-.ailleurs{ display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem 1.4rem; margin-top:1.8rem; }
-.ailleurs a{
-  font-size:.84rem; color:var(--ink);
-  padding:.5rem 0; border-bottom:1px solid var(--line);
-  transition:color .25s var(--ease), border-color .25s var(--ease);
-}
-.ailleurs a:hover{ color:var(--accent); border-bottom-color:var(--accent); }
 
 /* ---------- 5 bis. LES PAGES ANNEXES ----------
    Mentions légales et 404 partagent cette feuille, mais n'ont ni bulles ni
@@ -1567,10 +1495,10 @@ body::after{
    pas. Le lien des mentions légales, secondaire, vise le plancher de 24 px
    plutôt que celui de 44 : l'amener à 44 aurait doublé la hauteur du pied
    de page pour la ligne la moins touchée du site. */
-.numero, .ailleurs a, .moi__liens a{
+.lien-fort, .reserver__mot a, .moi__liens a{
   display:inline-flex; align-items:center; min-height:44px;
 }
-.ailleurs a, .moi__liens a{ padding-block:.35rem; margin-block:-.35rem; }
+.lien-fort, .reserver__mot a, .moi__liens a{ padding-block:.35rem; margin-block:-.35rem; }
 .pied a{
   display:inline-flex; align-items:center; min-height:24px;
   padding-block:.25rem; margin-block:-.25rem;

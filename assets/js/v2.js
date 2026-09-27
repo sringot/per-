@@ -170,6 +170,16 @@
     b.addEventListener('click', () => ouvrir(b.dataset.ouvre, b));
   });
 
+  // Un lien vers une autre rubrique — « Voir les massages » dans le
+  // rendez-vous — fait le même geste que sa bulle.
+  $$('a[data-rubrique]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const id = a.dataset.rubrique;
+      ouvrir(id, bulles.find(b => b.dataset.ouvre === id));
+    });
+  });
+
   panneaux.forEach(p => {
     p.querySelector('.fermer').addEventListener('click', demandeFermeture);
   });

@@ -14,11 +14,9 @@ sont ramenées à `ADOUCI` de leur écart à la teinte médiane, le grain est
 gardé entier — un blanc cassé vivant, pas une photo de papier.
 
 **Les touches.** La couleur de chaque page ne tient plus le fond : elle
-revient en petites surfaces. Rendez-vous : une bande de sa texture de
-page, en 2:1, comme les encadrés de prix des fiches.
-
-Moi et Le lieu (terracotta, tiré de la carte Madéro) et Avis (doré, tiré
-de sa texture de page) : une **teinte recomposée**. Même séparation que
+revient en petites surfaces : terracotta pour Moi, Le lieu et
+Rendez-vous (tiré de la carte Madéro), doré pour Avis (tiré de sa texture
+de page). Chacune est une **teinte recomposée**, en bande 2:1. Même séparation que
 pour le fond : la couleur devient une teinte fixe, et la lumière des
 taches et le grain y sont reposés, bornés. Ce sont des tons moyens, où ni
 le noir ni le blanc ne tiennent si la texture s'écarte trop ; bornés
@@ -42,7 +40,6 @@ ADOUCI = .3
 # pixels), en dessous des taches (une centaine).
 RAYON  = 30
 
-TOUCHES = ['rdv']
 # nom : (texture d'origine, teinte, écart maximal des taches, du grain)
 TEINTES = {
     'terracotta': ('assets/img/cartes/madero-texture.webp', (146, 74, 49), 10, 9),
@@ -82,11 +79,6 @@ def main():
     chemin = DEST / 'fond.webp'
     Image.fromarray(fond).save(chemin, quality=QUALITE, method=6)
     print(f'fond   {im.size[0]}×{im.size[1]}  {chemin.stat().st_size / 1024:.0f} Ko')
-
-    for page in TOUCHES:
-        chemin = DEST / f'{page}-touche.webp'
-        bande(source(page)).save(chemin, quality=QUALITE, method=6)
-        print(f'{page:6s} touche  {chemin.stat().st_size / 1024:.0f} Ko')
 
     for nom, (origine, teinte, ecart_lumiere, ecart_grain) in TEINTES.items():
         im = bande(Image.open(ROOT / origine).convert('RGB'))
