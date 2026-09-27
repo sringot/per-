@@ -1770,10 +1770,36 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   .faits{ font-size:clamp(.9rem,1vw,1.15rem); gap:.6rem; }
   .mot{ gap:clamp(1rem,2.4vh,1.8rem); }
 
-  /* --- La barre --- */
-  .bulle{ width:clamp(84px,7.4vw,124px); }
-  .bulle__rond{ width:clamp(64px,5.2vw,92px); }
-  .bulles{ gap:clamp(.6rem,1.6vw,2rem); }
+  /* --- La barre, en haut ---
+   Sur ordinateur, la navigation se cherche en haut de l'écran, pas au
+   pouce. La barre y monte, et chaque nom passe à côté de son rond : la
+   barre perd la moitié de sa hauteur, qu'on rend au contenu. Même rond,
+   même relief, même rubrique ouverte « enfoncée ». */
+  .bulles{
+    inset:0 0 auto 0; align-items:center;
+    gap:clamp(1rem,2.6vw,3rem);
+    padding:clamp(.8rem,2vh,1.3rem) calc(var(--pad) + 3.5rem) clamp(.8rem,2vh,1.3rem);
+  }
+  .bulle{ flex-direction:row; width:auto; gap:.7rem; }
+  .bulle__rond{ width:clamp(46px,3.4vw,60px); }
+  .bulle__nom{ font-size:1rem; text-align:left; white-space:nowrap; }
+  /* Le fondu passe sous la barre, en haut : plein derrière elle, il
+     s'efface vers le bas. L'image reste calée sur le fond du panneau —
+     c'est maintenant le haut de l'écran qui sert de repère. */
+  .bulles::before{
+    inset:0 0 auto 0; height:calc(100% + 48px);
+    background-position:0 0, center top calc((var(--vh) - var(--img-h)) / 2), 0 0;
+    -webkit-mask-image:linear-gradient(#000 calc(100% - 48px), transparent);
+            mask-image:linear-gradient(#000 calc(100% - 48px), transparent);
+  }
+  body{ padding-top:var(--barre); padding-bottom:var(--pied); }
+  .panneau{
+    padding-top:calc(var(--barre) + clamp(1.5rem,5vh,3.5rem));
+    padding-bottom:calc(var(--pied) + clamp(2rem,6vh,4rem));
+  }
+  /* La croix, juste sous la barre, à droite : à sa hauteur, elle passait
+     sous la barre et son fondu, qui sont au-dessus des panneaux. */
+  .fermer{ top:calc(var(--barre) + .6rem); right:clamp(1.2rem,3vw,3rem); width:48px; height:48px; }
 
   /* --- Les pages : une feuille pleine largeur, en deux colonnes --- */
   .panneau{ padding-inline:clamp(2rem,5vw,6rem); }
@@ -1788,7 +1814,7 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   /* L'image suit le texte : collante sous le haut du panneau. */
   #moi .cliches, #lieu .piece{
     grid-column:2; grid-row:1 / span 3;
-    position:sticky; top:clamp(4.5rem,10vh,7rem);
+    position:sticky; top:calc(var(--barre) + 1.5rem);
     margin:0; max-width:none; width:100%;
   }
   #moi .feuille > .bloc, #lieu .feuille > .bloc{ grid-column:1; }
@@ -1814,7 +1840,7 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   .fiche__retour{ grid-column:1 / -1; }
   .fiche__blason{
     grid-column:1; grid-row:2 / span 6;
-    position:sticky; top:clamp(4.5rem,10vh,7rem); margin:0;
+    position:sticky; top:calc(var(--barre) + 1.5rem); margin:0;
   }
   .fiche__nom{ font-size:clamp(2.2rem,3.4vw,3.4rem); margin-top:0; }
 
