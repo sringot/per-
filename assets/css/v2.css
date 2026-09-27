@@ -609,13 +609,27 @@ body::after{
 .panneau--clair .feuille{ gap:clamp(3rem, 9vh, 5rem); }
 #moi{ --texture-base:#E7AD86; }
 
+/* Le lieu, en attendant la version claire de sa texture verte que Marie
+   prépare : le site éclaircit l'actuelle d'un voile vert très pâle, au
+   minimum mesuré pour que le noir tienne partout (40 %), arrondi à 42.
+   Le jour où la texture claire arrive, `--eclaircir` disparaît. */
+.panneau--clair .texture-fond::after{
+  content:''; position:absolute; inset:0; background:var(--eclaircir, transparent);
+}
+#lieu{ --texture-base:#AEB7A1; --eclaircir:rgba(236,240,228,.42); }
+/* La phrase du lieu, entre la photo et les détails, reste centrée : c'est
+   une respiration, pas une information. */
+.panneau--clair .piece__mot{ font-size:1.12rem; }
+
 /* La hiérarchie passe par la taille et la graisse, plus par des gris : un
    seul noir, lisible partout sur la texture. */
 .panneau--clair .feuille h2{ font-size:clamp(2.2rem, 9vw, 3.2rem); margin-bottom:1.4rem; }
 .panneau--clair .chapo{ font-size:1.12rem; line-height:1.6; }
 
-/* « Réservé aux femmes » devient une étiquette : un fait, pas un paragraphe. */
-.panneau--clair .moi__reserve{
+/* Les étiquettes : un fait, pas un paragraphe — « Réservé aux femmes » sur
+   Moi, les horaires sur Le lieu. */
+.panneau--clair .moi__reserve,
+.panneau--clair .etiquette{
   display:flex; flex-direction:column; width:fit-content; gap:.1rem;
   margin-top:1.6rem; padding:.7rem 1.1rem; border-radius:14px;
   background:none; border:1.5px solid currentColor; color:var(--ink);
@@ -784,6 +798,8 @@ body::after{
   font-weight:600; font-size:.95rem; color:var(--teinte-t,var(--accent));
 }
 .moi__reserve span{ font-size:.84rem; color:var(--ink-soft); }
+.etiquette b{ font-weight:600; font-size:.95rem; }
+.etiquette span{ font-size:.84rem; }
 
 /* Deux clichés côte à côte, en portrait : ce sont des photos verticales,
    les forcer en 4/3 les recadrerait sur le mur plutôt que sur les mains.
