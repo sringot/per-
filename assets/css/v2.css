@@ -699,16 +699,12 @@ body::after{
    que les encadrés de prix des fiches : une texture, sous un voile dosé au
    pixel pour que l'encre tienne 4,6:1 au pire. Moi et Le lieu partagent
    un terracotta texturé, tiré de la carte Madéro par `tools-textures.py`,
-   en encre blanche ; Avis un doré clair, en encre noire. Leurs écarts de
-   lumière sont bornés à la génération, sans voile. Les filets (parcours, liste du Lieu) prennent un terracotta
+   en encre blanche, et Avis aussi. Ses écarts de lumière sont bornés à
+   la génération, sans voile. Les filets (parcours, liste du Lieu) prennent un terracotta
    plus clair. Les ronds de la barre, eux, restent crème. */
-#moi, #lieu, #rdv{
+#moi, #lieu, #rdv, #avis{
   --touche:url(../img/pages/terracotta-touche.webp); --touche-fond:#924A31;
   --touche-voile:transparent; --touche-encre:#FFFFFF; --touche-trait:#C7805F;
-}
-#avis{
-  --touche:url(../img/pages/dore-touche.webp); --touche-fond:#CE9E4C;
-  --touche-voile:transparent; --touche-encre:#1E1814; --touche-trait:#CDA25A;
 }
 .panneau--clair .moi__reserve,
 .panneau--clair .etiquette,
@@ -725,7 +721,8 @@ body::after{
 /* Les deux lignes de l'étiquette prennent l'encre de la touche : la
    première avait la teinte de la rubrique, la seconde le gris doux. */
 .panneau--clair .moi__reserve > *,
-.panneau--clair .etiquette > *{ color:inherit; }
+.panneau--clair .etiquette > *,
+.panneau--clair .resume *{ color:inherit; }
 .panneau--clair .parcours::before{ background:var(--touche-trait); }
 #lieu .infos li,
 #lieu .infos li:last-child{ border-color:var(--touche-trait); }
@@ -1364,8 +1361,8 @@ body::after{
 }
 
 /* --- Les avis ---
-   La synthèse dans la touche dorée de la page — le chiffre en grand, les
-   étoiles, le compte —, puis les avis en liste, séparés d'un filet doré :
+   La synthèse dans la touche terracotta de la page — le chiffre en grand, les
+   étoiles, le compte —, puis les avis en liste, séparés d'un filet terracotta :
    pas de cartes, comme « Sur place » du Lieu. Sur ordinateur, deux
    colonnes. Les étoiles sont un dessin : leur sens est dit par
    `aria-label`. */
@@ -1382,10 +1379,10 @@ body::after{
 .resume__n{ font-size:.85rem; font-weight:600; text-align:center; }
 .resume__barre{
   height:.55rem; border-radius:999px; overflow:hidden;
-  background:color-mix(in srgb, var(--ink) 16%, transparent);
+  background:color-mix(in srgb, currentColor 24%, transparent);
 }
 .resume__barre > span{
-  display:block; height:100%; width:0; border-radius:inherit; background:var(--ink);
+  display:block; height:100%; width:0; border-radius:inherit; background:currentColor;
   transition:width .6s var(--ease-out) .2s;
 }
 .resume__note{ display:flex; flex-direction:column; align-items:center; gap:.2rem; }
@@ -1406,7 +1403,7 @@ body::after{
   break-inside:avoid;
 }
 .avis li:last-child{ border-bottom:1px solid var(--touche-trait, var(--line)); }
-.avis__etoiles{ color:#86570E; font-size:1rem; letter-spacing:.14em; line-height:1; }
+.avis__etoiles{ color:#924A31; font-size:1rem; letter-spacing:.14em; line-height:1; }
 .avis q{ display:block; font-size:1.02rem; line-height:1.6; color:var(--ink); quotes:'«\00a0' '\00a0»'; }
 .avis cite{ font-style:normal; font-size:.86rem; color:var(--ink); }
 .avis cite b{ font-weight:600; }

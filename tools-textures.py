@@ -14,14 +14,12 @@ sont ramenées à `ADOUCI` de leur écart à la teinte médiane, le grain est
 gardé entier — un blanc cassé vivant, pas une photo de papier.
 
 **Les touches.** La couleur de chaque page ne tient plus le fond : elle
-revient en petites surfaces : terracotta pour Moi, Le lieu et
-Rendez-vous (tiré de la carte Madéro), doré pour Avis (tiré de sa texture
-de page). Chacune est une **teinte recomposée**, en bande 2:1. Même séparation que
+revient en petites surfaces, en terracotta pour les quatre pages (tiré
+de la carte Madéro) : une **teinte recomposée**, en bande 2:1. Même séparation que
 pour le fond : la couleur devient une teinte fixe, et la lumière des
-taches et le grain y sont reposés, bornés. Ce sont des tons moyens, où ni
+taches et le grain y sont reposés, bornés. C'est un ton moyen, où ni
 le noir ni le blanc ne tiennent si la texture s'écarte trop ; bornés
-ainsi, le blanc tient sur le terracotta (4,7:1 au pire pixel) et le noir
-sur le doré (5,3:1).
+ainsi, le blanc tient sur le terracotta (4,7:1 au pire pixel).
 
     python3 tools-textures.py
 """
@@ -43,7 +41,6 @@ RAYON  = 30
 # nom : (texture d'origine, teinte, écart maximal des taches, du grain)
 TEINTES = {
     'terracotta': ('assets/img/cartes/madero-texture.webp', (146, 74, 49), 10, 9),
-    'dore':       ('sources/pages/avis.png',                (206, 158, 76), 18, 12),
 }
 TOUCHE_RAPPORT = 2
 TOUCHE_LARGEUR = 800
