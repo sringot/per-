@@ -609,14 +609,14 @@ body::after{
 .panneau--clair .feuille{ gap:clamp(3rem, 9vh, 5rem); }
 #moi{ --texture-base:#E7AD86; }
 
-/* Le lieu, en attendant la version claire de sa texture verte que Marie
-   prépare : le site éclaircit l'actuelle d'un voile vert très pâle, au
-   minimum mesuré pour que le noir tienne partout (40 %), arrondi à 42.
-   Le jour où la texture claire arrive, `--eclaircir` disparaît. */
+/* Le lieu : la version claire de la texture verte, faite par Marie. Le noir
+   y tient sur 99,99 % de la surface ; quelques grains plus sombres
+   descendaient à 3,6:1. Un voile vert très pâle de 17 % — le minimum
+   mesuré est 15 — les rattrape sans qu'on le voie. */
 .panneau--clair .texture-fond::after{
   content:''; position:absolute; inset:0; background:var(--eclaircir, transparent);
 }
-#lieu{ --texture-base:#AEB7A1; --eclaircir:rgba(236,240,228,.42); }
+#lieu{ --texture-base:#AFBA96; --eclaircir:rgba(236,240,228,.17); }
 /* La phrase du lieu, entre la photo et les détails, reste centrée : c'est
    une respiration, pas une information. */
 .panneau--clair .piece__mot{ font-size:1.12rem; }
