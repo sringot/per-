@@ -130,7 +130,7 @@
      qu'ils sont fermés.
      ============================================================ -->
 
-<section class="panneau panneau--texture" id="moi" aria-labelledby="moi-t" inert>
+<section class="panneau panneau--texture panneau--clair" id="moi" aria-labelledby="moi-t" inert>
   <button class="fermer" type="button" aria-label="Fermer">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
   </button>
@@ -149,6 +149,10 @@
       décrocher un moment.
     </p>
 
+    <p class="moi__reserve">
+      <b>Massages réservés aux femmes</b>
+      <span>Par une femme, pour les femmes.</span>
+    </p>
     </div>
 
     <!-- Marie au travail. C'est la seule preuve visuelle du site qu'elle
@@ -173,10 +177,6 @@
                alt="Marie travaille du bout des doigts le long de la colonne vertébrale."></li>
     </ul>
 
-    <p class="bloc moi__reserve">
-      <b>Massages réservés aux femmes</b>
-      <span>Par une femme, pour les femmes.</span>
-    </p>
 
     <div class="bloc">
     <h3 class="bloc-h">Mon parcours</h3>
@@ -195,13 +195,19 @@
          Il suffit de sortir la ligne de ce commentaire :
            <span>Méthode Nathalie Duarte, certifiée en 2026</span>
     -->
+    <!-- Le métier d'abord, en une phrase : il n'a pas de carte, et le poser
+         en tête de la liste des massages le mettait au même rang qu'une
+         formation. Puis une ligne de temps où chaque formation porte la carte
+         du massage qu'elle a ouvert — on comprend d'un coup d'œil qu'à chaque
+         soin proposé correspond une formation suivie. -->
+    <p class="parcours__metier"><b>Professionnelle du paramédical</b>, c'est mon
+      métier au quotidien, et je l'exerce toujours.</p>
     <ul class="parcours">
-      <li><b>Professionnelle du paramédical</b><span>Mon métier au quotidien, toujours en exercice</span></li>
-      <li><b>Massage relaxant</b></li>
-      <li><b>Drainage lymphatique</b><span>Méthode Vodder, certifiée par La Maison du Lotus en 2024</span></li>
-      <li><b>Kobido</b><span>Certifiée par La Maison du Lotus en 2026</span></li>
-      <li><b>Madérothérapie</b><span>Certifiée par La Maison du Lotus en 2026</span></li>
-      <li><b>Deep tissus</b><span>Formation prévue début 2027</span></li>
+      <li><img class="parcours__carte" data-src="assets/img/cartes/relaxant.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Massage relaxant</b></span></li>
+      <li><img class="parcours__carte" data-src="assets/img/cartes/drainage.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Drainage lymphatique</b><span>Méthode Vodder, certifiée par La Maison du Lotus en 2024</span></span></li>
+      <li><img class="parcours__carte" data-src="assets/img/cartes/kobido.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Kobido</b><span>Certifiée par La Maison du Lotus en 2026</span></span></li>
+      <li><img class="parcours__carte" data-src="assets/img/cartes/madero.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Madérothérapie</b><span>Certifiée par La Maison du Lotus en 2026</span></span></li>
+      <li class="parcours--a-venir"><img class="parcours__carte" data-src="assets/img/cartes/deep-tissus.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Deep tissus</b><span>Formation prévue début 2027</span></span></li>
     </ul>
 
     <p class="parcours__ecole">

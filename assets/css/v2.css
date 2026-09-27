@@ -589,6 +589,73 @@ body::after{
   border:0; padding:clamp(1.25rem,5vw,1.9rem);
 }
 
+/* --- La page claire : Moi ---
+   Plus de blocs : le texte est posé directement sur une texture claire
+   que Marie a faite pour cette page, en noir. Et la page s'allonge : chaque
+   partie a sa place, séparée de la suivante par un vrai silence plutôt
+   qu'empilée dans des encadrés — c'est l'effet « imbriqué » qu'on retire.
+
+   L'encre est un noir un peu plus profond que celui du site : sur les
+   quelques pixels les plus sombres de la texture, le noir courant tombait à
+   4,1:1 ; celui-ci tient 4,6:1 partout, sans rien retirer à la texture. */
+/* Posées sur la feuille et non sur le panneau : `#moi` redéfinit déjà
+   `--teinte-t` et `--teinte-h`, et un identifiant l'emporte sur une classe —
+   le sur-titre, l'étiquette et le lien Instagram restaient au brun de la
+   rubrique, trop clair sur cette texture. La feuille en hérite en dernier. */
+.panneau--clair .feuille{ --ink:#1E1814; --ink-soft:#1E1814; --teinte-t:#1E1814; --teinte-h:#1E1814; }
+.panneau--clair .bloc{
+  background:none; box-shadow:none; padding:0; border-radius:0;
+}
+.panneau--clair .feuille{ gap:clamp(3rem, 9vh, 5rem); }
+#moi{ --texture-base:#E7AD86; }
+
+/* La hiérarchie passe par la taille et la graisse, plus par des gris : un
+   seul noir, lisible partout sur la texture. */
+.panneau--clair .feuille h2{ font-size:clamp(2.2rem, 9vw, 3.2rem); margin-bottom:1.4rem; }
+.panneau--clair .chapo{ font-size:1.12rem; line-height:1.6; }
+
+/* « Réservé aux femmes » devient une étiquette : un fait, pas un paragraphe. */
+.panneau--clair .moi__reserve{
+  display:flex; flex-direction:column; width:fit-content; gap:.1rem;
+  margin-top:1.6rem; padding:.7rem 1.1rem; border-radius:14px;
+  background:none; border:1.5px solid currentColor; color:var(--ink);
+}
+
+/* Les photos, l'une sous l'autre et en grand : côte à côte, elles faisaient
+   deux vignettes ; empilées, elles tiennent la page comme dans un magazine. */
+.panneau--clair .cliches{ grid-template-columns:1fr; gap:1rem; }
+.panneau--clair .cliches li{ border-radius:20px; box-shadow:0 22px 44px -30px rgba(40,20,10,.6); }
+
+/* Le parcours en ligne de temps. Chaque formation porte la carte du massage
+   qu'elle a ouvert, reliées par un filet vertical qui passe derrière. */
+.panneau--clair .bloc-h{
+  background:none; border:0; padding:0; margin:0 0 .6rem;
+  font-size:clamp(1.6rem, 6.5vw, 2.1rem); font-weight:600; letter-spacing:-.025em;
+  font-family:var(--police-titre);
+}
+.parcours__metier{ margin-bottom:1.6rem; font-size:1.02rem; }
+.panneau--clair .parcours{ position:relative; gap:1.1rem; }
+.panneau--clair .parcours::before{
+  content:''; position:absolute; left:23px; top:1.5rem; bottom:1.5rem; width:2px;
+  background:color-mix(in srgb, var(--ink) 22%, transparent);
+}
+.panneau--clair .parcours li{
+  position:relative; display:flex; align-items:center; gap:1.1rem;
+  padding:0; border:0;
+}
+.parcours__carte{
+  flex:none; width:48px; height:auto; aspect-ratio:9/16; border-radius:8px;
+  object-fit:cover; background:var(--card);
+  box-shadow:0 8px 18px -10px rgba(40,20,10,.6);
+}
+.parcours--a-venir .parcours__carte{ filter:grayscale(.7); opacity:.8; }
+.parcours__texte{ display:flex; flex-direction:column; gap:.1rem; }
+.panneau--clair .parcours b{ font-size:1.05rem; }
+.panneau--clair .parcours__ecole{ margin-top:1.8rem; }
+
+/* La fin de page : le cadre et Instagram, après un filet. */
+.panneau--clair .moi__cadre{ border-top-color:color-mix(in srgb, var(--ink) 25%, transparent); }
+
 /* --- L'entrée du contenu ---
    Courte et d'un bloc. Le contenu a été révélé un moment ligne à ligne :
    c'était joli à la première ouverture, long dès la deuxième. Il monte
