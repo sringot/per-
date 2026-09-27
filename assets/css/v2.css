@@ -350,10 +350,11 @@ body::after{
      un fondu de 60 px qui remonte derrière le bas des ronds. Tout en haut,
      il voilait les cartes pour rien ; à 20 px seulement, le contenu
      arrivait net contre les ronds, coupé au lieu de s'effacer. 15 px : la
-     ligne d'un nom au plus grand (.78rem × 1,15). */
+     ligne d'un nom au plus grand (.78rem × 1,15), en rem pour suivre
+     l'agrandissement du grand écran. */
   content:''; position:absolute; z-index:-1;
   inset:auto 0 calc(-1 * var(--pied)) 0;
-  height:calc(var(--pied) + .5rem + env(safe-area-inset-bottom, 0px) + 15px + 60px);
+  height:calc(var(--pied) + .5rem + env(safe-area-inset-bottom, 0px) + .95rem + 60px);
   pointer-events:none;
   /* Le fondu est fait de la texture de la page, pas d'un aplat : un aplat
      de sa couleur moyenne dessinait une bande lisse sur un fond granuleux.
@@ -1738,6 +1739,108 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
 /* Un souffle en plus de la hauteur de la barre : sans lui, le bouton de
    relance venait toucher les bulles en bas de course. */
 .panneau{ padding-bottom:calc(var(--barre) + var(--pied) + .9rem); }
+
+/* ---------- 7 bis. GRAND ÉCRAN ----------
+   Sur ordinateur, le site gardait ses mesures de téléphone : une colonne
+   de 34 rem au milieu d'un écran de 1440 px, du texte à 16 px, des photos
+   de vignette. Au-delà de 1024 px, tout grandit et les pages passent sur
+   deux colonnes.
+
+   **Tout grandit avec la largeur** : la taille de base suit l'écran, de
+   16 px à 1024 px jusqu'à 21 px vers 2000 px. Presque tout le site est
+   en rem — textes, marges, cartes —, donc tout suit d'un seul réglage, et
+   les proportions validées sur téléphone restent les mêmes.
+
+   **Deux colonnes** : le texte d'un côté, l'image ou l'action de l'autre.
+   Une ligne de lecture reste une ligne de lecture (une demi-page, pas une
+   page entière), et l'image, qui défilait loin sous le texte, reste à
+   côté de lui : elle est collante, et suit tant que la colonne de texte
+   défile. */
+@media (min-width:1024px) and (min-height:600px){
+  html{ font-size:clamp(16px, calc(.55vw + 10px), 21px); }
+
+  /* --- L'accueil --- */
+  .scene{ max-width:min(1800px, 92vw); column-gap:clamp(3rem,7vw,8rem); }
+  .portrait{ height:clamp(300px,60vh,780px); }
+  /* Un seul mot de treize signes. Sa colonne est ce que laisse la photo :
+     à 5,4 vw il y tient de 1024 à 2560 px de large (mesuré), au-delà il se
+     coupait en « marieemassa / ge ». */
+  .titre{ font-size:clamp(3.4rem,5.4vw,7.4rem); white-space:nowrap; }
+  .accroche{ font-size:clamp(1.15rem,1.5vw,1.7rem); max-width:30ch; }
+  .faits{ font-size:clamp(.9rem,1vw,1.15rem); gap:.6rem; }
+  .mot{ gap:clamp(1rem,2.4vh,1.8rem); }
+
+  /* --- La barre --- */
+  .bulle{ width:clamp(84px,7.4vw,124px); }
+  .bulle__rond{ width:clamp(64px,5.2vw,92px); }
+  .bulles{ gap:clamp(.6rem,1.6vw,2rem); }
+
+  /* --- Les pages : une feuille pleine largeur, en deux colonnes --- */
+  .panneau{ padding-inline:clamp(2rem,5vw,6rem); }
+  /* En rem, pas en px : la feuille s'élargit avec le texte, et un grand
+     écran ne se retrouve pas avec des marges vides de chaque côté. */
+  .feuille, .feuille--soins, .fiche{ max-width:76rem; }
+  #moi .feuille, #lieu .feuille, #rdv .feuille{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    column-gap:clamp(3rem,6vw,7rem); row-gap:clamp(3rem,8vh,5rem);
+    align-items:start;
+  }
+  /* L'image suit le texte : collante sous le haut du panneau. */
+  #moi .cliches, #lieu .piece{
+    grid-column:2; grid-row:1 / span 3;
+    position:sticky; top:clamp(4.5rem,10vh,7rem);
+    margin:0; max-width:none; width:100%;
+  }
+  #moi .feuille > .bloc, #lieu .feuille > .bloc{ grid-column:1; }
+  .panneau--clair .feuille h2{ font-size:clamp(2.8rem,4.4vw,4.8rem); }
+  .panneau--clair .chapo{ font-size:1.2rem; }
+  .parcours__carte{ width:58px; }
+  .panneau--clair .parcours::before{ left:28px; }
+  .cliches img{ aspect-ratio:4/5; }
+
+  /* Massages : les cinq cartes sur toute la largeur. */
+  .feuille--soins > :not(.soins){ max-width:44rem; }
+  .soins{ gap:clamp(.9rem,1.6vw,1.6rem); margin-top:2.6rem; }
+
+  /* La fiche : le bandeau à gauche, collant ; le soin et ses prix à droite. */
+  /* `:not([hidden])` : une fiche fermée porte `hidden`, et un `display`
+     posé ici l'emportait — son bouton de retour s'affichait sous les
+     cartes. */
+  .fiche:not([hidden]){
+    display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
+    column-gap:clamp(2.5rem,5vw,6rem); align-items:start;
+  }
+  .fiche > *{ grid-column:2; }
+  .fiche__retour{ grid-column:1 / -1; }
+  .fiche__blason{
+    grid-column:1; grid-row:2 / span 6;
+    position:sticky; top:clamp(4.5rem,10vh,7rem); margin:0;
+  }
+  .fiche__nom{ font-size:clamp(2.2rem,3.4vw,3.4rem); margin-top:0; }
+
+  /* Avis : le titre à gauche, l'attente à droite. */
+  #avis .bloc{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    column-gap:clamp(3rem,6vw,7rem); align-items:start;
+  }
+  #avis .bloc > *{ grid-column:2; }
+  #avis .bloc > .sur-titre, #avis .bloc > h2{ grid-column:1; }
+  #avis .bloc > .sur-titre{ grid-row:1; }
+  #avis .bloc > h2{ grid-row:2 / span 2; }
+  #avis .bloc > .attente-avis{ grid-row:2; margin-top:.6rem; font-size:1.15rem; }
+  #avis .bloc > .attente-avis + p{ grid-row:3; font-size:1.05rem; }
+
+  /* Rendez-vous : les trois temps à gauche, les boutons à droite. */
+  #rdv .feuille > .bloc, .etapes{ grid-column:1; }
+  .reserver{
+    grid-column:2; grid-row:1 / span 2; align-self:center;
+    grid-template-columns:1fr;
+  }
+  .reserver__mot, .reserver__secours{ grid-column:auto; }
+  .etapes__texte b{ font-size:1.25rem; }
+  .etapes__texte > span{ font-size:1.05rem; }
+  .reserver__btn{ min-height:64px; font-size:1.1rem; }
+}
 
 /* ---------- 8. MOUVEMENT RÉDUIT ---------- */
 /* Très court : un téléphone couché de 360 px de haut. La photo cède encore,
