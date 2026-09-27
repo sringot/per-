@@ -338,14 +338,32 @@ body::after{
 }
 /* Pendant la lecture d'une rubrique, la barre glisse hors de l'écran (le
    script pose `.barre-cachee`, voir « La barre qui s'efface »). Elle
-   emporte son fondu, qui est à l'intérieur. Transform et opacité
-   seulement : fluides, et sans rien déplacer autour. */
+   emporte son fondu, qui est à l'intérieur.
+
+   Un glissement, pas une disparition : la barre descend en entier et ne
+   s'efface qu'à la toute fin, quand elle est déjà presque sortie. Dans
+   la première version, l'opacité tombait plus vite que la barre ne
+   bougeait — on la voyait s'éteindre sur place, d'un coup. La courbe
+   démarre en douceur et se pose en douceur ; au retour, la barre remonte
+   un peu plus vite et redevient opaque dès le départ. Transform et
+   opacité seulement : le navigateur les anime sans recalculer la page. */
 .bulles{
-  transition:transform .34s var(--ease-out), opacity .26s var(--ease);
+  --glisse:cubic-bezier(.45,0,.2,1);
+  will-change:transform;
+  transition:transform .42s var(--glisse), opacity .12s linear;
 }
 .barre-cachee .bulles{
-  transform:translateY(calc(100% + var(--pied) + 16px));
+  transform:translateY(calc(100% + var(--pied) + 20px));
   opacity:0; pointer-events:none;
+  transition:transform .55s var(--glisse), opacity .2s linear .35s;
+}
+/* Animations réduites (réglage du téléphone) : pas de glissement, mais
+   pas non plus un saut sec — un fondu, qui n'est pas un mouvement.
+   `!important` parce que la règle générale du mouvement réduit coupe
+   toutes les transitions avec `!important`. */
+@media (prefers-reduced-motion:reduce){
+  .bulles{ transition:opacity .3s ease !important; }
+  .barre-cachee .bulles{ transform:none !important; }
 }
 /* Un fondu léger sous les bulles, au-dessus d'un panneau — comme le voile de
    l'accueil. Pas de bande : une bande crème faisait un bloc blanc de plus en
