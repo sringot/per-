@@ -336,12 +336,41 @@ body::after{
   gap:clamp(.3rem,2.6vw,1.5rem);
   padding:.5rem var(--pad) calc(.5rem + env(safe-area-inset-bottom, 0px));
 }
-/* Pas de socle : au-dessus d'un panneau, les bulles flottent sur la page,
-   comme sur l'accueil. La bande crème qui les portait faisait un bloc blanc
-   de plus en bas de chaque page — d'abord un dégradé, puis un aplat bordé
-   d'un filet — et on lui a préféré les ronds seuls. Le contenu s'arrête
-   quand même au-dessus d'eux en fin de défilement : les panneaux réservent
-   leur hauteur (`--barre`). */
+/* Un fondu léger sous les bulles, au-dessus d'un panneau — comme le voile de
+   l'accueil. Pas de bande : une bande crème faisait un bloc blanc de plus en
+   bas de chaque page. Pas rien non plus : sans fond, le contenu passait sous
+   les noms en défilant, et les noms posés sur la texture se lisaient mal
+   presque partout (1 à 2:1 mesuré).
+
+   Le fondu est uni sur le bas — là où sont les noms, qui ont ainsi un fond
+   régulier — puis s'efface vers le haut, derrière les ronds. Sa couleur est
+   celle de la page ouverte (`--fondu-bas`, posée par rubrique). */
+.bulles::before{
+  content:''; position:absolute; inset:-1.4rem 0 calc(-1 * var(--pied)) 0; z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(to top,
+    var(--fondu-bas) 0%, var(--fondu-bas) 42%,
+    color-mix(in srgb, var(--fondu-bas) 0%, transparent) 100%);
+  opacity:0; transition:opacity .3s var(--ease);
+}
+.a-panneau .bulles::before{ opacity:1; }
+:root{ --fondu-bas:var(--card); }
+:root[data-panneau="moi"]     { --fondu-bas:#E7AD86; }
+:root[data-panneau="lieu"]    { --fondu-bas:#B9C3A4; }
+:root[data-panneau="massages"]{ --fondu-bas:var(--card); }
+:root[data-panneau="avis"]    { --fondu-bas:#7E5412; }
+:root[data-panneau="rdv"]     { --fondu-bas:#4A0212; }
+
+/* Les noms au-dessus d'un panneau. Le gris courant tombait à 3,3:1 sur le
+   fondu pêche de Moi : un brun plus profond, 6:1 sur la plus claire des
+   pages. Sur les pages encore sombres (Avis, Rendez-vous), ils passent en
+   clair, comme sur l'accueil. */
+.a-panneau .bulle{ color:#3A3430; }
+.a-panneau .bulle[aria-expanded="true"]{ color:#1E1814; }
+:root[data-panneau="avis"] .bulle,
+:root[data-panneau="rdv"] .bulle{ color:#E9DDD2; }
+:root[data-panneau="avis"] .bulle[aria-expanded="true"],
+:root[data-panneau="rdv"] .bulle[aria-expanded="true"]{ color:#FFFFFF; }
 
 .bulle{
   display:flex; flex-direction:column; align-items:center; gap:.22rem;
