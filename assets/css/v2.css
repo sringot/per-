@@ -377,7 +377,7 @@ body::after{
 .a-panneau .bulles::before{ opacity:1; }
 :root{ --fondu-bas:var(--card); }
 /* Toutes les pages ont le même fond : le fondu aussi. */
-.a-panneau{ --fondu-bas:#E5D5C1; --fondu-img:url(../img/pages/fond.webp); }
+.a-panneau{ --fondu-bas:#EBDCC7; --fondu-img:url(../img/pages/fond.webp); }
 
 /* Les noms au-dessus d'un panneau : un brun plus profond que le gris
    courant, qui tombait à 3,3:1 sur les textures. */
@@ -575,7 +575,7 @@ body::after{
    contenu. En fond CSS et non en `<img>` : la même image pour cinq
    panneaux, une seule fois dans la feuille de style. La couleur du
    panneau est sa médiane, ce qu'on voit le temps qu'elle arrive. */
-.panneau--texture, #massages{ background:#E5D5C1; }
+.panneau--texture, #massages{ background:#EBDCC7; }
 .panneau--texture::after, #massages::after{ display:none; }
 .texture-fond{
   position:fixed; inset:0; z-index:0; pointer-events:none;
@@ -703,26 +703,26 @@ body::after{
 /* --- Les touches ---
    La couleur de chaque page ne tient plus son fond : elle revient en
    petites surfaces sur le blanc cassé — l'étiquette de Moi, les horaires
-   du Lieu, l'attente des Avis, les boutons du Rendez-vous — et dans le
-   rond de sa bulle. Même recette que les encadrés de prix des fiches : une
-   bande de la texture de la page, sous un voile de sa couleur dosé au
-   pixel pour que l'encre tienne 4,6:1 au pire. Moi n'en a pas besoin. Les
-   filets (parcours, liste du Lieu) prennent un ton moyen de la page.
-
-   Posées sur le panneau *et* sur sa bulle, qui vit hors du panneau. */
-.bulle[data-ouvre="moi"], #moi{
-  --touche:url(../img/pages/moi-touche.webp); --touche-fond:#E3A77F;
-  --touche-voile:transparent; --touche-encre:#1E1814; --touche-trait:#C8764C;
+   du Lieu, l'attente des Avis, les boutons du Rendez-vous. Même recette
+   que les encadrés de prix des fiches : une texture, sous un voile dosé au
+   pixel pour que l'encre tienne 4,6:1 au pire. Moi prend l'orange de la
+   carte Madéro, avec le voile et l'encre de sa fiche ; Le lieu le jaune
+   de Deep tissus, éclairci pour une encre noire. Les filets (parcours,
+   liste du Lieu) prennent un ton moyen de la même couleur. Les ronds de
+   la barre, eux, restent crème. */
+#moi{
+  --touche:url(../img/cartes/madero-texture.webp); --touche-fond:#BF4E24;
+  --touche-voile:rgba(140,48,16,.73); --touche-encre:#FFFFFF; --touche-trait:#D9733F;
 }
-.bulle[data-ouvre="lieu"], #lieu{
-  --touche:url(../img/pages/lieu-touche.webp); --touche-fond:#AAB690;
-  --touche-voile:rgba(236,240,228,.06); --touche-encre:#1E1814; --touche-trait:#93A276;
+#lieu{
+  --touche:url(../img/cartes/deep-tissus-texture.webp); --touche-fond:#CBA450;
+  --touche-voile:rgba(248,214,120,.5); --touche-encre:#1E1814; --touche-trait:#C9A24A;
 }
-.bulle[data-ouvre="avis"], #avis{
+#avis{
   --touche:url(../img/pages/avis-touche.webp); --touche-fond:#6E4A10;
   --touche-voile:rgba(70,44,6,.66); --touche-encre:#FFFFFF;
 }
-.bulle[data-ouvre="rdv"], #rdv{
+#rdv{
   --touche:url(../img/pages/rdv-touche.webp); --touche-fond:#56021A;
   --touche-voile:rgba(60,4,18,.06); --touche-encre:#FFFFFF;
 }
@@ -739,6 +739,10 @@ body::after{
 }
 .panneau--clair .moi__reserve,
 .panneau--clair .etiquette{ padding:.85rem 1.2rem; }
+/* Les deux lignes de l'étiquette prennent l'encre de la touche : la
+   première avait la teinte de la rubrique, la seconde le gris doux. */
+.panneau--clair .moi__reserve > *,
+.panneau--clair .etiquette > *{ color:inherit; }
 .panneau--clair .attente-avis{ padding:1.1rem 1.3rem; border-radius:16px; }
 /* Au survol, un voile sombre et non clair : il ne peut qu'ajouter au
    contraste du texte blanc. */
@@ -752,17 +756,6 @@ body::after{
 .panneau--clair .parcours::before{ background:var(--touche-trait); }
 #lieu .infos li,
 #lieu .infos li:last-child{ border-color:var(--touche-trait); }
-/* Le rond de la rubrique ouverte, dans la couleur de la page. */
-.bulle[aria-expanded="true"][data-ouvre="moi"] .bulle__rond,
-.bulle[aria-expanded="true"][data-ouvre="lieu"] .bulle__rond,
-.bulle[aria-expanded="true"][data-ouvre="avis"] .bulle__rond,
-.bulle[aria-expanded="true"][data-ouvre="rdv"] .bulle__rond{
-  background:
-    linear-gradient(var(--touche-voile), var(--touche-voile)),
-    var(--touche) center / cover no-repeat,
-    var(--touche-fond);
-  color:var(--touche-encre);
-}
 
 /* --- L'entrée du contenu ---
    Courte et d'un bloc. Le contenu a été révélé un moment ligne à ligne :

@@ -5,8 +5,8 @@ Les sources sont dans `sources/pages/`, créées par Marie au format
 téléphone (774 × 2033). `orange.png` n'a pas de page : l'orange reste la
 couleur de la seule carte Madéro.
 
-**Le fond.** Toutes les pages ont le même : le blanc cassé de Massages
-(`massages.png`), adouci. La texture d'origine a de grandes taches de
+**Le fond.** Toutes les pages ont le même : le blanc cassé de Marie
+(`fond.png`), adouci. La texture d'origine a de grandes taches de
 lumière ; derrière du texte, et à côté des bandeaux et des encadrés qui
 ont déjà leur grain, elles faisaient trop. On sépare l'image en deux :
 les taches (un flou large) et le grain (ce que le flou retire). Les taches
@@ -14,9 +14,10 @@ sont ramenées à `ADOUCI` de leur écart à la teinte médiane, le grain est
 gardé entier — un blanc cassé vivant, pas une photo de papier.
 
 **Les touches.** La couleur de chaque page ne tient plus le fond : elle
-revient en petites surfaces — l'étiquette de Moi, les horaires du Lieu,
-l'attente des Avis, les boutons du Rendez-vous. Pour elles, une bande de
-la texture de la page, en 2:1, comme les encadrés de prix des fiches.
+revient en petites surfaces. Moi et Le lieu empruntent la texture d'une
+carte (l'orange de Madéro, le jaune de Deep tissus), déjà produite par
+`tools-cartes-images.py`. Avis et Rendez-vous gardent la leur : une bande
+de leur texture de page, en 2:1, comme les encadrés de prix des fiches.
 
     python3 tools-textures.py
 """
@@ -29,13 +30,13 @@ ROOT    = pathlib.Path(__file__).parent
 SOURCES = ROOT / 'sources/pages'
 DEST    = ROOT / 'assets/img/pages'
 
-FOND   = 'massages'
+FOND   = 'fond'
 ADOUCI = .3
 # Rayon du flou qui sépare les taches du grain : au-dessus du grain (quelques
 # pixels), en dessous des taches (une centaine).
 RAYON  = 30
 
-TOUCHES = ['moi', 'lieu', 'avis', 'rdv']
+TOUCHES = ['avis', 'rdv']
 TOUCHE_RAPPORT = 2
 TOUCHE_LARGEUR = 800
 
