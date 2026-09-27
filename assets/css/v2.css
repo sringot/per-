@@ -357,13 +357,25 @@ body::after{
   opacity:0; pointer-events:none;
   transition:transform .55s var(--glisse), opacity .2s linear .35s;
 }
+/* Sur la fiche d'un massage, la barre s'efface aussi, avec le même
+   glissement : on y est pour lire un soin, et on en sort par « Tous les
+   massages » — pas vers une autre rubrique. `visibility` la retire aussi
+   du parcours au clavier, une fois sortie. Sur ordinateur, l'en-tête reste
+   (voir « Grand écran ») : il ne recouvre rien. */
+.en-fiche .bulles{
+  transform:translateY(calc(100% + var(--pied) + 20px));
+  opacity:0; pointer-events:none; visibility:hidden;
+  transition:transform .55s var(--glisse), opacity .2s linear .35s, visibility 0s linear .55s;
+}
+/* La place réservée à la barre n'a plus lieu d'être sous la fiche. */
+.en-fiche #massages{ padding-bottom:calc(var(--pied) + 1.5rem); }
 /* Animations réduites (réglage du téléphone) : pas de glissement, mais
    pas non plus un saut sec — un fondu, qui n'est pas un mouvement.
    `!important` parce que la règle générale du mouvement réduit coupe
    toutes les transitions avec `!important`. */
 @media (prefers-reduced-motion:reduce){
   .bulles{ transition:opacity .3s ease !important; }
-  .barre-cachee .bulles{ transform:none !important; }
+  .barre-cachee .bulles, .en-fiche .bulles{ transform:none !important; }
 }
 /* Un fondu léger sous les bulles, au-dessus d'un panneau — comme le voile de
    l'accueil. Pas de bande : une bande crème faisait un bloc blanc de plus en
@@ -1863,6 +1875,10 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   .bulles::before{ display:none; }
   /* En haut, elle s'efface vers le haut. */
   .barre-cachee .bulles{ transform:translateY(calc(-100% - 16px)); }
+  /* La fiche garde l'en-tête : en haut, il ne gêne pas la lecture. */
+  .en-fiche .bulles{ transform:none; opacity:1; pointer-events:auto; visibility:visible; }
+  .en-fiche.barre-cachee .bulles{ transform:translateY(calc(-100% - 16px)); opacity:0; pointer-events:none; }
+  .en-fiche #massages{ padding-bottom:calc(var(--pied) + clamp(2rem,6vh,4rem)); }
   .entete__marque{
     display:flex; align-items:center; gap:.75rem; margin-right:auto;
     font-size:1.35rem; font-weight:600; letter-spacing:-.035em; color:var(--ink);

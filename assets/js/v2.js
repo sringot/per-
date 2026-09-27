@@ -217,6 +217,13 @@
     p.addEventListener('scroll', () => {
       if (p !== ouvert) return;
       const y = p.scrollTop;
+      // Un défilement posé par le site (retour à sa place dans la liste
+      // des massages) n'est pas un geste : sans ce filtre, il cachait la
+      // barre au retour d'une fiche. Sur la fiche, la barre est déjà
+      // retirée, et le défilement n'y compte pas.
+      if (p._defilementPose || racine.classList.contains('en-fiche')) {
+        p._defilementPose = false; dernier = y; cumul = 0; return;
+      }
       const reste = p.scrollHeight - p.clientHeight - y;
       const dy = y - dernier;
       dernier = y;
@@ -520,6 +527,10 @@
         // Sur la fiche, pas de croix : elle semblait ramener à la liste des
         // massages et fermait toute la rubrique. Le retour est en haut.
         panneauSoins.dataset.vue = 'fiche';
+        // La barre aussi s'efface : sur la fiche, on revient aux massages,
+        // on ne change pas de rubrique.
+        racine.classList.add('en-fiche');
+        panneauSoins._defilementPose = true;
         panneauSoins.scrollTop = 0;
         // Le focus part sur le retour : c'est la sortie de la vue, comme la
         // croix est celle du panneau.
@@ -546,8 +557,11 @@
       () => {
         laFiche.hidden = true;
         delete panneauSoins.dataset.vue;
+        racine.classList.remove('en-fiche');
         feuilleSoins.hidden = false;
+        panneauSoins._defilementPose = true;
         panneauSoins.scrollTop = defilePlanche;
+        montreBarre();
         // Le focus retourne sur ce qui a ouvert la vue, pas en tête de page.
         focusApres(carte);
       });
@@ -561,6 +575,7 @@
     vuePoussee = false;
     laFiche.hidden = true;
     delete panneauSoins.dataset.vue;
+    racine.classList.remove('en-fiche');
     feuilleSoins.hidden = false;
   }
 
