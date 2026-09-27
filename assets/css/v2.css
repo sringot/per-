@@ -708,11 +708,11 @@ body::after{
 }
 #avis{
   --touche:url(../img/pages/dore-touche.webp); --touche-fond:#CE9E4C;
-  --touche-voile:transparent; --touche-encre:#1E1814;
+  --touche-voile:transparent; --touche-encre:#1E1814; --touche-trait:#CDA25A;
 }
 .panneau--clair .moi__reserve,
 .panneau--clair .etiquette,
-.panneau--clair .attente-avis{
+.panneau--clair .note{
   background:
     linear-gradient(var(--touche-voile), var(--touche-voile)),
     var(--touche) center / cover no-repeat,
@@ -726,7 +726,6 @@ body::after{
    première avait la teinte de la rubrique, la seconde le gris doux. */
 .panneau--clair .moi__reserve > *,
 .panneau--clair .etiquette > *{ color:inherit; }
-.panneau--clair .attente-avis{ padding:1.1rem 1.3rem; border-radius:16px; }
 .panneau--clair .parcours::before{ background:var(--touche-trait); }
 #lieu .infos li,
 #lieu .infos li:last-child{ border-color:var(--touche-trait); }
@@ -1364,23 +1363,33 @@ body::after{
   .tableau tbody tr.t-desc{ border-top:0; padding-top:0; margin-top:-.4rem; }
 }
 
-/* L'état d'attente des avis. Il est écrit comme une phrase, pas comme un
-   avertissement technique : une activité qui démarre n'a pas d'avis, ce
-   n'est pas une anomalie à signaler. */
-.attente-avis{
-  font-size:1.02rem; color:var(--ink); margin-bottom:.9rem;
+/* --- Les avis ---
+   La synthèse dans la touche dorée de la page — le chiffre en grand, les
+   étoiles, le compte —, puis les avis en liste, séparés d'un filet doré :
+   pas de cartes, comme « Sur place » du Lieu. Sur ordinateur, deux
+   colonnes. Les étoiles sont un dessin : leur sens est dit par
+   `aria-label`. */
+.note{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:.3rem 1rem;
+  width:fit-content; margin-top:1.6rem; padding:1rem 1.4rem; border-radius:16px;
+  box-shadow:0 14px 30px -22px rgba(40,20,10,.6);
 }
+.note__chiffre{ font-size:1.1rem; font-weight:600; }
+.note__chiffre b{ font-size:2.4rem; letter-spacing:-.03em; line-height:1; }
+.note__etoiles{ font-size:1.15rem; letter-spacing:.12em; }
+.note small{ flex-basis:100%; font-size:.9rem; }
 
-/* --- Les avis --- */
-.note{ display:flex; align-items:baseline; gap:.6rem; margin-bottom:1.4rem; }
-.note b{ font-size:1.9rem; font-weight:600; color:var(--ink); letter-spacing:-.03em; }
-.note span{ color:var(--teinte-t,var(--accent)); font-size:.8rem; letter-spacing:.12em; }
-.note small{ font-size:.78rem; color:var(--ink-soft); }
-
-.avis{ display:grid; gap:.7rem; }
-.avis li{ padding:1rem 1.1rem; border-radius:16px; box-shadow:var(--nm-out); }
-.avis q{ display:block; font-size:.9rem; color:var(--ink); quotes:'«\00a0' '\00a0»'; }
-.avis cite{ display:block; margin-top:.45rem; font-style:normal; font-size:.76rem; color:var(--ink-soft); }
+.avis{ display:grid; }
+.avis li{
+  display:flex; flex-direction:column; gap:.55rem;
+  padding:1.5rem 0; border-top:1px solid var(--touche-trait, var(--line));
+  break-inside:avoid;
+}
+.avis li:last-child{ border-bottom:1px solid var(--touche-trait, var(--line)); }
+.avis__etoiles{ color:#86570E; font-size:1rem; letter-spacing:.14em; line-height:1; }
+.avis q{ display:block; font-size:1.02rem; line-height:1.6; color:var(--ink); quotes:'«\00a0' '\00a0»'; }
+.avis cite{ font-style:normal; font-size:.86rem; color:var(--ink); }
+.avis cite b{ font-weight:600; }
 
 /* --- Le rendez-vous : trois temps, puis deux boutons ---
    Les étapes sur une ligne, comme le parcours de Moi : des pastilles
@@ -1887,8 +1896,10 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   #avis .bloc > .sur-titre, #avis .bloc > h2{ grid-column:1; }
   #avis .bloc > .sur-titre{ grid-row:1; }
   #avis .bloc > h2{ grid-row:2 / span 2; }
-  #avis .bloc > .attente-avis{ grid-row:2; margin-top:.6rem; font-size:1.15rem; }
-  #avis .bloc > .attente-avis + p{ grid-row:3; font-size:1.05rem; }
+  #avis .bloc > .note{ grid-row:2; align-self:end; margin-top:0; }
+  /* Les avis, sur deux colonnes : chacun reste entier dans la sienne. */
+  .avis{ display:block; columns:2; column-gap:clamp(3rem,6vw,7rem); }
+  .avis li:last-child{ border-bottom:0; }
 
   /* Rendez-vous : les trois temps à gauche, les boutons à droite. */
   #rdv .feuille > .bloc, .etapes{ grid-column:1; }

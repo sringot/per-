@@ -475,33 +475,70 @@
       <p class="sur-titre">Retours clientes</p>
       <h2 id="avis-t">Elles en parlent<br>mieux que moi</h2>
 
-    <!-- ⚠️ EN ATTENTE DES PREMIERS AVIS. Il y avait ici quatre témoignages
-         en lorem ipsum et une note de 4,8/5 calculée dessus. Une visiteuse
-         qui lit « Lorem ipsum dolor » ne croit plus rien du reste de la
-         page, et une note moyenne inventée est un argument de vente faux.
-         L'état d'attente ci-dessous dit la vérité — une activité qui
-         commence — et ne coûte aucune confiance.
-
-         Pour les vrais avis : rétablir le bloc de la note
-
-           <p class="note"><b id="note-moy">—</b>
-             <span id="note-etoiles" aria-hidden="true"></span>
-             <small><span id="note-nb">—</span> avis</small></p>
-
-         puis une <ul class="avis" id="avis-liste"> dont chaque
-         <li data-note="5"><q>…</q><cite>Prénom N. · Soin</cite></li>
-         porte sa note. La moyenne, les étoiles et le compte se calculent
-         tout seuls à partir des `data-note` — rien à écrire en dur. -->
-    <p class="attente-avis">
-      Marie vient d’ouvrir sa pièce de massage&nbsp;: les premiers retours
-      arriveront ici, tels qu’ils seront écrits.
+    <!-- La note, les étoiles et le nombre ne sont jamais écrits : ils se
+         calculent à partir des `data-note` de la liste ci-dessous. Pour un
+         nouvel avis, ajouter un <li data-note="…"> suffit. -->
+    <p class="note">
+      <span class="note__chiffre"><b id="note-moy">—</b>/5</span>
+      <span class="note__etoiles" id="note-etoiles" aria-hidden="true"></span>
+      <small><span id="note-nb">—</span> avis sur Google et Treatwell</small>
     </p>
-    <p>
-      En attendant, le mieux reste d’essayer — et de lui dire ce que vous en
-      avez pensé.
-    </p>
-
     </div>
+
+    <!-- Les avis de Google et de Treatwell, recopiés mot pour mot, fautes
+         comprises : un avis corrigé n'est plus tout à fait celui de la
+         cliente. Seules les apostrophes sont typographiques. Le nom est réduit
+         à son initiale ; Treatwell n'en donne pas. L'avis de Hanne B. est
+         coupé là où Google le coupe (« Plus ») : à compléter si on a la
+         suite. Treatwell en a d'autres (« Voir plus d'avis ») : à ajouter
+         au même format. -->
+    <ul class="avis" id="avis-liste">
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Marie est une masseuse exceptionnelle, empathique et bienveillante, elle nous enveloppe d’un toucher à la fois relaxant et réconfortant. Je recommande à 200 %<br>Personnellement je l’ai adopté 💗</q>
+        <cite><b>Catherine T.</b> · sur Google</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Grand merci à Marie, un massage au top ! 1h30 de bonheur. Professionnelle et bienveillante, elle veille à tout pour que vous passiez un agréable moment. N’hésitez pas vous ne serez pas déçu.</q>
+        <cite><b>Marjorie</b> · Massage relaxant · sur Treatwell</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Première fois chez Marie et je ne regrette pas ! Marie est accueillante et tres gentille, ambiance agréable et table de massage chauffante (parfait pour l’hiver qui arrive !). Massage Kobido sensationnel que je recommande vivement, axé aussi sur la détente que j’ai vraiment apprécié 😊 Bref j y retournerai et je recommande à 100%</q>
+        <cite><b>Alexandra</b> · Kobido · sur Treatwell</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Je fais des massages chez Marie depuis un an, c’est un plaisir que je m’octroie, un moment de détente pour moi. Marie sait me soulager aux endroits nécessaires, chaque séance est différente, personnalisée, j’en sors sur un petit nuage […]</q>
+        <cite><b>Hanne B.</b> · sur Google</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>J’ai pris rendez vous car je fais pas mal de rétention d’eau. Marie a su m’expliquer les bienfaits de sa méthode (méthode Vodder) Je ne connaissais que la méthode Renatta et j’ai été agréablement surprise du résultats sur mes jambes. Merci Marie, à très vite</q>
+        <cite><b>Monthe</b> · Drainage lymphatique · sur Treatwell</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Merci Marie pour ce massage relaxant et cet accueil chaleureux. Super moment de bien-être, je reviendrai sans hésiter !</q>
+        <cite><b>Pauline T.</b> · sur Google</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Ma fille a adoré le massage et est ressortie apaisée, toute zen Marie est toujours aussi attentionnée Allez y !!!</q>
+        <cite><b>Alexandra</b> · Massage du dos, des épaules et du cou · sur Treatwell</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Première fois que Marie me masse et franchement 10/10 je vous conseille de tester ! en tt cas pour ma part je reviendrais</q>
+        <cite><b>Audrey C.</b> · sur Google</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Toujours aussi bien accueillie par Marie qui est très à l’écoute et bienveillante. Deuxième soin Kobido 😊, toujours aussi agréable ! Le massage du dos était top ! Je suis arrivée avec de douloureuses contractures du au stress et Marie a fait des miracles 🤩</q>
+        <cite><b>Alexandra</b> · Kobido · sur Treatwell</cite>
+      </li>
+    </ul>
   </div>
 </section>
 
