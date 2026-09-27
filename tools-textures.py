@@ -14,14 +14,16 @@ sont ramenées à `ADOUCI` de leur écart à la teinte médiane, le grain est
 gardé entier — un blanc cassé vivant, pas une photo de papier.
 
 **Les touches.** La couleur de chaque page ne tient plus le fond : elle
-revient en petites surfaces. Avis et Rendez-vous : une bande de leur
-texture de page, en 2:1, comme les encadrés de prix des fiches.
+revient en petites surfaces. Rendez-vous : une bande de sa texture de
+page, en 2:1, comme les encadrés de prix des fiches.
 
-Moi et Le lieu : une version **pâle** de la texture d'une carte — l'orange
-de Madéro, le jaune de Deep tissus, produites par `tools-cartes-images.py`.
-En pleine couleur, elles pesaient trop sur le blanc cassé. Même séparation
-que pour le fond : la teinte devient une couleur pâle fixe, la lumière des
-taches est gardée à 35 %, le grain à 70 % — pâle, mais texturée.
+Moi et Le lieu (terracotta, tiré de la carte Madéro) et Avis (doré, tiré
+de sa texture de page) : une **teinte recomposée**. Même séparation que
+pour le fond : la couleur devient une teinte fixe, et la lumière des
+taches et le grain y sont reposés, bornés. Ce sont des tons moyens, où ni
+le noir ni le blanc ne tiennent si la texture s'écarte trop ; bornés
+ainsi, le blanc tient sur le terracotta (4,7:1 au pire pixel) et le noir
+sur le doré (5,3:1).
 
     python3 tools-textures.py
 """
@@ -40,11 +42,11 @@ ADOUCI = .3
 # pixels), en dessous des taches (une centaine).
 RAYON  = 30
 
-TOUCHES = ['avis', 'rdv']
-# page : (carte d'origine, teinte pâle)
-PALES = {
-    'moi':  ('madero',      (247, 203, 170)),
-    'lieu': ('deep-tissus', (242, 224, 166)),
+TOUCHES = ['rdv']
+# nom : (texture d'origine, teinte, écart maximal des taches, du grain)
+TEINTES = {
+    'terracotta': ('assets/img/cartes/madero-texture.webp', (146, 74, 49), 10, 9),
+    'dore':       ('sources/pages/avis.png',                (206, 158, 76), 18, 12),
 }
 TOUCHE_RAPPORT = 2
 TOUCHE_LARGEUR = 800
@@ -57,6 +59,15 @@ def source(nom):
     if not src.exists():
         raise SystemExit(f'texture introuvable : {src}')
     return Image.open(src).convert('RGB')
+
+
+def bande(im):
+    """Une bande 2:1 au milieu de la texture, à la largeur des touches."""
+    W, H = im.size
+    h = min(H, round(W / TOUCHE_RAPPORT))
+    haut = (H - h) // 2
+    return im.crop((0, haut, W, haut + h)).resize(
+        (TOUCHE_LARGEUR, round(TOUCHE_LARGEUR / TOUCHE_RAPPORT)), Image.LANCZOS)
 
 
 def main():
@@ -73,27 +84,22 @@ def main():
     print(f'fond   {im.size[0]}×{im.size[1]}  {chemin.stat().st_size / 1024:.0f} Ko')
 
     for page in TOUCHES:
-        im = source(page)
-        W, H = im.size
-        h = round(W / TOUCHE_RAPPORT)
-        haut = (H - h) // 2
-        bande = im.crop((0, haut, W, haut + h)).resize(
-            (TOUCHE_LARGEUR, round(TOUCHE_LARGEUR / TOUCHE_RAPPORT)), Image.LANCZOS)
         chemin = DEST / f'{page}-touche.webp'
-        bande.save(chemin, quality=QUALITE, method=6)
+        bande(source(page)).save(chemin, quality=QUALITE, method=6)
         print(f'{page:6s} touche  {chemin.stat().st_size / 1024:.0f} Ko')
 
-    for page, (carte, pale) in PALES.items():
-        im = Image.open(ROOT / 'assets/img/cartes' / f'{carte}-texture.webp').convert('RGB')
+    for nom, (origine, teinte, ecart_lumiere, ecart_grain) in TEINTES.items():
+        im = bande(Image.open(ROOT / origine).convert('RGB'))
         a = np.asarray(im).astype(float)
         taches = np.asarray(im.filter(ImageFilter.GaussianBlur(20))).astype(float)
         grain = a - taches
-        mediane = np.median(a.reshape(-1, 3), axis=0)
-        lumiere = (taches - mediane).mean(axis=2, keepdims=True)
-        p = np.clip(np.array(pale) + .35 * lumiere + .7 * grain, 0, 255).astype('uint8')
-        chemin = DEST / f'{page}-touche.webp'
-        Image.fromarray(p).save(chemin, quality=QUALITE, method=6)
-        print(f'{page:6s} touche pâle  {chemin.stat().st_size / 1024:.0f} Ko')
+        lumiere = (taches - np.median(a.reshape(-1, 3), axis=0)).mean(axis=2, keepdims=True)
+        p = (np.array(teinte)
+             + np.clip(.4 * lumiere, -ecart_lumiere, ecart_lumiere)
+             + np.clip(.6 * grain, -ecart_grain, ecart_grain))
+        chemin = DEST / f'{nom}-touche.webp'
+        Image.fromarray(np.clip(p, 0, 255).astype('uint8')).save(chemin, quality=QUALITE, method=6)
+        print(f'{nom:10s} touche  {chemin.stat().st_size / 1024:.0f} Ko')
 
 
 if __name__ == '__main__':
