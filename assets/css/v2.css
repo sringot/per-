@@ -956,8 +956,17 @@ body::after{
 .fiche__prix{ display:grid; gap:.9rem; margin-top:1.8rem; }
 .fiche__bloc{
   padding:.9rem 1.1rem; border-radius:14px;
-  background:color-mix(in srgb, var(--teinte,var(--accent)) 10%, var(--card));
+  background:var(--prix-fond, color-mix(in srgb, var(--teinte,var(--accent)) 10%, var(--card)));
+  color:var(--prix-encre, var(--ink));
 }
+/* Tout le texte de l'encadré prend son encre : les libellés, les durées,
+   les prix et le « au lieu de », qui avaient chacun leur gris sur le
+   crème. */
+.fiche__bloc h4,
+.fiche__bloc .t-l__nom,
+.fiche__bloc .t-l__prix,
+.fiche__bloc .t-avant,
+.fiche__bloc .t-l--vide{ color:var(--prix-encre, inherit); }
 /* .76rem (12,2 px) et l'encre foncée des bandeaux : à .72rem et avec
    `--teinte-t`, ces deux libellés tombaient à 11,5 px et 4,19:1 — sous les
    deux planchers du site. `--teinte-t` est calculée sur le crème nu, or ce
@@ -965,7 +974,7 @@ body::after{
    lui faut. */
 .fiche__bloc h4{
   font-size:.76rem; font-weight:600; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--teinte-h,var(--accent));
+  text-transform:uppercase; color:var(--prix-encre, var(--teinte-h,var(--accent)));
   margin-bottom:.45rem;
 }
 .fiche__bloc .t-l{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem; }
@@ -1027,10 +1036,20 @@ body::after{
    changé avec les nouvelles cartes (le kobido est passé du bordeaux au
    framboise, le drainage du rose au brun rosé). Les monogrammes vectoriels
    de `img/soins/` ne servent plus au site. */
-.soin--kobido     { --fond:#6B0D24; --carte:url(../img/cartes/kobido.webp); }
-.soin--relaxant   { --fond:#909A80; --carte:url(../img/cartes/relaxant.webp); }
-.soin--madero     { --fond:#C85327; --carte:url(../img/cartes/madero.webp); }
-.soin--drainage   { --fond:#8F5442; --carte:url(../img/cartes/drainage.webp); }
+.soin--kobido     { --fond:#6B0D24; --carte:url(../img/cartes/kobido.webp);
+                    --prix-fond:#6B0D24; --prix-encre:#E98D90; }
+.soin--relaxant   { --fond:#909A80; --carte:url(../img/cartes/relaxant.webp);
+                    --prix-fond:#909A80; --prix-encre:#262812; }
+.soin--madero     { --fond:#C85327; --carte:url(../img/cartes/madero.webp);
+                    --prix-fond:#BF4E24; --prix-encre:#FFFFFF; }
+.soin--drainage   { --fond:#8F5442; --carte:url(../img/cartes/drainage.webp);
+                    --prix-fond:#8F5442; --prix-encre:#FFFFFF; }
+/* `--prix-fond` et `--prix-encre` : les encadrés de prix de la fiche, dans
+   la couleur de la carte. L'encre reprend la lettre de la carte quand elle
+   se lit en petit texte — le rose du kobido sur son framboise (5,1:1),
+   l'olive du relaxant assombri (5,1:1). Pour le madéro et le drainage, leur
+   lettre tombait à 2,7 et 2,1:1 : le texte passe en blanc, et l'orange du
+   madéro est foncé d'un cran pour que ce blanc tienne (4,9:1). */
 .soin--deep-tissus{ --fond:#A27529; --carte:url(../img/cartes/deep-tissus.webp); }
 
 /* --- Le tableau des tarifs ---

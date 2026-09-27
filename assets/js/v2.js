@@ -291,6 +291,10 @@
     const prix = $('.fiche__prix', laFiche);
     prix.textContent = '';
     $$('td[data-col]', ligne).forEach(cellule => {
+      // Une cellule qui ne dit que « Pas de forfait » ne fait pas un
+      // encadré : sur la fiche, l'absence se lit d'elle-même.
+      const lignes = $$('.t-l', cellule);
+      if (!lignes.length || lignes.every(l => l.classList.contains('t-l--vide'))) return;
       const bloc = document.createElement('div');
       bloc.className = 'fiche__bloc';
       const h = document.createElement('h4');
