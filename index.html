@@ -582,6 +582,13 @@
      panneaux et disponible à toute profondeur.
      ============================================================ -->
 <nav class="bulles" id="bulles" aria-label="Navigation principale">
+  <!-- La marque, pour la barre d'ordinateur seulement : sur téléphone la
+       barre n'est que des bulles, et le logo est déjà en tête de l'accueil.
+       Elle ramène à l'accueil — depuis une rubrique, elle la referme. -->
+  <a class="entete__marque" href="./" aria-label="marieemassage, accueil">
+    <img src="assets/img/logo-officiel.webp" alt="" width="200" height="200" decoding="async">
+    <span aria-hidden="true">marieemassage</span>
+  </a>
 
   <button class="bulle" type="button" data-ouvre="moi" aria-expanded="false" aria-controls="moi">
     <span class="bulle__rond">

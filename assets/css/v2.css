@@ -386,6 +386,8 @@ body::after{
 .a-panneau .bulle{ color:#3A3430; }
 .a-panneau .bulle[aria-expanded="true"]{ color:#1E1814; }
 
+/* La marque n'existe que dans la barre d'ordinateur (voir « Grand écran »). */
+.entete__marque{ display:none; }
 .bulle{
   display:flex; flex-direction:column; align-items:center; gap:.22rem;
   /* Assez large pour que « Rendez-vous » tienne sur une ligne : à deux
@@ -1770,28 +1772,60 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   .faits{ font-size:clamp(.9rem,1vw,1.15rem); gap:.6rem; }
   .mot{ gap:clamp(1rem,2.4vh,1.8rem); }
 
-  /* --- La barre, en haut ---
-   Sur ordinateur, la navigation se cherche en haut de l'écran, pas au
-   pouce. La barre y monte, et chaque nom passe à côté de son rond : la
-   barre perd la moitié de sa hauteur, qu'on rend au contenu. Même rond,
-   même relief, même rubrique ouverte « enfoncée ». */
+  /* --- La barre de navigation ---
+   Sur ordinateur, les bulles deviennent une vraie barre d'en-tête : la
+   marque à gauche (logo et nom, alignés), les rubriques en liens texte à
+   droite, et « Rendez-vous » en bouton — c'est l'action du site. Un fond
+   crème un peu transparent, flouté, et un filet dessous : le contenu
+   défile derrière sans jamais gêner la lecture des liens. La rubrique
+   ouverte est soulignée de terracotta. Ce sont les mêmes boutons que sur
+   téléphone : mêmes gestes, même ordre au clavier. */
   .bulles{
-    inset:0 0 auto 0; align-items:center;
-    gap:clamp(1rem,2.6vw,3rem);
-    padding:clamp(.8rem,2vh,1.3rem) calc(var(--pad) + 3.5rem) clamp(.8rem,2vh,1.3rem);
+    inset:0 0 auto 0; justify-content:flex-end; align-items:center;
+    gap:clamp(1.4rem,2.6vw,2.8rem);
+    padding:clamp(.8rem,1.6vh,1.1rem) clamp(2rem,5vw,6rem);
+    background:color-mix(in srgb, #F6ECDF 86%, transparent);
+    -webkit-backdrop-filter:blur(14px) saturate(1.1);
+            backdrop-filter:blur(14px) saturate(1.1);
+    border-bottom:1px solid color-mix(in srgb, var(--ink) 10%, transparent);
   }
-  .bulle{ flex-direction:row; width:auto; gap:.7rem; }
-  .bulle__rond{ width:clamp(46px,3.4vw,60px); }
-  .bulle__nom{ font-size:1rem; text-align:left; white-space:nowrap; }
-  /* Le fondu passe sous la barre, en haut : plein derrière elle, il
-     s'efface vers le bas. L'image reste calée sur le fond du panneau —
-     c'est maintenant le haut de l'écran qui sert de repère. */
-  .bulles::before{
-    inset:0 0 auto 0; height:calc(100% + 48px);
-    background-position:0 0, center top calc((var(--vh) - var(--img-h)) / 2), 0 0;
-    -webkit-mask-image:linear-gradient(#000 calc(100% - 48px), transparent);
-            mask-image:linear-gradient(#000 calc(100% - 48px), transparent);
+  .bulles::before{ display:none; }
+  .entete__marque{
+    display:flex; align-items:center; gap:.75rem; margin-right:auto;
+    font-size:1.35rem; font-weight:600; letter-spacing:-.035em; color:var(--ink);
   }
+  .entete__marque img{ width:2.6rem; height:2.6rem; }
+  .bulle{
+    position:relative; width:auto; flex-direction:row; gap:0;
+    padding:.55rem 0; color:var(--ink);
+  }
+  .bulle__rond{ display:none; }
+  .bulle__nom{ font-size:1.02rem; font-weight:500; letter-spacing:0; }
+  .bulle::after{
+    content:''; position:absolute; left:0; right:0; bottom:.2rem; height:2px;
+    border-radius:2px; background:#C7805F;
+    transform:scaleX(0); transform-origin:left;
+    transition:transform .3s var(--ease-out);
+  }
+  .bulle[aria-expanded="true"]::after{ transform:scaleX(1); }
+  .a-panneau .bulle, .a-panneau .bulle[aria-expanded="true"]{ color:var(--ink); }
+  @media (hover:hover) and (pointer:fine){
+    .bulle:hover::after{ transform:scaleX(1); }
+  }
+  /* Rendez-vous, en bouton. */
+  html .bulles .bulle[data-ouvre="rdv"]{
+    margin-left:.4rem; padding:.7rem 1.5rem; border-radius:999px;
+    background:var(--ink); color:#F6EDE2;
+    box-shadow:0 10px 24px -16px rgba(20,12,10,.8);
+    transition:background-color .25s var(--ease), transform .2s var(--ease);
+  }
+  html .bulles .bulle[data-ouvre="rdv"]::after{ display:none; }
+  @media (hover:hover) and (pointer:fine){
+    html .bulles .bulle[data-ouvre="rdv"]:hover{ background:#3A3430; transform:translateY(-1px); }
+  }
+  html .bulles .bulle[data-ouvre="rdv"][aria-expanded="true"]{ background:#924A31; }
+  /* Le logo de l'accueil ferait doublon avec celui de la barre. */
+  .scene .logo{ display:none; }
   body{ padding-top:var(--barre); padding-bottom:var(--pied); }
   .panneau{
     padding-top:calc(var(--barre) + clamp(1.5rem,5vh,3.5rem));

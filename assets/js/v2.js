@@ -89,7 +89,10 @@
     // l'ouverture se ferait depuis le milieu de l'écran et le geste
     // perdrait son lien avec ce qu'on vient de toucher.
     if (bulle) {
-      const r = bulle.querySelector('.bulle__rond').getBoundingClientRect();
+      // Sur ordinateur, la barre n'a plus de ronds (ce sont des liens
+      // texte) : le disque part alors du lien lui-même.
+      const rond = bulle.querySelector('.bulle__rond');
+      const r = (rond && rond.offsetWidth ? rond : bulle).getBoundingClientRect();
       p.style.setProperty('--x', `${r.left + r.width / 2}px`);
       p.style.setProperty('--y', `${r.top + r.height / 2}px`);
     }
@@ -207,6 +210,15 @@
         b.textContent = copie ? 'Numéro copié' : 'Numéro sélectionné';
       }
     });
+  });
+
+  // La marque de la barre d'ordinateur ramène à l'accueil : depuis une
+  // rubrique, elle la referme au lieu de recharger la page.
+  const marque = $('.entete__marque');
+  if (marque) marque.addEventListener('click', e => {
+    if (!ouvert) return;
+    e.preventDefault();
+    demandeFermeture();
   });
 
   // Un lien vers une autre rubrique — « Voir les massages » dans le
