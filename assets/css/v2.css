@@ -757,27 +757,42 @@ body::after{
   display:grid; gap:clamp(.55rem,2.4vw,.9rem);
   grid-template-columns:repeat(2,minmax(0,1fr));
 }
-@media (min-width:620px){ .soins{ grid-template-columns:repeat(4,minmax(0,1fr)); } }
+/* Deux colonnes sur téléphone — le deep tissus seul sur la dernière ligne,
+   à la même taille que les autres. Sur écran large, les cinq en ligne. */
+@media (min-width:620px){ .soins{ grid-template-columns:repeat(5,minmax(0,1fr)); } }
 
-/* .62, le format des cartes de la planche (330 × 530). */
+/* 9:16, le format des cartes dessinées par Marie (900 × 1600). L'image
+   remplit la carte ; le nom et « Voir » se posent en bas, en blanc.
+
+   `background` porte la teinte médiane de la carte : c'est ce qu'on voit
+   le temps que l'image arrive, au lieu d'un trou crème. */
 .soin__carte{
-  position:relative; display:flex; flex-direction:column; width:100%;
-  aspect-ratio:.62; padding:clamp(.75rem,3vw,1rem);
+  position:relative; isolation:isolate; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:flex-end; width:100%;
+  aspect-ratio:9/16; padding:clamp(.75rem,3vw,1rem);
   border-radius:16px;
-  background:var(--fond); color:var(--texte);
+  background:var(--fond); color:#FFF;
   box-shadow:0 14px 28px -20px rgba(42,35,32,.6);
   transition:transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
 }
-/* Le monogramme occupe le haut de la carte, comme sur la planche. */
-.soin__signe{
-  flex:1; min-height:0;
-  background:var(--signe-c);
-  -webkit-mask:var(--signe) center/contain no-repeat;
-  mask:var(--signe) center/contain no-repeat;
+.soin__img{
+  position:absolute; inset:0; z-index:-2;
+  width:100%; height:100%; object-fit:cover;
+}
+/* Le voile sous le texte. Le blanc tient sur le framboise et le brun, pas
+   sur les taches de lumière du sauge et du doré : un dégradé sombre, borné
+   au tiers bas de la carte, lui donne un fond sûr partout. Il reste sous
+   le monogramme, qui s'arrête à 58 % de la hauteur. */
+.soin__carte::after{
+  content:''; position:absolute; inset:auto 0 0 0; height:42%; z-index:-1;
+  background:linear-gradient(to top,
+    rgba(20,13,11,.62) 0%, rgba(20,13,11,.45) 45%, rgba(20,13,11,0) 100%);
+  pointer-events:none;
 }
 .soin__nom{
-  margin-top:.5rem; font-size:clamp(.88rem,3.4vw,1rem); font-weight:600;
+  font-size:clamp(.88rem,3.4vw,1rem); font-weight:600;
   letter-spacing:-.01em; line-height:1.2; text-align:left;
+  text-shadow:0 1px 8px rgba(20,13,11,.35);
 }
 /* Le seul mot qui dit que la carte s'ouvre. Sans lui, quatre aplats colorés
    ne se distinguent pas d'une illustration — c'est le reproche qu'on
@@ -786,7 +801,8 @@ body::after{
    .74rem tombait à 11,8 — mesuré. */
 .soin__voir{
   margin-top:.15rem; font-size:.76rem; font-weight:500; letter-spacing:.06em;
-  text-transform:uppercase; text-align:left; opacity:.72;
+  text-transform:uppercase; text-align:left;
+  color:rgba(255,255,255,.86);
 }
 @media (hover:hover) and (pointer:fine){
   .soin__carte:hover{
@@ -795,6 +811,14 @@ body::after{
   }
 }
 .soin__carte:active{ transform:translateY(0) scale(.975); }
+
+/* Le deep tissus, « bientôt ». À moitié grisé — on devine encore le
+   doré — et sans aucun des gestes d'une carte qu'on touche : ni
+   soulèvement au survol, ni enfoncement à l'appui. Ce n'est pas un bouton. */
+.soin--bientot .soin__carte{ box-shadow:none; }
+.soin--bientot .soin__img{ filter:grayscale(.7) brightness(1.04); opacity:.78; }
+.soin--bientot .soin__carte:hover,
+.soin--bientot .soin__carte:active{ transform:none; }
 
 /* --- La fiche d'un soin ---
    Elle remplace la planche dans le panneau plutôt que de s'ouvrir par
@@ -826,20 +850,16 @@ body::after{
   .fiche__retour:hover{ background:color-mix(in srgb, var(--accent) 8%, transparent); }
 }
 
-/* Le monogramme en grand, dans la couleur du soin : c'est ce qui relie la
-   fiche à la carte qu'on vient de toucher. */
+/* La carte du soin en bandeau, recadrée autour de son monogramme : c'est
+   ce qui relie la fiche à la carte qu'on vient de toucher. 16:9 et non
+   plus 2,4:1 — la lettre occupe 40 % de la hauteur de la carte, et un
+   bandeau plus allongé la coupait. */
 .fiche__blason{
-  margin-top:1.2rem; border-radius:20px;
+  margin-top:1.2rem; border-radius:20px; overflow:hidden;
   background:var(--fond);
-  aspect-ratio:2.4; display:grid; place-items:center;
-  padding:clamp(1.1rem,5vw,1.8rem);
+  aspect-ratio:16/9;
 }
-.fiche__signe{
-  width:100%; height:100%;
-  background:var(--signe-c);
-  -webkit-mask:var(--signe) center/contain no-repeat;
-  mask:var(--signe) center/contain no-repeat;
-}
+.fiche__img{ width:100%; height:100%; object-fit:cover; }
 .fiche__nom{
   margin-top:1.4rem; font-size:clamp(1.5rem,6vw,2rem); font-weight:600;
   letter-spacing:-.025em; line-height:1.1;
@@ -890,20 +910,22 @@ body::after{
   .fiche{ animation:none; }
 }
 
-/* Relevé sur la planche de référence par tools-cartes.py.
-   `--signe-c` est la couleur du monogramme, `--texte` la même teinte
-   poussée jusqu'à 4,5:1 — le petit texte l'exige, pas la grande forme.
+/* Les cartes dessinées par Marie, et leur teinte.
 
-   Le Madéro fait exception : Marie a remplacé son orange par le Pantone
-   17-1230 Mocha Mousse, qui n'est donc pas sur la planche. Relancer
-   tools-cartes.py rendrait l'orange — c'est ici que la teinte fait foi
-   pour ce soin, et `--texte` comme `--marque` en ont été redéduits par les
-   mêmes fonctions. */
-.soin--kobido     { --fond:#7E3D49; --signe-c:#F8E2AF; --texte:#F8E2AF; --marque:#978A6B; --signe:url(../img/soins/kobido.svg); }
-.soin--relaxant   { --fond:#A9AE9D; --signe-c:#707550; --texte:#3F422D; --marque:#707550; --signe:url(../img/soins/relaxant.svg); }
-.soin--deep-tissus{ --fond:#FAE1AB; --signe-c:#D59C40; --texte:#825F27; --marque:#B38336; --signe:url(../img/soins/deep-tissus.svg); }
-.soin--madero     { --fond:#D15929; --signe-c:#FDF5E8; --texte:#141413; --marque:#8E8982; --signe:url(../img/soins/madero.svg); }
-.soin--drainage   { --fond:#E39E99; --signe-c:#BF585A; --texte:#6B3132; --marque:#BF585A; --signe:url(../img/soins/drainage.svg); }
+   `--fond` est la **médiane** de chaque texture, relevée sur les fonds sans
+   lettre qu'elle a fournis : la couleur d'ensemble qu'on perçoit, pas celle
+   d'une tache de lumière. Elle sert d'attente pendant le chargement, et
+   teinte le « i » de chaque ligne du tableau.
+
+   Ces valeurs remplacent celles de l'ancienne planche : les couleurs ont
+   changé avec les nouvelles cartes (le kobido est passé du bordeaux au
+   framboise, le drainage du rose au brun rosé). Les monogrammes vectoriels
+   de `img/soins/` ne servent plus au site. */
+.soin--kobido     { --fond:#6B0D24; --carte:url(../img/cartes/kobido.webp); }
+.soin--relaxant   { --fond:#909A80; --carte:url(../img/cartes/relaxant.webp); }
+.soin--madero     { --fond:#C85327; --carte:url(../img/cartes/madero.webp); }
+.soin--drainage   { --fond:#8F5442; --carte:url(../img/cartes/drainage.webp); }
+.soin--deep-tissus{ --fond:#A27529; --carte:url(../img/cartes/deep-tissus.webp); }
 
 /* --- Le tableau des tarifs ---
    Sous la grille, une seule fois. On lit des prix **côte à côte** : les
@@ -911,8 +933,8 @@ body::after{
    chiffre en changeant d'écran pour en comparer deux.
 
    Chaque ligne porte la classe de son soin (`.soin--kobido`…), donc ses
-   variables de couleur : le monogramme du tableau vient du même masque que
-   celui de la carte, et la palette n'a qu'une seule source. */
+   variables : la vignette du tableau est la carte même de la planche, et
+   l'identité visuelle n'a qu'une seule source. */
 /* Le titre d'une section, dans un bandeau à la teinte de sa rubrique.
 
    Les sections s'enchaînaient sans rien pour les séparer : « Mon parcours »
@@ -956,9 +978,6 @@ body::after{
   text-align:left; font-weight:600; color:var(--ink);
   white-space:nowrap;
 }
-/* Le monogramme de la carte, en petit. `--marque` est la même teinte poussée
-   jusqu'à 3:1 sur le socle du site : hors de sa carte, elle n'a plus le fond
-   coloré qui la faisait ressortir. */
 /* Le monogramme du soin, sur sa carte — en miniature.
 
    Il était posé nu, à 17 px, dans une teinte grisée tirée de la carte
@@ -970,16 +989,16 @@ body::after{
    ses deux couleurs : l'aplat en fond, le monogramme dedans. Le nom du soin
    est juste à côté, donc la vignette ne porte aucune information à elle
    seule : c'est un repère, pas un pictogramme à déchiffrer. */
+/* La carte elle-même, zoomée sur sa lettre. Réduite entière à 26 px, la
+   lettre n'en ferait plus que 10 : on agrandit l'image de 158 % et on vise
+   le centre du monogramme, relevé à 50 % de la largeur et 45 % de la
+   hauteur sur les cinq cartes. 41 % est la position CSS qui aligne ce
+   point sur le milieu de la vignette. Même fichier que la planche : il est
+   déjà en cache quand on ouvre la fiche tarifs. */
 .t-signe{
   flex:none; width:26px; height:34px; margin-right:.6rem;
-  border-radius:5px; background:var(--fond);
-  display:inline-grid; place-items:center;
-}
-.t-signe::before{
-  content:''; width:64%; height:64%;
-  background:var(--signe-c);
-  -webkit-mask:var(--signe) center/contain no-repeat;
-          mask:var(--signe) center/contain no-repeat;
+  border-radius:5px;
+  background:var(--carte) 50% 41% / 158% auto no-repeat, var(--fond);
 }
 /* Le « i » qui ouvre la description du soin. Il porte la teinte de son
    soin en fond très dilué — assez pour qu'on le rattache à la ligne, assez

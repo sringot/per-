@@ -45,7 +45,9 @@ def inline_illus(html):
     # par format, oublier le second laissait l'image mobile introuvable.
     # `data-src` autant que `src` : les photos du panneau « Moi » n'ont
     # d'adresse que là, et l'aperçu doit quand même les embarquer.
-    motif = r'(?:data-src|src|srcset)="(assets/img/[\w./-]+)"'
+    # `data-bandeau` de même : l'image du haut de la fiche d'un soin n'est
+    # nommée que sur sa carte.
+    motif = r'(?:data-src|data-bandeau|src|srcset)="(assets/img/[\w./-]+)"'
 
     # Les commentaires sont mis de côté pendant le balayage. Un commentaire
     # qui montre le balisage à écrire plus tard y cite des fichiers qui

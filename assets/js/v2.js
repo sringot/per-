@@ -269,8 +269,15 @@
     if (!ligne) return false;
     const lDesc = $(`tr.t-desc.soin--${cle}`, panneauSoins);
 
-    // La classe du soin porte sa couleur, son monogramme et son encre.
+    // La classe du soin porte sa couleur, visible le temps que le bandeau
+    // arrive ; le bandeau est la carte même, recadrée autour de sa lettre.
     laFiche.className = 'fiche soin--' + cle;
+    // Son adresse est écrite sur la carte (`data-bandeau`) plutôt que
+    // fabriquée ici : le balisage dit quels fichiers le site emploie, et
+    // l'outil d'aperçu, qui les embarque, les trouve.
+    const img = $('.fiche__img', laFiche);
+    const carte = $(`button.soin__carte[data-soin="${cle}"]`);
+    if (img && carte && carte.dataset.bandeau) img.src = carte.dataset.bandeau;
 
     const mot  = $('.t-soin__mot', ligne);
     const quoi = $('.t-soin__quoi', ligne);
@@ -351,7 +358,9 @@
     feuilleSoins.hidden = false;
   }
 
-  $$('.soin__carte').forEach(carte => {
+  // `button` : la carte « bientôt » porte la même classe mais n'est pas un
+  // bouton, et ne doit rien ouvrir.
+  $$('button.soin__carte').forEach(carte => {
     carte.addEventListener('click', () => montreVue(carte.dataset.soin, true));
   });
   const boutonTarifs = $('.soins__tarifs');

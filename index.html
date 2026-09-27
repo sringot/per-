@@ -297,41 +297,61 @@
       sa façon de prendre soin de vous.
     </p>
 
-    <!-- Les cartes de la planche de Marie. Chacune ne porte que son
-         monogramme et son nom : c'est une couverture, pas une fiche. Le
-         détail et le prix sont derrière, et `data-soin` dit quelle ligne du
-         tableau les contient — aucun prix n'est écrit deux fois.
+    <!-- Les cartes dessinées par Marie : une texture, un monogramme, rien
+         d'autre. Le nom est ajouté par-dessus, en blanc, pour qu'il reste
+         du texte — lisible par un lecteur d'écran, traduisible, net à toute
+         taille. Le détail et le prix sont derrière, et `data-soin` dit quelle
+         ligne du tableau les contient : aucun prix n'est écrit deux fois.
 
-         Le deep tissus n'a pas de carte tant qu'il n'est pas au tableau :
-         la planche se déduit des soins proposés, elle ne les devance pas. -->
+         `alt` vide : l'image ne dit rien que le nom écrit dessus ne dise
+         déjà. `data-src` et non `src` : le panneau est fermé mais occupe la
+         fenêtre, et le navigateur aurait chargé les cinq cartes à l'arrivée
+         sur l'accueil. Le script les pose à l'ouverture de Massages. -->
     <ul class="soins">
       <li class="soin soin--kobido">
-        <button class="soin__carte" type="button" data-soin="kobido" aria-label="Kobido — voir le détail et le prix">
-          <span class="soin__signe" aria-hidden="true"></span>
+        <button class="soin__carte" type="button" data-soin="kobido" data-bandeau="assets/img/cartes/kobido-bandeau.webp" aria-label="Kobido — voir le détail et le prix">
+          <img class="soin__img" data-src="assets/img/cartes/kobido.webp" width="600" height="1067"
+               alt="" decoding="async">
           <span class="soin__nom">Kobido</span>
           <span class="soin__voir" aria-hidden="true">Voir</span>
         </button>
       </li>
       <li class="soin soin--relaxant">
-        <button class="soin__carte" type="button" data-soin="relaxant" aria-label="Relaxant — voir le détail et le prix">
-          <span class="soin__signe" aria-hidden="true"></span>
+        <button class="soin__carte" type="button" data-soin="relaxant" data-bandeau="assets/img/cartes/relaxant-bandeau.webp" aria-label="Relaxant — voir le détail et le prix">
+          <img class="soin__img" data-src="assets/img/cartes/relaxant.webp" width="600" height="1067"
+               alt="" decoding="async">
           <span class="soin__nom">Relaxant</span>
           <span class="soin__voir" aria-hidden="true">Voir</span>
         </button>
       </li>
       <li class="soin soin--madero">
-        <button class="soin__carte" type="button" data-soin="madero" aria-label="Madéro — voir le détail et le prix">
-          <span class="soin__signe" aria-hidden="true"></span>
+        <button class="soin__carte" type="button" data-soin="madero" data-bandeau="assets/img/cartes/madero-bandeau.webp" aria-label="Madéro — voir le détail et le prix">
+          <img class="soin__img" data-src="assets/img/cartes/madero.webp" width="600" height="1067"
+               alt="" decoding="async">
           <span class="soin__nom">Madéro</span>
           <span class="soin__voir" aria-hidden="true">Voir</span>
         </button>
       </li>
       <li class="soin soin--drainage">
-        <button class="soin__carte" type="button" data-soin="drainage" aria-label="Drainage — voir le détail et le prix">
-          <span class="soin__signe" aria-hidden="true"></span>
+        <button class="soin__carte" type="button" data-soin="drainage" data-bandeau="assets/img/cartes/drainage-bandeau.webp" aria-label="Drainage — voir le détail et le prix">
+          <img class="soin__img" data-src="assets/img/cartes/drainage.webp" width="600" height="1067"
+               alt="" decoding="async">
           <span class="soin__nom">Drainage</span>
           <span class="soin__voir" aria-hidden="true">Voir</span>
         </button>
+      </li>
+      <!-- Le deep tissus arrive début 2027 : sa carte est là, grisée, mais
+           ce n'est pas un bouton. Il n'a ni prix ni fiche à ouvrir, et un
+           élément qui a l'air cliquable sans l'être est pire qu'une absence.
+           Le jour où Marie le propose : lui donner la forme des quatre
+           autres, et remettre sa ligne dans le tableau des tarifs. -->
+      <li class="soin soin--deep-tissus soin--bientot">
+        <div class="soin__carte">
+          <img class="soin__img" data-src="assets/img/cartes/deep-tissus.webp" width="600" height="1067"
+               alt="" decoding="async">
+          <span class="soin__nom">Deep tissus</span>
+          <span class="soin__voir">Bientôt</span>
+        </div>
       </li>
     </ul>
 
@@ -466,8 +486,11 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
       <span>Tous les massages</span>
     </button>
+    <!-- La carte du soin, recadrée en bandeau autour du monogramme. Son
+         adresse est posée par le script, au moment où l'on touche la carte :
+         une seule fiche sert les quatre soins. -->
     <div class="fiche__blason">
-      <span class="fiche__signe" aria-hidden="true"></span>
+      <img class="fiche__img" alt="" width="900" height="506" decoding="async">
     </div>
     <h3 class="fiche__nom" id="fiche-nom"></h3>
     <p class="fiche__sous"></p>
