@@ -357,7 +357,7 @@ body::after{
 :root{ --fondu-bas:var(--card); }
 :root[data-panneau="moi"]     { --fondu-bas:#E7AD86; }
 :root[data-panneau="lieu"]    { --fondu-bas:#B9C3A4; }
-:root[data-panneau="massages"]{ --fondu-bas:var(--card); }
+:root[data-panneau="massages"]{ --fondu-bas:#E5D6C4; }
 :root[data-panneau="avis"]    { --fondu-bas:#7E5412; }
 :root[data-panneau="rdv"]     { --fondu-bas:#4A0212; }
 
@@ -613,6 +613,15 @@ body::after{
    le sur-titre, l'étiquette et le lien Instagram restaient au brun de la
    rubrique, trop clair sur cette texture. La feuille en hérite en dernier. */
 .panneau--clair .feuille{ --ink:#1E1814; --ink-soft:#1E1814; --teinte-t:#1E1814; --teinte-h:#1E1814; }
+
+/* Massages : la texture crème de Marie, fixée comme sur Moi et Le lieu, mais
+   sans la classe `panneau--clair` — la planche garde sa grille de cartes et
+   la fiche ses encadrés. Seul le texte passe au noir : la teinte jaune du
+   titre tombait sous 3:1 sur les ombres de la texture. Les cartes et les
+   encadrés de prix gardent leurs propres couleurs. */
+#massages{ background:#E5D6C4; }
+#massages::after{ display:none; }
+#massages .feuille, #massages .fiche{ --ink:#1E1814; --ink-soft:#1E1814; --teinte-t:#1E1814; --teinte-h:#1E1814; }
 .panneau--clair .bloc{
   background:none; box-shadow:none; padding:0; border-radius:0;
 }

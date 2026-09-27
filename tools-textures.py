@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prépare les textures de fond des pages Moi, Le lieu, Avis et Rendez-vous.
+"""Prépare les textures de fond des pages Moi, Le lieu, Massages, Avis et Rendez-vous.
 
 Les sources sont dans `sources/pages/`, une par page, créées par Marie au
 format téléphone (774 × 2033). `orange.png` n'a pas de page : l'orange reste
@@ -21,7 +21,7 @@ ROOT    = pathlib.Path(__file__).parent
 SOURCES = ROOT / 'sources/pages'
 DEST    = ROOT / 'assets/img/pages'
 
-PAGES = ['moi', 'lieu', 'avis', 'rdv']
+PAGES = ['moi', 'lieu', 'massages', 'avis', 'rdv']
 QUALITE = 80
 
 
