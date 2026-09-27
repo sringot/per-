@@ -1059,6 +1059,31 @@ body::after{
   .fiche{ animation:none; }
 }
 
+/* --- La carte qui devient fiche ---
+   La carte touchée et le bandeau de la fiche portent le même nom le temps
+   du passage (voir v2.js), et le navigateur anime l'un vers l'autre. Les
+   deux n'ont pas le même format — 9:16 pour la carte, 16:9 pour le
+   bandeau — donc les deux captures sont recadrées comme les images
+   d'origine (`object-fit:cover`) dans un cadre qui garde ses coins
+   arrondis : on voit la carte s'élargir, pas s'écraser. */
+::view-transition-group(carte-soin){
+  animation-duration:.48s;
+  animation-timing-function:cubic-bezier(.22,.68,.28,1);
+  border-radius:18px; overflow:hidden;
+}
+::view-transition-old(carte-soin),
+::view-transition-new(carte-soin){
+  width:100%; height:100%; object-fit:cover;
+  animation-duration:.48s;
+}
+/* Le reste de la page se fond, plus vite que la carte ne voyage : on doit
+   voir la carte arriver sur une page déjà en place. */
+::view-transition-old(root),
+::view-transition-new(root){ animation-duration:.26s; }
+/* Quand la transition fait le travail, la fiche n'a plus besoin de sa
+   propre entrée : les deux se seraient additionnées. */
+.vt .fiche{ animation:none; }
+
 /* Les cartes dessinées par Marie, et leur teinte.
 
    `--fond` est la **médiane** de chaque texture, relevée sur les fonds sans

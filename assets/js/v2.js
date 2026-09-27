@@ -318,17 +318,67 @@
     if (el) requestAnimationFrame(() => el.focus({ preventScroll: true }));
   };
 
+  /* ---------- Le passage d'une vue à l'autre ----------
+     La carte touchée s'agrandit jusqu'à devenir le bandeau de la fiche ;
+     au retour, le bandeau redevient la carte, à sa place dans la planche.
+     C'est l'API View Transitions qui anime : la carte de départ et le
+     bandeau d'arrivée portent le même nom le temps du passage, et le
+     navigateur fait glisser l'un vers l'autre pendant que le reste de la
+     page se fond.
+
+     Les deux ne portent jamais le nom en même temps : un nom en double dans
+     un même état annule la transition. On nomme le départ, on change la
+     page, on retire le nom au départ et on le pose à l'arrivée.
+
+     Sans l'API, ou quand le système demande moins d'animations, le passage
+     est immédiat et la fiche garde sa courte entrée (`fiche-entre`). */
+  const transitions = typeof document.startViewTransition === 'function'
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (transitions) racine.classList.add('vt');
+  const NOM_CARTE = 'carte-soin';
+  const attend = ms => new Promise(r => setTimeout(r, ms));
+
+  function passe(depart, arrivee, changer, image) {
+    if (!transitions) { changer(); return; }
+    if (depart) depart.style.viewTransitionName = NOM_CARTE;
+    const t = document.startViewTransition(async () => {
+      if (depart) depart.style.viewTransitionName = '';
+      changer();
+      if (arrivee) arrivee.style.viewTransitionName = NOM_CARTE;
+      // Le bandeau doit être décodé avant la capture de l'état d'arrivée :
+      // sans cette attente, la carte grandissait vers un cadre vide et
+      // l'image surgissait après coup. Plafonnée, pour ne jamais figer la
+      // page sur une connexion lente.
+      if (image) await Promise.race([image.decode().catch(() => {}), attend(350)]);
+    });
+    t.finished.finally(() => { if (arrivee) arrivee.style.viewTransitionName = ''; });
+  }
+
+  // Où l'on en était dans la planche. Le retour y ramène : c'est là que la
+  // carte attend le bandeau qui redescend — et c'est là qu'on l'avait
+  // laissée. Remonter en tête de planche faisait perdre sa place.
+  let defilePlanche = 0;
+
   function montreVue(cle, pousse) {
     if (cle !== 'tarifs' && !remplitFiche(cle)) return;
-    const cible = cle === 'tarifs' ? vueTarifs : laFiche;
-    feuilleSoins.hidden = true;
-    laFiche.hidden    = cle === 'tarifs';
-    vueTarifs.hidden  = cle !== 'tarifs';
+    const tarifs = cle === 'tarifs';
+    const cible  = tarifs ? vueTarifs : laFiche;
+    const carte  = tarifs ? null : $(`button.soin__carte[data-soin="${cle}"]`);
+    if (vueCle === null) defilePlanche = panneauSoins.scrollTop;
     vueCle = cle;
-    panneauSoins.scrollTop = 0;
-    // Le focus part sur le retour : c'est la sortie de la vue, comme la
-    // croix est celle du panneau.
-    focusApres($('.fiche__retour', cible));
+    passe(
+      feuilleSoins.hidden ? null : carte,
+      tarifs ? null : $('.fiche__blason', laFiche),
+      () => {
+        feuilleSoins.hidden = true;
+        laFiche.hidden    = tarifs;
+        vueTarifs.hidden  = !tarifs;
+        panneauSoins.scrollTop = 0;
+        // Le focus part sur le retour : c'est la sortie de la vue, comme la
+        // croix est celle du panneau.
+        focusApres($('.fiche__retour', cible));
+      },
+      tarifs ? null : $('.fiche__img', laFiche));
     if (pousse) {
       memorise({ panneau: 'massages', vue: cle }, '#massages');
       vuePoussee = true;
@@ -342,14 +392,19 @@
     if (retour && vuePoussee) { vuePoussee = false; history.back(); return; }
     const cle = vueCle;
     vueCle = null;
-    laFiche.hidden = true;
-    vueTarifs.hidden = true;
-    feuilleSoins.hidden = false;
-    panneauSoins.scrollTop = 0;
-    // Le focus retourne sur ce qui a ouvert la vue, pas en tête de page.
-    focusApres(cle === 'tarifs'
-      ? $('.soins__tarifs')
-      : $(`.soin__carte[data-soin="${cle}"]`));
+    const tarifs = cle === 'tarifs';
+    const carte  = tarifs ? null : $(`button.soin__carte[data-soin="${cle}"]`);
+    passe(
+      tarifs || laFiche.hidden ? null : $('.fiche__blason', laFiche),
+      carte,
+      () => {
+        laFiche.hidden = true;
+        vueTarifs.hidden = true;
+        feuilleSoins.hidden = false;
+        panneauSoins.scrollTop = defilePlanche;
+        // Le focus retourne sur ce qui a ouvert la vue, pas en tête de page.
+        focusApres(tarifs ? $('.soins__tarifs') : carte);
+      });
   }
 
   // Remise à zéro silencieuse, appelée quand le panneau se referme : ni
