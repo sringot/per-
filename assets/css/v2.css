@@ -348,18 +348,33 @@ body::after{
 .bulles::before{
   content:''; position:absolute; inset:-1.4rem 0 calc(-1 * var(--pied)) 0; z-index:-1;
   pointer-events:none;
-  background:linear-gradient(to top,
-    var(--fondu-bas) 0%, var(--fondu-bas) 42%,
-    color-mix(in srgb, var(--fondu-bas) 0%, transparent) 100%);
+  /* Le fondu est fait de la texture de la page, pas d'un aplat : un aplat
+     de sa couleur moyenne dessinait une bande lisse sur un fond granuleux.
+     L'image est calée comme `.texture-fond img` — plein écran, `cover`,
+     centrée — et le bas de ce pseudo-élément est le bas de l'écran, d'où la
+     position : le surplus de l'image, moitié en haut, moitié en bas. Le
+     masque fait le fondu. `--fondu-voile`, un voile de la couleur de la
+     page, aplanit les taches de lumière sous les noms sans effacer le grain. Les cinq textures ont le même rapport, 0,38. */
+  --vh:100vh;
+  --fondu-voile:color-mix(in srgb, var(--fondu-bas) var(--fondu-p, 45%), transparent);
+  --img-l:max(100vw, var(--vh) * .38);
+  --img-h:max(var(--vh), 100vw / .38);
+  background:
+    linear-gradient(var(--fondu-voile), var(--fondu-voile)),
+    var(--fondu-img, none) center bottom calc((var(--vh) - var(--img-h)) / 2) / var(--img-l) var(--img-h) no-repeat,
+    var(--fondu-bas);
+  -webkit-mask-image:linear-gradient(to top, #000 42%, transparent);
+          mask-image:linear-gradient(to top, #000 42%, transparent);
   opacity:0; transition:opacity .3s var(--ease);
 }
+@supports (height:100dvh){ .bulles::before{ --vh:100dvh; } }
 .a-panneau .bulles::before{ opacity:1; }
 :root{ --fondu-bas:var(--card); }
-:root[data-panneau="moi"]     { --fondu-bas:#E7AD86; }
-:root[data-panneau="lieu"]    { --fondu-bas:#B9C3A4; }
-:root[data-panneau="massages"]{ --fondu-bas:#E5D6C4; }
-:root[data-panneau="avis"]    { --fondu-bas:#7E5412; }
-:root[data-panneau="rdv"]     { --fondu-bas:#4A0212; }
+:root[data-panneau="moi"]     { --fondu-bas:#E7AD86; --fondu-p:62%; --fondu-img:url(../img/pages/moi.webp); }
+:root[data-panneau="lieu"]    { --fondu-bas:#B9C3A4; --fondu-p:62%; --fondu-img:url(../img/pages/lieu.webp); }
+:root[data-panneau="massages"]{ --fondu-bas:#E5D6C4; --fondu-img:url(../img/pages/massages.webp); }
+:root[data-panneau="avis"]    { --fondu-bas:#7E5412; --fondu-p:100%; /* la texture sombre d’Avis a des reflets dorés trop vifs sous des noms clairs : aplat, en attendant sa nouvelle texture */ --fondu-img:url(../img/pages/avis.webp); }
+:root[data-panneau="rdv"]     { --fondu-bas:#4A0212; --fondu-img:url(../img/pages/rdv.webp); }
 
 /* Les noms au-dessus d'un panneau. Le gris courant tombait à 3,3:1 sur le
    fondu pêche de Moi : un brun plus profond, 6:1 sur la plus claire des
