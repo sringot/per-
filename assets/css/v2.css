@@ -52,8 +52,6 @@
      seule ligne qui change. */
   --police-titre: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  /* Le socle de la barre de bulles. */
-  --socle: var(--card);
 
   --r-lg:       26px;
 
@@ -338,27 +336,12 @@ body::after{
   gap:clamp(.3rem,2.6vw,1.5rem);
   padding:.5rem var(--pad) calc(.5rem + env(safe-area-inset-bottom, 0px));
 }
-/* Le socle de la barre. Il n'apparaît qu'au-dessus d'un panneau : sur
-   l'accueil, les bulles se posent sur le voile de la photo et n'ont besoin
-   de rien. Le dégradé va jusqu'à la transparence vers le haut pour que le
-   contenu qui défile s'y dissolve au lieu de buter sur une arête. */
-.bulles::before{
-  /* Le socle descend jusqu'au bas de la fenêtre, sous le pied de page :
-     au-dessus d'un panneau, la bande qui reste entre la barre et le bord
-     laisserait sinon voir le contenu défiler. */
-  /* Un aplat franc, bordé d'un filet, et plus un dégradé. Le dégradé
-     remontait d'une trentaine de pixels au-dessus de la barre : sur du texte
-     crème il passait inaperçu, sur les cartes de soins il faisait une brume
-     blanche qui délavait leur bas — le « Voir » s'y effaçait. Le contenu
-     s'arrête maintenant net au bord de la barre, comme sous une barre
-     d'onglets. */
-  content:''; position:absolute; inset:0 0 calc(-1 * var(--pied)) 0; z-index:-1;
-  background:var(--socle);
-  border-top:1px solid var(--line);
-  opacity:0; transition:opacity .3s var(--ease);
-  pointer-events:none;
-}
-.a-panneau .bulles::before{ opacity:1; }
+/* Pas de socle : au-dessus d'un panneau, les bulles flottent sur la page,
+   comme sur l'accueil. La bande crème qui les portait faisait un bloc blanc
+   de plus en bas de chaque page — d'abord un dégradé, puis un aplat bordé
+   d'un filet — et on lui a préféré les ronds seuls. Le contenu s'arrête
+   quand même au-dessus d'eux en fin de défilement : les panneaux réservent
+   leur hauteur (`--barre`). */
 
 .bulle{
   display:flex; flex-direction:column; align-items:center; gap:.22rem;
@@ -414,9 +397,10 @@ body::after{
 }
 .bulle:active .bulle__rond{ box-shadow:var(--bulle-creux); transform:translateY(0) scale(.96); }
 
-/* La bulle du rendez-vous est la seule pleine : c'est l'action. */
-.bulle--phare .bulle__rond{ background:var(--accent); color:var(--white); }
-.bulle--phare{ color:var(--ink); }
+/* La bulle du rendez-vous n'est plus pleine : elle prend la forme des quatre
+   autres, un disque crème et son icône à la couleur de sa rubrique — le
+   bordeaux du logo. Le disque plein la faisait passer pour un bouton d'une
+   autre famille. */
 
 /* La rubrique ouverte. Le disque se creuse au lieu de saillir — le même
    relief que l'appui, tenu : on lit « celle-ci est enfoncée » sans avoir à
@@ -425,9 +409,6 @@ body::after{
 .bulle[aria-expanded="true"] .bulle__rond{
   box-shadow:var(--bulle-creux);
   background-color:color-mix(in srgb, var(--teinte,var(--accent)) 16%, var(--card));
-}
-.bulle--phare[aria-expanded="true"] .bulle__rond{
-  background:var(--accent-d); box-shadow:var(--bulle-creux);
 }
 
 /* Entrée en cascade, une bulle après l'autre. */
@@ -1772,14 +1753,6 @@ body::after{
   html:not(.a-panneau) .bulle{ color:#E4D8CC; }
   html:not(.a-panneau) .bulle__rond{
     background:rgba(253,246,238,.93); box-shadow:none;
-  }
-  html:not(.a-panneau) .bulle--phare{ color:#FDF6EE; }
-  /* Plus d'anneau crème autour du rendez-vous, ni au survol : c'était un
-     halo blanc de plus sur la photo. Le disque bordeaux se distingue des
-     quatre autres par sa couleur même — c'est le seul qui ne soit pas
-     crème — et son icône reste blanche. */
-  html:not(.a-panneau) .bulle--phare .bulle__rond{
-    background:var(--accent); box-shadow:none;
   }
   @media (hover:hover) and (pointer:fine){
     html:not(.a-panneau) .bulle:hover{ color:#FDF6EE; }
