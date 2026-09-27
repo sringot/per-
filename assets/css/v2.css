@@ -336,6 +336,17 @@ body::after{
   gap:clamp(.3rem,2.6vw,1.5rem);
   padding:.5rem var(--pad) calc(.5rem + env(safe-area-inset-bottom, 0px));
 }
+/* Pendant la lecture d'une rubrique, la barre glisse hors de l'écran (le
+   script pose `.barre-cachee`, voir « La barre qui s'efface »). Elle
+   emporte son fondu, qui est à l'intérieur. Transform et opacité
+   seulement : fluides, et sans rien déplacer autour. */
+.bulles{
+  transition:transform .34s var(--ease-out), opacity .26s var(--ease);
+}
+.barre-cachee .bulles{
+  transform:translateY(calc(100% + var(--pied) + 16px));
+  opacity:0; pointer-events:none;
+}
 /* Un fondu léger sous les bulles, au-dessus d'un panneau — comme le voile de
    l'accueil. Pas de bande : une bande crème faisait un bloc blanc de plus en
    bas de chaque page. Pas rien non plus : sans fond, le contenu passait sous
@@ -1828,6 +1839,8 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
     border-bottom:1px solid color-mix(in srgb, var(--ink) 10%, transparent);
   }
   .bulles::before{ display:none; }
+  /* En haut, elle s'efface vers le haut. */
+  .barre-cachee .bulles{ transform:translateY(calc(-100% - 16px)); }
   .entete__marque{
     display:flex; align-items:center; gap:.75rem; margin-right:auto;
     font-size:1.35rem; font-weight:600; letter-spacing:-.035em; color:var(--ink);

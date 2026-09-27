@@ -141,6 +141,7 @@
     replie(p);
 
     racine.classList.add('a-panneau');
+    montreBarre();
     // La rubrique ouverte, pour la feuille de style : la barre de bulles est
     // hors du panneau, et son fondu doit prendre la couleur de la page qu'elle
     // recouvre — ses noms aussi, clairs sur une page sombre.
@@ -167,6 +168,7 @@
     ouvert = null;
     declencheur = null;
     racine.classList.remove('a-panneau');
+    montreBarre();
     delete racine.dataset.panneau;
     // Le panneau des massages se rouvre sur sa planche, jamais sur la fiche
     // qu'on y avait laissée : on retrouve la rubrique telle qu'on l'a
@@ -189,6 +191,54 @@
       fermer();
     }
   }
+
+  /* ---------- La barre qui s'efface pendant la lecture ----------
+     Dans une rubrique, la barre s'efface quand on défile vers le bas pour
+     lire, et revient au moindre défilement vers le haut — le geste
+     d'Instagram ou de Safari. Elle revient aussi en haut et en bas de
+     page, quand on approche du bord où elle se trouve, et dès qu'on
+     l'atteint au clavier. Elle ne se cache jamais sur une page qui ne
+     défile pas : il faut pouvoir la retrouver sans chercher. Les petits
+     mouvements du doigt (moins de 12 px) ne comptent pas. */
+  const SEUIL = 12;
+  let barreCachee = false;
+  function montreBarre() {
+    if (!barreCachee) return;
+    barreCachee = false;
+    racine.classList.remove('barre-cachee');
+  }
+  function cacheBarre() {
+    if (barreCachee) return;
+    barreCachee = true;
+    racine.classList.add('barre-cachee');
+  }
+  panneaux.forEach(p => {
+    let dernier = 0, cumul = 0;
+    p.addEventListener('scroll', () => {
+      if (p !== ouvert) return;
+      const y = p.scrollTop;
+      const reste = p.scrollHeight - p.clientHeight - y;
+      const dy = y - dernier;
+      dernier = y;
+      if (p.scrollHeight - p.clientHeight < 120 || y < 60 || reste < 40) {
+        cumul = 0; montreBarre(); return;
+      }
+      // On cumule dans un même sens ; un changement de sens repart de zéro.
+      cumul = (Math.sign(dy) === Math.sign(cumul)) ? cumul + dy : dy;
+      if (cumul > SEUIL) cacheBarre();
+      else if (cumul < -SEUIL) montreBarre();
+    }, { passive: true });
+  });
+  $('.bulles') && $('.bulles').addEventListener('focusin', montreBarre);
+  // Approcher le bord de la barre la fait revenir : la souris en haut de
+  // l'écran sur ordinateur, un appui en bas de l'écran sur téléphone.
+  document.addEventListener('mousemove', e => {
+    if (barreCachee && e.clientY < 90 && matchMedia('(min-width:1024px)').matches) montreBarre();
+  }, { passive: true });
+  document.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    if (barreCachee && t && t.clientY > innerHeight - 90 && !matchMedia('(min-width:1024px)').matches) montreBarre();
+  }, { passive: true });
 
   /* ---------- Branchements ---------- */
 
