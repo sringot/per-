@@ -617,9 +617,24 @@ body::after{
   content:''; position:absolute; inset:0; background:var(--eclaircir, transparent);
 }
 #lieu{ --texture-base:#AFBA96; --eclaircir:rgba(236,240,228,.17); }
-/* La phrase du lieu, entre la photo et les détails, reste centrée : c'est
-   une respiration, pas une information. */
-.panneau--clair .piece__mot{ font-size:1.12rem; }
+/* La phrase du lieu devient une citation, alignée à gauche comme tout le
+   reste de la page : centrée, au-dessus d'une liste alignée à gauche, elle
+   faisait un morceau à part. */
+.panneau--clair .piece__mot{
+  margin-top:0; text-align:left; max-width:24ch;
+  font-size:clamp(1.3rem, 5.4vw, 1.6rem); font-weight:500;
+  line-height:1.35; letter-spacing:-.015em;
+}
+/* « Sur place » : même forme que « Mon parcours ». */
+.panneau--clair .infos__titre{ margin-top:2.8rem; margin-bottom:.4rem; }
+.infos{ display:grid; }
+.infos li{
+  display:flex; flex-direction:column; gap:.1rem; padding:.85rem 0;
+  border-top:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+.infos li:last-child{ border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.infos b{ font-weight:600; font-size:1rem; color:var(--ink); }
+.infos span{ font-size:.9rem; color:var(--ink-soft); }
 
 /* La hiérarchie passe par la taille et la graisse, plus par des gris : un
    seul noir, lisible partout sur la texture. */
