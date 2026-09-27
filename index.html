@@ -368,32 +368,41 @@
       </li>
     </ul>
 
-
-
-    <!-- Le tableau n'est plus sous les cartes : la planche se lit d'un
-         coup d'œil, et vingt lignes de prix dessous la noyaient. Il a sa
-         propre vue, ouverte par ce bouton — c'est la question qui vient
-         après « lequel ? », pas en même temps. -->
-    <button class="soins__tarifs" type="button" aria-controls="tarifs-vue"
-            aria-label="Voir la fiche tarifs : tous les prix et les forfaits">
-      <span>Voir la fiche tarifs</span>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
-    </button>
-
+    <!-- Les deux offres, sous les cartes. Elles étaient dans la fiche
+         tarifs, retirée : elles ne portent pas sur un soin mais sur
+         plusieurs, ou sur une première fois, et n'ont donc pas leur place
+         dans une fiche de soin. Mêmes valeurs que l'affiche de la pièce. -->
+    <ul class="offres">
+      <!-- « 3 séances de chaque », comme Marie l'a précisé. Le prix de
+           référence n'est pas écrit : `data-lots` donne la composition du
+           pack (3 séances à 70 €, 3 à 80 €) et le script en tire le « au lieu
+           de ». Un tarif qui change met le gain à jour tout seul. -->
+      <li class="offre" data-prix="390" data-lots="70:3,80:3">
+        <b>Pack combiné — 390&nbsp;€</b>
+        <span>3&nbsp;séances de madérothérapie et 3&nbsp;de drainage lymphatique</span>
+        <em class="offre__avant"></em>
+      </li>
+      <!-- La remise portait « sur votre massage inédit » : personne ne sait
+           ce qu'est un massage inédit. Le libellé dit maintenant la condition,
+           et le « i » ouvre les termes exacts — mêmes gestes que le « i » des
+           soins, juste au-dessus. -->
+      <li class="offre offre--phare">
+        <b>−10&nbsp;€</b>
+        <span>sur un massage que vous n'avez jamais essayé</span>
+        <button class="t-info" type="button" aria-expanded="false"
+                aria-controls="d-remise" aria-label="Conditions de la remise"><span aria-hidden="true">i</span></button>
+        <span class="offre__cond" id="d-remise" hidden>Hors premier
+          rendez-vous&nbsp;: si l'envie vous prend d'essayer un massage que
+          vous n'avez encore jamais fait chez moi, il est à −10&nbsp;€.</span>
+      </li>
+    </ul>
   </div>
 
-
-  <!-- La fiche tarifs : tous les prix, les forfaits et les deux offres,
-       dans une vue à elle. Les fiches de soins y puisent leurs chiffres,
-       et c'est ici qu'on les compare — la raison même d'un tableau.
-       Elle reste dans le panneau, comme la fiche d'un soin.
-       `aria-hidden` est inutile : `hidden` suffit et sort la vue du
-       parcours clavier comme des lecteurs d'écran. -->
-  <section class="fiche fiche--tarifs" id="tarifs-vue" aria-labelledby="tarifs-t" hidden>
-    <button class="fiche__retour" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
-      <span>Tous les massages</span>
-    </button>
+  <!-- Le tableau des tarifs n'est plus affiché : la fiche tarifs a été
+       retirée de la page Massages. Il reste dans la page, caché, parce qu'il
+       est la **source** des prix : chaque fiche de soin recopie les siens de
+       sa ligne. Un tarif se change donc toujours ici, et nulle part ailleurs. -->
+  <div class="tarifs-source" hidden>
       <!-- Le bloc des tarifs est un enfant à part de la feuille : celle-ci
            borne ses paragraphes à une longueur de ligne lisible, et le tableau
            s'y retrouvait à l'étroit — « 1 h 30 » et « 90 € » passaient à la
@@ -459,36 +468,8 @@
       </div>
       <p class="tableau__note">Un forfait s'applique au soin choisi&nbsp;; le tarif indiqué couvre l'ensemble des séances.</p>
 
-      <!-- Les deux offres qui ne tiennent pas dans le tableau : elles ne
-           portent pas sur un soin mais sur plusieurs, ou sur une première
-           fois. Mêmes valeurs que l'affiche de la pièce de massage. -->
-      <ul class="offres">
-        <!-- « 3 séances de chaque », comme Marie l'a précisé. Le prix de
-             référence n'est pas écrit : `data-lots` donne la composition du
-             pack (3 séances à 70 €, 3 à 80 €) et le script en tire le « au lieu
-             de ». Un tarif qui change met le gain à jour tout seul. -->
-        <li class="offre" data-prix="390" data-lots="70:3,80:3">
-          <b>Pack combiné — 390&nbsp;€</b>
-          <span>3&nbsp;séances de madérothérapie et 3&nbsp;de drainage lymphatique</span>
-          <em class="offre__avant"></em>
-        </li>
-        <!-- La remise portait « sur votre massage inédit » : personne ne sait
-             ce qu'est un massage inédit. Le libellé dit maintenant la condition,
-             et le « i » ouvre les termes exacts — mêmes gestes que le « i » des
-             soins, juste au-dessus. -->
-        <li class="offre offre--phare">
-          <b>−10&nbsp;€</b>
-          <span>sur un massage que vous n'avez jamais essayé</span>
-          <button class="t-info" type="button" aria-expanded="false"
-                  aria-controls="d-remise" aria-label="Conditions de la remise"><span aria-hidden="true">i</span></button>
-          <span class="offre__cond" id="d-remise" hidden>Hors premier
-            rendez-vous&nbsp;: si l'envie vous prend d'essayer un massage que
-            vous n'avez encore jamais fait chez moi, il est à −10&nbsp;€.</span>
-        </li>
-      </ul>
       </div><!-- /.tarifs -->
-    <button class="fiche__autres" type="button">Voir les autres massages</button>
-  </section>
+  </div>
   <!-- La fiche d'un soin. Une seule pour les quatre : son contenu est
        recopié depuis la ligne du tableau au moment où l'on touche une carte
        — le nom, le sous-titre, la description et les prix n'existent donc

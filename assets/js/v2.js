@@ -259,9 +259,9 @@
   const panneauSoins = $('#massages');
   const feuilleSoins = $('.feuille--soins');
   const laFiche      = $('#fiche');
-  const vueTarifs    = $('#tarifs-vue');
-  // Trois vues dans le panneau : la planche (null), la fiche tarifs
-  // ('tarifs'), ou la fiche d'un soin (sa clé).
+  // Deux vues dans le panneau : la planche (null) ou la fiche d'un soin
+  // (sa clé). La fiche tarifs a été retirée ; son tableau reste, caché,
+  // comme source des prix.
   let vueCle     = null;
   let vuePoussee = false;  // une entrée d'historique lui a-t-elle été posée ?
 
@@ -364,25 +364,22 @@
   let defilePlanche = 0;
 
   function montreVue(cle, pousse) {
-    if (cle !== 'tarifs' && !remplitFiche(cle)) return;
-    const tarifs = cle === 'tarifs';
-    const cible  = tarifs ? vueTarifs : laFiche;
-    const carte  = tarifs ? null : $(`button.soin__carte[data-soin="${cle}"]`);
+    if (!remplitFiche(cle)) return;
+    const carte = $(`button.soin__carte[data-soin="${cle}"]`);
     if (vueCle === null) defilePlanche = panneauSoins.scrollTop;
     vueCle = cle;
     passe(
       feuilleSoins.hidden ? null : carte,
-      tarifs ? null : $('.fiche__blason', laFiche),
+      $('.fiche__blason', laFiche),
       () => {
         feuilleSoins.hidden = true;
-        laFiche.hidden    = tarifs;
-        vueTarifs.hidden  = !tarifs;
+        laFiche.hidden = false;
         panneauSoins.scrollTop = 0;
         // Le focus part sur le retour : c'est la sortie de la vue, comme la
         // croix est celle du panneau.
-        focusApres($('.fiche__retour', cible));
+        focusApres($('.fiche__retour', laFiche));
       },
-      tarifs ? null : $('.fiche__img', laFiche));
+      $('.fiche__img', laFiche));
     if (pousse) {
       memorise({ panneau: 'massages', vue: cle }, '#massages');
       vuePoussee = true;
@@ -396,18 +393,16 @@
     if (retour && vuePoussee) { vuePoussee = false; history.back(); return; }
     const cle = vueCle;
     vueCle = null;
-    const tarifs = cle === 'tarifs';
-    const carte  = tarifs ? null : $(`button.soin__carte[data-soin="${cle}"]`);
+    const carte = $(`button.soin__carte[data-soin="${cle}"]`);
     passe(
-      tarifs || laFiche.hidden ? null : $('.fiche__blason', laFiche),
+      laFiche.hidden ? null : $('.fiche__blason', laFiche),
       carte,
       () => {
         laFiche.hidden = true;
-        vueTarifs.hidden = true;
         feuilleSoins.hidden = false;
         panneauSoins.scrollTop = defilePlanche;
         // Le focus retourne sur ce qui a ouvert la vue, pas en tête de page.
-        focusApres(tarifs ? $('.soins__tarifs') : carte);
+        focusApres(carte);
       });
   }
 
@@ -418,7 +413,6 @@
     vueCle = null;
     vuePoussee = false;
     laFiche.hidden = true;
-    vueTarifs.hidden = true;
     feuilleSoins.hidden = false;
   }
 
@@ -427,8 +421,6 @@
   $$('button.soin__carte').forEach(carte => {
     carte.addEventListener('click', () => montreVue(carte.dataset.soin, true));
   });
-  const boutonTarifs = $('.soins__tarifs');
-  if (boutonTarifs) boutonTarifs.addEventListener('click', () => montreVue('tarifs', true));
   // Les deux vues portent les mêmes sorties : la flèche du haut et le
   // bouton du bas ramènent l'une comme l'autre à la planche.
   $$('.fiche__retour, .fiche__autres').forEach(b => {
