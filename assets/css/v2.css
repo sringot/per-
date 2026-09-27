@@ -346,7 +346,13 @@ body::after{
    régulier — puis s'efface vers le haut, derrière les ronds. Sa couleur est
    celle de la page ouverte (`--fondu-bas`, posée par rubrique). */
 .bulles::before{
-  content:''; position:absolute; inset:-1.4rem 0 calc(-1 * var(--pied)) 0; z-index:-1;
+  /* Il ne sert qu'aux noms : une bande de leur hauteur, calée sur le bas
+     de la barre, plus 20 px de fondu. Au-dessus, rien — le flou qui montait
+     derrière les ronds voilait les cartes pour rien. 15 px : la ligne d'un
+     nom au plus grand (.78rem × 1,15). */
+  content:''; position:absolute; z-index:-1;
+  inset:auto 0 calc(-1 * var(--pied)) 0;
+  height:calc(var(--pied) + .5rem + env(safe-area-inset-bottom, 0px) + 15px + 20px);
   pointer-events:none;
   /* Le fondu est fait de la texture de la page, pas d'un aplat : un aplat
      de sa couleur moyenne dessinait une bande lisse sur un fond granuleux.
@@ -363,8 +369,8 @@ body::after{
     linear-gradient(var(--fondu-voile), var(--fondu-voile)),
     var(--fondu-img, none) center bottom calc((var(--vh) - var(--img-h)) / 2) / var(--img-l) var(--img-h) no-repeat,
     var(--fondu-bas);
-  -webkit-mask-image:linear-gradient(to top, #000 42%, transparent);
-          mask-image:linear-gradient(to top, #000 42%, transparent);
+  -webkit-mask-image:linear-gradient(transparent, #000 20px);
+          mask-image:linear-gradient(transparent, #000 20px);
   opacity:0; transition:opacity .3s var(--ease);
 }
 @supports (height:100dvh){ .bulles::before{ --vh:100dvh; } }
@@ -1574,6 +1580,9 @@ body::after{
   .bulle__nom{ font-size:clamp(.7rem,1.9vw,.76rem); }
 }
 @media (max-height:520px){
+  /* Le nom est à côté du rond, au milieu de la barre : la bande du fondu
+     reprend toute sa hauteur. */
+  .bulles::before{ inset:-1rem 0 calc(-1 * var(--pied)) 0; height:auto; }
   /* Téléphone couché : la colonne devient courte et large, et la photo
      étirée dessus donnerait un bandeau. Elle reprend ici son rapport
      d'arche et se cale en bas, contre le nom. */
