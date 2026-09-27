@@ -523,14 +523,25 @@ body::after{
   visibility:visible;
   transition:clip-path .38s var(--ease-out), visibility 0s;
 }
+/* La rubrique qu'on quitte pour une autre : elle reste entière, telle
+   quelle, **sous** celle qui s'ouvre, et le script la retire une fois
+   l'ouverture finie. Sans elle, elle se refermait pendant que l'autre
+   arrivait, et l'accueil passait un instant entre les deux. */
+.panneau.sortant{
+  clip-path:none; visibility:visible; z-index:49; transition:none;
+}
+.panneau.sortant::before{ opacity:0; transition:none; }
+.panneau.sortant .feuille{ opacity:1; transform:none; transition:none; }
 
 /* Le disque s'ouvre **dans la couleur de sa rubrique**, puis la couleur
    se retire : on voit passer une teinte sans jamais lire une page
    colorée. C'est le geste qui porte la couleur, pas le décor. */
 .panneau::before{
   content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:var(--teinte,var(--accent));
-  opacity:.16;
+  /* Le terracotta du site pour toutes les rubriques : chacune avait sa
+     teinte (vert, jaune…), restes de l'ancienne palette. */
+  background:#924A31;
+  opacity:.12;
   transition:opacity .6s var(--ease) .16s;
 }
 .panneau.ouvert::before{ opacity:0; }
@@ -1861,6 +1872,28 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   /* La croix, juste sous la barre, à droite : à sa hauteur, elle passait
      sous la barre et son fondu, qui sont au-dessus des panneaux. */
   .fermer{ top:calc(var(--barre) + .6rem); right:clamp(1.2rem,3vw,3rem); width:48px; height:48px; }
+
+  /* --- L'ouverture, sur ordinateur ---
+     Un fondu, et la page monte d'un souffle (`.feuille`, plus haut). Le
+     disque partait du lien, dans la barre d'en-tête, qui passe au-dessus
+     des panneaux : le premier tiers de l'animation se jouait caché sous
+     elle, puis la page surgissait d'un coup. Seule l'opacité est animée,
+     pas de `transform` sur le panneau : il ferait de lui le repère des
+     éléments fixes qu'il contient (le fond, la croix). */
+  .panneau{
+    clip-path:none; opacity:0;
+    transition:opacity .3s var(--ease), visibility 0s linear .3s;
+  }
+  .panneau.ouvert{
+    clip-path:none; opacity:1;
+    transition:opacity .3s var(--ease), visibility 0s;
+  }
+  .panneau.sortant{ opacity:1; }
+  /* D'une rubrique à l'autre, le fond est le même : il ne bouge pas, et
+     seul le contenu change — l'ancien s'efface vite, le nouveau monte.
+     En fondu enchaîné, les deux textes se superposaient à mi-course. */
+  .panneau.sortant .feuille{ opacity:0; transform:none; transition:opacity .14s var(--ease); }
+  .feuille{ transform:translateY(16px); transition:opacity .3s var(--ease), transform .45s var(--ease-out); }
 
   /* --- Les pages : une feuille pleine largeur, en deux colonnes --- */
   .panneau{ padding-inline:clamp(2rem,5vw,6rem); }

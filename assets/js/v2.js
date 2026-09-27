@@ -71,6 +71,20 @@
 
   /* ---------- Ouvrir / fermer ---------- */
 
+  // La durée de l'ouverture, en ms : celle de la transition `.ouvert` du
+  // CSS, plus une marge. Le panneau qu'on quitte reste dessous jusque-là.
+  const DUREE_OUVERTURE = 480;
+
+  // Les images d'un panneau n'ont d'adresse qu'à son ouverture — ou avant,
+  // une fois l'accueil affiché (voir plus bas) : ouvertes au clic seulement,
+  // elles arrivaient après l'animation et la photo apparaissait d'un coup.
+  function chargeImages(p) {
+    $$('img[data-src]', p).forEach(img => {
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    });
+  }
+
   function ouvrir(id, bulle) {
     const p = document.getElementById(id);
     // Seuls les panneaux s'ouvrent. Sans ce filtre, une adresse pointant
@@ -83,7 +97,21 @@
     // « retour » aurait rejoué la visite rubrique par rubrique au lieu de
     // ramener à l'accueil. On remplace l'entrée courante.
     const changement = ouvert !== null;
-    if (ouvert) fermer();
+    // D'une rubrique à l'autre, l'ancienne reste affichée **sous** la
+    // nouvelle le temps que celle-ci s'ouvre (`.sortant`). Refermée d'abord,
+    // elle se retirait pendant que l'autre arrivait, et l'accueil passait
+    // un instant entre les deux. Le retrait suit par une minuterie, pas par
+    // `transitionend` : un évènement qui ne vient pas (onglet en arrière-
+    // plan, mouvement réduit) aurait laissé le panneau affiché pour de bon.
+    p.classList.remove('sortant');
+    clearTimeout(p._sortie);
+    if (ouvert) {
+      const ancien = ouvert;
+      ancien.classList.add('sortant');
+      fermer();
+      clearTimeout(ancien._sortie);
+      ancien._sortie = setTimeout(() => ancien.classList.remove('sortant'), DUREE_OUVERTURE);
+    }
 
     // Le disque part du centre de la bulle : sans ces coordonnées,
     // l'ouverture se ferait depuis le milieu de l'écran et le geste
@@ -97,12 +125,7 @@
       p.style.setProperty('--y', `${r.top + r.height / 2}px`);
     }
 
-    // Les images du panneau n'ont d'adresse qu'à partir d'ici : tant qu'il
-    // est fermé, elles ne coûtent rien.
-    $$('img[data-src]', p).forEach(img => {
-      img.src = img.dataset.src;
-      img.removeAttribute('data-src');
-    });
+    chargeImages(p);
 
     p.removeAttribute('inert');
     p.classList.add('ouvert');
@@ -168,6 +191,15 @@
   }
 
   /* ---------- Branchements ---------- */
+
+  // Une fois l'accueil chargé et le navigateur au repos, les images des
+  // rubriques se chargent en fond : quand on en ouvre une, elles sont là.
+  // Quelques centaines de kilo-octets, après tout le reste.
+  window.addEventListener('load', () => {
+    const tout = () => panneaux.forEach(chargeImages);
+    if ('requestIdleCallback' in window) requestIdleCallback(tout, { timeout: 3000 });
+    else setTimeout(tout, 1500);
+  });
 
   bulles.forEach(b => {
     b.addEventListener('click', () => ouvrir(b.dataset.ouvre, b));
