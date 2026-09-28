@@ -29,7 +29,7 @@ import sys
 # Le nom de domaine acheté chez OVH, sans « https:// » ni « www » — par
 # exemple 'mariemassage.fr'. Tant qu'il vaut None, le site est publié à
 # l'adresse GitHub par défaut.
-DOMAINE = None
+DOMAINE = 'marieemassage.com'
 
 ROOT   = pathlib.Path(__file__).parent
 SORTIE = ROOT / '_site'
