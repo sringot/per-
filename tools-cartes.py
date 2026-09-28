@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Extrait les cinq cartes de soins de la planche de référence.
 
-`reference-cartes-soins.png` est une planche fournie par Marie :
+`sources/cartes/reference-cartes-soins.png` est une planche fournie par Marie :
 cinq cartes, chacune avec sa couleur de fond, un monogramme dessiné dans
 l'esprit du logo (deux têtes rondes posées sur une lettre pleine), et le
 nom du soin en bas.
@@ -27,7 +27,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 ROOT      = pathlib.Path(__file__).parent
-SOURCE    = ROOT / 'reference-cartes-soins.png'
+SOURCE    = ROOT / 'sources/cartes/reference-cartes-soins.png'
 DEST      = ROOT / 'assets/img/soins'
 
 # Le monogramme occupe la partie haute de la carte ; le nom du soin, écrit

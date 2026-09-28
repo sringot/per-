@@ -11,7 +11,7 @@ de l'affiche : on le recadre au disque et on le détoure.
 Le logo n'est jamais redessiné — ce script ne fait que recadrer, détourer
 et redimensionner le fichier d'origine.
 
-    python3 tools-logo-officiel.py "new logo.png"
+    python3 tools-logo-officiel.py sources/logo/logo-source.png
 """
 import pathlib
 import subprocess

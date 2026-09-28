@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Prépare le fond commun des pages et les touches de couleur de chacune.
 
-Les sources sont dans `sources/pages/`, créées par Marie au format
-téléphone (774 × 2033). `orange.png` n'a pas de page : l'orange reste la
-couleur de la seule carte Madéro.
+La source est `sources/pages/fond.png`, le blanc cassé créé par Marie au
+format téléphone. Les textures pleine couleur qu'elle avait faites pour
+chaque page ne servent plus ; elles restent dans l'historique du dépôt.
 
 **Le fond.** Toutes les pages ont le même : le blanc cassé de Marie
 (`fond.png`), adouci. La texture d'origine a de grandes taches de

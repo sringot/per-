@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Prépare les photos du site aux formats attendus par les gabarits.
 
-Trois photographies alimentent le site : une scène de massage, qui tient
-l'accueil, un portrait posé, qui reste dans « Moi », et la pièce de
-massage, qui tient « Le lieu ». Chaque emplacement a son propre rapport
+Les photographies d'origine sont dans `sources/photos/` : deux scènes de
+massage (l'accueil et la page « Moi »), la pièce de massage (« Le lieu »)
+et un portrait posé, gardé pour la vignette de « Moi » — retirée pour
+l'instant, mais qu'on peut remettre. Chaque emplacement a son propre rapport
 d'aspect. Recadrer à la main donnerait des fichiers
 qu'on ne saurait plus régénérer : le cadrage est décrit ici, en fractions
 de l'image d'origine, et le script produit les fichiers.
@@ -18,8 +19,9 @@ Marie et ses mains.
 import pathlib
 from PIL import Image
 
-ROOT = pathlib.Path(__file__).parent
-DEST = ROOT / 'assets/img'
+ROOT    = pathlib.Path(__file__).parent
+SOURCES = ROOT / 'sources/photos'
+DEST    = ROOT / 'assets/img'
 
 # Le cliché de Marie en séance qui reste propre au panneau « Moi ». Il
 # arrive déjà cadré en 3/4, celui du gabarit : rien à recadrer, seulement à
@@ -70,9 +72,6 @@ FORMATS = [
     # monte, et lui seul.
     ('seance-source-1.png', 'marie-hero-plein.webp', 390 / 844, 669, 1.00,
      SEANCE_X, .5),
-    # Portrait posé, gardé pour le panneau « Moi » et les partages.
-    ('marie-source.png', 'marie-portrait.webp',  4 / 5,     800, 0.92,
-     VISAGE_X, VISAGE_Y),
     # Le même portrait au rapport des vignettes de « Moi ». Depuis que la
     # scène de massage tient l'accueil, elle ne peut plus servir aussi de
     # vignette : c'est le visage de Marie qui prend sa place, et il lui faut
@@ -96,12 +95,6 @@ FORMATS = [
     # personne ne demande à voir la pièce.
     ('cabinet-source.png', 'cabinet.webp',        1 / 1,    1080, 1.00,
      .5, .42),
-    # Découpe large du portrait. Cadrée large mais pas en bandeau : c'est
-    # le conteneur qui découpe la bande finale, via `object-position`. Une
-    # découpe 16/9 ne pouvait pas contenir la tête entière, la photo
-    # d'origine étant verticale.
-    ('marie-source.png', 'marie-hero-large.webp', 4 / 3,    930, 1.00,
-     VISAGE_X, 0.385),
 ]
 
 
@@ -126,7 +119,7 @@ def main():
     ouvertes = {}
     for source, nom, rapport, largeur, part, vx, vy in FORMATS:
         if source not in ouvertes:
-            chemin_src = DEST / source
+            chemin_src = SOURCES / source
             if not chemin_src.exists():
                 raise SystemExit(f'photo introuvable : {chemin_src}')
             ouvertes[source] = Image.open(chemin_src).convert('RGB')
@@ -140,7 +133,7 @@ def main():
               f'{chemin.stat().st_size / 1024:.1f} Ko')
 
     for source, nom in SEANCES:
-        src = DEST / source
+        src = SOURCES / source
         if not src.exists():
             raise SystemExit(f'photo introuvable : {src}')
         im = Image.open(src).convert('RGB')
