@@ -13,7 +13,7 @@ Treatwell et par SMS.
 
 | Fichier | Rôle |
 | ------- | ---- |
-| `index.html` | Tout le site : l'accueil et ses cinq rubriques (Moi, Le lieu, Massages, Avis, Rendez-vous), en panneaux qui s'ouvrent sur place. |
+| `index.html` | Tout le site : l'accueil et ses cinq rubriques (À propos, Le lieu, Massages, Avis, Rendez-vous), en panneaux qui s'ouvrent sur place. |
 | `mentions-legales.html` | Les mentions légales. |
 | `404.html` | La page « introuvable », autonome (styles inclus). |
 | `assets/css/v2.css` | Toute la mise en forme — téléphone d'abord, puis « Grand écran » au-delà de 1024 px. |

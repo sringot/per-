@@ -468,9 +468,12 @@ body::after{
    pas du texte qu'on lit — les systèmes eux-mêmes tiennent leurs barres
    d'onglets entre 10 et 12 px — et à 12 px « Rendez-vous » se coupait en
    deux lignes, ce qui déséquilibrait la rangée entière. */
+/* Sur une ligne, quitte à déborder un peu de la bulle : sur un téléphone de
+   360 px ou moins, « Rendez-vous » se coupait encore au tiret. Ses voisins
+   (« Avis », le bord de l'écran) laissent la place de ces quelques pixels. */
 .bulle__nom{
   font-size:clamp(.7rem,2vw,.78rem); font-weight:500;
-  letter-spacing:.02em; line-height:1.15; text-align:center;
+  letter-spacing:.02em; line-height:1.15; text-align:center; white-space:nowrap;
 }
 /* Réservé aux vrais pointeurs : sur iOS, `:hover` reste collé au dernier
    élément touché et la bulle restait soulevée après l'appui. */
