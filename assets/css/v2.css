@@ -696,7 +696,7 @@ body::after{
 }
 .infos li:last-child{ border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
 .infos b{ font-weight:600; font-size:1rem; color:var(--ink); }
-.infos span{ font-size:.9rem; color:var(--ink-soft); }
+.infos li > span{ font-size:.9rem; color:var(--ink-soft); }
 
 /* La hiérarchie passe par la taille et la graisse, plus par des gris : un
    seul noir, lisible partout sur la texture. */
