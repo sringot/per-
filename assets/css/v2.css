@@ -1162,10 +1162,19 @@ body::after{
   width:100%; height:100%; object-fit:cover;
   animation-duration:.48s;
 }
-/* Le reste de la page se fond, plus vite que la carte ne voyage : on doit
-   voir la carte arriver sur une page déjà en place. */
-::view-transition-old(root),
-::view-transition-new(root){ animation-duration:.26s; }
+/* Le reste de la page passe en deux temps, plus vite que la carte ne
+   voyage : l'ancienne s'efface d'abord, la nouvelle vient ensuite. Un
+   fondu croisé montrait les deux textes l'un sur l'autre pendant un
+   instant — la liste et la fiche mêlées. On doit voir la carte arriver
+   sur une page déjà en place. */
+@keyframes vt-sort{ to{ opacity:0 } }
+@keyframes vt-entre{ from{ opacity:0 } }
+::view-transition-old(root){ animation:vt-sort .12s var(--ease) both; }
+::view-transition-new(root){ animation:vt-entre .22s var(--ease) .1s both; }
+/* Entre les deux, le fond de page — le même, calé comme `.texture-fond` :
+   sans lui, l'instant où les deux pages sont transparentes laissait passer
+   un éclair clair. */
+::view-transition{ background:url(../img/pages/fond.webp) center / cover no-repeat; }
 /* Quand la transition fait le travail, la fiche n'a plus besoin de sa
    propre entrée : les deux se seraient additionnées. */
 .vt .fiche{ animation:none; }
@@ -1280,10 +1289,20 @@ body::after{
   height:.55rem; border-radius:999px; overflow:hidden;
   background:color-mix(in srgb, currentColor 24%, transparent);
 }
+/* Les barres se remplissent à l'ouverture de la page, une fois le panneau
+   en place : réglées au chargement, elles s'animaient quand personne ne
+   les voyait. Pas de transition au retour à zéro — à la fermeture, elles
+   se vident d'un coup, cachées. `--part` est posée par le script. */
 .resume__barre > span{
   display:block; height:100%; width:0; border-radius:inherit; background:currentColor;
-  transition:width .6s var(--ease-out) .2s;
 }
+.panneau.ouvert .resume__barre > span{
+  width:var(--part, 0%);
+  transition:width .8s var(--ease-out) .35s;
+}
+/* Quittée pour une autre rubrique, la page reste un instant sous la
+   nouvelle : ses barres restent pleines, sinon on les voyait se vider. */
+.panneau.sortant .resume__barre > span{ width:var(--part, 0%); }
 .resume__note{ display:flex; flex-direction:column; align-items:center; gap:.2rem; }
 .resume__note b{ font-size:clamp(3rem,13vw,3.8rem); font-weight:500; line-height:.95; letter-spacing:-.04em; }
 .resume__etoiles{ font-size:1rem; letter-spacing:.1em; }
@@ -1721,6 +1740,9 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
     border-bottom:1px solid color-mix(in srgb, var(--ink) 10%, transparent);
   }
   .bulles::before{ display:none; }
+  /* Passage carte → fiche : l'en-tête est à part, il ne clignote pas
+     avec la page qui s'efface et revient. */
+  .bulles{ view-transition-name:entete; }
   /* En haut, elle s'efface vers le haut. */
   .barre-cachee .bulles{ transform:translateY(calc(-100% - 16px)); }
   /* La fiche garde l'en-tête : en haut, il ne gêne pas la lecture. */
@@ -1837,17 +1859,22 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
   }
   .fiche__nom{ font-size:clamp(2.2rem,3.4vw,3.4rem); margin-top:0; }
 
-  /* Avis : le titre à gauche, l'attente à droite. */
+  /* Avis : le titre et la provenance à gauche, le résumé à droite, qui
+     tient toute la hauteur de l'en-tête. Le résumé commençait sous le
+     sur-titre et la provenance passait dessous : la colonne de droite
+     descendait deux fois plus bas que le titre, et laissait un grand vide
+     à gauche avant les avis. */
   #avis .bloc{
     display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
     column-gap:clamp(3rem,6vw,7rem); align-items:start;
   }
-  #avis .bloc > *{ grid-column:2; }
-  #avis .bloc > .sur-titre, #avis .bloc > h2{ grid-column:1; }
+  #avis .bloc > *{ grid-column:1; }
   #avis .bloc > .sur-titre{ grid-row:1; }
-  #avis .bloc > h2{ grid-row:2 / span 2; }
-  #avis .bloc > .resume{ grid-row:2 / span 2; align-self:start; margin-top:.4rem; }
-  #avis .bloc > .avis__source{ grid-row:4; }
+  #avis .bloc > h2{ grid-row:2; }
+  #avis .bloc > .avis__source{ grid-row:3; max-width:26rem; }
+  /* Descendu d'un cran : en haut de colonne, sur les écrans étroits, la
+     croix de fermeture mordait son coin. */
+  #avis .bloc > .resume{ grid-column:2; grid-row:1 / span 3; align-self:start; margin-top:2.2rem; }
   /* Les avis, sur deux colonnes : chacun reste entier dans la sienne. */
   .avis{ display:block; columns:2; column-gap:clamp(3rem,6vw,7rem); }
   .avis li:last-child{ border-bottom:0; }

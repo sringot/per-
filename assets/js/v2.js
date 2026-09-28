@@ -616,7 +616,7 @@
     for (let e = 1; e <= 5; e++) {
       const nb = notes.filter(x => Math.round(x) === e).length;
       const barre = $(`[data-etoiles="${e}"]`);
-      if (barre) barre.style.width = `${(nb / notes.length) * 100}%`;
+      if (barre) barre.style.setProperty('--part', `${(nb / notes.length) * 100}%`);
       const compte = $(`[data-compte="${e}"]`);
       if (compte) compte.textContent = nb;
     }
