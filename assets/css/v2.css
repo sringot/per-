@@ -739,7 +739,9 @@ body::after{
   object-fit:cover; background:var(--card);
   box-shadow:0 8px 18px -10px rgba(40,20,10,.6);
 }
-.parcours--a-venir .parcours__carte{ filter:grayscale(.7); opacity:.8; }
+/* « À venir » : grisée, mais opaque — transparente, elle laissait voir le
+   filet du parcours qui passe derrière. */
+.parcours--a-venir .parcours__carte{ filter:grayscale(.7) brightness(1.06); }
 .parcours__texte{ display:flex; flex-direction:column; gap:.1rem; }
 .panneau--clair .parcours b{ font-size:1.05rem; }
 .panneau--clair .parcours__ecole{ margin-top:1.8rem; }
