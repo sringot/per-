@@ -1825,6 +1825,11 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
    relance venait toucher les bulles en bas de course. */
 .panneau{ padding-bottom:calc(var(--barre) + var(--pied) + .9rem); }
 
+/* Donnée d'exemple dans les mentions légales, à remplacer avant la mise
+   en ligne : encadrée, pour qu'on ne la laisse pas passer à la relecture.
+   `tools-publier.py` refuse de publier tant qu'il en reste une. */
+.fictif{ outline:1.5px dashed #924A31; outline-offset:2px; border-radius:3px; }
+
 /* ---------- 7 bis. GRAND ÉCRAN ----------
    Sur ordinateur, le site gardait ses mesures de téléphone : une colonne
    de 34 rem au milieu d'un écran de 1440 px, du texte à 16 px, des photos

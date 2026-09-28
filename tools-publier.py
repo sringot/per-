@@ -7,6 +7,10 @@ cela n'a à être en ligne. Ce script ne copie que ce que les pages utilisent
 vraiment — il le trouve en lisant les pages, les feuilles de style et le
 script, pas dans une liste tenue à la main qui finirait par mentir.
 
+Il refuse de publier tant qu'une donnée d'exemple (`class="fictif"`)
+reste dans une page : les mentions légales en portent tant que Marie n'a
+pas donné les siennes.
+
 Il fait aussi trois retouches, sur la copie seulement :
 
 - l'adresse du site est écrite partout où elle apparaît (partage, Google,
@@ -90,6 +94,15 @@ def main():
     if SORTIE.exists():
         shutil.rmtree(SORTIE)
     SORTIE.mkdir()
+
+    # Des données d'exemple (`class="fictif"`, dans les mentions légales)
+    # ne doivent jamais partir en ligne : on s'arrête avant de publier.
+    fictives = {pg: (ROOT / pg).read_text(encoding='utf-8').count('class="fictif"')
+                for pg in PAGES if (ROOT / pg).suffix == '.html'}
+    fictives = {pg: n for pg, n in fictives.items() if n}
+    if fictives:
+        sys.exit('publication refusée — données fictives à remplacer : '
+                 + ', '.join(f'{pg} ({n})' for pg, n in fictives.items()))
 
     besoins = references()
     manquants = sorted(str(b.relative_to(ROOT)) for b in besoins if not b.exists())
