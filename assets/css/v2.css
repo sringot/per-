@@ -543,8 +543,7 @@ body::after{
      défilable, le panneau se laissait tirer de côté de 31 px sur
      téléphone — la même cause que sur l'accueil, où une couche de
      recadrage règle le problème. Ici c'est le panneau lui-même qui
-     recadre : rien n'a jamais à défiler latéralement dedans, et le
-     tableau des tarifs garde son propre défilement. */
+     recadre : rien n'a jamais à défiler latéralement dedans. */
   overflow:hidden auto; overscroll-behavior:contain;
   padding:clamp(3.6rem,9vh,5.5rem) var(--pad) clamp(2rem,6vh,4rem);
   /* Fermé : réduit au disque de la bulle d'origine, donc invisible.
@@ -796,10 +795,6 @@ body::after{
 }
 .panneau.ouvert .feuille{ opacity:1; transform:none; }
 
-/* La description d'un soin arrive de la même façon, en plus bref encore :
-   c'est une réponse à un appui, pas une entrée en scène. */
-@keyframes parait{ from{ opacity:0; transform:translateY(6px); } }
-.tableau tr.t-desc:not([hidden]){ animation:parait .22s var(--ease-out); }
 
 /* Deux classes, et non `.sur-titre` seul : le sur-titre est un `<p>` dans
    `.feuille`, et `.feuille p` (une classe + un élément) l'emportait sur
@@ -967,8 +962,8 @@ body::after{
    `tools-cartes.py`, jamais saisis à la main. Le monogramme est posé en
    **masque** : le fichier SVG ne porte aucune couleur, c'est le CSS qui
    la donne — une teinte se change donc ici, sans retoucher les dessins. */
-/* Le tableau n'est pas de la prose : il lui faut la largeur de ses colonnes,
-   pas une longueur de ligne de lecture. Le reste du panneau garde la sienne. */
+/* La grille des cartes prend plus de largeur qu'une ligne de lecture ; le
+   texte au-dessus garde la sienne. */
 .feuille--soins{ max-width:min(46rem,100%); }
 .feuille--soins > :not(.soins){ max-width:34rem; }
 
@@ -1177,8 +1172,7 @@ body::after{
 
    `--fond` est la **médiane** de chaque texture, relevée sur les fonds sans
    lettre qu'elle a fournis : la couleur d'ensemble qu'on perçoit, pas celle
-   d'une tache de lumière. Elle sert d'attente pendant le chargement, et
-   teinte le « i » de chaque ligne du tableau.
+   d'une tache de lumière. Elle sert d'attente pendant le chargement.
 
    Ces valeurs remplacent celles de l'ancienne planche : les couleurs ont
    changé avec les nouvelles cartes (le kobido est passé du bordeaux au
@@ -1211,14 +1205,6 @@ body::after{
    dont les lettres ne se lisaient pas en petit texte. */
 .soin--deep-tissus{ --fond:#A27529; --carte:url(../img/cartes/deep-tissus.webp); }
 
-/* --- Le tableau des tarifs ---
-   Sous la grille, une seule fois. On lit des prix **côte à côte** : les
-   porter au dos des cartes obligeait à en retourner cinq, et à retenir un
-   chiffre en changeant d'écran pour en comparer deux.
-
-   Chaque ligne porte la classe de son soin (`.soin--kobido`…), donc ses
-   variables : la vignette du tableau est la carte même de la planche, et
-   l'identité visuelle n'a qu'une seule source. */
 /* Le titre d'une section, dans un bandeau à la teinte de sa rubrique.
 
    Les sections s'enchaînaient sans rien pour les séparer : « Mon parcours »
@@ -1242,113 +1228,13 @@ body::after{
   border-left:4px solid var(--teinte,var(--accent));
   border-top-left-radius:4px; border-bottom-left-radius:4px;
 }
-.tableau table{
-  width:100%; border-collapse:collapse;
-  font-size:clamp(.8rem,2.6vw,.9rem);
-  /* Les chiffres s'alignent en colonnes : ils doivent avoir la même chasse. */
-  font-variant-numeric:tabular-nums;
-}
-.tableau thead th{
-  text-align:left; font-weight:500; color:var(--ink-soft);
-  font-size:.75rem; letter-spacing:.1em; text-transform:uppercase;
-  padding:0 1rem .5rem 0; white-space:nowrap;
-}
-.tableau tbody th, .tableau tbody td{
-  border-top:1px solid var(--line);
-  padding:.8rem 1rem .8rem 0;
-  vertical-align:top;
-}
-.tableau tbody th{
-  text-align:left; font-weight:600; color:var(--ink);
-  white-space:nowrap;
-}
-/* Le monogramme du soin, sur sa carte — en miniature.
 
-   Il était posé nu, à 17 px, dans une teinte grisée tirée de la carte
-   (`--marque`). Or ces cinq monogrammes sur leur aplat sont l'identité
-   visuelle de Marie : c'est ce qu'elle publie, en grand, sur son compte.
-   Réduits à une petite forme grise, ils ne disaient plus rien.
-
-   La vignette reprend le rapport de ses cartes — plus haute que large — et
-   ses deux couleurs : l'aplat en fond, le monogramme dedans. Le nom du soin
-   est juste à côté, donc la vignette ne porte aucune information à elle
-   seule : c'est un repère, pas un pictogramme à déchiffrer. */
-/* La carte elle-même, zoomée sur sa lettre. Réduite entière à 26 px, la
-   lettre n'en ferait plus que 10 : on agrandit l'image de 158 % et on vise
-   le centre du monogramme, relevé à 50 % de la largeur et 45 % de la
-   hauteur sur les cinq cartes. 41 % est la position CSS qui aligne ce
-   point sur le milieu de la vignette. Même fichier que la planche : il est
-   déjà en cache quand on ouvre la fiche tarifs. */
-.t-signe{
-  flex:none; width:26px; height:34px; margin-right:.6rem;
-  border-radius:5px;
-  background:var(--carte) 50% 41% / 158% auto no-repeat, var(--fond);
-}
-/* Le « i » qui ouvre la description du soin. Il porte la teinte de son
-   soin en fond très dilué — assez pour qu'on le rattache à la ligne, assez
-   peu pour que l'encre y reste à plus de 10:1. La lettre est décorative :
-   c'est `aria-label` qui nomme le bouton. */
-/* Le nom et son « i » sur une seule ligne souple : le bouton est poussé au
-   bord droit de la colonne. Posé à la suite du nom, il tombait là où
-   celui-ci finissait — cinq positions différentes, de « Kobido » à
-   « Drainage lymphatique ». Au bord, il rejoint la colonne des prix. */
-/* Le nom du soin et ce qu'il est, l'un sous l'autre.
-
-   Le tableau n'affichait que les noms : Kobido, Deep Tissus, Madéro,
-   Drainage lymphatique. Quatre mots sur cinq ne disent rien à qui n'a
-   jamais pris de massage, et il fallait ouvrir les cinq « i » pour
-   comprendre le menu — c'est-à-dire cinq gestes avant la première idée.
-
-   La phrase qui les explique existait déjà : elle ouvrait la description
-   cachée, en gras, et elle est visible en permanence sur l'affiche que
-   Marie a validée. Elle remonte donc sous le nom, et la description ne la
-   répète plus. Le « i » cesse d'être le seul moyen de comprendre pour
-   devenir ce qu'il devrait être : « en savoir plus ». */
-.t-soin{ display:flex; align-items:center; }
-.t-soin__mot{ flex:1; min-width:0; }
-.t-soin__quoi{
-  display:block; margin-top:.12rem;
-  font-style:normal; font-weight:400; font-size:.8rem; line-height:1.3;
-  color:var(--ink-soft);
-}
-/* Le disque reste à 26 px — c'est un repère, pas un bouton d'action — mais
-   la zone qui répond au doigt en fait 44, le minimum recommandé. Le
-   rembourrage est transparent et compensé par une marge négative : rien ne
-   bouge à l'écran, et la ligne du soin garde sa hauteur. C'est le seul
-   accès à la description des soins, il ne peut pas être le plus difficile
-   à viser de la page. */
-.t-info{
-  width:26px; height:26px; border-radius:50%; flex:none;
-  display:inline-grid; place-items:center;
-  margin-left:auto;
-  font-size:.82rem; font-weight:600; line-height:1;
-  color:var(--ink);
-  background:color-mix(in srgb, var(--fond) 26%, var(--card));
-  transition:background .25s var(--ease);
-  /* La boîte reste de 26 px, le rembourrage déborde dessus. */
-  box-sizing:content-box; padding:9px; margin:-9px -9px -9px auto;
-  background-clip:content-box;
-}
-@media (hover:hover) and (pointer:fine){
-  .t-info:hover{ background:color-mix(in srgb, var(--fond) 42%, var(--card)); }
-}
-/* La description prend une ligne à elle, sous celle du soin : logée dans la
-   cellule du nom, elle aurait allongé la colonne et décalé les prix. */
-.tableau tr.t-desc[hidden]{ display:none; }
-.t-desc td{
-  padding-top:0; padding-bottom:1rem;
-  font-size:.86rem; color:var(--ink-soft); max-width:52ch;
-}
-.t-desc b{ font-weight:600; color:var(--ink); }
-
-/* Une offre : sa durée (ou son nombre de séances) et son prix. Le Relaxant
-   en a deux par cellule, d'où la liste plutôt qu'une ligne de tableau de
-   plus — une cellule fusionnée ne survivrait pas au réempilement. */
-/* Le prix se cale à droite de sa colonne, à toutes les largeurs. Posé
-   simplement à la suite du libellé, il commençait là où celui-ci finissait :
-   « 1 h 60 € » et « 1 h 30 90 € » ne tombaient donc pas au même endroit, et
-   les cinq forfaits s'étalaient sur 65 px d'écart. Un tableau de prix se lit
-   en colonne — c'est même la seule raison d'en faire un tableau. */
+/* Une ligne de prix : la durée (ou le nombre de séances) et le prix. Elles
+   sont écrites dans le tableau caché des tarifs, qui n'est qu'une source, et
+   recopiées telles quelles dans les encadrés de la fiche d'un massage. */
+/* Le prix se cale à droite, à toutes les largeurs : posé à la suite du
+   libellé, « 1 h 60 € » et « 1 h 30 90 € » ne tombaient pas au même endroit,
+   et une liste de prix se lit en colonne. */
 .t-l{
   display:flex; align-items:baseline; flex-wrap:wrap;
   justify-content:space-between; gap:.15rem .6rem;
@@ -1362,59 +1248,14 @@ body::after{
 }
 .t-avant:empty{ display:none; }
 .t-l--vide{ color:var(--ink-soft); }
-.tableau__note{
-  margin-top:1rem;
-  font-size:.76rem; color:var(--ink-soft);
-}
-.tableau__aide{
-  margin:-.4rem 0 1rem;
-  font-size:.78rem; color:var(--ink-soft);
-}
-/* Le « i » cité dans la phrase prend l'allure du bouton, en plus petit :
-   on reconnaît alors dans le tableau ce qu'on vient de lire. */
-.tableau__aide b{
-  display:inline-grid; place-items:center;
-  width:21px; height:21px; border-radius:50%; vertical-align:-.35em;
-  font-size:.75rem; font-weight:600; line-height:1;
-  color:var(--ink); background:color-mix(in srgb, var(--ink) 10%, var(--card));
-}
 
-/* En tableau, une offre et son forfait sont sur la même ligne visuelle : il
-   leur faut la même hauteur. Le forfait porte une seconde ligne (« au lieu
-   de … ») que la séance n'a pas — sans plancher commun, les deux durées du
-   Relaxant se décalaient l'une par rapport à l'autre. */
+/* Une hauteur commune aux lignes de prix : le forfait porte une seconde
+   ligne (« au lieu de … ») que la séance n'a pas. */
 @media (min-width:621px){
   .t-l{ min-height:2.5em; }
   .t-l + .t-l{ margin-top:.35rem; }
 }
 
-/* Sur téléphone, le tableau se **réempile en blocs**. Il défilait
-   latéralement, et c'est la colonne des forfaits — la plus utile — qui
-   sortait de l'écran. Chaque cellule reprend son intitulé de colonne, sans
-   quoi les prix se retrouveraient sans étiquette. */
-@media (max-width:620px){
-  .tableau table, .tableau tbody, .tableau tr,
-  .tableau tbody th, .tableau tbody td{ display:block; width:100%; }
-  .tableau thead{ position:absolute; width:1px; height:1px;
-    overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
-  .tableau tbody tr{
-    border-top:1px solid var(--line);
-    padding:1rem 0 .2rem;
-  }
-  .tableau tbody th, .tableau tbody td{ border-top:0; padding:0 0 .8rem; }
-  .tableau tbody th{
-    font-size:1rem; margin-bottom:.6rem; white-space:normal;
-  }
-  .tableau tbody td::before{
-    content:attr(data-col);
-    display:block; margin-bottom:.3rem;
-    font-size:.75rem; font-weight:500; letter-spacing:.1em;
-    text-transform:uppercase; color:var(--ink-soft);
-  }
-  /* Réempilée, chaque ligne prend un filet : la description en hériterait
-     et se détacherait de son soin au lieu de le prolonger. */
-  .tableau tbody tr.t-desc{ border-top:0; padding-top:0; margin-top:-.4rem; }
-}
 
 /* --- Les avis ---
    La synthèse dans la touche terracotta de la page — le chiffre en grand, les

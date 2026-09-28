@@ -97,7 +97,10 @@ def main():
 
     # Des données d'exemple (`class="fictif"`, dans les mentions légales)
     # ne doivent jamais partir en ligne : on s'arrête avant de publier.
-    fictives = {pg: (ROOT / pg).read_text(encoding='utf-8').count('class="fictif"')
+    # Comptées sur le texte tel qu'il sera publié, sans ses commentaires :
+    # la note qui explique la règle ne doit pas la déclencher.
+    fictives = {pg: retouche(ROOT / pg, (ROOT / pg).read_text(encoding='utf-8'))
+                    .count('class="fictif"')
                 for pg in PAGES if (ROOT / pg).suffix == '.html'}
     fictives = {pg: n for pg, n in fictives.items() if n}
     if fictives:

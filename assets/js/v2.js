@@ -16,11 +16,18 @@
   // Certains contextes (aperçu en bac à sable, fichier ouvert en local)
   // refusent d'écrire dans l'historique. L'adresse partageable est un
   // confort : elle ne doit pas pouvoir emporter le reste du script.
+  // Chaque entrée que le site pose dans l'historique porte sa profondeur :
+  // 1 pour une rubrique ouverte depuis l'accueil, 2 pour la fiche d'un
+  // massage par-dessus. Un simple drapeau « a-t-on empilé ? » se perdait en
+  // route (bouton retour, changement de rubrique depuis une fiche), et la
+  // croix ne ramenait plus à l'accueil. La profondeur, elle, voyage avec
+  // l'entrée : on sait toujours de combien de pas revenir.
+  const profondeur = () => (history.state && history.state.profondeur) || 0;
   const memorise = (etat, hash) => {
     try { history.pushState(etat, '', hash); } catch (e) { /* sans gravité */ }
   };
-  const remplace = (url) => {
-    try { history.replaceState(null, '', url); } catch (e) { /* sans gravité */ }
+  const remplace = (url, etat = null) => {
+    try { history.replaceState(etat, '', url); } catch (e) { /* sans gravité */ }
   };
 
   const bulles   = $$('.bulle');
@@ -56,18 +63,7 @@
 
   let ouvert = null;          // panneau affiché, ou null
   let declencheur = null;     // bulle d'où il est parti, pour y revenir
-  let aPousse = false;        // a-t-on ajouté une entrée d'historique ?
-
-  /* Les descriptions du tableau des tarifs se replient quand on quitte le
-     panneau : on retrouve la liste des prix telle qu'on l'avait découverte,
-     pas l'état où on l'avait laissée. */
-  function replie(p) {
-    $$('.t-info[aria-expanded="true"]', p).forEach(b => {
-      b.setAttribute('aria-expanded', 'false');
-      const d = document.getElementById(b.getAttribute('aria-controls'));
-      if (d) d.hidden = true;
-    });
-  }
+  let versAccueil = false;    // un retour en arrière vise l'accueil
 
   /* ---------- Ouvrir / fermer ---------- */
 
@@ -138,7 +134,6 @@
     // la navigation au clavier dans le panneau.
     p.querySelector('.fermer').focus({ preventScroll: true });
     p.scrollTop = 0;
-    replie(p);
 
     racine.classList.add('a-panneau');
     montreBarre();
@@ -147,9 +142,12 @@
     // recouvre — ses noms aussi, clairs sur une page sombre.
     racine.dataset.panneau = id;
 
+    // D'une rubrique à l'autre, on remplace l'entrée courante (même depuis
+    // une fiche) en gardant sa profondeur : la croix revient toujours à
+    // l'accueil en autant de pas qu'il en faut.
     if (location.hash !== '#' + id) {
-      if (changement) remplace('#' + id);
-      else { memorise({ panneau: id }, '#' + id); aPousse = true; }
+      if (changement) remplace('#' + id, { panneau: id, profondeur: profondeur() });
+      else memorise({ panneau: id, profondeur: profondeur() + 1 }, '#' + id);
     }
   }
 
@@ -157,7 +155,6 @@
     if (!ouvert) return;
     ouvert.classList.remove('ouvert');
     ouvert.setAttribute('inert', '');
-    replie(ouvert);
     // Le fond redevient atteignable **avant** qu'on y remette le focus.
     fond.forEach(e => e.removeAttribute('inert'));
     bulles.forEach(b => b.setAttribute('aria-expanded', 'false'));
@@ -181,11 +178,17 @@
   // sinon le bouton « retour » du téléphone rouvrait le panneau qu'on
   // venait de fermer, et l'historique grossissait de deux entrées par
   // aller-retour — cinq rubriques visitées, onze retours pour sortir.
+  //
+  // Depuis une fiche, c'est deux pas ; arrivé directement sur une adresse
+  // partagée (…/#massages), il n'y a rien à défaire : on nettoie l'adresse.
+  // `versAccueil` dit au popstate que ce retour vise l'accueil, même si
+  // l'entrée d'arrivée est une rubrique (lien partagé) : il referme alors.
   function demandeFermeture() {
     if (!ouvert) return;
-    if (aPousse) {
-      aPousse = false;
-      history.back();          // le popstate ci-dessous referme
+    const pas = profondeur();
+    if (pas > 0) {
+      versAccueil = true;
+      history.go(-pas);        // le popstate ci-dessous referme
     } else {
       remplace(location.pathname);
       fermer();
@@ -201,6 +204,8 @@
      défile pas : il faut pouvoir la retrouver sans chercher. Les petits
      mouvements du doigt (moins de 12 px) ne comptent pas. */
   const SEUIL = 12;
+  // Créée une fois : relue à chaque mouvement de souris ou de doigt.
+  const grandEcran = matchMedia('(min-width:1024px)');
   let barreCachee = false;
   function montreBarre() {
     if (!barreCachee) return;
@@ -221,7 +226,9 @@
       // des massages) n'est pas un geste : sans ce filtre, il cachait la
       // barre au retour d'une fiche. Sur la fiche, la barre est déjà
       // retirée, et le défilement n'y compte pas.
-      if (p._defilementPose || racine.classList.contains('en-fiche')) {
+      // Sur téléphone, la barre est retirée de la fiche : le défilement n'y
+      // compte pas. Sur ordinateur, l'en-tête y reste et suit le geste.
+      if (p._defilementPose || (racine.classList.contains('en-fiche') && !grandEcran.matches)) {
         p._defilementPose = false; dernier = y; cumul = 0; return;
       }
       const reste = p.scrollHeight - p.clientHeight - y;
@@ -236,15 +243,16 @@
       else if (cumul < -SEUIL) montreBarre();
     }, { passive: true });
   });
-  $('.bulles') && $('.bulles').addEventListener('focusin', montreBarre);
+  const barre = $('.bulles');
+  if (barre) barre.addEventListener('focusin', montreBarre);
   // Approcher le bord de la barre la fait revenir : la souris en haut de
   // l'écran sur ordinateur, un appui en bas de l'écran sur téléphone.
   document.addEventListener('mousemove', e => {
-    if (barreCachee && e.clientY < 90 && matchMedia('(min-width:1024px)').matches) montreBarre();
+    if (barreCachee && e.clientY < 90 && grandEcran.matches) montreBarre();
   }, { passive: true });
   document.addEventListener('touchstart', e => {
     const t = e.touches[0];
-    if (barreCachee && t && t.clientY > innerHeight - 90 && !matchMedia('(min-width:1024px)').matches) montreBarre();
+    if (barreCachee && t && t.clientY > innerHeight - 90 && !grandEcran.matches) montreBarre();
   }, { passive: true });
 
   /* ---------- Branchements ---------- */
@@ -336,27 +344,30 @@
   // Bouton « retour » du téléphone : il doit refermer le panneau,
   // pas quitter le site.
   window.addEventListener('popstate', e => {
+    if (versAccueil) {
+      versAccueil = false;
+      if (location.hash) remplace(location.pathname);
+      fermer();
+      return;
+    }
     const id = location.hash.slice(1);
     const p = id && document.getElementById(id);
     if (p && p.classList.contains('panneau')) {
-      aPousse = false;
       ouvrir(id, bulles.find(b => b.dataset.ouvre === id));
       // Une fiche de soin est une étape d'historique à part entière : le
       // bouton « retour » du téléphone doit ramener à la planche, pas
       // refermer les massages d'un coup.
       if (id === 'massages') {
         const cle = e.state && e.state.vue;
-        vuePoussee = false;
         if (cle) montreVue(cle, false); else montreListe(false);
       }
     } else {
-      aPousse = false;
       fermer();
     }
   });
 
   // Arrivée directe sur une adresse partagée (…/#massages). Aucune entrée
-  // n'a été empilée : `aPousse` reste faux, et la fermeture nettoiera
+  // n'a été empilée : la profondeur vaut 0, et la fermeture nettoiera
   // l'adresse au lieu de tenter un retour qui sortirait du site.
   const depart = location.hash.slice(1);
   if (depart) ouvrir(depart, bulles.find(b => b.dataset.ouvre === depart));
@@ -413,7 +424,6 @@
   // (sa clé). La fiche tarifs a été retirée ; son tableau reste, caché,
   // comme source des prix.
   let vueCle     = null;
-  let vuePoussee = false;  // une entrée d'historique lui a-t-elle été posée ?
 
   function remplitFiche(cle) {
     if (!panneauSoins || !laFiche) return false;
@@ -524,6 +534,7 @@
       () => {
         feuilleSoins.hidden = true;
         laFiche.hidden = false;
+        montreBarre();
         // Sur la fiche, pas de croix : elle semblait ramener à la liste des
         // massages et fermait toute la rubrique. Le retour est en haut.
         panneauSoins.dataset.vue = 'fiche';
@@ -537,17 +548,14 @@
         focusApres($('.fiche__retour', laFiche));
       },
       $('.fiche__img', laFiche));
-    if (pousse) {
-      memorise({ panneau: 'massages', vue: cle }, '#massages');
-      vuePoussee = true;
-    }
+    if (pousse) memorise({ panneau: 'massages', vue: cle, profondeur: profondeur() + 1 }, '#massages');
   }
 
   function montreListe(retour) {
     if (!vueCle) return;
     // On **revient en arrière** plutôt que d'empiler : sans cela, le bouton
     // « retour » du téléphone rouvrait la vue qu'on venait de quitter.
-    if (retour && vuePoussee) { vuePoussee = false; history.back(); return; }
+    if (retour && history.state && history.state.vue) { history.back(); return; }
     const cle = vueCle;
     vueCle = null;
     const carte = $(`button.soin__carte[data-soin="${cle}"]`);
@@ -572,7 +580,6 @@
   function reinitFiche() {
     if (!vueCle) return;
     vueCle = null;
-    vuePoussee = false;
     laFiche.hidden = true;
     delete panneauSoins.dataset.vue;
     racine.classList.remove('en-fiche');
@@ -619,23 +626,21 @@
     const pleines = Math.max(0, Math.min(5, Math.round(moy)));
     $('#note-etoiles').textContent = '★'.repeat(pleines) + '☆'.repeat(5 - pleines);
     $('#note-nb').textContent = notes.length;
+    // Les étoiles de chaque avis se tirent aussi de sa note : copier un avis
+    // en changeant seulement `data-note` ne peut plus laisser cinq étoiles
+    // sur un avis à quatre.
+    $$('li[data-note]', liste).forEach(li => {
+      const et = $('.avis__etoiles', li);
+      const n = Math.max(0, Math.min(5, Math.round(parseFloat(li.dataset.note))));
+      if (!et || isNaN(n)) return;
+      et.textContent = '★'.repeat(n) + '☆'.repeat(5 - n);
+      et.setAttribute('aria-label', `${n} étoile${n > 1 ? 's' : ''} sur 5`);
+    });
   })();
 
   /* ---------- Année du pied de page ---------- */
   const an = $('#annee');
   if (an) an.textContent = new Date().getFullYear();
-  /* Le « i » de chaque soin : la description est dans la page, on ne fait
-     que la montrer. `aria-expanded` porte l'état, `aria-controls` désigne la
-     ligne — un lecteur d'écran annonce donc l'un et trouve l'autre. */
-  $$('.t-info').forEach(bouton => {
-    bouton.addEventListener('click', () => {
-      const d = document.getElementById(bouton.getAttribute('aria-controls'));
-      if (!d) return;
-      const ouvre = bouton.getAttribute('aria-expanded') !== 'true';
-      bouton.setAttribute('aria-expanded', String(ouvre));
-      d.hidden = !ouvre;
-    });
-  });
 
 
 })();

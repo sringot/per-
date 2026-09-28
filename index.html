@@ -7,7 +7,8 @@
   <meta name="description" content="Marie Massage, masseuse bien-être à Montigny-le-Bretonneux, massages réservés aux femmes : kobido, relaxant, madérothérapie, drainage lymphatique. Réservation en ligne ou par message.">
   <link rel="canonical" href="https://sringot.github.io/per-/">
 
-  <!-- Aperçu du lien partagé. TODO : vrai domaine à la mise en ligne. -->
+  <!-- Aperçu du lien partagé. L'adresse est réécrite à la publication
+       (tools-publier.py, ligne DOMAINE). -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Marie Massage">
   <meta property="og:locale" content="fr_FR">
@@ -375,9 +376,6 @@
            ligne l'un sous l'autre. -->
       <div class="tarifs">
       <h3 class="bloc-h" id="tarifs-t">Les tarifs</h3>
-      <!-- Les cartes qui se retournaient portaient l'invitation à toucher ;
-           sans elles, rien ne dit plus que le « i » s'ouvre. -->
-      <p class="tableau__aide">Le <b>i</b> de chaque soin ouvre sa description.</p>
       <!-- Le tableau plutôt que le dos des cartes : on lit des prix côte à
            côte, pas un par un. En retourner cinq pour en comparer deux, c'était
            demander de retenir un chiffre en changeant d'écran. -->
@@ -392,7 +390,7 @@
           </thead>
           <tbody>
         <tr class="soin--kobido">
-          <th scope="row"><span class="t-soin"><span class="t-signe" aria-hidden="true"></span><span class="t-soin__mot">Kobido<em class="t-soin__quoi">Lifting japonais du visage</em></span><button class="t-info" type="button" aria-expanded="false" aria-controls="d-kobido" aria-label="Description du kobido"><span aria-hidden="true">i</span></button></span></th>
+          <th scope="row"><span class="t-soin"><span class="t-soin__mot">Kobido<em class="t-soin__quoi">Lifting japonais du visage</em></span></span></th>
           <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">60&nbsp;€</b></span></td>
           <td data-col="En forfait"><span class="t-l t-l--vide">Pas de forfait</span></td>
         </tr>
@@ -405,7 +403,7 @@
           <td colspan="3">Inspiré du massage traditionnel japonais : des gestes rythmés, précis et enveloppants, à l'huile d'abricot, sur le visage, le cou et la nuque. Pour délasser les traits, faire du bien à la peau et s'offrir un vrai moment de détente.</td>
         </tr>
         <tr class="soin--relaxant">
-          <th scope="row"><span class="t-soin"><span class="t-signe" aria-hidden="true"></span><span class="t-soin__mot">Relaxant<em class="t-soin__quoi">Massage corps complet</em></span><button class="t-info" type="button" aria-expanded="false" aria-controls="d-relaxant" aria-label="Description du relaxant"><span aria-hidden="true">i</span></button></span></th>
+          <th scope="row"><span class="t-soin"><span class="t-soin__mot">Relaxant<em class="t-soin__quoi">Massage corps complet</em></span></span></th>
           <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">60&nbsp;€</b></span><span class="t-l"><span class="t-l__nom">1 h 30</span><b class="t-l__prix">90&nbsp;€</b></span></td>
           <td data-col="En forfait"><span class="t-l" data-unite="60" data-lot="3" data-prix="150"><span class="t-l__nom">3&nbsp;séances&nbsp;de&nbsp;1&nbsp;h</span><b class="t-l__prix">150&nbsp;€</b><em class="t-avant"></em></span><span class="t-l" data-unite="90" data-lot="3" data-prix="240"><span class="t-l__nom">3&nbsp;séances&nbsp;de&nbsp;1&nbsp;h&nbsp;30</span><b class="t-l__prix">240&nbsp;€</b><em class="t-avant"></em></span></td>
         </tr>
@@ -419,7 +417,7 @@
              supprimées ici (le soin et sa description) sont à reprendre telles
              quelles le jour où elle le proposera. -->
         <tr class="soin--madero">
-          <th scope="row"><span class="t-soin"><span class="t-signe" aria-hidden="true"></span><span class="t-soin__mot">Madéro<em class="t-soin__quoi">Soin corps remodelant</em></span><button class="t-info" type="button" aria-expanded="false" aria-controls="d-madero" aria-label="Description du madéro"><span aria-hidden="true">i</span></button></span></th>
+          <th scope="row"><span class="t-soin"><span class="t-soin__mot">Madéro<em class="t-soin__quoi">Soin corps remodelant</em></span></span></th>
           <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">70&nbsp;€</b></span></td>
           <td data-col="En forfait"><span class="t-l" data-unite="70" data-lot="5" data-prix="300"><span class="t-l__nom">5&nbsp;séances</span><b class="t-l__prix">300&nbsp;€</b><em class="t-avant"></em></span></td>
         </tr>
@@ -427,7 +425,7 @@
           <td colspan="3">Un massage aux outils en bois, dont les formes s'adaptent à chaque zone du corps. Un travail en surface, pour s'occuper de la cellulite et de la silhouette sans agresser la peau, avec une pression adaptée à votre corps.</td>
         </tr>
         <tr class="soin--drainage">
-          <th scope="row"><span class="t-soin"><span class="t-signe" aria-hidden="true"></span><span class="t-soin__mot">Drainage lymphatique<em class="t-soin__quoi">Jambes légères, circulation relancée</em></span><button class="t-info" type="button" aria-expanded="false" aria-controls="d-drainage" aria-label="Description du drainage lymphatique"><span aria-hidden="true">i</span></button></span></th>
+          <th scope="row"><span class="t-soin"><span class="t-soin__mot">Drainage lymphatique<em class="t-soin__quoi">Jambes légères, circulation relancée</em></span></span></th>
           <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">80&nbsp;€</b></span></td>
           <td data-col="En forfait"><span class="t-l" data-unite="80" data-lot="5" data-prix="350"><span class="t-l__nom">5&nbsp;séances</span><b class="t-l__prix">350&nbsp;€</b><em class="t-avant"></em></span></td>
         </tr>
