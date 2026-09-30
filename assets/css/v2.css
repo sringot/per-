@@ -1689,6 +1689,14 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
 /* Un souffle en plus de la hauteur de la barre : sans lui, le bouton de
    relance venait toucher les bulles en bas de course. */
 .panneau{ padding-bottom:calc(var(--barre) + var(--pied) + .9rem); }
+/* Les pages annexes (mentions légales) n'ont pas de barre : leur pied de
+   page reprend sa place à la fin du texte. Fixé comme sur l'accueil, sans
+   fond, il flottait par-dessus les paragraphes qu'on lisait. */
+.annexe ~ .pied{ position:static; padding-top:1rem; color:var(--ink-soft); }
+/* …et la couleur du texte de la page : le clair de l'accueil, fait pour
+   la photo sombre, disparaissait sur le crème. */
+.annexe ~ .pied a{ border-bottom-color:var(--line); }
+body:has(> .annexe){ padding-bottom:0; }
 
 /* Donnée d'exemple dans les mentions légales, à remplacer avant la mise
    en ligne : encadrée, pour qu'on ne la laisse pas passer à la relecture.
