@@ -5,8 +5,8 @@ Sort le logo détouré et les deux favicons, tous depuis le même fichier :
 c'est ce qui garantit qu'ils ne divergeront pas.
 
 Le fichier qu'elle fournit est un carré blanc de 1254 px avec le disque
-posé au milieu. Tel quel, ses angles blancs se verraient sur le socle crème
-de l'affiche : on le recadre au disque et on le détoure.
+posé au milieu. Tel quel, ses angles blancs se verraient sur le fond
+crème : on le recadre au disque et on le détoure.
 
 Le logo n'est jamais redessiné — ce script ne fait que recadrer, détourer
 et redimensionner le fichier d'origine.
@@ -24,7 +24,7 @@ ROOT = pathlib.Path(__file__).parent
 DEST = ROOT / 'assets/img/logo-officiel.png'
 # La version servie au navigateur. Le PNG de 300 px pèse 72 Ko et reste le
 # fichier le plus lourd du site, pour une image affichée à 52 px au plus ;
-# en WebP à 200 px il en fait 5. Le PNG est gardé pour l'affiche imprimée,
+# en WebP à 200 px il en fait 5. Le PNG est gardé pour les impressions,
 # où l'on veut les pixels.
 DEST_WEB = ROOT / 'assets/img/logo-officiel.webp'
 COTE_WEB = 200
@@ -34,9 +34,8 @@ FAVICONS = [('assets/img/favicon.png', 32), ('assets/img/favicon-180.png', 180)]
 # Le socle du site. iOS compose l'icône d'accueil sur du noir si elle est
 # transparente : celle de 180 px est donc aplatie sur ce fond.
 SOCLE = (0xFC, 0xF0, 0xE2)
-# Le logo est imprimé à 14 mm, soit 165 px à 300 dpi. Le double laisse de la
-# marge, et le fichier est embarqué en base64 dans l'affiche : inutile de
-# transporter les 1254 px d'origine.
+# Imprimé à 14 mm (la carte avis), le logo fait 165 px à 300 dpi. Le double
+# laisse de la marge : inutile de transporter les 1254 px d'origine.
 COTE = 300
 # Écart au blanc du fond au-delà duquel un pixel appartient au dessin. Assez
 # haut pour ignorer le bruit de compression, assez bas pour attraper le bord

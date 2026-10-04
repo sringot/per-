@@ -82,8 +82,6 @@ On ne les relance que si un original change.
 | `tools-logo-officiel.py` | Logo détouré et favicons. | `sources/logo/logo-source.png` |
 | `tools-partage.js` | Image de partage (WhatsApp, Instagram…). | les fichiers du site |
 | `tools-carte-avis.js` | Carte A6 « Votre avis compte » avec le QR code, à imprimer pour la salle. | `sources/carte-avis-qr.svg` |
-| `tools-cartes.py` | Monogrammes vectoriels, pour l'affiche. | `sources/cartes/reference-cartes-soins.png` |
-| `tools-affiche.py` (+ `tools-affiche-pdf.js`, `tools_couleur.py`) | Affiche A4 des tarifs pour la pièce. | le site |
 | `tools-preview.py` | Aperçu en un seul fichier autonome. | le site |
 | `tools-publier.py` | Version en ligne, dans `_site/`. | le site |
 | `tools-avis-google.py` | Ajoute les derniers avis Google à la version en ligne, à chaque publication et chaque matin. | la fiche Google de Marie |
