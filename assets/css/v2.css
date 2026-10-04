@@ -635,6 +635,10 @@ body::after{
    en haut et « Voir les autres massages » en bas font ce retour. */
 .panneau[data-vue="fiche"] .fermer{ display:none; }
 .fermer:active{ box-shadow:var(--bulle-creux); transform:scale(.94); }
+/* Sur une page à part (mentions légales), la croix ramène à l'accueil. Sur
+   grand écran, elle garde sa place en haut : il n'y a pas d'en-tête sous
+   lequel la descendre comme dans les rubriques. */
+.fermer.fermer--page{ top:calc(clamp(.9rem,2.5vh,1.6rem) + var(--haut)); }
 
 /* --- Le fond des pages ---
    Un seul, pour les cinq : le blanc cassé de Massages, adouci par
