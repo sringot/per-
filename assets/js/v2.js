@@ -79,6 +79,26 @@
       img.src = img.dataset.src;
       img.removeAttribute('data-src');
     });
+    if (p.id === 'massages') prechargeBandeaux();
+  }
+
+  // Les bandeaux des fiches (la carte recadrée en largeur) ne sont dans
+  // aucune balise <img> : la fiche n'en a qu'une, qui change de source à
+  // chaque soin. Ils ne partaient donc qu'au moment de toucher la carte, et
+  // la première ouverture de chaque soin attendait l'image — un temps mort
+  // après l'appui, puis une carte qui s'agrandissait vers un cadre vide. On
+  // les demande avec les images de la rubrique ; la fiche les trouve ensuite
+  // dans le cache du navigateur.
+  const bandeaux = new Map();
+  function prechargeBandeaux() {
+    $$('button.soin__carte[data-bandeau]').forEach(c => {
+      const url = c.dataset.bandeau;
+      if (bandeaux.has(url)) return;
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = url;
+      bandeaux.set(url, img);
+    });
   }
 
   function ouvrir(id, bulle) {
@@ -442,7 +462,24 @@
     // l'outil d'aperçu, qui les embarque, les trouve.
     const img = $('.fiche__img', laFiche);
     const carte = $(`button.soin__carte[data-soin="${cle}"]`);
-    if (img && carte && carte.dataset.bandeau) img.src = carte.dataset.bandeau;
+    if (img && carte && carte.dataset.bandeau) {
+      const url = carte.dataset.bandeau;
+      prechargeBandeaux();
+      const bandeau = bandeaux.get(url);
+      const vignette = $('.soin__img', carte);
+      // Pas encore arrivé (connexion lente) : la fiche prend d'abord l'image
+      // de la carte, déjà affichée — la même illustration, recadrée par
+      // `object-fit` — puis le bandeau dès qu'il est là. Sans cela, la carte
+      // s'agrandissait vers un cadre vide.
+      if (!(bandeau.complete && bandeau.naturalWidth) && vignette && vignette.complete && vignette.naturalWidth) {
+        img.src = vignette.currentSrc || vignette.src;
+        bandeau.addEventListener('load', () => {
+          if (laFiche.classList.contains('soin--' + cle)) img.src = url;
+        }, { once: true });
+      } else {
+        img.src = url;
+      }
+    }
 
     const mot  = $('.t-soin__mot', ligne);
     const quoi = $('.t-soin__quoi', ligne);
@@ -511,9 +548,10 @@
       if (arrivee) arrivee.style.viewTransitionName = NOM_CARTE;
       // Le bandeau doit être décodé avant la capture de l'état d'arrivée :
       // sans cette attente, la carte grandissait vers un cadre vide et
-      // l'image surgissait après coup. Plafonnée, pour ne jamais figer la
-      // page sur une connexion lente.
-      if (image) await Promise.race([image.decode().catch(() => {}), attend(350)]);
+      // l'image surgissait après coup. Plafonnée court : l'image est d'ordinaire
+      // déjà là (préchargée, ou celle de la carte en attendant), et sur une
+      // connexion lente, attendre davantage laissait l'appui sans réponse.
+      if (image) await Promise.race([image.decode().catch(() => {}), attend(150)]);
     });
     t.finished.finally(() => { if (arrivee) arrivee.style.viewTransitionName = ''; });
   }
