@@ -6,7 +6,7 @@
 // change, on le corrige dans avis/index.html et la carte imprimée reste
 // bonne. Le QR lui-même est dans sources/carte-avis-qr.svg (fabriqué une
 // fois avec segno, en Python : `segno.make('https://marieemassage.com/avis/',
-// error='m')`). Mêmes police, fond et terracotta que le site.
+// error='m')`). Mêmes police et fond que le site.
 //
 //     node tools-carte-avis.js     → carte-avis.pdf (à imprimer) et carte-avis.png
 
@@ -41,9 +41,11 @@ const HTML = `<!doctype html><html lang="fr"><head><meta charset="utf-8">
        box-shadow:0 2mm 5mm -3mm rgba(40,20,10,.45); }
   .qr svg{ width:100%; height:100%; display:block; }
   .adresse{ font-size:8pt; color:#4A423D; margin-top:2.5mm; letter-spacing:.02em; }
-  .bas{ align-self:stretch; margin:0 -9mm; padding:4.2mm 0 4.8mm; color:#FDF6EE;
-        background:url(${f('assets/img/pages/terracotta-touche.webp')}) center/cover, #924A31;
-        font-size:10pt; font-weight:500; }
+  /* Le mot de la fin, sur le fond comme le reste : un bandeau terracotta
+     tranchait avec le prune du logo. Un simple filet le sépare du QR. */
+  .bas{ align-self:center; margin-bottom:10mm; padding-top:4mm; min-width:52mm;
+        border-top:.3mm solid rgba(42,35,32,.18);
+        color:#2A2320; font-size:10pt; font-weight:500; }
 </style></head><body>
   <div class="haut">
     <img class="logo" src="${f('assets/img/logo-officiel.webp')}" alt="">
