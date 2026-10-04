@@ -1318,6 +1318,7 @@ body::after{
 }
 
 #avis .avis__source{ margin-top:.9rem; font-size:.85rem; }
+#avis .avis__laisser{ justify-self:start; margin-top:.5rem; font-size:.92rem; }
 .avis{ display:grid; }
 .avis li{
   display:flex; flex-direction:column; gap:.55rem;
@@ -1444,6 +1445,29 @@ body::after{
 .annexe li{ color:var(--ink-soft); margin-top:.3rem; }
 .annexe--404{ text-align:center; max-width:34rem; }
 .annexe--404 .chapo{ margin-bottom:2rem; }
+
+/* La page du QR code (avis/) : on la découvre sur son téléphone, dans la
+   salle, juste après la séance. Une seule chose à y faire — le bouton —
+   donc tout est centré, à hauteur de pouce, sur le fond des rubriques. */
+.merci{
+  position:relative; z-index:1; min-height:100svh;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:1rem; padding:clamp(2.5rem,8vh,4rem) var(--pad); text-align:center;
+}
+.merci__logo{ width:64px; height:64px; margin-bottom:.4rem; }
+.merci .sur-titre{ letter-spacing:.2em; text-transform:uppercase; font-size:.72rem; color:var(--accent); }
+.merci h1{
+  font-size:clamp(2.2rem,9vw,3.2rem); font-weight:600;
+  line-height:1.04; letter-spacing:-.035em;
+}
+.merci__mot{ max-width:30ch; color:var(--ink-soft); font-size:1.05rem; }
+.merci__btn{ width:100%; max-width:22rem; margin-top:1rem; }
+.merci__signe{ margin-top:.8rem; font-weight:500; line-height:1.4; }
+.merci__site{
+  margin-top:1.4rem; font-size:.9rem; color:var(--ink-soft);
+  text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:.3em;
+  display:inline-flex; align-items:center; min-height:44px;
+}
 
 /* ---------- 5 bis. DÉTAIL DU RENDEZ-VOUS ---------- */
 /* L'école des formations, dite une fois au-dessus de la liste. L'agrément
@@ -1696,7 +1720,7 @@ body{ padding-bottom:calc(var(--barre) + var(--pied)); }
 /* …et la couleur du texte de la page : le clair de l'accueil, fait pour
    la photo sombre, disparaissait sur le crème. */
 .annexe ~ .pied a{ border-bottom-color:var(--line); }
-body:has(> .annexe){ padding-bottom:0; }
+body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
 
 /* Donnée d'exemple dans les mentions légales, à remplacer avant la mise
    en ligne : encadrée, pour qu'on ne la laisse pas passer à la relecture.

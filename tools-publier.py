@@ -42,7 +42,7 @@ ANCIENNE_ADRESSE = 'https://sringot.github.io/per-/'
 ADRESSE = f'https://{DOMAINE}/' if DOMAINE else ANCIENNE_ADRESSE
 RACINE  = '/' if DOMAINE else '/per-/'
 
-PAGES  = ['index.html', 'mentions-legales.html', '404.html', 'robots.txt', 'sitemap.xml']
+PAGES  = ['index.html', 'mentions-legales.html', 'avis/index.html', '404.html', 'robots.txt', 'sitemap.xml']
 TEXTES = {'.html', '.css', '.js', '.txt', '.xml', '.json', '.svg'}
 
 # Tout chemin `assets/…` écrit dans une page ou un script.

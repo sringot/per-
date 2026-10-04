@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merci pour votre visite — Marie Massage</title>
+  <meta name="description" content="Laissez un avis sur votre séance chez Marie Massage.">
+  <!-- La page du QR code posé dans la salle : on n'y arrive qu'en le
+       scannant, elle n'a rien à faire dans les résultats de recherche. -->
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="../assets/img/favicon-180.png">
+  <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/figtree-400-latin.woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/fonts.css">
+  <link rel="stylesheet" href="../assets/css/v2.css">
+</head>
+<body>
+
+<!-- Le QR code de la salle mène ici, et non directement chez Google : si
+     le lien d'avis change un jour, on le change sur cette page, et le QR
+     imprimé reste bon. Le dossier `avis/` donne l'adresse courte
+     marieemassage.com/avis/.
+
+     ⚠️ Le lien Google est provisoire tant qu'il porte la marque `fictif`
+     ci-dessous : tools-publier.py refuse de publier avant qu'il soit
+     remplacé par le vrai (fiche Google › « Demander des avis »), ici et
+     sur le bouton de la page Avis de index.html. -->
+<div class="texture-fond" aria-hidden="true"></div>
+
+<main class="merci">
+  <img class="merci__logo" src="../assets/img/logo-officiel.webp" alt="" width="200" height="200">
+  <p class="sur-titre">marieemassage</p>
+  <h1>Merci pour<br>votre visite</h1>
+  <p class="merci__mot">
+    Votre avis compte beaucoup&nbsp;: il aide d'autres femmes à me
+    trouver. Une minute&nbsp;suffit.
+  </p>
+  <a class="reserver__btn reserver__btn--plein merci__btn"
+     href="https://g.page/r/LIEN-A-VENIR/review" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>
+    Laisser un avis sur Google
+  </a><span class="fictif" hidden></span>
+  <p class="merci__signe">À bientôt,<br>Marie</p>
+  <a class="merci__site" href="../">Découvrir le site</a>
+</main>
+
+</body>
+</html>

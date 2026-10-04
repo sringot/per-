@@ -15,6 +15,7 @@ Treatwell et par SMS.
 | ------- | ---- |
 | `index.html` | Tout le site : l'accueil et ses cinq rubriques (À propos, Le lieu, Massages, Avis, Rendez-vous), en panneaux qui s'ouvrent sur place. |
 | `mentions-legales.html` | Les mentions légales. |
+| `avis/index.html` | La page du QR code de la salle (marieemassage.com/avis/) : un merci et le bouton vers le formulaire d'avis Google. |
 | `404.html` | La page « introuvable », autonome (styles inclus). |
 | `assets/css/v2.css` | Toute la mise en forme — téléphone d'abord, puis « Grand écran » au-delà de 1024 px. |
 | `assets/js/v2.js` | Ouverture des rubriques, fiches des massages, barre qui s'efface, calcul des prix et des avis. |
@@ -32,6 +33,8 @@ l'endroit où il est fait.
 - **La description d'un massage** : même tableau, ligne `t-desc` du soin.
 - **Un avis** : ajouter un `<li data-note="5">` dans `#avis-liste`. La
   moyenne, les étoiles, les barres et le nombre d'avis se recalculent.
+- **Le lien d'avis Google** : dans `avis/index.html` et sur le bouton de la
+  page Avis de `index.html`. Le QR imprimé ne change pas.
 - **Le domaine** : une seule ligne, `DOMAINE` dans `tools-publier.py`.
 
 ## Publier
@@ -57,6 +60,7 @@ On ne les relance que si un original change.
 | `tools-textures.py` | Fond blanc cassé des pages et touche terracotta. | `sources/pages/fond.png` |
 | `tools-logo-officiel.py` | Logo détouré et favicons. | `sources/logo/logo-source.png` |
 | `tools-partage.js` | Image de partage (WhatsApp, Instagram…). | les fichiers du site |
+| `tools-carte-avis.js` | Carte A6 « Votre avis compte » avec le QR code, à imprimer pour la salle. | `sources/carte-avis-qr.svg` |
 | `tools-cartes.py` | Monogrammes vectoriels, pour l'affiche. | `sources/cartes/reference-cartes-soins.png` |
 | `tools-affiche.py` (+ `tools-affiche-pdf.js`, `tools_couleur.py`) | Affiche A4 des tarifs pour la pièce. | le site |
 | `tools-preview.py` | Aperçu en un seul fichier autonome. | le site |
