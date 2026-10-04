@@ -1312,7 +1312,6 @@ body::after{
 }
 
 #avis .avis__source{ margin-top:.9rem; font-size:.85rem; }
-#avis .avis__laisser{ justify-self:start; margin-top:.5rem; font-size:.92rem; }
 .avis{ display:grid; }
 .avis li{
   display:flex; flex-direction:column; gap:.55rem;

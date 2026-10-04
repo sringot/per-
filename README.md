@@ -34,7 +34,7 @@ l'endroit où il est fait.
 - **Un avis** : ajouter un `<li data-note="5">` dans `#avis-liste`. La
   moyenne, les étoiles, les barres et le nombre d'avis se recalculent.
 - **Le lien d'avis Google** : dans `avis/index.html`, seul endroit où il est
-  écrit (le bouton de la page Avis y renvoie). Le QR imprimé ne change pas.
+  écrit. Le QR imprimé ne change pas.
 - **Le domaine** : une seule ligne, `DOMAINE` dans `tools-publier.py`.
 
 ## Publier
