@@ -1668,7 +1668,17 @@ body::after{
   .teinte{
     display:block; position:fixed; left:0; right:0; z-index:1; pointer-events:none;
   }
-  .teinte--haut{ top:0;    height:max(var(--haut), 1px); background:#88674E; }
+  /* En haut aussi, le brun sombre du bas — comme une page sombre, façon
+     Spotify : le rideau clair aurait sinon demandé une teinte moyenne. Un
+     dégradé sous le filet assombrit le haut de la photo pour que la barre
+     de Safari s'y fonde. */
+  .teinte--haut{ top:0;    height:max(var(--haut), 1px); background:#211B17; }
+  .teinte--haut::after{
+    content:''; position:absolute; top:100%; left:0; right:0; height:120px;
+    background:linear-gradient(#211B17, rgba(33,27,23,.55) 40%, rgba(33,27,23,0));
+  }
+  /* Le logo passe devant ce dégradé. */
+  .logo{ position:relative; z-index:2; }
   /* #211B17 et non #1E1815 : la couleur du voile telle qu'elle s'affiche,
      sous le grain qui couvre tout le site (mesurée au ras du bord). */
   .teinte--bas { bottom:0; height:max(var(--bas), 1px);  background:#211B17; }
