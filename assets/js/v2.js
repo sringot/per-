@@ -30,6 +30,15 @@
     try { history.replaceState(etat, '', url); } catch (e) { /* sans gravité */ }
   };
 
+  // L'accueil s'appelle marieemassage.com, pas marieemassage.com/index.html.
+  // Les liens du site visent déjà l'adresse nue ; si l'on arrive malgré tout
+  // par « index.html » (un vieux lien partagé), l'adresse se raccourcit, sans
+  // recharger. Pas sur un fichier ouvert en local : sans serveur, l'adresse
+  // nue ne mènerait nulle part au rechargement.
+  if (location.protocol.startsWith('http') && /\/index\.html$/.test(location.pathname)) {
+    remplace(location.pathname.replace(/index\.html$/, '') + location.search + location.hash, history.state);
+  }
+
   const bulles   = $$('.bulle');
   const panneaux = $$('.panneau');
   // Ce qui doit disparaître du clavier et des lecteurs d'écran quand un
