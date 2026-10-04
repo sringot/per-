@@ -1668,6 +1668,13 @@ body::after{
   .teinte{
     display:block; position:fixed; left:0; right:0; z-index:1; pointer-events:none;
   }
+  /* Les filets n'ont pas suffi : Safari s'est rabattu sur le fond de la
+     page — c'est lui qui décide, comme chez Spotify dont le fond est noir.
+     Sur l'accueil, le fond prend donc la teinte du bas de la photo (il est
+     entièrement couvert par elle, on ne le voit pas) ; une rubrique
+     ouverte le rend crème, comme elle. */
+  html:has(.portrait), html:has(.portrait) body{ background:#201A17; }
+  html:has(.panneau.ouvert), html:has(.panneau.ouvert) body{ background:var(--card); }
   /* En haut aussi, le brun sombre du bas — comme une page sombre, façon
      Spotify : le rideau clair aurait sinon demandé une teinte moyenne. Un
      dégradé sous le filet assombrit le haut de la photo pour que la barre
