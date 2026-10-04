@@ -97,6 +97,12 @@
        fait le contraste. Sur grand écran la photo reprend son arche et le
        voile disparaît. -->
   <span class="voile" aria-hidden="true"></span>
+  <!-- Pour Safari sur iPhone, qui colore la zone de l'heure et celle de la
+       barre d'adresse d'après les éléments fixes collés aux bords : sans
+       elles, il prenait le crème de la page, deux bandes claires autour de
+       la photo. Voir « Teintes de Safari » dans v2.css. -->
+  <span class="teinte teinte--haut" aria-hidden="true"></span>
+  <span class="teinte teinte--bas" aria-hidden="true"></span>
 
   <!-- Le nom et la ligne d'accroche forment un bloc : ils se déplacent
        ensemble d'une composition à l'autre. La navigation, elle, est un

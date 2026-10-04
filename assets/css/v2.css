@@ -318,6 +318,7 @@ body::after{
 /* Le voile n'existe que sur téléphone, où la photo occupe l'écran entier.
    Ailleurs la photo garde son arche et rien ne se pose dessus. */
 .voile{ display:none; }
+.teinte{ display:none; }
 
 /* ---------- 4. LES BULLES ---------- */
 
@@ -1649,10 +1650,28 @@ body::after{
     display:block; position:fixed; inset:auto 0 0 0; z-index:0;
     height:min(72vh, 480px); pointer-events:none;
     background:linear-gradient(to top,
-      rgba(30,24,21,.93)  0%, rgba(30,24,21,.90) 30%, rgba(30,24,21,.86) 55%,
+      rgb(30,24,21) 0%, rgba(30,24,21,.93) 3%, rgba(30,24,21,.90) 30%, rgba(30,24,21,.86) 55%,
       rgba(30,24,21,.80) 67%, rgba(30,24,21,.52) 80%, rgba(30,24,21,.24) 90%,
       rgba(30,24,21,0)  100%);
   }
+  /* --- Teintes de Safari ---
+     Safari (iOS 26) peint la zone de l'heure et celle de sa barre du bas
+     de la couleur de fond d'un élément fixe collé au bord ; à défaut, de
+     celle de la page — le crème, qui faisait deux bandes claires autour de
+     la photo. Ces deux filets lui donnent la teinte du bord : en haut celle
+     du rideau, relevée sur le rendu ; en bas la couleur pleine sur laquelle
+     finit le voile (premier arrêt de son dégradé), la même sur tous les
+     écrans — le bas de la photo, lui, variait d'un téléphone à l'autre.
+     Ils couvrent la zone de l'encoche quand le site passe dessous, un pixel
+     sinon. Une rubrique ouverte, fixe et crème, passe devant : Safari
+     reprend alors le crème. */
+  .teinte{
+    display:block; position:fixed; left:0; right:0; z-index:1; pointer-events:none;
+  }
+  .teinte--haut{ top:0;    height:max(var(--haut), 1px); background:#88674E; }
+  /* #211B17 et non #1E1815 : la couleur du voile telle qu'elle s'affiche,
+     sous le grain qui couvre tout le site (mesurée au ras du bord). */
+  .teinte--bas { bottom:0; height:max(var(--bas), 1px);  background:#211B17; }
   .voile::before{
     content:''; position:absolute; inset:0; z-index:-1;
     -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
