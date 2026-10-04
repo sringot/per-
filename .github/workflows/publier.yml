@@ -43,6 +43,7 @@ jobs:
       # Sans clé, ou si Google ne répond pas, le site part avec ses avis.
       - name: Ajouter les derniers avis Google
         run: python3 tools-avis-google.py
+        continue-on-error: true
         env:
           GOOGLE_PLACES_KEY: ${{ secrets.GOOGLE_PLACES_KEY }}
           GOOGLE_PLACE_ID: ${{ vars.GOOGLE_PLACE_ID }}

@@ -8,8 +8,8 @@ vraiment — il le trouve en lisant les pages, les feuilles de style et le
 script, pas dans une liste tenue à la main qui finirait par mentir.
 
 Il refuse de publier tant qu'une donnée d'exemple (`class="fictif"`)
-reste dans une page : les mentions légales en portent tant que Marie n'a
-pas donné les siennes.
+reste dans une page : c'est ainsi qu'on marque une information provisoire
+(dans les mentions légales, par exemple) pour qu'elle ne parte pas en ligne.
 
 Il fait aussi trois retouches, sur la copie seulement :
 

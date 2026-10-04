@@ -17,8 +17,11 @@ const path = require('path');
 
 const RACINE = __dirname;
 const f = p => `file://${path.join(RACINE, p)}`;
+// Le cadre du dessin reprend la taille écrite dans le fichier : un QR
+// refait avec une autre version, ou avec la marge par défaut de segno,
+// garde ainsi ses bords — un cadre fixe l'aurait rogné, et rendu illisible.
 const QR = fs.readFileSync(path.join(RACINE, 'sources/carte-avis-qr.svg'), 'utf8')
-  .replace(/width="\d+" height="\d+"/, 'viewBox="0 0 29 29" shape-rendering="crispEdges"');
+  .replace(/width="(\d+)" height="(\d+)"/, 'viewBox="0 0 $1 $2" shape-rendering="crispEdges"');
 
 const HTML = `<!doctype html><html lang="fr"><head><meta charset="utf-8">
 <style>
@@ -61,16 +64,23 @@ const HTML = `<!doctype html><html lang="fr"><head><meta charset="utf-8">
 </body></html>`;
 
 (async () => {
-  const navigateur = await chromium.launch({ executablePath: process.env.CHROME || undefined });
-  const page = await navigateur.newPage({ viewport: { width: 397, height: 559 }, deviceScaleFactor: 4 });
   // Depuis un fichier, comme tools-partage.js : une page vierge ne peut pas
   // charger les polices et les images locales.
-  const temp = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'carte-')), 'carte.html');
+  const dossier = fs.mkdtempSync(path.join(os.tmpdir(), 'carte-'));
+  const temp = path.join(dossier, 'carte.html');
   fs.writeFileSync(temp, HTML);
-  await page.goto(`file://${temp}`, { waitUntil: 'networkidle' });
-  await page.evaluate(() => document.fonts.ready);
-  await page.pdf({ path: path.join(RACINE, 'carte-avis.pdf'), width: '105mm', height: '148mm', printBackground: true });
-  await page.screenshot({ path: path.join(RACINE, 'carte-avis.png') });
-  await navigateur.close();
-  console.log('carte écrite → carte-avis.pdf, carte-avis.png');
-})();
+  let navigateur;
+  try {
+    navigateur = await chromium.launch({ executablePath: process.env.CHROME || undefined });
+    const page = await navigateur.newPage({ viewport: { width: 397, height: 559 }, deviceScaleFactor: 4 });
+    await page.goto(`file://${temp}`, { waitUntil: 'networkidle' });
+    await page.evaluate(() => document.fonts.ready);
+    await page.pdf({ path: path.join(RACINE, 'carte-avis.pdf'), width: '105mm', height: '148mm', printBackground: true });
+    await page.screenshot({ path: path.join(RACINE, 'carte-avis.png') });
+    console.log('carte écrite → carte-avis.pdf, carte-avis.png');
+  } finally {
+    // Navigateur fermé et dossier temporaire supprimé, même en cas d'échec.
+    if (navigateur) await navigateur.close();
+    fs.rmSync(dossier, { recursive: true, force: true });
+  }
+})().catch(e => { console.error('carte non écrite :', e.message); process.exitCode = 1; });

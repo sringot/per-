@@ -53,7 +53,7 @@ SOINS = [
      [(('1 heure', 70), (5, 300))]),
     ('drainage', 'Drainage lymphatique', 'Méthode Nathalie Duarte',
      '#E39E99', '#6B3132',
-     [(('1 heure', 80), (5, 350))]),
+     [(('1 heure', 100), (5, 450))]),
 ]
 
 PACK = ('Pack combiné', 'Madéro & drainage lymphatique', 6, 390)
