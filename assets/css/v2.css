@@ -961,12 +961,7 @@ body::after{
    sur place : toucher une carte ouvre sa fiche, qui prend le panneau et se
    referme par la flèche du haut. Le retournement montrait la description
    mais pas le prix, et il fallait retourner quatre cartes pour comparer
-   deux chiffres.
-
-   Les couleurs et les monogrammes sont relevés sur la planche par
-   `tools-cartes.py`, jamais saisis à la main. Le monogramme est posé en
-   **masque** : le fichier SVG ne porte aucune couleur, c'est le CSS qui
-   la donne — une teinte se change donc ici, sans retoucher les dessins. */
+   deux chiffres. */
 /* La grille des cartes prend plus de largeur qu'une ligne de lecture ; le
    texte au-dessus garde la sienne. */
 .feuille--soins{ max-width:min(46rem,100%); }
@@ -1190,8 +1185,7 @@ body::after{
 
    Ces valeurs remplacent celles de l'ancienne planche : les couleurs ont
    changé avec les nouvelles cartes (le kobido est passé du bordeaux au
-   framboise, le drainage du rose au brun rosé). Les monogrammes vectoriels
-   de `img/soins/` ne servent plus au site. */
+   framboise, le drainage du rose au brun rosé). */
 .soin--kobido     { --fond:#6B0D24; --carte:url(../img/cartes/kobido.webp);
                     --prix-fond:#6B0D24; --prix-encre:#FFECEC;
                     --prix-texture:url(../img/cartes/kobido-texture.webp); --prix-voile:rgba(80,8,28,.49); }
