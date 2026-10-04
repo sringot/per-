@@ -11,6 +11,10 @@ name: Publication du site
 on:
   push:
     branches: [claude/v2-bulles]
+  # Chaque matin, pour reprendre les nouveaux avis Google (tools-avis-google.py).
+  # La programmation suit la branche par défaut du dépôt : claude/v2-bulles.
+  schedule:
+    - cron: '17 5 * * *'
   workflow_dispatch:
 
 permissions:
@@ -36,6 +40,12 @@ jobs:
           python-version: '3.12'
       - name: Rassembler le site
         run: python3 tools-publier.py
+      # Sans clé, ou si Google ne répond pas, le site part avec ses avis.
+      - name: Ajouter les derniers avis Google
+        run: python3 tools-avis-google.py
+        env:
+          GOOGLE_PLACES_KEY: ${{ secrets.GOOGLE_PLACES_KEY }}
+          GOOGLE_PLACE_ID: ${{ vars.GOOGLE_PLACE_ID }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
