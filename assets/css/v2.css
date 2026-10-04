@@ -1655,30 +1655,23 @@ body::after{
       rgba(30,24,21,0)  100%);
   }
   /* --- Teintes de Safari ---
-     Safari (iOS 26) peint la zone de l'heure et celle de sa barre du bas
-     de la couleur de fond d'un élément fixe collé au bord ; à défaut, de
-     celle de la page — le crème, qui faisait deux bandes claires autour de
-     la photo. Ces deux filets lui donnent, en haut comme en bas, la teinte
-     du bas de l'accueil. Le voile la rend unie (plein sur son premier
-     quart) : la même sur tous les écrans — à .93, le bas de la photo
-     transparaissait et la teinte variait d'un téléphone à l'autre.
-     Ils couvrent la zone de l'encoche quand le site passe dessous, un pixel
-     sinon. Une rubrique ouverte, fixe et crème, passe devant : Safari
-     reprend alors le crème. */
+     Safari (iOS 26) peint la zone de l'heure et celle de sa barre du bas de
+     la couleur de fond de la page — le crème, qui faisait deux bandes
+     claires autour de la photo. Sur l'accueil, le fond prend donc la teinte
+     du bas de la photo (règle `html:has(.portrait)` ci-dessous), comme une
+     page sombre façon Spotify. Le voile rend ce bas uni (plein sur son
+     premier quart) : la même teinte sur tous les écrans, sans raccord.
+     Les deux filets `.teinte` ne pilotent pas Safari (testé : il les
+     ignore) ; celui du haut porte le dégradé qui assombrit le haut de la
+     photo pour que la barre sombre s'y fonde. */
   .teinte{
     display:block; position:fixed; left:0; right:0; z-index:1; pointer-events:none;
   }
-  /* Les filets n'ont pas suffi : Safari s'est rabattu sur le fond de la
-     page — c'est lui qui décide, comme chez Spotify dont le fond est noir.
-     Sur l'accueil, le fond prend donc la teinte du bas de la photo (il est
-     entièrement couvert par elle, on ne le voit pas) ; une rubrique
-     ouverte le rend crème, comme elle. */
+  /* Le fond de l'accueil, entièrement couvert par la photo : on ne le voit
+     pas, Safari si. Une rubrique ouverte le rend crème, comme elle. */
   html:has(.portrait), html:has(.portrait) body{ background:#201A17; }
   html:has(.panneau.ouvert), html:has(.panneau.ouvert) body{ background:var(--card); }
-  /* En haut aussi, le brun sombre du bas — comme une page sombre, façon
-     Spotify : le rideau clair aurait sinon demandé une teinte moyenne. Un
-     dégradé sous le filet assombrit le haut de la photo pour que la barre
-     de Safari s'y fonde. */
+  /* Le dégradé du haut : le rideau est clair, la barre de Safari sombre. */
   .teinte--haut{ top:0;    height:max(var(--haut), 1px); background:#201A17; }
   .teinte--haut::after{
     content:''; position:absolute; top:100%; left:0; right:0; height:120px;
