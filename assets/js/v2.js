@@ -1,0 +1,646 @@
+/* =========================================================
+   MARIE MASSAGE — V2
+
+   Un seul écran, cinq panneaux. Le panneau s'ouvre *depuis* la
+   bulle qu'on a touchée : son disque grandit jusqu'à remplir
+   l'écran. D'où le besoin de connaître, au moment du clic, où se
+   trouve la bulle — c'est tout ce que fait ce fichier, avec la
+   gestion du clavier et de l'historique.
+   ========================================================= */
+(function () {
+  'use strict';
+
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+  // Certains contextes (aperçu en bac à sable, fichier ouvert en local)
+  // refusent d'écrire dans l'historique. L'adresse partageable est un
+  // confort : elle ne doit pas pouvoir emporter le reste du script.
+  // Chaque entrée que le site pose dans l'historique porte sa profondeur :
+  // 1 pour une rubrique ouverte depuis l'accueil, 2 pour la fiche d'un
+  // massage par-dessus. Un simple drapeau « a-t-on empilé ? » se perdait en
+  // route (bouton retour, changement de rubrique depuis une fiche), et la
+  // croix ne ramenait plus à l'accueil. La profondeur, elle, voyage avec
+  // l'entrée : on sait toujours de combien de pas revenir.
+  const profondeur = () => (history.state && history.state.profondeur) || 0;
+  const memorise = (etat, hash) => {
+    try { history.pushState(etat, '', hash); } catch (e) { /* sans gravité */ }
+  };
+  const remplace = (url, etat = null) => {
+    try { history.replaceState(etat, '', url); } catch (e) { /* sans gravité */ }
+  };
+
+  const bulles   = $$('.bulle');
+  const panneaux = $$('.panneau');
+  // Ce qui doit disparaître du clavier et des lecteurs d'écran quand un
+  // panneau couvre l'écran. `clip-path` ne masque qu'à l'œil : sans cela,
+  // la tabulation sortait du panneau et parcourait la page en dessous.
+  // La barre de navigation n'en fait **pas** partie : c'est tout l'intérêt
+  // de l'avoir sortie de `.scene`. Elle reste au-dessus du panneau ouvert,
+  // atteignable au doigt comme à la tabulation, et c'est par elle qu'on
+  // passe d'une rubrique à l'autre sans refermer.
+  const fond = [$('.scene'), $('.pied'), $('.evitement')].filter(Boolean);
+  /* ---------- D'où vient le focus ----------
+     `:focus-visible` est censé ne montrer l'anneau qu'au clavier. Les
+     moteurs ne s'accordent pas sur le cas qui nous concerne : ouvrir un
+     panneau pose le focus sur la fermeture par script, et le refermer le
+     repose sur la bulle. Chromium n'affiche alors rien après un appui au
+     doigt ; Safari, si — l'anneau restait sur le bouton après l'avoir
+     touché.
+
+     On tranche donc nous-mêmes, plutôt que de s'en remettre à l'heuristique
+     de chacun : `data-pointeur` marque une interaction au doigt ou à la
+     souris, et le CSS masque l'anneau tant qu'il est là. Une touche de
+     navigation le retire — `keydown` précède le déplacement du focus, la
+     bulle suivante retrouve donc son anneau. */
+  const racine = document.documentElement;
+  const CLAVIER = new Set(['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft',
+                           'ArrowRight', 'Home', 'End', 'Enter', ' ']);
+  addEventListener('pointerdown', () => racine.setAttribute('data-pointeur', ''), true);
+  addEventListener('keydown', e => {
+    if (CLAVIER.has(e.key)) racine.removeAttribute('data-pointeur');
+  }, true);
+
+  let ouvert = null;          // panneau affiché, ou null
+  let declencheur = null;     // bulle d'où il est parti, pour y revenir
+  let versAccueil = false;    // un retour en arrière vise l'accueil
+
+  /* ---------- Ouvrir / fermer ---------- */
+
+  // La durée de l'ouverture, en ms : celle de la transition `.ouvert` du
+  // CSS, plus une marge. Le panneau qu'on quitte reste dessous jusque-là.
+  const DUREE_OUVERTURE = 480;
+
+  // Les images d'un panneau n'ont d'adresse qu'à son ouverture — ou avant,
+  // une fois l'accueil affiché (voir plus bas) : ouvertes au clic seulement,
+  // elles arrivaient après l'animation et la photo apparaissait d'un coup.
+  function chargeImages(p) {
+    $$('img[data-src]', p).forEach(img => {
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    });
+  }
+
+  function ouvrir(id, bulle) {
+    const p = document.getElementById(id);
+    // Seuls les panneaux s'ouvrent. Sans ce filtre, une adresse pointant
+    // sur n'importe quel `id` de la page — #bulles, la cible du lien
+    // d'évitement — arrivait ici, ne trouvait pas de bouton de fermeture,
+    // et l'erreur emportait tout le reste du script.
+    if (!p || !p.classList.contains('panneau') || ouvert === p) return;
+    // Passer d'une rubrique à l'autre ne doit pas empiler une entrée de
+    // plus : avec une barre toujours là, on en change souvent, et le bouton
+    // « retour » aurait rejoué la visite rubrique par rubrique au lieu de
+    // ramener à l'accueil. On remplace l'entrée courante.
+    const changement = ouvert !== null;
+    // D'une rubrique à l'autre, l'ancienne reste affichée **sous** la
+    // nouvelle le temps que celle-ci s'ouvre (`.sortant`). Refermée d'abord,
+    // elle se retirait pendant que l'autre arrivait, et l'accueil passait
+    // un instant entre les deux. Le retrait suit par une minuterie, pas par
+    // `transitionend` : un évènement qui ne vient pas (onglet en arrière-
+    // plan, mouvement réduit) aurait laissé le panneau affiché pour de bon.
+    p.classList.remove('sortant');
+    clearTimeout(p._sortie);
+    if (ouvert) {
+      const ancien = ouvert;
+      ancien.classList.add('sortant');
+      fermer();
+      clearTimeout(ancien._sortie);
+      ancien._sortie = setTimeout(() => ancien.classList.remove('sortant'), DUREE_OUVERTURE);
+    }
+
+    // Le disque part du centre de la bulle : sans ces coordonnées,
+    // l'ouverture se ferait depuis le milieu de l'écran et le geste
+    // perdrait son lien avec ce qu'on vient de toucher.
+    if (bulle) {
+      // Sur ordinateur, la barre n'a plus de ronds (ce sont des liens
+      // texte) : le disque part alors du lien lui-même.
+      const rond = bulle.querySelector('.bulle__rond');
+      const r = (rond && rond.offsetWidth ? rond : bulle).getBoundingClientRect();
+      p.style.setProperty('--x', `${r.left + r.width / 2}px`);
+      p.style.setProperty('--y', `${r.top + r.height / 2}px`);
+    }
+
+    chargeImages(p);
+
+    p.removeAttribute('inert');
+    p.classList.add('ouvert');
+    fond.forEach(e => e.setAttribute('inert', ''));
+    ouvert = p;
+    declencheur = bulle || null;
+    if (bulle) bulle.setAttribute('aria-expanded', 'true');
+
+    // Le focus part sur la fermeture : c'est la sortie, et cela ancre
+    // la navigation au clavier dans le panneau.
+    p.querySelector('.fermer').focus({ preventScroll: true });
+    p.scrollTop = 0;
+
+    racine.classList.add('a-panneau');
+    montreBarre();
+    // La rubrique ouverte, pour la feuille de style : la barre de bulles est
+    // hors du panneau, et son fondu doit prendre la couleur de la page qu'elle
+    // recouvre — ses noms aussi, clairs sur une page sombre.
+    racine.dataset.panneau = id;
+
+    // D'une rubrique à l'autre, on remplace l'entrée courante (même depuis
+    // une fiche) en gardant sa profondeur : la croix revient toujours à
+    // l'accueil en autant de pas qu'il en faut.
+    if (location.hash !== '#' + id) {
+      if (changement) remplace('#' + id, { panneau: id, profondeur: profondeur() });
+      else memorise({ panneau: id, profondeur: profondeur() + 1 }, '#' + id);
+    }
+  }
+
+  function fermer(opts = {}) {
+    if (!ouvert) return;
+    ouvert.classList.remove('ouvert');
+    ouvert.setAttribute('inert', '');
+    // Le fond redevient atteignable **avant** qu'on y remette le focus.
+    fond.forEach(e => e.removeAttribute('inert'));
+    bulles.forEach(b => b.setAttribute('aria-expanded', 'false'));
+
+    // Le focus revient sur la bulle d'origine : sans cela il retombe
+    // en tête de document et l'on perd sa place.
+    if (declencheur) declencheur.focus({ preventScroll: true });
+    ouvert = null;
+    declencheur = null;
+    racine.classList.remove('a-panneau');
+    montreBarre();
+    delete racine.dataset.panneau;
+    // Le panneau des massages se rouvre sur sa planche, jamais sur la fiche
+    // qu'on y avait laissée : on retrouve la rubrique telle qu'on l'a
+    // découverte, comme les descriptions du tableau que `replie` referme.
+    reinitFiche();
+  }
+
+  // Fermeture demandée par l'utilisateur (croix, Échap, voile).
+  // On **revient en arrière** au lieu d'empiler une entrée de plus :
+  // sinon le bouton « retour » du téléphone rouvrait le panneau qu'on
+  // venait de fermer, et l'historique grossissait de deux entrées par
+  // aller-retour — cinq rubriques visitées, onze retours pour sortir.
+  //
+  // Depuis une fiche, c'est deux pas ; arrivé directement sur une adresse
+  // partagée (…/#massages), il n'y a rien à défaire : on nettoie l'adresse.
+  // `versAccueil` dit au popstate que ce retour vise l'accueil, même si
+  // l'entrée d'arrivée est une rubrique (lien partagé) : il referme alors.
+  function demandeFermeture() {
+    if (!ouvert) return;
+    const pas = profondeur();
+    if (pas > 0) {
+      versAccueil = true;
+      history.go(-pas);        // le popstate ci-dessous referme
+    } else {
+      remplace(location.pathname);
+      fermer();
+    }
+  }
+
+  /* ---------- La barre qui s'efface pendant la lecture ----------
+     Dans une rubrique, la barre s'efface quand on défile vers le bas pour
+     lire, et revient au moindre défilement vers le haut — le geste
+     d'Instagram ou de Safari. Elle revient aussi en haut et en bas de
+     page, quand on approche du bord où elle se trouve, et dès qu'on
+     l'atteint au clavier. Elle ne se cache jamais sur une page qui ne
+     défile pas : il faut pouvoir la retrouver sans chercher. Les petits
+     mouvements du doigt (moins de 12 px) ne comptent pas. */
+  const SEUIL = 12;
+  // Créée une fois : relue à chaque mouvement de souris ou de doigt.
+  const grandEcran = matchMedia('(min-width:1024px)');
+  let barreCachee = false;
+  function montreBarre() {
+    if (!barreCachee) return;
+    barreCachee = false;
+    racine.classList.remove('barre-cachee');
+  }
+  function cacheBarre() {
+    if (barreCachee) return;
+    barreCachee = true;
+    racine.classList.add('barre-cachee');
+  }
+  panneaux.forEach(p => {
+    let dernier = 0, cumul = 0;
+    p.addEventListener('scroll', () => {
+      if (p !== ouvert) return;
+      const y = p.scrollTop;
+      // Un défilement posé par le site (retour à sa place dans la liste
+      // des massages) n'est pas un geste : sans ce filtre, il cachait la
+      // barre au retour d'une fiche. Sur la fiche, la barre est déjà
+      // retirée, et le défilement n'y compte pas.
+      // Sur téléphone, la barre est retirée de la fiche : le défilement n'y
+      // compte pas. Sur ordinateur, l'en-tête y reste et suit le geste.
+      if (p._defilementPose || (racine.classList.contains('en-fiche') && !grandEcran.matches)) {
+        p._defilementPose = false; dernier = y; cumul = 0; return;
+      }
+      const reste = p.scrollHeight - p.clientHeight - y;
+      const dy = y - dernier;
+      dernier = y;
+      if (p.scrollHeight - p.clientHeight < 120 || y < 60 || reste < 40) {
+        cumul = 0; montreBarre(); return;
+      }
+      // On cumule dans un même sens ; un changement de sens repart de zéro.
+      cumul = (Math.sign(dy) === Math.sign(cumul)) ? cumul + dy : dy;
+      if (cumul > SEUIL) cacheBarre();
+      else if (cumul < -SEUIL) montreBarre();
+    }, { passive: true });
+  });
+  const barre = $('.bulles');
+  if (barre) barre.addEventListener('focusin', montreBarre);
+  // Approcher le bord de la barre la fait revenir : la souris en haut de
+  // l'écran sur ordinateur, un appui en bas de l'écran sur téléphone.
+  document.addEventListener('mousemove', e => {
+    if (barreCachee && e.clientY < 90 && grandEcran.matches) montreBarre();
+  }, { passive: true });
+  document.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    if (barreCachee && t && t.clientY > innerHeight - 90 && !grandEcran.matches) montreBarre();
+  }, { passive: true });
+
+  /* ---------- Branchements ---------- */
+
+  // Une fois l'accueil chargé et le navigateur au repos, les images des
+  // rubriques se chargent en fond : quand on en ouvre une, elles sont là.
+  // Quelques centaines de kilo-octets, après tout le reste.
+  window.addEventListener('load', () => {
+    const tout = () => panneaux.forEach(chargeImages);
+    if ('requestIdleCallback' in window) requestIdleCallback(tout, { timeout: 3000 });
+    else setTimeout(tout, 1500);
+  });
+
+  bulles.forEach(b => {
+    b.addEventListener('click', () => ouvrir(b.dataset.ouvre, b));
+  });
+
+  // « Envoyer un message » ouvre l'application de messages. Quand rien ne
+  // s'ouvre — un ordinateur sans messagerie, l'aperçu d'une application qui
+  // bloque ces liens —, le bouton semblait mort. Si la page n'a ni perdu le
+  // focus ni été masquée une seconde et demie après le geste, c'est
+  // qu'aucune application n'a pris la main : le numéro s'affiche, à copier.
+  $$('a[data-secours]').forEach(a => {
+    const secours = document.getElementById(a.dataset.secours);
+    if (!secours) return;
+    a.addEventListener('click', () => {
+      let parti = false;
+      const part = () => { parti = true; };
+      window.addEventListener('blur', part, { once: true });
+      document.addEventListener('visibilitychange', part, { once: true });
+      setTimeout(() => {
+        window.removeEventListener('blur', part);
+        document.removeEventListener('visibilitychange', part);
+        if (!parti) secours.hidden = false;
+      }, 1500);
+    });
+  });
+  $$('[data-copie]').forEach(b => {
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(b.dataset.copie);
+        b.textContent = 'Numéro copié';
+      } catch (e) {
+        // Presse-papiers refusé (un aperçu intégré, un navigateur ancien) :
+        // l'ancienne commande de copie sur le numéro sélectionné, et s'il
+        // le faut, la sélection seule — il reste alors à copier soi-même.
+        const r = document.createRange();
+        r.selectNodeContents(b.previousElementSibling);
+        const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+        let copie = false;
+        try { copie = document.execCommand('copy'); } catch (e2) {}
+        b.textContent = copie ? 'Numéro copié' : 'Numéro sélectionné';
+      }
+    });
+  });
+
+  // La marque de la barre d'ordinateur ramène à l'accueil : depuis une
+  // rubrique, elle la referme au lieu de recharger la page.
+  const marque = $('.entete__marque');
+  if (marque) marque.addEventListener('click', e => {
+    if (!ouvert) return;
+    e.preventDefault();
+    demandeFermeture();
+  });
+
+  // Un lien vers une autre rubrique — « Voir les massages » dans le
+  // rendez-vous — fait le même geste que sa bulle.
+  $$('a[data-rubrique]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const id = a.dataset.rubrique;
+      ouvrir(id, bulles.find(b => b.dataset.ouvre === id));
+    });
+  });
+
+  panneaux.forEach(p => {
+    p.querySelector('.fermer').addEventListener('click', demandeFermeture);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    // Échap défait un cran à la fois : la fiche d'un soin d'abord, le
+    // panneau ensuite. Fermer tout d'un coup faisait perdre la planche à
+    // qui voulait seulement revenir aux autres massages.
+    if (vueCle) { montreListe(true); return; }
+    if (ouvert) demandeFermeture();
+  });
+
+  // Bouton « retour » du téléphone : il doit refermer le panneau,
+  // pas quitter le site.
+  window.addEventListener('popstate', e => {
+    if (versAccueil) {
+      versAccueil = false;
+      if (location.hash) remplace(location.pathname);
+      fermer();
+      return;
+    }
+    const id = location.hash.slice(1);
+    const p = id && document.getElementById(id);
+    if (p && p.classList.contains('panneau')) {
+      ouvrir(id, bulles.find(b => b.dataset.ouvre === id));
+      // Une fiche de soin est une étape d'historique à part entière : le
+      // bouton « retour » du téléphone doit ramener à la planche, pas
+      // refermer les massages d'un coup.
+      if (id === 'massages') {
+        const cle = e.state && e.state.vue;
+        if (cle) montreVue(cle, false); else montreListe(false);
+      }
+    } else {
+      fermer();
+    }
+  });
+
+  // Arrivée directe sur une adresse partagée (…/#massages). Aucune entrée
+  // n'a été empilée : la profondeur vaut 0, et la fermeture nettoiera
+  // l'adresse au lieu de tenter un retour qui sortirait du site.
+  const depart = location.hash.slice(1);
+  if (depart) ouvrir(depart, bulles.find(b => b.dataset.ouvre === depart));
+
+
+  /* ---------- La place que prend la barre ----------
+     Mesurées plutôt que devinées : elles dépendent de la taille des
+     libellés, qui suit celle du texte choisie dans le système. La barre se
+     pose au-dessus du pied de page, et le contenu des panneaux s'arrête
+     au-dessus des deux. Des constantes écrites dans la feuille de style
+     auraient menti dès qu'on agrandit le texte, et la dernière ligne serait
+     passée dessous. */
+  const bas = [['--barre', $('.bulles')], ['--pied', $('.pied')]].filter(x => x[1]);
+  if (bas.length) {
+    const mesure = () => bas.forEach(([nom, el]) => racine.style.setProperty(
+      nom, `${Math.round(el.getBoundingClientRect().height)}px`));
+    mesure();
+    if (window.ResizeObserver) {
+      const o = new ResizeObserver(mesure);
+      bas.forEach(([, el]) => o.observe(el));
+    } else addEventListener('resize', mesure);
+  }
+
+  /* ---------- L'économie des forfaits ----------
+     Jamais écrite : elle se déduit du prix à la séance, du nombre de
+     séances et du prix du lot. Un tarif qui change met le gain à jour tout
+     seul, et une addition fausse devient impossible. */
+  $$('.t-l[data-prix]').forEach(f => {
+    const u = parseFloat(f.dataset.unite);
+    const n = parseFloat(f.dataset.lot);
+    const p = parseFloat(f.dataset.prix);
+    if ([u, n, p].some(isNaN) || u * n <= p) return;
+    // « au lieu de 180 € » plutôt que « −30 € » : la remise brute posée à
+    // côté d'un prix ne dit pas ce qu'elle est — remise ? acompte ? part
+    // par séance ? Le prix de référence, lui, se comprend sans notice.
+    const cible = $('.t-avant', f);
+    if (cible) cible.textContent = `au lieu de ${u * n} €`;
+  });
+
+  /* ---------- La planche de cartes et les fiches ----------
+     Une carte par soin, et une seule fiche pour tous : son contenu est
+     recopié depuis la ligne du tableau au moment où l'on touche la carte.
+     Le nom, le sous-titre, la description et les prix n'existent donc qu'à
+     un seul endroit dans la page — écrits deux fois, ils auraient fini par
+     se contredire, et c'est un prix affiché qui aurait menti.
+
+     La fiche remplace la planche dans le panneau au lieu de s'ouvrir par
+     dessus : deux couches superposées donnaient deux fermetures à l'écran,
+     et plus aucune ne disait où elle ramenait. */
+  const panneauSoins = $('#massages');
+  const feuilleSoins = $('.feuille--soins');
+  const laFiche      = $('#fiche');
+  // Deux vues dans le panneau : la planche (null) ou la fiche d'un soin
+  // (sa clé). La fiche tarifs a été retirée ; son tableau reste, caché,
+  // comme source des prix.
+  let vueCle     = null;
+
+  function remplitFiche(cle) {
+    if (!panneauSoins || !laFiche) return false;
+    // `:not(.t-desc)` : la ligne du soin et celle de sa description portent
+    // la même classe de soin, et sans ce filtre c'est la description qui
+    // arrivait en premier — une fiche sans nom ni prix.
+    const ligne = $(`tr.soin--${cle}:not(.t-desc)`, panneauSoins);
+    if (!ligne) return false;
+    const lDesc = $(`tr.t-desc.soin--${cle}`, panneauSoins);
+
+    // La classe du soin porte sa couleur, visible le temps que le bandeau
+    // arrive ; le bandeau est la carte même, recadrée autour de sa lettre.
+    laFiche.className = 'fiche soin--' + cle;
+    // Son adresse est écrite sur la carte (`data-bandeau`) plutôt que
+    // fabriquée ici : le balisage dit quels fichiers le site emploie, et
+    // l'outil d'aperçu, qui les embarque, les trouve.
+    const img = $('.fiche__img', laFiche);
+    const carte = $(`button.soin__carte[data-soin="${cle}"]`);
+    if (img && carte && carte.dataset.bandeau) img.src = carte.dataset.bandeau;
+
+    const mot  = $('.t-soin__mot', ligne);
+    const quoi = $('.t-soin__quoi', ligne);
+    $('.fiche__nom', laFiche).textContent  = mot ? mot.firstChild.textContent.trim() : '';
+    $('.fiche__sous', laFiche).textContent = quoi ? quoi.textContent.trim() : '';
+    const td = lDesc && $('td', lDesc);
+    $('.fiche__desc', laFiche).textContent = td ? td.textContent.trim() : '';
+
+    // Les prix sont clonés, pas réécrits : « au lieu de … » est déjà calculé
+    // sur la ligne du tableau, il suit la copie sans qu'on y pense.
+    const prix = $('.fiche__prix', laFiche);
+    prix.textContent = '';
+    $$('td[data-col]', ligne).forEach(cellule => {
+      // Une cellule qui ne dit que « Pas de forfait » ne fait pas un
+      // encadré : sur la fiche, l'absence se lit d'elle-même.
+      const lignes = $$('.t-l', cellule);
+      if (!lignes.length || lignes.every(l => l.classList.contains('t-l--vide'))) return;
+      const bloc = document.createElement('div');
+      bloc.className = 'fiche__bloc';
+      const h = document.createElement('h4');
+      h.textContent = cellule.dataset.col;
+      bloc.appendChild(h);
+      $$('.t-l', cellule).forEach(l => bloc.appendChild(l.cloneNode(true)));
+      prix.appendChild(bloc);
+    });
+    return true;
+  }
+
+  /* Masquer la vue qu'on quitte lui fait perdre le focus, et le navigateur
+     le réattribue de lui-même au panneau — le premier conteneur défilable
+     au-dessus. Ce rattrapage est interne, sans pile JS, et il tombe *après*
+     la fin de notre fonction : posé dans la foulée, notre focus était
+     écrasé une milliseconde plus tard, et la tabulation repartait du haut
+     du panneau. On attend donc l'image suivante pour le poser — mesuré au
+     `focusin`, c'est le seul ordre qui tienne. */
+  const focusApres = el => {
+    if (el) requestAnimationFrame(() => el.focus({ preventScroll: true }));
+  };
+
+  /* ---------- Le passage d'une vue à l'autre ----------
+     La carte touchée s'agrandit jusqu'à devenir le bandeau de la fiche ;
+     au retour, le bandeau redevient la carte, à sa place dans la planche.
+     C'est l'API View Transitions qui anime : la carte de départ et le
+     bandeau d'arrivée portent le même nom le temps du passage, et le
+     navigateur fait glisser l'un vers l'autre pendant que le reste de la
+     page se fond.
+
+     Les deux ne portent jamais le nom en même temps : un nom en double dans
+     un même état annule la transition. On nomme le départ, on change la
+     page, on retire le nom au départ et on le pose à l'arrivée.
+
+     Sans l'API, ou quand le système demande moins d'animations, le passage
+     est immédiat et la fiche garde sa courte entrée (`fiche-entre`). */
+  const transitions = typeof document.startViewTransition === 'function'
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (transitions) racine.classList.add('vt');
+  const NOM_CARTE = 'carte-soin';
+  const attend = ms => new Promise(r => setTimeout(r, ms));
+
+  function passe(depart, arrivee, changer, image) {
+    if (!transitions) { changer(); return; }
+    if (depart) depart.style.viewTransitionName = NOM_CARTE;
+    const t = document.startViewTransition(async () => {
+      if (depart) depart.style.viewTransitionName = '';
+      changer();
+      if (arrivee) arrivee.style.viewTransitionName = NOM_CARTE;
+      // Le bandeau doit être décodé avant la capture de l'état d'arrivée :
+      // sans cette attente, la carte grandissait vers un cadre vide et
+      // l'image surgissait après coup. Plafonnée, pour ne jamais figer la
+      // page sur une connexion lente.
+      if (image) await Promise.race([image.decode().catch(() => {}), attend(350)]);
+    });
+    t.finished.finally(() => { if (arrivee) arrivee.style.viewTransitionName = ''; });
+  }
+
+  // Où l'on en était dans la planche. Le retour y ramène : c'est là que la
+  // carte attend le bandeau qui redescend — et c'est là qu'on l'avait
+  // laissée. Remonter en tête de planche faisait perdre sa place.
+  let defilePlanche = 0;
+
+  function montreVue(cle, pousse) {
+    if (!remplitFiche(cle)) return;
+    const carte = $(`button.soin__carte[data-soin="${cle}"]`);
+    if (vueCle === null) defilePlanche = panneauSoins.scrollTop;
+    vueCle = cle;
+    passe(
+      feuilleSoins.hidden ? null : carte,
+      $('.fiche__blason', laFiche),
+      () => {
+        feuilleSoins.hidden = true;
+        laFiche.hidden = false;
+        montreBarre();
+        // Sur la fiche, pas de croix : elle semblait ramener à la liste des
+        // massages et fermait toute la rubrique. Le retour est en haut.
+        panneauSoins.dataset.vue = 'fiche';
+        // La barre aussi s'efface : sur la fiche, on revient aux massages,
+        // on ne change pas de rubrique.
+        racine.classList.add('en-fiche');
+        panneauSoins._defilementPose = true;
+        panneauSoins.scrollTop = 0;
+        // Le focus part sur le retour : c'est la sortie de la vue, comme la
+        // croix est celle du panneau.
+        focusApres($('.fiche__retour', laFiche));
+      },
+      $('.fiche__img', laFiche));
+    if (pousse) memorise({ panneau: 'massages', vue: cle, profondeur: profondeur() + 1 }, '#massages');
+  }
+
+  function montreListe(retour) {
+    if (!vueCle) return;
+    // On **revient en arrière** plutôt que d'empiler : sans cela, le bouton
+    // « retour » du téléphone rouvrait la vue qu'on venait de quitter.
+    if (retour && history.state && history.state.vue) { history.back(); return; }
+    const cle = vueCle;
+    vueCle = null;
+    const carte = $(`button.soin__carte[data-soin="${cle}"]`);
+    passe(
+      laFiche.hidden ? null : $('.fiche__blason', laFiche),
+      carte,
+      () => {
+        laFiche.hidden = true;
+        delete panneauSoins.dataset.vue;
+        racine.classList.remove('en-fiche');
+        feuilleSoins.hidden = false;
+        panneauSoins._defilementPose = true;
+        panneauSoins.scrollTop = defilePlanche;
+        montreBarre();
+        // Le focus retourne sur ce qui a ouvert la vue, pas en tête de page.
+        focusApres(carte);
+      });
+  }
+
+  // Remise à zéro silencieuse, appelée quand le panneau se referme : ni
+  // focus ni historique, il n'y a plus personne pour les recevoir.
+  function reinitFiche() {
+    if (!vueCle) return;
+    vueCle = null;
+    laFiche.hidden = true;
+    delete panneauSoins.dataset.vue;
+    racine.classList.remove('en-fiche');
+    feuilleSoins.hidden = false;
+  }
+
+  // `button` : la carte « bientôt » porte la même classe mais n'est pas un
+  // bouton, et ne doit rien ouvrir.
+  $$('button.soin__carte').forEach(carte => {
+    carte.addEventListener('click', () => montreVue(carte.dataset.soin, true));
+  });
+  // Les deux vues portent les mêmes sorties : la flèche du haut et le
+  // bouton du bas ramènent l'une comme l'autre à la planche.
+  $$('.fiche__retour, .fiche__autres').forEach(b => {
+    b.addEventListener('click', () => montreListe(true));
+  });
+
+  /* ---------- Synthèse des avis ----------
+     Jamais écrite en dur : la moyenne et le nombre viennent des avis
+     présents dans la page. Ajouter un <li data-note="…"> suffit. */
+  (function synthese() {
+    const liste = $('#avis-liste');
+    if (!liste) return;
+    const notes = $$('li[data-note]', liste)
+      .map(li => parseFloat(li.dataset.note))
+      .filter(n => n >= 0 && n <= 5);
+    if (!notes.length) return;
+
+    const moy = notes.reduce((a, b) => a + b, 0) / notes.length;
+    // Toujours une décimale, comme Google : « 5,0 » et non « 5 ».
+    $('#note-moy').textContent = (Math.round(moy * 10) / 10).toFixed(1).replace('.', ',');
+    // La répartition : une barre par nombre d'étoiles, longue de sa part
+    // des avis. Une note à demi-étoile compte dans l'étoile arrondie.
+    for (let e = 1; e <= 5; e++) {
+      const nb = notes.filter(x => Math.round(x) === e).length;
+      const barre = $(`[data-etoiles="${e}"]`);
+      if (barre) barre.style.setProperty('--part', `${(nb / notes.length) * 100}%`);
+      const compte = $(`[data-compte="${e}"]`);
+      if (compte) compte.textContent = nb;
+    }
+    // Bornée : les avis sont destinés à être remplacés à la main, et une
+    // note saisie hors barème (« 55 », ou un barème sur 10) rendait
+    // `repeat()` négatif — l'exception emportait le reste du script.
+    const pleines = Math.max(0, Math.min(5, Math.round(moy)));
+    $('#note-etoiles').textContent = '★'.repeat(pleines) + '☆'.repeat(5 - pleines);
+    $('#note-nb').textContent = notes.length;
+    // Les étoiles de chaque avis se tirent aussi de sa note : copier un avis
+    // en changeant seulement `data-note` ne peut plus laisser cinq étoiles
+    // sur un avis à quatre.
+    $$('li[data-note]', liste).forEach(li => {
+      const et = $('.avis__etoiles', li);
+      const n = Math.max(0, Math.min(5, Math.round(parseFloat(li.dataset.note))));
+      if (!et || isNaN(n)) return;
+      et.textContent = '★'.repeat(n) + '☆'.repeat(5 - n);
+      et.setAttribute('aria-label', `${n} étoile${n > 1 ? 's' : ''} sur 5`);
+    });
+  })();
+
+  /* ---------- Année du pied de page ---------- */
+  const an = $('#annee');
+  if (an) an.textContent = new Date().getFullYear();
+
+
+})();

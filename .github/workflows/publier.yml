@@ -1,0 +1,44 @@
+# Publie le site sur GitHub Pages à chaque changement poussé sur la branche
+# du site. Seuls les fichiers utiles partent en ligne : `tools-publier.py`
+# les rassemble dans `_site/` (sans les originaux, les outils ni les notes
+# de travail) et y écrit l'adresse du site.
+#
+# À régler une fois sur GitHub : Settings › Pages › Source : « GitHub
+# Actions ». Si la branche ci-dessous n'est pas celle par défaut du dépôt,
+# l'autoriser dans Settings › Environments › github-pages.
+name: Publication du site
+
+on:
+  push:
+    branches: [claude/v2-bulles]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Une publication à la fois ; la plus récente l'emporte.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Rassembler le site
+        run: python3 tools-publier.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploiement
+        uses: actions/deploy-pages@v4

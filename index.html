@@ -3,219 +3,685 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marie Massage — Masseuse bien-être à Voisins-le-Bretonneux</title>
-  <meta name="description" content="Marie Massage, masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, massage bébé et relaxation.">
+  <title>Marie Massage — Masseuse bien-être à Montigny-le-Bretonneux</title>
+  <meta name="description" content="Marie Massage, masseuse bien-être à Montigny-le-Bretonneux, massages réservés aux femmes : kobido, relaxant, madérothérapie, drainage lymphatique. Réservation en ligne ou par message.">
   <link rel="canonical" href="https://sringot.github.io/per-/">
 
-  <!-- Aperçu du lien partagé (WhatsApp, Instagram, Facebook…).
-       TODO : remplacer le domaine par le vrai à la mise en ligne. -->
+  <!-- Aperçu du lien partagé. L'adresse est réécrite à la publication
+       (tools-publier.py, ligne DOMAINE). -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Marie Massage">
   <meta property="og:locale" content="fr_FR">
-  <meta property="og:title" content="Marie Massage — Masseuse bien-être à Voisins-le-Bretonneux">
-  <meta property="og:description" content="Marie Massage, masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, massage bébé et relaxation.">
+  <meta property="og:title" content="Marie Massage — Masseuse bien-être à Montigny-le-Bretonneux">
+  <meta property="og:description" content="Vous accueillir, vous masser, et vous permettre de décrocher un moment.">
   <meta property="og:url" content="https://sringot.github.io/per-/">
   <meta property="og:image" content="https://sringot.github.io/per-/assets/img/partage.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Marie, masseuse bien-être à Voisins-le-Bretonneux">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="assets/img/favicon.png" sizes="32x32">
   <link rel="apple-touch-icon" href="assets/img/favicon-180.png">
 
+  <!-- Un seul fichier : Figtree est une police variable, les « trois
+       graisses » livrées par Google en étaient trois copies identiques. -->
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-400-latin.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/figtree-600-latin.woff2" crossorigin>
 
   <link rel="stylesheet" href="assets/css/fonts.css">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/v2.css">
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "HealthAndBeautyBusiness",
     "name": "Marie Massage",
-    "description": "Masseuse bien-être à Voisins-le-Bretonneux. Kobido, madérothérapie, drainage lymphatique, massage bébé et relaxation.",
+    "description": "Masseuse bien-être à Montigny-le-Bretonneux, massages réservés aux femmes. Kobido, relaxant, madérothérapie, drainage lymphatique.",
     "url": "https://sringot.github.io/per-/",
     "image": "https://sringot.github.io/per-/assets/img/partage.jpg",
-    "logo": "https://sringot.github.io/per-/assets/img/logo-mark.png",
-    "telephone": "+33600000000",
-    "email": "contact@mariemassage.fr",
+    "telephone": "+33631183481",
     "priceRange": "€€",
     "address": {
       "@type": "PostalAddress",
-      "addressLocality": "Voisins-le-Bretonneux",
-      "postalCode": "78960",
+      "addressLocality": "Montigny-le-Bretonneux",
+      "postalCode": "78180",
       "addressCountry": "FR"
     },
     "openingHoursSpecification": [{
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-      "opens": "09:00", "closes": "20:00"
+      "dayOfWeek": ["Wednesday", "Saturday"],
+      "opens": "11:00",
+      "closes": "18:00"
     }],
     "sameAs": ["https://www.instagram.com/marieemassage/"]
   }
   </script>
 </head>
-<body class="p-index">
+<body>
 
-<!-- ============ PRELOADER (accueil uniquement) ============ -->
-<div class="preloader" id="preloader">
-  <div class="preloader__logo">
-    <img draggable="false" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
-  </div>
-  <span class="preloader__bar"><i></i></span>
-</div>
+<a class="evitement" href="#bulles">Aller à la navigation</a>
 
-<a class="skip-link" href="#main">Aller au contenu</a>
+<!-- ============================================================
+     L'ACCUEIL — un seul écran, jamais de défilement.
+     Une photo, un titre, cinq bulles. Rien d'autre.
+     ============================================================ -->
+<main class="scene" id="scene">
 
-<div class="page">
+  <div class="filigrane-fond" aria-hidden="true"><span class="filigrane"></span></div>
 
-  <!-- ---------- HEADER ---------- -->
-  <header class="header" id="header">
-    <div class="shell header__inner">
+  <!-- Le logo officiel, inséré tel quel. Le fichier livré par Marie est un
+       carré blanc avec le disque au milieu : tools-logo-officiel.py le
+       recadre au disque et le détoure, sinon ses angles se verraient sur le
+       socle crème. -->
+  <img class="logo" src="assets/img/logo-officiel.webp" alt="" width="200" height="200"
+       draggable="false" fetchpriority="high" decoding="async">
 
-      <a href="index.html" class="brand" aria-label="Marie Massage — accueil">
-        <img draggable="false" class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
-      </a>
+  <figure class="portrait">
+    <picture>
+      <!-- Téléphone debout : la photo prend l'écran entier. On sert la
+           découpe déjà au rapport de l'écran, sinon le navigateur rogne les
+           côtés d'une image en 3/4 et n'en affiche que 62 % de la largeur —
+           433 px pour 1170 pixels d'écran. Le média est le même que celui
+           qui déclenche la composition plein écran dans la feuille de style :
+           les deux doivent basculer ensemble. -->
+      <source media="(max-width:699px) and (orientation:portrait)"
+              srcset="assets/img/marie-hero-plein.webp" width="669" height="1448">
+      <source media="(max-width:819px)" srcset="assets/img/marie-hero-m.webp" width="700" height="938">
+      <img src="assets/img/marie-hero.webp" alt="Marie, penchée sur la table, masse le dos d'une cliente."
+           width="1040" height="1394" draggable="false" fetchpriority="high" decoding="async">
+    </picture>
+  </figure>
 
-      <nav class="nav" id="nav" aria-label="Navigation principale">
-        <ul class="nav__list" id="navList">
-          <span class="nav__pill" id="navPill" aria-hidden="true"></span>
-          <li><a href="a-propos.html" class="nav__link">À propos</a></li>
-          <li><a href="le-cabinet.html" class="nav__link">Le cabinet</a></li>
-          <li><a href="massages.html" class="nav__link">Massages</a></li>
-          <li><a href="avis.html" class="nav__link">Avis</a></li>
-          <li><a href="contact.html" class="nav__link">Contact</a></li>
-        </ul>
-        <a href="contact.html" class="btn btn--primary nav__cta-m">Je prends du temps pour moi</a>
-      </nav>
+  <!-- Sur téléphone, la photo occupe l'écran entier et le texte se pose
+       dessus : ce voile en porte la lisibilité. Il est en deux couches —
+       un flou qui calme les plis du rideau, puis un dégradé sombre qui
+       fait le contraste. Sur grand écran la photo reprend son arche et le
+       voile disparaît. -->
+  <span class="voile" aria-hidden="true"></span>
 
-      <div class="header__end">
-        <a href="contact.html" class="btn btn--primary magnetic nav__cta">
-          <span>Je prends du temps pour moi</span>
-        </a>
-        <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
+  <!-- Le nom et la ligne d'accroche forment un bloc : ils se déplacent
+       ensemble d'une composition à l'autre. La navigation, elle, est un
+       emplacement de grille à part — sur téléphone elle se range en colonne
+       à côté de la photo, sur écran large elle suit le nom. -->
+  <div class="mot">
 
-    </div>
-  </header>
+  <h1 class="titre">marieemassage</h1>
+  <!-- Une promesse, pas une étiquette de métier : « masseuse bien-être à
+       Montigny » disait ce qu'elle est, pas ce qu'on vient y chercher. Le
+       métier et la ville n'ont pas disparu — ils sont juste en dessous,
+       avec les deux autres faits qui décidaient d'un rendez-vous et qui
+       attendaient jusqu'ici derrière un clic. -->
+  <p class="accroche">Une heure pour vous, dans une pièce pensée pour ça.</p>
+  <!-- Le nom de la commune est insécable : sans cela il se coupe sur son
+       trait d'union (« Montigny-le- / Bretonneux »), ce qui se lit mal. -->
+  <p class="faits">
+    <span>Réservé aux femmes</span>
+    <span>Dès 60&nbsp;€</span>
+    <span class="insecable">Montigny-le-Bretonneux</span>
+  </p>
 
-<main id="main">
-
-  <section class="hero" id="accueil">
-    <div class="hero__aura" aria-hidden="true">
-      <span class="orb orb--1"></span>
-      <span class="orb orb--2"></span>
-    </div>
-
-    <div class="shell hero__inner">
-
-      <div class="hero__content">
-        <p class="hero__eyebrow reveal" style="--d:.05s">
-          <span class="pulse"></span> Voisins-le-Bretonneux
-        </p>
-
-        <h1 class="hero__title">
-          <span class="ln"><span style="--d:.10s">Retrouvez</span></span>
-          <span class="ln"><span style="--d:.19s">votre équilibre</span></span>
-          <span class="ln"><span style="--d:.28s">&amp; bien-être</span></span>
-        </h1>
-
-        <p class="hero__text reveal" style="--d:.42s">
-          Vous accueillir, vous masser, et vous permettre de décrocher
-          un moment.
-        </p>
-
-        <div class="hero__actions reveal" style="--d:.52s">
-          <a href="contact.html" class="btn btn--primary btn--lg magnetic"><span>Je prends du temps pour moi</span></a>
-          <a href="massages.html" class="btn btn--outline btn--lg magnetic"><span>Mes massages</span></a>
-        </div>
-
-        <!-- Preuve sociale : avatars + un avis relayé toutes les 12 s.
-             Placé ici plutôt qu'en bas de page — c'est la première chose
-             que la cliente voit, sans avoir à faire défiler. -->
-        <a class="proof reveal" href="avis.html" style="--d:.62s" aria-label="Avis de clientes">
-          <span class="proof__top">
-            <span class="proof__avatars" aria-hidden="true">
-              <i class="ill"><img draggable="false" src="assets/img/illus/avatar-1.svg" alt="" loading="lazy" decoding="async"></i><i class="ill"><img draggable="false" src="assets/img/illus/avatar-2.svg" alt="" loading="lazy" decoding="async"></i><i class="ill"><img draggable="false" src="assets/img/illus/avatar-3.svg" alt="" loading="lazy" decoding="async"></i>
-            </span>
-            <b>Ce qu'en disent mes clientes</b>
-            <span class="proof__more" aria-hidden="true">Tous les avis</span>
-          </span>
-
-          <span class="proof__quote">
-            <span class="ticker__stars" aria-hidden="true">★★★★★</span>
-            <span class="ticker__stage" id="tickerStage">
-              <span class="ticker__item is-on">« Lorem ipsum dolor sit amet, consectetur adipiscing elit. »<i>Prénom N. · Kobido</i></span>
-              <span class="ticker__item">« Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. »<i>Prénom N. · Relaxation</i></span>
-              <span class="ticker__item">« Duis aute irure dolor in reprehenderit in voluptate velit esse. »<i>Prénom N. · Drainage</i></span>
-              <span class="ticker__item">« Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia. »<i>Prénom N. · Madérothérapie</i></span>
-              <span class="ticker__item">« Maecenas aliquam risus ut volutpat pretium, nunc velit tincidunt orci. »<i>Prénom N. · Dos &amp; nuque</i></span>
-            </span>
-          </span>
-        </a>
-      </div>
-
-      <div class="hero__visual" id="heroVisual">
-        <div class="hero__tilt" id="heroTilt">
-          <figure class="ill arch hero__photo">
-            <!-- Deux découpes, une par format : verticale pour l'arche haute
-                 du desktop, horizontale pour l'arche large du téléphone.
-                 Rogner la verticale à la hauteur du mobile perdait les côtés. -->
-            <picture>
-              <source media="(max-width:860px)" srcset="assets/img/marie-hero-large.webp" width="930" height="698">
-              <img draggable="false" src="assets/img/marie-hero.webp" alt="Marie, masseuse bien-être à Voisins-le-Bretonneux" width="1040" height="1144" fetchpriority="high" decoding="async">
-            </picture>
-          </figure>
-        </div>
-      </div>
-
-    </div>
-
-    <a href="a-propos.html" class="cue" id="cue" aria-label="Descendre">
-      <span class="cue__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13m0 0-6-6m6 6 6-6"/></svg></span>
-      <span class="cue__txt">Découvrir</span>
-    </a>
-  </section>
+  </div><!-- /.mot -->
 
 
 </main>
 
-  <!-- ---------- FOOTER ---------- -->
-  <footer class="footer">
-    <div class="shell footer__inner">
+<!-- ============================================================
+     LES PANNEAUX — présents dans la page, révélés au clic.
+     Ils restent dans le document pour que les moteurs les lisent ;
+     `inert` les retire du clavier et des lecteurs d'écran tant
+     qu'ils sont fermés.
+     ============================================================ -->
 
-      <div class="footer__top">
-        <a href="index.html" class="brand brand--footer" aria-label="Marie Massage — accueil">
-          <img draggable="false" class="brand__mark" src="assets/img/logo-mark.png" alt="" width="281" height="300" fetchpriority="high" decoding="async">
-        </a>
-        <p class="footer__tag">Masseuse bien-être · Voisins-le-Bretonneux</p>
+<section class="panneau panneau--texture panneau--clair" id="moi" aria-labelledby="moi-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="texture-fond" aria-hidden="true"></div>
+  <div class="feuille">
+    <div class="bloc">
+      <p class="sur-titre">À propos</p>
+      <h2 id="moi-t">Masser, par plaisir</h2>
+    <p class="chapo">
+      En parallèle de mon activité principale dans le paramédical, j'ai choisi de
+      consacrer une partie de mon temps à quelque chose que j'aime particulièrement&nbsp;:
+      masser.
+    </p>
+    <p>
+      L'idée est simple&nbsp;: vous accueillir, vous masser, et vous permettre de
+      décrocher un moment.
+    </p>
 
-        <!-- TODO : coordonnées fictives — à remplacer ici ET dans contact.html -->
-        <p class="footer__contact">
-          <a href="tel:+33600000000">06 00 00 00 00</a>
-          <span aria-hidden="true">·</span>
-          <a href="mailto:contact@mariemassage.fr">contact@mariemassage.fr</a>
-        </p>
-      </div>
+    <p class="moi__reserve">
+      <b>Massages réservés aux femmes</b>
+      <span>Par une femme, pour les femmes.</span>
+    </p>
+    </div>
 
-      <div class="footer__bottom">
-        <p>© <span id="year">2026</span> Marie Massage · <a href="mentions-legales.html">Mentions légales</a></p>
-        <p class="footer__mention">Les massages proposés sont des soins de bien-être, non thérapeutiques.</p>
-      </div>
+    <!-- Marie au travail. C'est la seule preuve visuelle du site qu'elle
+         masse vraiment : le portrait de l'accueil montre qui elle est, pas
+         ce qu'elle fait.
+
+         L'adresse est dans `data-src`, pas dans `src` : `loading="lazy"` ne
+         suffisait pas. Le panneau est fermé mais il occupe la fenêtre, donc
+         le navigateur jugeait les deux images « proches de l'écran » et les
+         téléchargeait — 88 Ko à l'ouverture de la page pour du contenu que
+         personne n'a demandé. Le script les pose à l'ouverture du panneau. -->
+    <ul class="cliches">
+      <!-- Essai : le portrait posé est retiré, à la demande de Sébastien, pour
+           voir la page avec la seule photo de Marie en séance. Pour le
+           remettre, il suffit de rétablir cette ligne avant l'autre :
+             <li><img data-src="assets/img/marie-moi.webp" width="620" height="827"
+                      decoding="async" alt="Marie, dans sa pièce de massage."></li> -->
+      <li><img data-src="assets/img/marie-seance-2.webp" width="620" height="827"
+               decoding="async"
+               alt="Marie travaille du bout des doigts le long de la colonne vertébrale."></li>
+    </ul>
+
+
+    <div class="bloc">
+    <h3 class="bloc-h">Mon parcours</h3>
+    <!-- Par ordre chronologique, comme Marie le demande : le métier d'abord,
+         puis les formations par date, celle qui vient en dernier.
+
+         Le massage relaxant : « Formation en massage relaxant aux huiles »,
+         La Maison du Lotus, certificat daté du 13 juin 2024 (vu sur photo).
+         Le drainage : certifié en 2026 par Nathalie Duarte. L'ancienne
+         méthode n'est plus nommée nulle part, à la demande de Marie.
+    -->
+    <!-- Le métier d'abord, en une phrase : il n'a pas de carte, et le poser
+         en tête de la liste des massages le mettait au même rang qu'une
+         formation. Puis une ligne de temps où chaque formation porte la carte
+         du massage qu'elle a ouvert — on comprend d'un coup d'œil qu'à chaque
+         soin proposé correspond une formation suivie. -->
+    <p class="parcours__metier"><b>Professionnelle du paramédical</b>, c'est mon
+      métier au quotidien, et je l'exerce toujours. J'ai souhaité me former
+      en plus, afin de vous proposer les massages suivants&nbsp;:</p>
+    <ul class="parcours">
+      <li><img class="parcours__carte" data-src="assets/img/cartes/relaxant.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Massage relaxant</b><span>Aux huiles, certifiée par La Maison du Lotus en 2024</span></span></li>
+      <li><img class="parcours__carte" data-src="assets/img/cartes/drainage.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Drainage lymphatique</b><span>Certifiée en 2026 par Nathalie Duarte</span></span></li>
+      <li><img class="parcours__carte" data-src="assets/img/cartes/kobido.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Kobido</b><span>Certifiée par La Maison du Lotus en 2026</span></span></li>
+      <li><img class="parcours__carte" data-src="assets/img/cartes/madero.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Madérothérapie</b><span>Certifiée par La Maison du Lotus en 2026</span></span></li>
+      <li class="parcours--a-venir"><img class="parcours__carte" data-src="assets/img/cartes/deep-tissus.webp" width="600" height="1067" alt="" decoding="async"><span class="parcours__texte"><b>Deep tissus</b><span>Formation prévue début 2027</span></span></li>
+    </ul>
+
+    <p class="parcours__ecole">
+      La Maison du Lotus est un centre de formation aux massages bien-être
+      <b>agréé FFMBE</b>, à Voisins-le-Bretonneux.
+    </p>
+
 
     </div>
-  </footer>
 
-</div><!-- /.page -->
+    <div class="bloc">
+    <p class="moi__cadre">
+      Je ne soigne pas&nbsp;: je détends. Mes massages sont des soins de
+      bien-être, ils ne remplacent ni un kinésithérapeute ni un avis médical.
+    </p>
 
-<a href="#main" class="totop" id="totop" aria-label="Remonter en haut">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg>
-</a>
+    <p class="moi__liens">
+      <a href="https://www.instagram.com/marieemassage/" rel="me noopener" target="_blank">
+        @marieemassage sur Instagram
+      </a>
+    </p>
+    </div>
+  </div>
+</section>
 
+<section class="panneau panneau--texture panneau--clair" id="lieu" aria-labelledby="lieu-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="texture-fond" aria-hidden="true"></div>
+  <div class="feuille">
+    <div class="bloc">
+      <p class="sur-titre">Le lieu</p>
+      <h2 id="lieu-t">Une parenthèse<br>hors du temps</h2>
+    <p class="chapo">
+      J'ai créé une pièce entièrement dédiée aux massages, pensée pour vous
+      accueillir dans une atmosphère agréable et chaleureuse.
+    </p>
+    <!-- Les jours, en étiquette : c'est la question qu'on vient poser en
+         ouvrant « Le lieu ». Même forme que « Réservé aux femmes » sur la
+         page Moi. Marie masse deux jours par semaine, sur rendez-vous. -->
+    <p class="etiquette">
+      <b>Le mercredi et le samedi</b>
+      <span>De 11&nbsp;h à 18&nbsp;h, sur rendez-vous.</span>
+    </p>
 
-<script src="assets/js/main.js"></script>
+    </div>
+
+    <!-- Il n'y a qu'une photographie de la pièce : elle est donc carrée et
+         à pleine largeur, plutôt qu'une vignette parmi d'autres — trois
+         petits cadres tiennent une série, un seul se noie.
+
+         Elle arrive après le chapô, avant le reste : c'est ce qu'on vient
+         voir en ouvrant « Le lieu ».
+
+         `data-src` et non `src` : le panneau est fermé mais occupe la
+         fenêtre, et le navigateur téléchargeait les images qu'il croyait
+         proches de l'écran. Le script la pose à l'ouverture. -->
+    <figure class="piece">
+      <img data-src="assets/img/cabinet.webp" width="1080" height="1080"
+           decoding="async"
+           alt="La pièce de massage : la table dressée de linge, une échelle
+                de serviettes, une lampe et des lumières tamisées.">
+    </figure>
+
+    <div class="bloc">
+    <p class="piece__mot">
+      Un petit espace où, pendant une heure, le monde peut bien attendre un peu.
+    </p>
+
+    <!-- Les informations pratiques, même forme que « Mon parcours » sur la
+         page Moi : un petit titre, puis des lignes séparées d'un filet, un
+         intitulé en gras et son détail dessous. Elles étaient en liste nue
+         sous une phrase centrée, et les deux ne se parlaient pas.
+
+         Les horaires n'y sont plus : ils sont en étiquette, sous la
+         présentation — c'est la première chose qu'on cherche ici. -->
+    <p class="sur-titre infos__titre">Sur place</p>
+    <ul class="infos">
+      <li><b>Montigny-le-Bretonneux (78180)</b><span>Adresse exacte communiquée au <span class="insecable">rendez-vous</span></span></li>
+      <li><b>Linge frais à chaque séance</b></li>
+      <li><b>Musique &amp; lumière tamisées</b></li>
+    </ul>
+    </div>
+  </div>
+</section>
+
+<section class="panneau" id="massages" aria-labelledby="massages-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="texture-fond" aria-hidden="true"></div>
+  <!-- Deux vues dans le même panneau : la planche de cartes, et la fiche
+       d'un soin. On passe de l'une à l'autre sans refermer le panneau, et
+       la flèche de retour ramène à la planche — c'est le geste d'un
+       catalogue, pas celui d'une nouvelle page. -->
+  <div class="feuille feuille--soins" data-vue="liste">
+    <p class="sur-titre">Les massages</p>
+    <h2 id="massages-t">Quatre soins,<br>quatre univers</h2>
+    <p class="chapo">
+      Parce qu'on n'a pas tous les mêmes envies ni les mêmes besoins, chacun a
+      sa façon de prendre soin de vous.
+    </p>
+
+    <!-- Les cartes dessinées par Marie : une texture, un monogramme, rien
+         d'autre. Le nom est ajouté par-dessus, en blanc, pour qu'il reste
+         du texte — lisible par un lecteur d'écran, traduisible, net à toute
+         taille. Le détail et le prix sont derrière, et `data-soin` dit quelle
+         ligne du tableau les contient : aucun prix n'est écrit deux fois.
+
+         `alt` vide : l'image ne dit rien que le nom écrit dessus ne dise
+         déjà. `data-src` et non `src` : le panneau est fermé mais occupe la
+         fenêtre, et le navigateur aurait chargé les cinq cartes à l'arrivée
+         sur l'accueil. Le script les pose à l'ouverture de Massages. -->
+    <ul class="soins">
+      <li class="soin soin--kobido">
+        <button class="soin__carte" type="button" data-soin="kobido" data-bandeau="assets/img/cartes/kobido-bandeau.webp" aria-label="Kobido — voir le détail et le prix">
+          <img class="soin__img" data-src="assets/img/cartes/kobido.webp" width="600" height="1067"
+               alt="" decoding="async">
+          <span class="soin__nom">Kobido</span>
+          <span class="soin__voir" aria-hidden="true">Voir</span>
+        </button>
+      </li>
+      <li class="soin soin--relaxant">
+        <button class="soin__carte" type="button" data-soin="relaxant" data-bandeau="assets/img/cartes/relaxant-bandeau.webp" aria-label="Relaxant — voir le détail et le prix">
+          <img class="soin__img" data-src="assets/img/cartes/relaxant.webp" width="600" height="1067"
+               alt="" decoding="async">
+          <span class="soin__nom">Relaxant</span>
+          <span class="soin__voir" aria-hidden="true">Voir</span>
+        </button>
+      </li>
+      <li class="soin soin--madero">
+        <button class="soin__carte" type="button" data-soin="madero" data-bandeau="assets/img/cartes/madero-bandeau.webp" aria-label="Madéro — voir le détail et le prix">
+          <img class="soin__img" data-src="assets/img/cartes/madero.webp" width="600" height="1067"
+               alt="" decoding="async">
+          <span class="soin__nom">Madéro</span>
+          <span class="soin__voir" aria-hidden="true">Voir</span>
+        </button>
+      </li>
+      <li class="soin soin--drainage">
+        <button class="soin__carte" type="button" data-soin="drainage" data-bandeau="assets/img/cartes/drainage-bandeau.webp" aria-label="Drainage — voir le détail et le prix">
+          <img class="soin__img" data-src="assets/img/cartes/drainage.webp" width="600" height="1067"
+               alt="" decoding="async">
+          <span class="soin__nom">Drainage</span>
+          <span class="soin__voir" aria-hidden="true">Voir</span>
+        </button>
+      </li>
+      <!-- Le deep tissus arrive début 2027 : sa carte est là, grisée, mais
+           ce n'est pas un bouton. Il n'a ni prix ni fiche à ouvrir, et un
+           élément qui a l'air cliquable sans l'être est pire qu'une absence.
+           Le jour où Marie le propose : lui donner la forme des quatre
+           autres, et remettre sa ligne dans le tableau des tarifs. -->
+      <li class="soin soin--deep-tissus soin--bientot">
+        <div class="soin__carte">
+          <img class="soin__img" data-src="assets/img/cartes/deep-tissus.webp" width="600" height="1067"
+               alt="" decoding="async">
+          <span class="soin__nom">Deep tissus</span>
+          <span class="soin__voir">Bientôt</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Le tableau des tarifs n'est plus affiché : la fiche tarifs a été
+       retirée de la page Massages. Il reste dans la page, caché, parce qu'il
+       est la **source** des prix : chaque fiche de soin recopie les siens de
+       sa ligne. Un tarif se change donc toujours ici, et nulle part ailleurs. -->
+  <div class="tarifs-source" hidden>
+      <!-- Le bloc des tarifs est un enfant à part de la feuille : celle-ci
+           borne ses paragraphes à une longueur de ligne lisible, et le tableau
+           s'y retrouvait à l'étroit — « 1 h 30 » et « 90 € » passaient à la
+           ligne l'un sous l'autre. -->
+      <div class="tarifs">
+      <h3 class="bloc-h" id="tarifs-t">Les tarifs</h3>
+      <!-- Le tableau plutôt que le dos des cartes : on lit des prix côte à
+           côte, pas un par un. En retourner cinq pour en comparer deux, c'était
+           demander de retenir un chiffre en changeant d'écran. -->
+      <div class="tableau">
+        <table aria-labelledby="tarifs-t">
+          <thead>
+            <tr>
+              <th scope="col">Soin</th>
+              <th scope="col">La séance</th>
+              <th scope="col">En forfait</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="soin--kobido">
+          <th scope="row"><span class="t-soin"><span class="t-soin__mot">Kobido<em class="t-soin__quoi">Lifting japonais du visage</em></span></span></th>
+          <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">60&nbsp;€</b></span></td>
+          <td data-col="En forfait"><span class="t-l t-l--vide">Pas de forfait</span></td>
+        </tr>
+        <!-- Descriptions écrites par Marie (septembre 2026), resserrées pour
+             tenir dans la fiche. Le texte complet du drainage citait des
+             effets sur la santé (immunité, fertilité, lipœdème, suites
+             d'opération…) : retirés tant que ce n'est pas validé — un soin de
+             bien-être ne peut pas les revendiquer. -->
+        <tr class="t-desc soin--kobido" id="d-kobido" hidden>
+          <td colspan="3">Inspiré du massage traditionnel japonais : des gestes rythmés, précis et enveloppants, à l'huile d'abricot, sur le visage, le cou et la nuque. Pour délasser les traits, faire du bien à la peau et s'offrir un vrai moment de détente.</td>
+        </tr>
+        <tr class="soin--relaxant">
+          <th scope="row"><span class="t-soin"><span class="t-soin__mot">Relaxant<em class="t-soin__quoi">Massage corps complet</em></span></span></th>
+          <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">60&nbsp;€</b></span><span class="t-l"><span class="t-l__nom">1 h 30</span><b class="t-l__prix">90&nbsp;€</b></span></td>
+          <td data-col="En forfait"><span class="t-l" data-unite="60" data-lot="3" data-prix="150"><span class="t-l__nom">3&nbsp;séances&nbsp;de&nbsp;1&nbsp;h</span><b class="t-l__prix">150&nbsp;€</b><em class="t-avant"></em></span><span class="t-l" data-unite="90" data-lot="3" data-prix="240"><span class="t-l__nom">3&nbsp;séances&nbsp;de&nbsp;1&nbsp;h&nbsp;30</span><b class="t-l__prix">240&nbsp;€</b><em class="t-avant"></em></span></td>
+        </tr>
+        <tr class="t-desc soin--relaxant" id="d-relaxant" hidden>
+          <td colspan="3">Un massage complet, du crâne aux orteils, pour lâcher prise et se détendre en profondeur. À l'huile de sésame, en mouvements lents et enveloppants, il s'adapte à vous : la pression se règle selon votre envie, plus douce ou plus appuyée.</td>
+        </tr>
+        <!-- Le deep tissus est retiré du tableau à la demande de Marie : la
+             formation est prévue pour début 2027, elle ne le pratique pas
+             encore. Sa ligne reste dans « Mon parcours », où elle annonce la
+             formation à venir sans l'offrir à la réservation. Les deux lignes
+             supprimées ici (le soin et sa description) sont à reprendre telles
+             quelles le jour où elle le proposera. -->
+        <tr class="soin--madero">
+          <th scope="row"><span class="t-soin"><span class="t-soin__mot">Madéro<em class="t-soin__quoi">Soin corps remodelant</em></span></span></th>
+          <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">70&nbsp;€</b></span></td>
+          <td data-col="En forfait"><span class="t-l" data-unite="70" data-lot="5" data-prix="300"><span class="t-l__nom">5&nbsp;séances</span><b class="t-l__prix">300&nbsp;€</b><em class="t-avant"></em></span></td>
+        </tr>
+        <tr class="t-desc soin--madero" id="d-madero" hidden>
+          <td colspan="3">Un massage aux outils en bois, dont les formes s'adaptent à chaque zone du corps. Un travail en surface, pour s'occuper de la cellulite et de la silhouette sans agresser la peau, avec une pression adaptée à votre corps.</td>
+        </tr>
+        <tr class="soin--drainage">
+          <th scope="row"><span class="t-soin"><span class="t-soin__mot">Drainage lymphatique<em class="t-soin__quoi">Jambes légères, circulation relancée</em></span></span></th>
+          <td data-col="La séance"><span class="t-l"><span class="t-l__nom">1 h</span><b class="t-l__prix">80&nbsp;€</b></span></td>
+          <td data-col="En forfait"><span class="t-l" data-unite="80" data-lot="5" data-prix="350"><span class="t-l__nom">5&nbsp;séances</span><b class="t-l__prix">350&nbsp;€</b><em class="t-avant"></em></span></td>
+        </tr>
+        <tr class="t-desc soin--drainage" id="d-drainage" hidden>
+          <td colspan="3">Un massage rythmé et précis, qui accompagne la circulation de la lymphe. Une formation qui m'a marquée : j'en ressors convaincue que le drainage lymphatique est un vrai allié. Soin de bien-être, qui ne remplace pas un suivi médical.</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tableau__note">Un forfait s'applique au soin choisi&nbsp;; le tarif indiqué couvre l'ensemble des séances.</p>
+
+      </div><!-- /.tarifs -->
+  </div>
+  <!-- La fiche d'un soin. Une seule pour les quatre : son contenu est
+       recopié depuis la ligne du tableau au moment où l'on touche une carte
+       — le nom, le sous-titre, la description et les prix n'existent donc
+       qu'à un seul endroit dans la page. Changer un tarif dans le tableau
+       change la fiche, sans que personne ait à y penser. -->
+  <article class="fiche" id="fiche" aria-labelledby="fiche-nom" hidden>
+    <button class="fiche__retour" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+      <span>Tous les massages</span>
+    </button>
+    <!-- La carte du soin, recadrée en bandeau autour du monogramme. Son
+         adresse est posée par le script, au moment où l'on touche la carte :
+         une seule fiche sert les quatre soins. -->
+    <div class="fiche__blason">
+      <img class="fiche__img" alt="" width="900" height="506" decoding="async">
+    </div>
+    <h3 class="fiche__nom" id="fiche-nom"></h3>
+    <p class="fiche__sous"></p>
+    <p class="fiche__desc"></p>
+    <div class="fiche__prix"></div>
+    <button class="fiche__autres" type="button">Voir les autres massages</button>
+  </article>
+</section>
+
+<section class="panneau panneau--texture panneau--clair" id="avis" aria-labelledby="avis-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="texture-fond" aria-hidden="true"></div>
+  <div class="feuille">
+    <div class="bloc">
+      <p class="sur-titre">Retours clientes</p>
+      <h2 id="avis-t">Elles en parlent<br>mieux que moi</h2>
+
+    <!-- Le résumé, sur le modèle de celui de Google : la répartition des
+         notes à gauche, la moyenne à droite. Rien n'y est écrit en dur :
+         les barres, la moyenne, les étoiles et le nombre se calculent à
+         partir des `data-note` de la liste. Pour un nouvel avis, ajouter un
+         <li data-note="…"> suffit. -->
+    <div class="resume">
+      <p class="resume__titre">Résumé des avis <small>Google et Treatwell</small></p>
+      <ol class="resume__barres">
+        <li><span class="resume__n" aria-hidden="true">5</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="5"></span></span><span class="lecteur"><span data-compte="5">0</span> avis à 5 étoiles</span></li>
+        <li><span class="resume__n" aria-hidden="true">4</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="4"></span></span><span class="lecteur"><span data-compte="4">0</span> avis à 4 étoiles</span></li>
+        <li><span class="resume__n" aria-hidden="true">3</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="3"></span></span><span class="lecteur"><span data-compte="3">0</span> avis à 3 étoiles</span></li>
+        <li><span class="resume__n" aria-hidden="true">2</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="2"></span></span><span class="lecteur"><span data-compte="2">0</span> avis à 2 étoiles</span></li>
+        <li><span class="resume__n" aria-hidden="true">1</span><span class="resume__barre" aria-hidden="true"><span data-etoiles="1"></span></span><span class="lecteur"><span data-compte="1">0</span> avis à 1 étoile</span></li>
+      </ol>
+      <p class="resume__note">
+        <b id="note-moy">—</b>
+        <span class="resume__etoiles" id="note-etoiles" aria-hidden="true"></span>
+        <small>(<span id="note-nb">—</span><span class="lecteur"> avis</span>)</small>
+      </p>
+    </div>
+    <!-- Exigée par le Code de la consommation (art. L111-7-2) pour qui
+         affiche des avis : dire d'où ils viennent et comment ils sont
+         choisis. -->
+    <p class="avis__source">Avis de clientes recopiés mot pour mot depuis Google et Treatwell.</p>
+    </div>
+
+    <!-- Les avis de Google et de Treatwell, recopiés mot pour mot, fautes
+         comprises : un avis corrigé n'est plus tout à fait celui de la
+         cliente. Seules les apostrophes sont typographiques. Le nom est réduit
+         à son initiale ; Treatwell n'en donne pas. L'avis de Hanne B. est
+         coupé là où Google le coupe (« Plus ») : à compléter si on a la
+         suite. Dans celui de Monthe, le nom d'une méthode que Marie ne
+         mentionne plus est retiré, et la coupure marquée « […] ». Treatwell en a d'autres (« Voir plus d'avis ») : à ajouter
+         au même format. -->
+    <ul class="avis" id="avis-liste">
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Marie est une masseuse exceptionnelle, empathique et bienveillante, elle nous enveloppe d’un toucher à la fois relaxant et réconfortant. Je recommande à 200 %<br>Personnellement je l’ai adopté 💗</q>
+        <cite><b>Catherine T.</b> · sur Google</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Grand merci à Marie, un massage au top ! 1h30 de bonheur. Professionnelle et bienveillante, elle veille à tout pour que vous passiez un agréable moment. N’hésitez pas vous ne serez pas déçu.</q>
+        <cite><b>Marjorie</b> · Massage relaxant · sur Treatwell</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Première fois chez Marie et je ne regrette pas ! Marie est accueillante et tres gentille, ambiance agréable et table de massage chauffante (parfait pour l’hiver qui arrive !). Massage Kobido sensationnel que je recommande vivement, axé aussi sur la détente que j’ai vraiment apprécié 😊 Bref j y retournerai et je recommande à 100%</q>
+        <cite><b>Alexandra</b> · Kobido · sur Treatwell</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Je fais des massages chez Marie depuis un an, c’est un plaisir que je m’octroie, un moment de détente pour moi. Marie sait me soulager aux endroits nécessaires, chaque séance est différente, personnalisée, j’en sors sur un petit nuage […]</q>
+        <cite><b>Hanne B.</b> · sur Google</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>J’ai pris rendez vous car je fais pas mal de rétention d’eau. Marie a su m’expliquer les bienfaits de sa méthode […] Je ne connaissais que la méthode Renatta et j’ai été agréablement surprise du résultats sur mes jambes. Merci Marie, à très vite</q>
+        <cite><b>Monthe</b> · Drainage lymphatique · sur Treatwell</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Merci Marie pour ce massage relaxant et cet accueil chaleureux. Super moment de bien-être, je reviendrai sans hésiter !</q>
+        <cite><b>Pauline T.</b> · sur Google</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Ma fille a adoré le massage et est ressortie apaisée, toute zen Marie est toujours aussi attentionnée Allez y !!!</q>
+        <cite><b>Alexandra</b> · Massage du dos, des épaules et du cou · sur Treatwell</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Première fois que Marie me masse et franchement 10/10 je vous conseille de tester ! en tt cas pour ma part je reviendrais</q>
+        <cite><b>Audrey C.</b> · sur Google</cite>
+      </li>
+      <li data-note="5">
+        <span class="avis__etoiles" role="img" aria-label="5 étoiles sur 5">★★★★★</span>
+        <q>Toujours aussi bien accueillie par Marie qui est très à l’écoute et bienveillante. Deuxième soin Kobido 😊, toujours aussi agréable ! Le massage du dos était top ! Je suis arrivée avec de douloureuses contractures du au stress et Marie a fait des miracles 🤩</q>
+        <cite><b>Alexandra</b> · Kobido · sur Treatwell</cite>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="panneau panneau--texture panneau--clair" id="rdv" aria-labelledby="rdv-t" inert>
+  <button class="fermer" type="button" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="texture-fond" aria-hidden="true"></div>
+  <div class="feuille feuille--rdv">
+    <div class="bloc">
+      <p class="sur-titre">Rendez-vous</p>
+      <h2 id="rdv-t">Réserver,<br>en trois temps</h2>
+    </div>
+
+    <!-- Les trois temps d'une réservation, sur une ligne comme le parcours de
+         la page Moi : quelqu'un qui découvre Marie sait ce qui l'attend avant
+         d'avoir à choisir un bouton. Les boutons viennent ensuite, ensemble. -->
+    <ol class="etapes">
+      <li>
+        <span class="etapes__n" aria-hidden="true">1</span>
+        <span class="etapes__texte"><b>Choisissez votre massage</b>
+          <span>Kobido, relaxant, madéro ou drainage.
+            <a class="lien-fort" href="#massages" data-rubrique="massages">Voir les massages</a></span></span>
+      </li>
+      <li>
+        <span class="etapes__n" aria-hidden="true">2</span>
+        <span class="etapes__texte"><b>Prenez votre créneau</b>
+          <span>Le mercredi ou le samedi, entre <span class="insecable">11&nbsp;h et 18&nbsp;h</span>&nbsp;: en ligne, ou par message.</span></span>
+      </li>
+      <li>
+        <span class="etapes__n" aria-hidden="true">3</span>
+        <span class="etapes__texte"><b>Recevez l'adresse</b>
+          <span>À Montigny-le-Bretonneux&nbsp;: l'adresse exacte vous est communiquée au <span class="insecable">rendez-vous</span>.</span></span>
+      </li>
+    </ol>
+
+    <!-- Deux boutons, comme demandé : réserver en ligne et envoyer un
+         message. Le numéro reste écrit en dessous, pour qui veut appeler. -->
+    <div class="reserver">
+      <!-- Lien fourni par Marie. `target="_blank"` : le planning Treatwell
+           est un parcours de réservation à lui seul, on ne quitte pas le
+           site en plein milieu pour y entrer. `rel="noopener"` va avec. -->
+      <a class="reserver__btn reserver__btn--plein" href="https://widget.treatwell.fr/salon/marieemassge/"
+         target="_blank" rel="noopener">Réserver en ligne
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+      <a class="reserver__btn" href="sms:+33631183481" data-secours="secours-sms">Envoyer un message</a>
+      <!-- Si l'appareil n'ouvre pas les messages — un ordinateur, l'aperçu
+           d'une application qui bloque ces liens —, le bouton ne doit pas
+           avoir l'air cassé : le numéro apparaît ici, prêt à copier. -->
+      <p class="reserver__secours" id="secours-sms" role="status" hidden>
+        Les messages ne se sont pas ouverts sur cet appareil. Écrivez au
+        <b>06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</b>
+        <button class="reserver__copier" type="button" data-copie="06 31 18 34 81">Copier le numéro</button>
+      </p>
+      <!-- Formulée à la première personne, comme Marie l'a demandée : ce
+           n'est pas un horaire d'ouverture mais le moment où elle répond.
+           L'adresse contact@mariemassage.fr reste retirée : Marie ne l'a pas
+           reconnue, et une boîte que personne ne relève avale les messages. -->
+      <p class="reserver__mot">Au <a href="tel:+33631183481">06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</a>,
+        je réponds dès que je suis disponible.
+        Et sur Instagram, <a class="lien-fort" href="https://www.instagram.com/marieemassage/"
+        target="_blank" rel="noopener">@marieemassage</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- La distinction entre soin de bien-être et acte de kinésithérapie n'a
+     pas disparu du site : elle est écrite en entier dans les mentions
+     légales, dont le lien est juste ici. Elle a seulement quitté l'accueil,
+     où elle pesait deux lignes sous les bulles. -->
+<!-- ============================================================
+     LA BARRE DE NAVIGATION
+
+     Elle est **hors de `.scene`** à dessein. L'ouverture d'un panneau rend
+     le fond inerte — c'est ce qui empêche la tabulation d'en sortir — et la
+     barre, qui vivait dedans, devenait injoignable avec lui : il fallait
+     refermer pour changer de rubrique. Posée ici, elle reste au-dessus des
+     panneaux et disponible à toute profondeur.
+     ============================================================ -->
+<nav class="bulles" id="bulles" aria-label="Navigation principale">
+  <!-- La marque, pour la barre d'ordinateur seulement : sur téléphone la
+       barre n'est que des bulles, et le logo est déjà en tête de l'accueil.
+       Elle ramène à l'accueil — depuis une rubrique, elle la referme. -->
+  <a class="entete__marque" href="./" aria-label="marieemassage, accueil">
+    <img src="assets/img/logo-officiel.webp" alt="" width="200" height="200" decoding="async">
+    <span aria-hidden="true">marieemassage</span>
+  </a>
+
+  <button class="bulle" type="button" data-ouvre="moi" aria-expanded="false" aria-controls="moi">
+    <span class="bulle__rond">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.4" r="3.9"/><path d="M4.6 20.2a7.4 7.4 0 0 1 14.8 0"/></svg>
+    </span>
+    <span class="bulle__nom">À propos</span>
+  </button>
+
+  <button class="bulle" type="button" data-ouvre="lieu" aria-expanded="false" aria-controls="lieu">
+    <span class="bulle__rond">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V9.6L12 4l8 5.6V20"/><path d="M9.4 20v-5.4h5.2V20"/></svg>
+    </span>
+    <span class="bulle__nom">Le lieu</span>
+  </button>
+
+  <button class="bulle" type="button" data-ouvre="massages" aria-expanded="false" aria-controls="massages">
+    <span class="bulle__rond">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 13.4V5.6a1.6 1.6 0 0 1 3.2 0v5.2"/><path d="M11.8 10.4V6.4a1.6 1.6 0 0 1 3.2 0v4.4"/><path d="M15 10.8V8.2a1.5 1.5 0 0 1 3 0v6.2a5.6 5.6 0 0 1-5.6 5.6H11a5 5 0 0 1-4.3-2.5L5 14.7a1.5 1.5 0 0 1 2.4-1.8Z"/></svg>
+    </span>
+    <span class="bulle__nom">Massages</span>
+  </button>
+
+  <button class="bulle" type="button" data-ouvre="avis" aria-expanded="false" aria-controls="avis">
+    <span class="bulle__rond">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9L9.5 9Z"/></svg>
+    </span>
+    <span class="bulle__nom">Avis</span>
+  </button>
+
+  <button class="bulle" type="button" data-ouvre="rdv" aria-expanded="false" aria-controls="rdv">
+    <span class="bulle__rond">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h3l2 5-2.4 1.4a12 12 0 0 0 5 5L15 13l5 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4 6.2 2 2 0 0 1 6 4Z"/></svg>
+    </span>
+    <span class="bulle__nom">Rendez-vous</span>
+  </button>
+
+</nav>
+
+<footer class="pied">
+  <p>© <span id="annee">2026</span> Marie Massage · <a href="mentions-legales.html">Mentions légales</a></p>
+</footer>
+
+<script src="assets/js/v2.js"></script>
 </body>
 </html>

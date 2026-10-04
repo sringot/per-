@@ -1,0 +1,1927 @@
+/* =========================================================
+   MARIE MASSAGE — V2 « bulles »
+
+   Un seul écran, jamais de défilement à l'accueil : une photo,
+   un titre, cinq bulles. Le contenu vit dans des panneaux qui
+   s'ouvrent depuis la bulle qu'on touche — la bulle grandit
+   jusqu'à remplir l'écran.
+
+   Même charte que la V1 : Figtree, socle crème, relief doux — l'accent
+   est le bordeaux du logo de Marie.
+   ========================================================= */
+
+/* ---------- 1. VARIABLES ---------- */
+:root{
+  /* L'accent du site est celui du logo officiel de Marie : le bordeaux de
+     son disque, relevé sur le fichier. Il a remplacé l'ocre, qui ne venait
+     de nulle part dans son identité. La variable ne dit plus une teinte
+     mais un rôle — la prochaine fois qu'elle change, son nom reste vrai. */
+  --accent:     #6A2F3C;
+  --accent-d:   #4B212B;
+  /* Le socle est **relevé sur l'image de fond** (sa teinte médiane), et non
+     choisi à part : tout le langage de relief repose sur des surfaces qui
+     partagent la couleur du fond. Resté au crème d'avant, plus gris que
+     l'image, chaque bulle se détachait comme un disque gris posé dessus au
+     lieu d'être creusée dans la page. */
+  --card:       #FCF0E2;
+  --ink:        #2A2320;
+  --ink-soft:   #635D57;
+  --line:       rgba(42,35,32,.10);
+  --white:      #FFF;
+
+  /* La lumière du relief doux est éteinte : elle faisait un halo blanc
+     autour de tout ce qui passait sur une image ou sur une page en couleur
+     — les bulles, les photos, les avis, les boutons. Le jeton reste, les
+     ombres qui l'emploient n'en gardent que la moitié sombre. */
+  --nm-light:   rgba(255,255,255,0);
+  --nm-dark:    rgba(122,104,84,.18);
+  --nm-out:     -5px -5px 12px var(--nm-light), 6px 7px 16px var(--nm-dark);
+  --nm-out-lg:  -8px -8px 20px var(--nm-light), 10px 12px 26px var(--nm-dark);
+  --nm-in:      inset -3px -3px 8px var(--nm-light), inset 4px 4px 9px var(--nm-dark);
+  /* Les bulles n'ont que la moitié sombre du relief : sans lumière blanche,
+     pas de halo quand elles passent sur une image. */
+  --bulle-ombre:       0 6px 14px -4px rgba(42,35,32,.24);
+  --bulle-ombre-haute: 0 12px 22px -6px rgba(42,35,32,.28);
+  --bulle-creux:       inset 0 2px 7px rgba(42,35,32,.22);
+
+  /* Le bruit du grain du papier, généré par le navigateur. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  /* La police des grands titres. Figtree en attendant « 8 », la police des
+     posts de Marie : le jour où son projet Adobe Fonts existe, c'est cette
+     seule ligne qui change. */
+  --police-titre: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+
+  --r-lg:       26px;
+
+  /* Une couleur par rubrique, tirée des cartes de soins. Deux valeurs
+     pour chacune : `-i` pour les tracés (icônes, filets — 3:1 suffit)
+     et `-t` pour le petit texte (4,5:1). Les tons bruts des cartes sont
+     trop pâles sur le socle crème : la sauge y tombe à 2:1, le jaune à
+     1,1:1. Ils sont donc foncés juste ce qu'il faut, par le même calcul
+     que celui des cartes — la teinte reste reconnaissable.
+
+     Les valeurs `-t` sont calculées non pas sur le crème nu mais sur le
+     **crème lavé de 13 % de la teinte**, celui du haut des panneaux : le
+     lavis assombrit le fond, et trois d'entre elles y retombaient à
+     4,1-4,2:1. */
+  /* Une troisième valeur par rubrique, `-h` : l'encre d'un titre de section.
+     Les bandeaux sont lavés de 20 % de la teinte, plus foncés que les 13 %
+     sur lesquels les valeurs `-t` avaient été calculées — quatre d'entre
+     elles y retombaient à 3,8-4,2:1. Celles-ci sont relevées par le même
+     calcul, sur le fond réel du bandeau. */
+  --moi-i:      #A47864;  --moi-t:      #805E4E;  --moi-h:      #79594A;
+  --lieu-i:     #898D7F;  --lieu-t:     #67695F;  --lieu-h:      #606359;   /* sauge     */
+  --massages-i: #988968;  --massages-t: #786C52;  --massages-h:      #6A6049;   /* jaune     */
+  --avis-i:     #B37D79;  --avis-t:     #875E5B;  --avis-h:      #7D5855;   /* rose      */
+  --rdv-i:      #6A2F3C;  --rdv-t:      #6A2F3C;  --rdv-h:      #6A2F3C;   /* bordeaux  */
+
+  /* Le filigrane des panneaux. Une seule teinte pour les cinq, à dessein :
+     c'est le même fond partout, pas un accord par rubrique. */
+  --filigrane:  #A47864;
+
+  --ease:       cubic-bezier(.22,.68,.28,1);
+  --ease-out:   cubic-bezier(.16,1,.3,1);
+  --pad:        clamp(1.1rem,4vw,3rem);
+}
+
+/* ---------- 2. SOCLE ---------- */
+*,*::before,*::after{ box-sizing:border-box; }
+*{ margin:0; padding:0; }
+
+html{
+  -webkit-text-size-adjust:100%;
+  background:var(--card);
+}
+/* L'accueil tient dans un écran — mais par sa mise en page, pas par un
+   verrou. `overflow:hidden` sur `html` a été retiré : à 200 % de zoom, ou
+   avec une police système à 24 px, la composition dépasse la fenêtre et
+   le verrou rendait alors les bulles et le pied de page **inatteignables**,
+   ni au doigt ni au clavier. Aux tailles normales rien ne défile de toute
+   façon, la page tenant exactement dans la fenêtre — vérifié de 280 × 653
+   à 1920 × 1080. */
+body{
+  font-family:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:clamp(.94rem,.35vw + .86rem,1rem);
+  line-height:1.6;
+  color:var(--ink);
+  background:var(--card);
+  -webkit-font-smoothing:antialiased;
+  min-height:100svh;
+  display:flex; flex-direction:column;
+}
+img{ display:block; max-width:100%; }
+button{ background:none; border:0; font:inherit; color:inherit; cursor:pointer; }
+a{ color:inherit; text-decoration:none; }
+ul{ list-style:none; }
+
+/* Confort au toucher : pas de délai de double-appui, pas de voile gris. */
+a, button{ touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+img{ -webkit-user-drag:none; user-select:none; pointer-events:none; }
+
+/* --- Le grain ---
+   Le socle crème est un aplat, et un aplat se lit comme une couleur, pas
+   comme une matière. Un grain très fin par-dessus tout le site — 3,5 % —
+   suffit à le faire passer pour du papier. On ne le voit pas ; on voit
+   qu'il manque quand on l'enlève.
+
+   Le bruit est généré par le navigateur (`feTurbulence`) plutôt que servi
+   en image : 300 octets au lieu de plusieurs dizaines de kilo-octets, et
+   aucun motif qui se répète. */
+body::after{
+  content:''; position:fixed; inset:0; z-index:999;
+  pointer-events:none; opacity:.035;
+  background-image:var(--grain);
+}
+
+.evitement{
+  position:fixed; top:.6rem; left:.6rem; z-index:99;
+  background:var(--accent); color:var(--white);
+  padding:.7rem 1.1rem; border-radius:999px; min-height:44px;
+  display:inline-flex; align-items:center;
+  transform:translateY(-200%); transition:transform .3s var(--ease);
+}
+.evitement:focus{ transform:none; }
+:focus-visible{ outline:2.5px solid var(--accent); outline-offset:4px; border-radius:6px; }
+/* Après un appui au doigt ou à la souris, pas d'anneau — même quand c'est
+   le script qui a posé le focus. Voir la note de v2.js : les moteurs ne
+   s'accordent pas sur ce cas, et sur iOS l'anneau restait affiché après
+   avoir simplement touché un bouton. Le lien d'évitement fait exception :
+   il n'existe que pour le clavier. */
+[data-pointeur] :focus-visible:not(.evitement){ outline:none; }
+
+/* ---------- 3. L'ACCUEIL ----------
+   Composition décentrée : la photo se pose à gauche, le nom et les bulles
+   la suivent. Sur téléphone la colonne unique reste calée à gauche plutôt
+   que centrée — c'est le même déséquilibre voulu, dans un format étroit. */
+.scene{
+  flex:1;
+  /* Téléphone : la photo prend la largeur, les bulles se rangent en
+     colonne contre elle. C'est ce qui la fait grandir — la bande droite
+     restait vide, et la photo était bornée par la hauteur pour ne pas
+     pousser les bulles hors de l'écran. */
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-areas:
+    "logo  logo"
+    "photo photo"
+    "mot   mot";
+  align-content:center; justify-items:start;
+  column-gap:clamp(.7rem,3vw,1.2rem);
+  row-gap:clamp(.6rem,1.8vh,1.2rem);
+  padding:clamp(1rem,3vh,2rem) var(--pad);
+  text-align:left;
+  position:relative;
+  width:100%; max-width:1180px; margin-inline:auto;
+}
+.logo    { grid-area:logo; }
+.portrait{ grid-area:photo; }
+.mot     { grid-area:mot; }
+.mot{
+  display:flex; flex-direction:column; align-items:flex-start;
+  gap:clamp(.3rem,1vh,.6rem);
+  min-width:0;
+}
+
+/* --- Le fond de l'accueil ---
+   Le même filigrane que les panneaux, à la même place et à la même teinte :
+   l'accueil et les rubriques doivent partager un fond, pas se ressembler.
+
+   Il remplace l'image de fond de la V2 — un dégradé crème de 6 Ko portant
+   l'ancien pictogramme. Le masque fait un kilo-octet, reste net à toutes les
+   tailles et sa couleur se règle depuis le CSS ; l'image imposait la sienne.
+   `tools-fond.py` et les deux `fond*.webp` ne servent donc plus.
+
+   Fixé à la fenêtre plutôt que posé dans la scène : celle-ci est bornée à
+   1180 px, le fond s'y serait arrêté et les bords d'un grand écran seraient
+   restés crème nu. Fixé, il ne compte pas non plus dans le débordement. */
+/* Le repère est volontairement coupé par le bord droit de l'écran. En
+   position fixe il y débordait vraiment, et la page gagnait un défilement
+   horizontal de 31 px sur téléphone. La couche qui le porte occupe donc la
+   fenêtre entière et le recadre elle-même — le repère, lui, garde
+   exactement les règles des panneaux. */
+.filigrane-fond{
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+}
+
+/* La photo et son voile sont les deux couches de fond de l'accueil sur
+   téléphone : elles restent au-dessous du texte, que la règle suivante
+   remonte. `:where()` ne pèse rien dans la spécificité — c'est ce qui
+   permet d'allonger cette liste sans que la règle prenne le dessus sur
+   les styles des éléments qu'elle vise. */
+.scene > *:not(:where(.filigrane-fond, .portrait, .voile)){ position:relative; z-index:1; }
+
+/* Écran large : deux colonnes. Le pictogramme coiffe la photo, le nom et
+   les bulles occupent la colonne de droite, centrés sur la hauteur.
+
+   Le seuil est à 820 px et non à 700. Entre les deux, la colonne de droite
+   n'était plus assez large pour cinq bulles en ligne : sur une tablette de
+   768 px la page débordait de 132 px sur le côté. La composition d'origine
+   — l'arche et la colonne de bulles à son flanc — y tient sans forcer. */
+@media (min-width:820px) and (min-height:560px){
+  .scene{
+    grid-template-columns:auto minmax(0,1fr);
+    grid-template-areas:
+      "logo  mot"
+      "photo mot";
+    align-content:center; align-items:center; justify-items:start;
+    column-gap:clamp(2rem,5vw,4.5rem);
+    row-gap:clamp(.6rem,1.8vh,1.2rem);
+  }
+  /* Sur écran large, la composition tient à gauche : les nappes de droite
+     s'élargissent pour que le vide reste habité au lieu d'être blanc. */
+}
+
+/* Le pictogramme seul, en tête d'écran. Il tient lieu d'en-tête : il n'y
+   en a pas d'autre sur ce site. `alt` vide — le nom de la marque est juste
+   dessous, en titre ; le répéter n'apprendrait rien à un lecteur d'écran. */
+.logo{
+  width:clamp(34px,7vh,52px); height:auto;
+  margin-bottom:clamp(.1rem,1vh,.5rem);
+}
+
+/* L'arche de la V1, reprise telle quelle : le cadre est plus haut que
+   large et s'arrondit en demi-cercle vers le haut. La hauteur est pilotée
+   en `vh` et la largeur en découle — dans un écran qui ne défile pas,
+   c'est la hauteur qui est rare, pas la largeur. */
+.portrait{
+  /* Sur téléphone la photo remplit sa colonne — la hauteur suit le rapport
+     de l'arche. Le `min()` garde une seconde borne en hauteur d'écran :
+     sur un téléphone couché, la colonne est très large et la photo
+     dépassait de 280 px. Deux limites, pas une. */
+  /* Sur téléphone, la photo **s'étire à la hauteur de la colonne de
+     bulles** : c'est la colonne qui fixe la rangée, et la photo la remplit.
+     Un rapport d'image figé ne pouvait pas garantir cette égalité — la
+     hauteur des bulles dépend de leur taille, la sienne de sa largeur, et
+     les deux ne tombaient juste qu'à une largeur d'écran précise. */
+  width:min(100%, 40vh); height:auto; align-self:stretch;
+  border-radius:min(50vw,290px) min(50vw,290px) var(--r-lg) var(--r-lg);
+  overflow:hidden;
+  box-shadow:var(--nm-out-lg);
+}
+.portrait picture{ display:block; height:100%; }
+/* La découpe suit : le cadre n'a plus de rapport fixe, l'image le remplit
+   en se recadrant plutôt qu'en se déformant. */
+.portrait img{ object-position:50% 32%; }
+.portrait img{ width:100%; height:100%; object-fit:cover; }
+@keyframes souffle{
+  0%,100%{ transform:translateY(0) scale(1); }
+  50%    { transform:translateY(-7px) scale(1.012); }
+}
+
+/* « marieemassage » fait treize signes là où « Marie » en faisait cinq :
+   l'échelle est calée pour que le nom tienne sur une ligne dès 320 px,
+   sans quoi il se couperait en plein milieu du mot. */
+.titre{
+  font-size:clamp(1.75rem,6.6vw,3.5rem);
+  font-weight:600; line-height:1; letter-spacing:-.035em;
+  color:var(--ink);
+  /* Un seul mot : il ne peut pas se couper aux espaces. À très fort
+     agrandissement il vaut mieux qu'il se coupe que qu'il déborde. */
+  overflow-wrap:anywhere;
+}
+.accroche{
+  font-size:clamp(.82rem,2.4vw,.98rem);
+  color:var(--ink-soft); max-width:34ch;
+  /* Deux lignes de longueur voisine plutôt qu'une longue et un mot seul. */
+  text-wrap:balance;
+}
+/* Les trois faits qui décidaient d'un rendez-vous et qu'il fallait aller
+   chercher dans « Moi » et « Massages ». Ils prennent la forme des bulles
+   — même socle, même relief — pour qu'on les lise comme des repères et non
+   comme une phrase de plus. */
+/* 11,5 px et non 12 : c'est la plus grande taille à laquelle les trois
+   faits tiennent encore sur une seule ligne à 390 px — le format de
+   référence, et la composition validée. Ils partaient de 9,9 px. */
+.faits{
+  display:flex; flex-wrap:wrap; gap:.3rem;
+  font-size:clamp(.72rem,2.2vw,.82rem); line-height:1;
+}
+.faits span{
+  padding:.45rem .58rem; border-radius:2rem;
+  background:var(--card); box-shadow:var(--nm-out);
+  color:var(--ink-soft); white-space:nowrap;
+}
+.insecable{ white-space:nowrap; }
+
+/* Le voile n'existe que sur téléphone, où la photo occupe l'écran entier.
+   Ailleurs la photo garde son arche et rien ne se pose dessus. */
+.voile{ display:none; }
+
+/* ---------- 4. LES BULLES ---------- */
+
+/* La bulle et son panneau portent la même teinte : c'est ce qui fait
+   qu'une rubrique se reconnaît avant même d'être lue. Le disque reste
+   crème et seul le tracé se colore — cinq ronds pleins et vifs sur
+   l'accueil basculeraient du côté de l'application pour enfants. */
+.bulle[data-ouvre="moi"],      #moi     { --teinte:var(--moi-i);      --teinte-t:var(--moi-t); --teinte-h:var(--moi-h); }
+.bulle[data-ouvre="lieu"],     #lieu    { --teinte:var(--lieu-i);     --teinte-t:var(--lieu-t); --teinte-h:var(--lieu-h); }
+.bulle[data-ouvre="massages"], #massages{ --teinte:var(--massages-i); --teinte-t:var(--massages-t); --teinte-h:var(--massages-h); }
+.bulle[data-ouvre="avis"],     #avis    { --teinte:var(--avis-i);     --teinte-t:var(--avis-t); --teinte-h:var(--avis-h); }
+.bulle[data-ouvre="rdv"],      #rdv     { --teinte:var(--rdv-i);      --teinte-t:var(--rdv-t); --teinte-h:var(--rdv-h); }
+
+/* La barre est fixée au bas de la fenêtre et passe **au-dessus** des
+   panneaux (z-index 60 contre 50) : c'est le même élément sur l'accueil et
+   à l'intérieur d'une rubrique. Changer de rubrique ne demande donc plus de
+   refermer d'abord.
+
+   Sa hauteur est publiée dans `--barre`, mesurée au chargement par le
+   script : le pied de page et les panneaux s'en servent pour réserver la
+   place. Une valeur écrite ici à la main aurait menti dès que la taille du
+   texte du système change. */
+.bulles{
+  position:fixed; inset:auto 0 var(--pied) 0; z-index:60;
+  display:flex; align-items:flex-start; justify-content:center;
+  gap:clamp(.3rem,2.6vw,1.5rem);
+  padding:.5rem var(--pad) calc(.5rem + env(safe-area-inset-bottom, 0px));
+}
+/* Pendant la lecture d'une rubrique, la barre glisse hors de l'écran (le
+   script pose `.barre-cachee`, voir « La barre qui s'efface »). Elle
+   emporte son fondu, qui est à l'intérieur.
+
+   Un glissement, pas une disparition : la barre descend en entier et ne
+   s'efface qu'à la toute fin, quand elle est déjà presque sortie. Dans
+   la première version, l'opacité tombait plus vite que la barre ne
+   bougeait — on la voyait s'éteindre sur place, d'un coup. La courbe
+   démarre en douceur et se pose en douceur ; au retour, la barre remonte
+   un peu plus vite et redevient opaque dès le départ. Transform et
+   opacité seulement : le navigateur les anime sans recalculer la page. */
+.bulles{
+  --glisse:cubic-bezier(.45,0,.2,1);
+  will-change:transform;
+  transition:transform .42s var(--glisse), opacity .12s linear;
+}
+.barre-cachee .bulles{
+  transform:translateY(calc(100% + var(--pied) + 20px));
+  opacity:0; pointer-events:none;
+  transition:transform .55s var(--glisse), opacity .2s linear .35s;
+}
+/* Sur la fiche d'un massage, la barre s'efface aussi, avec le même
+   glissement : on y est pour lire un soin, et on en sort par « Tous les
+   massages » — pas vers une autre rubrique. `visibility` la retire aussi
+   du parcours au clavier, une fois sortie. Sur ordinateur, l'en-tête reste
+   (voir « Grand écran ») : il ne recouvre rien. */
+.en-fiche .bulles{
+  transform:translateY(calc(100% + var(--pied) + 20px));
+  opacity:0; pointer-events:none; visibility:hidden;
+  transition:transform .55s var(--glisse), opacity .2s linear .35s, visibility 0s linear .55s;
+}
+/* La place réservée à la barre n'a plus lieu d'être sous la fiche. */
+.en-fiche #massages{ padding-bottom:calc(var(--pied) + 1.5rem); }
+/* Animations réduites (réglage du téléphone) : pas de glissement, mais
+   pas non plus un saut sec — un fondu, qui n'est pas un mouvement.
+   `!important` parce que la règle générale du mouvement réduit coupe
+   toutes les transitions avec `!important`. */
+@media (prefers-reduced-motion:reduce){
+  .bulles{ transition:opacity .3s ease !important; }
+  .barre-cachee .bulles, .en-fiche .bulles{ transform:none !important; }
+}
+/* Un fondu léger sous les bulles, au-dessus d'un panneau — comme le voile de
+   l'accueil. Pas de bande : une bande crème faisait un bloc blanc de plus en
+   bas de chaque page. Pas rien non plus : sans fond, le contenu passait sous
+   les noms en défilant, et les noms posés sur la texture se lisaient mal
+   presque partout (1 à 2:1 mesuré).
+
+   Le fondu est uni sur le bas — là où sont les noms, qui ont ainsi un fond
+   régulier — puis s'efface vers le haut, derrière les ronds. Sa couleur est
+   celle de la page ouverte (`--fondu-bas`, posée par rubrique). */
+.bulles::before{
+  /* Une bande de la hauteur des noms, calée sur le bas de la barre, plus
+     un fondu de 60 px qui remonte derrière le bas des ronds. Tout en haut,
+     il voilait les cartes pour rien ; à 20 px seulement, le contenu
+     arrivait net contre les ronds, coupé au lieu de s'effacer. 15 px : la
+     ligne d'un nom au plus grand (.78rem × 1,15), en rem pour suivre
+     l'agrandissement du grand écran. */
+  content:''; position:absolute; z-index:-1;
+  inset:auto 0 calc(-1 * var(--pied)) 0;
+  height:calc(var(--pied) + .5rem + env(safe-area-inset-bottom, 0px) + .95rem + 60px);
+  pointer-events:none;
+  /* Le fondu est fait de la texture de la page, pas d'un aplat : un aplat
+     de sa couleur moyenne dessinait une bande lisse sur un fond granuleux.
+     L'image est calée comme `.texture-fond img` — plein écran, `cover`,
+     centrée — et le bas de ce pseudo-élément est le bas de l'écran, d'où la
+     position : le surplus de l'image, moitié en haut, moitié en bas. Le
+     masque fait le fondu. `--fondu-voile`, un voile de la couleur de la
+     page, aplanit les taches de lumière sous les noms sans effacer le grain. Les cinq textures ont le même rapport, 0,38. */
+  --vh:100vh;
+  --fondu-voile:color-mix(in srgb, var(--fondu-bas) var(--fondu-p, 45%), transparent);
+  --img-l:max(100vw, var(--vh) * .38);
+  --img-h:max(var(--vh), 100vw / .38);
+  background:
+    linear-gradient(var(--fondu-voile), var(--fondu-voile)),
+    var(--fondu-img, none) center bottom calc((var(--vh) - var(--img-h)) / 2) / var(--img-l) var(--img-h) no-repeat,
+    var(--fondu-bas);
+  -webkit-mask-image:linear-gradient(transparent, rgba(0,0,0,.55) 32px, #000 60px);
+          mask-image:linear-gradient(transparent, rgba(0,0,0,.55) 32px, #000 60px);
+  opacity:0; transition:opacity .3s var(--ease);
+}
+@supports (height:100dvh){ .bulles::before{ --vh:100dvh; } }
+.a-panneau .bulles::before{ opacity:1; }
+:root{ --fondu-bas:var(--card); }
+/* Toutes les pages ont le même fond : le fondu aussi. */
+.a-panneau{ --fondu-bas:#EBDCC7; --fondu-img:url(../img/pages/fond.webp); }
+
+/* Les noms au-dessus d'un panneau : un brun plus profond que le gris
+   courant, qui tombait à 3,3:1 sur les textures. */
+.a-panneau .bulle{ color:#3A3430; }
+.a-panneau .bulle[aria-expanded="true"]{ color:#1E1814; }
+
+/* La marque n'existe que dans la barre d'ordinateur (voir « Grand écran »). */
+.entete__marque{ display:none; }
+.bulle{
+  display:flex; flex-direction:column; align-items:center; gap:.22rem;
+  /* Assez large pour que « Rendez-vous » tienne sur une ligne : à deux
+     lignes, la dernière bulle dépassait la hauteur de la photo et la
+     colonne débordait sous elle. */
+  width:clamp(62px,18vw,78px);
+  color:var(--ink-soft);
+  transition:transform .3s var(--ease-out), color .3s var(--ease);
+}
+.bulle__rond{
+  width:clamp(52px,15vw,74px); aspect-ratio:1;
+  display:grid; place-items:center;
+  border-radius:50%;
+  background:var(--card);
+  /* Une ombre portée sombre, et plus l'ombre claire du relief doux : cette
+     lumière blanche en haut à gauche faisait un halo autour de chaque
+     bulle dès qu'elle passait au-dessus d'une photo ou d'une carte — sur
+     le crème elle se fondait, sur une texture elle se voyait. L'ombre
+     sombre suffit à détacher le disque du fond crème. */
+  box-shadow:var(--bulle-ombre);
+  color:var(--teinte,var(--accent));
+  /* Un souffle de la teinte dans le disque lui-même. À 8 %, le relief
+     doux tient encore — au-delà, le disque cesse de partager le fond et
+     l'illusion de creux tombe. */
+  background-color:color-mix(in srgb, var(--teinte,var(--accent)) 8%, var(--card));
+  transition:box-shadow .3s var(--ease), transform .35s var(--ease-out),
+             background-color .3s var(--ease);
+}
+.bulle__rond svg{
+  width:44%; height:44%;
+  fill:none; stroke:currentColor; stroke-width:1.6;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+/* 11,2 px au plancher, contre 9,6 auparavant : le libellé d'une bulle est
+   le seul mot qui nomme la rubrique, sur l'élément le plus touché du site.
+   Il ne monte pas à 12 px comme le reste : c'est un libellé sous une icône,
+   pas du texte qu'on lit — les systèmes eux-mêmes tiennent leurs barres
+   d'onglets entre 10 et 12 px — et à 12 px « Rendez-vous » se coupait en
+   deux lignes, ce qui déséquilibrait la rangée entière. */
+/* Sur une ligne, quitte à déborder un peu de la bulle : sur un téléphone de
+   360 px ou moins, « Rendez-vous » se coupait encore au tiret. Ses voisins
+   (« Avis », le bord de l'écran) laissent la place de ces quelques pixels. */
+.bulle__nom{
+  font-size:clamp(.7rem,2vw,.78rem); font-weight:500;
+  letter-spacing:.02em; line-height:1.15; text-align:center; white-space:nowrap;
+}
+/* Réservé aux vrais pointeurs : sur iOS, `:hover` reste collé au dernier
+   élément touché et la bulle restait soulevée après l'appui. */
+@media (hover:hover) and (pointer:fine){
+  .bulle:hover{ color:var(--ink); }
+  .bulle:hover .bulle__rond{
+    box-shadow:var(--bulle-ombre-haute); transform:translateY(-4px);
+    background-color:color-mix(in srgb, var(--teinte,var(--accent)) 12%, var(--card));
+  }
+}
+.bulle:active .bulle__rond{ box-shadow:var(--bulle-creux); transform:translateY(0) scale(.96); }
+
+/* La bulle du rendez-vous n'est plus pleine : elle prend la forme des quatre
+   autres, un disque crème et son icône à la couleur de sa rubrique — le
+   bordeaux du logo. Le disque plein la faisait passer pour un bouton d'une
+   autre famille. */
+
+/* La rubrique ouverte. Le disque se creuse au lieu de saillir — le même
+   relief que l'appui, tenu : on lit « celle-ci est enfoncée » sans avoir à
+   apprendre un code de couleur. Le libellé passe à l'encre pleine. */
+.bulle[aria-expanded="true"]{ color:var(--ink); }
+.bulle[aria-expanded="true"] .bulle__rond{
+  box-shadow:var(--bulle-creux);
+  background-color:color-mix(in srgb, var(--teinte,var(--accent)) 16%, var(--card));
+}
+
+/* Entrée en cascade, une bulle après l'autre. */
+.bulle{ opacity:0; animation:monte .7s var(--ease-out) forwards; }
+.bulle:nth-child(1){ animation-delay:.30s }
+.bulle:nth-child(2){ animation-delay:.38s }
+.bulle:nth-child(3){ animation-delay:.46s }
+.bulle:nth-child(4){ animation-delay:.54s }
+.bulle:nth-child(5){ animation-delay:.62s }
+@keyframes monte{ from{ opacity:0; transform:translateY(16px) scale(.9) } to{ opacity:1; transform:none } }
+
+.logo, .portrait, .titre, .accroche, .faits{ opacity:0; animation:monte .8s var(--ease-out) forwards; }
+.titre   { animation-delay:.14s }
+.accroche{ animation-delay:.22s }
+.faits   { animation-delay:.26s }
+/* Les deux animations de la photo sont déclarées ensemble : `animation`
+   est un raccourci, et une seconde règle en aurait écrasé la première —
+   la respiration ne jouait jamais. La seconde prend la suite de l'entrée. */
+.portrait{
+  animation:monte .8s var(--ease-out) .06s forwards,
+            souffle 9s ease-in-out 1s infinite;
+}
+
+/* Écran large : la place ne manque plus. La photo reprend une hauteur en
+   part d'écran, et les bulles se remettent en ligne sous le nom.
+
+   Ce bloc est **après** les règles de base des bulles, et non dans la
+   requête média du haut : à spécificité égale c'est la dernière déclaration
+   qui l'emporte, et la colonne du téléphone reprenait le dessus. */
+@media (min-width:820px) and (min-height:560px){
+  .portrait{
+    width:auto; height:clamp(240px,42vh,460px);
+    align-self:center; aspect-ratio:1/1.34;
+  }
+  .mot{ gap:clamp(.5rem,1.5vh,1rem); align-self:end; }
+  .bulle{ gap:.5rem; width:clamp(64px,10vw,86px); }
+  .bulle__rond{ width:clamp(54px,7vw,74px); }
+}
+
+/* ---------- 5. LES PANNEAUX ---------- */
+.panneau{
+  position:fixed; inset:0; z-index:50;
+  background:var(--card);
+  /* Vertical seulement. Le filigrane est volontairement coupé par le bord
+     droit, et comme `overflow-y:auto` rend aussi l'axe horizontal
+     défilable, le panneau se laissait tirer de côté de 31 px sur
+     téléphone — la même cause que sur l'accueil, où une couche de
+     recadrage règle le problème. Ici c'est le panneau lui-même qui
+     recadre : rien n'a jamais à défiler latéralement dedans. */
+  overflow:hidden auto; overscroll-behavior:contain;
+  padding:clamp(3.6rem,9vh,5.5rem) var(--pad) clamp(2rem,6vh,4rem);
+  /* Fermé : réduit au disque de la bulle d'origine, donc invisible.
+     Les coordonnées sont posées par le JS au moment du clic. */
+  clip-path:circle(0 at var(--x,50%) var(--y,90%));
+  visibility:hidden;
+  transition:clip-path .34s var(--ease-out), visibility 0s linear .34s;
+}
+/* Le disque s'ouvrait en 600 ms et le texte n'était pleinement lisible
+   qu'à 540 ms : mesuré, pas estimé. Sur un site où l'on ouvre cinq
+   onglets d'affilée, c'est une demi-seconde d'attente à chaque fois, et
+   ça se ressent comme une lenteur du site plutôt que comme une
+   animation. La séquence est ramenée à peu près de moitié — le geste
+   reste le même, il ne fait plus patienter. */
+.panneau.ouvert{
+  clip-path:circle(150% at var(--x,50%) var(--y,90%));
+  visibility:visible;
+  transition:clip-path .38s var(--ease-out), visibility 0s;
+}
+/* La rubrique qu'on quitte pour une autre : elle reste entière, telle
+   quelle, **sous** celle qui s'ouvre, et le script la retire une fois
+   l'ouverture finie. Sans elle, elle se refermait pendant que l'autre
+   arrivait, et l'accueil passait un instant entre les deux. */
+.panneau.sortant{
+  clip-path:none; visibility:visible; z-index:49; transition:none;
+}
+.panneau.sortant::before{ opacity:0; transition:none; }
+.panneau.sortant .feuille{ opacity:1; transform:none; transition:none; }
+
+/* Le disque s'ouvre **dans la couleur de sa rubrique**, puis la couleur
+   se retire : on voit passer une teinte sans jamais lire une page
+   colorée. C'est le geste qui porte la couleur, pas le décor. */
+.panneau::before{
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  /* Le terracotta du site pour toutes les rubriques : chacune avait sa
+     teinte (vert, jaune…), restes de l'ancienne palette. */
+  background:#924A31;
+  opacity:.12;
+  transition:opacity .6s var(--ease) .16s;
+}
+.panneau.ouvert::before{ opacity:0; }
+
+/* Et il en reste un lavis en tête de panneau, assez faible pour ne pas
+   se voir et assez présent pour qu'« Avis » et « Le lieu » n'aient pas
+   la même température. */
+.panneau::after{
+  content:''; position:absolute; inset:0 0 auto; height:clamp(190px,38vh,360px);
+  z-index:0; pointer-events:none;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--teinte,var(--accent)) 13%, transparent) 0,
+    transparent 100%);
+}
+/* Le contenu passe au-dessus des deux voiles — sauf la couche du
+   filigrane, qui doit rester fixée à la fenêtre.
+
+   L'exception est dans `:where()`, qui ne compte pas dans la spécificité.
+   Écrite en `:not(.filigrane-fond)`, la règle passait à deux classes et
+   l'emportait alors sur `.fermer` : le bouton de fermeture repassait en
+   `relative`, se rangeait sous le contenu et devenait incliquable. */
+.panneau > *:not(:where(.filigrane-fond, .texture-fond)){ position:relative; z-index:1; }
+
+.fermer{
+  position:fixed; top:clamp(.9rem,2.5vh,1.6rem); right:var(--pad); z-index:2;
+  width:44px; height:44px; border-radius:50%;
+  display:grid; place-items:center;
+  /* L'ombre des bulles, sans lumière blanche : posée sur une texture, la
+     croix aurait porté le même halo que celui qu'on vient de leur retirer. */
+  background:var(--card); box-shadow:var(--bulle-ombre); color:var(--ink);
+  transition:box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+.fermer svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
+.fermer:hover{ box-shadow:var(--bulle-ombre-haute); }
+/* Sur la fiche d'un massage, pas de croix : on la prenait pour un retour
+   à la liste, et elle refermait toute la rubrique. « Tous les massages »
+   en haut et « Voir les autres massages » en bas font ce retour. */
+.panneau[data-vue="fiche"] .fermer{ display:none; }
+.fermer:active{ box-shadow:var(--bulle-creux); transform:scale(.94); }
+
+/* --- Le fond des pages ---
+   Un seul, pour les cinq : le blanc cassé de Massages, adouci par
+   `tools-textures.py` — ses taches de lumière ramenées à 30 %, le grain
+   gardé. Chaque page avait eu sa texture pleine couleur : c'était beaucoup,
+   et avec le bandeau et les encadrés des fiches, trois grains se
+   superposaient. La couleur de chaque page revient en petites touches
+   (plus bas, « Les touches »).
+
+   Fixé à la fenêtre, comme le filigrane : il ne défile pas avec le
+   contenu. En fond CSS et non en `<img>` : la même image pour cinq
+   panneaux, une seule fois dans la feuille de style. La couleur du
+   panneau est sa médiane, ce qu'on voit le temps qu'elle arrive. */
+.panneau--texture, #massages{ background:#EBDCC7; }
+.panneau--texture::after, #massages::after{ display:none; }
+.texture-fond{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:url(../img/pages/fond.webp) center / cover no-repeat;
+}
+
+/* Les blocs se suivent à intervalle régulier : l'écart est porté par la
+   feuille, et les marges que chaque élément avait sur le crème sont
+   remises à zéro à ce niveau — sans quoi les deux s'additionnaient. */
+.panneau--texture .feuille{ display:flex; flex-direction:column; gap:.9rem; }
+.panneau--texture .feuille > *{ margin:0; }
+/* Deux classes : `.moi__reserve` a ses propres fond et marge, qui
+   doivent céder au bloc. */
+.panneau--texture .bloc{
+  background:var(--card); border-radius:22px;
+  padding:clamp(1.25rem,5vw,1.9rem);
+  box-shadow:0 18px 40px -26px rgba(20,12,10,.55);
+}
+.bloc > :first-child{ margin-top:0; padding-top:0; border-top:0; }
+
+/* --- Les pages claires : Moi, Le lieu, Avis, Rendez-vous ---
+   Plus de blocs : le texte est posé directement sur le blanc cassé, en
+   noir. Et la page s'allonge : chaque
+   partie a sa place, séparée de la suivante par un vrai silence plutôt
+   qu'empilée dans des encadrés — c'est l'effet « imbriqué » qu'on retire.
+
+   L'encre est un noir un peu plus profond que celui du site : sur les
+   quelques pixels les plus sombres de la texture, le noir courant tombait à
+   4,1:1 ; celui-ci tient 4,6:1 partout, sans rien retirer à la texture. */
+/* Posées sur la feuille et non sur le panneau : `#moi` redéfinit déjà
+   `--teinte-t` et `--teinte-h`, et un identifiant l'emporte sur une classe —
+   le sur-titre, l'étiquette et le lien Instagram restaient au brun de la
+   rubrique, trop clair sur cette texture. La feuille en hérite en dernier. */
+.panneau--clair .feuille{ --ink:#1E1814; --ink-soft:#1E1814; --teinte-t:#1E1814; --teinte-h:#1E1814; }
+
+/* Massages : le même fond, sans la classe `panneau--clair` — la planche
+   garde sa grille de cartes et la fiche ses encadrés. Seul le texte passe
+   au noir : la teinte jaune du titre tombait sous 3:1 sur la texture. */
+#massages .feuille, #massages .fiche{ --ink:#1E1814; --ink-soft:#1E1814; --teinte-t:#1E1814; --teinte-h:#1E1814; }
+.panneau--clair .bloc{
+  background:none; box-shadow:none; padding:0; border-radius:0;
+}
+.panneau--clair .feuille{ gap:clamp(3rem, 9vh, 5rem); }
+
+/* La phrase du lieu devient une citation, alignée à gauche comme tout le
+   reste de la page : centrée, au-dessus d'une liste alignée à gauche, elle
+   faisait un morceau à part. */
+.panneau--clair .piece__mot{
+  margin-top:0; text-align:left; max-width:24ch;
+  font-size:clamp(1.3rem, 5.4vw, 1.6rem); font-weight:500;
+  line-height:1.35; letter-spacing:-.015em;
+}
+/* « Sur place » : même forme que « Mon parcours ». */
+.panneau--clair .infos__titre{ margin-top:2.8rem; margin-bottom:.4rem; }
+.infos{ display:grid; }
+.infos li{
+  display:flex; flex-direction:column; gap:.1rem; padding:.85rem 0;
+  border-top:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+.infos li:last-child{ border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.infos b{ font-weight:600; font-size:1rem; color:var(--ink); }
+.infos li > span{ font-size:.9rem; color:var(--ink-soft); }
+
+/* La hiérarchie passe par la taille et la graisse, plus par des gris : un
+   seul noir, lisible partout sur la texture. */
+.panneau--clair .feuille h2{ font-size:clamp(2.2rem, 9vw, 3.2rem); margin-bottom:1.4rem; }
+.panneau--clair .chapo{ font-size:1.12rem; line-height:1.6; }
+
+/* Les étiquettes : un fait, pas un paragraphe — « Réservé aux femmes » sur
+   Moi, les horaires sur Le lieu. */
+.panneau--clair .moi__reserve,
+.panneau--clair .etiquette{
+  display:flex; flex-direction:column; width:fit-content; gap:.1rem;
+  margin-top:1.6rem; padding:.7rem 1.1rem; border-radius:14px;
+  background:none; border:1.5px solid currentColor; color:var(--ink);
+}
+
+/* Les photos, l'une sous l'autre et en grand : côte à côte, elles faisaient
+   deux vignettes ; empilées, elles tiennent la page comme dans un magazine. */
+.panneau--clair .cliches{ grid-template-columns:1fr; gap:1rem; }
+.panneau--clair .cliches li{ border-radius:20px; box-shadow:0 22px 44px -30px rgba(40,20,10,.6); }
+
+/* Le parcours en ligne de temps. Chaque formation porte la carte du massage
+   qu'elle a ouvert, reliées par un filet vertical qui passe derrière. */
+.panneau--clair .bloc-h{
+  background:none; border:0; padding:0; margin:0 0 .6rem;
+  font-size:clamp(1.6rem, 6.5vw, 2.1rem); font-weight:600; letter-spacing:-.025em;
+  font-family:var(--police-titre);
+}
+.parcours__metier{ margin-bottom:1.6rem; font-size:1.02rem; }
+.panneau--clair .parcours{ position:relative; gap:1.1rem; }
+.panneau--clair .parcours::before{
+  content:''; position:absolute; left:23px; top:1.5rem; bottom:1.5rem; width:2px;
+  background:color-mix(in srgb, var(--ink) 22%, transparent);
+}
+.panneau--clair .parcours li{
+  position:relative; display:flex; align-items:center; gap:1.1rem;
+  padding:0; border:0;
+}
+.parcours__carte{
+  flex:none; width:48px; height:auto; aspect-ratio:9/16; border-radius:8px;
+  object-fit:cover; background:var(--card);
+  box-shadow:0 8px 18px -10px rgba(40,20,10,.6);
+}
+/* « À venir » : grisée, mais opaque — transparente, elle laissait voir le
+   filet du parcours qui passe derrière. */
+.parcours--a-venir .parcours__carte{ filter:grayscale(.7) brightness(1.06); }
+.parcours__texte{ display:flex; flex-direction:column; gap:.1rem; }
+.panneau--clair .parcours b{ font-size:1.05rem; }
+.panneau--clair .parcours__ecole{ margin-top:1.8rem; }
+
+/* La fin de page : le cadre et Instagram, après un filet. */
+.panneau--clair .moi__cadre{ border-top-color:color-mix(in srgb, var(--ink) 25%, transparent); }
+
+/* --- Les touches ---
+   La couleur de chaque page ne tient plus son fond : elle revient en
+   petites surfaces sur le blanc cassé — l'étiquette de Moi, les horaires
+   du Lieu, l'attente des Avis, les boutons du Rendez-vous. Même recette
+   que les encadrés de prix des fiches : une texture, sous un voile dosé au
+   pixel pour que l'encre tienne 4,6:1 au pire. Moi et Le lieu partagent
+   un terracotta texturé, tiré de la carte Madéro par `tools-textures.py`,
+   en encre blanche, et Avis aussi. Ses écarts de lumière sont bornés à
+   la génération, sans voile. Les filets (parcours, liste du Lieu) prennent un terracotta
+   plus clair. Les ronds de la barre, eux, restent crème. */
+#moi, #lieu, #rdv, #avis{
+  --touche:url(../img/pages/terracotta-touche.webp); --touche-fond:#924A31;
+  --touche-voile:transparent; --touche-encre:#FFFFFF; --touche-trait:#C7805F;
+}
+.panneau--clair .moi__reserve,
+.panneau--clair .etiquette,
+.panneau--clair .resume{
+  background:
+    linear-gradient(var(--touche-voile), var(--touche-voile)),
+    var(--touche) center / cover no-repeat,
+    var(--touche-fond);
+  color:var(--touche-encre); border:0;
+  box-shadow:0 14px 30px -22px rgba(40,20,10,.6);
+}
+.panneau--clair .moi__reserve,
+.panneau--clair .etiquette{ padding:.85rem 1.2rem; }
+/* Les deux lignes de l'étiquette prennent l'encre de la touche : la
+   première avait la teinte de la rubrique, la seconde le gris doux. */
+.panneau--clair .moi__reserve > *,
+.panneau--clair .etiquette > *,
+.panneau--clair .resume *{ color:inherit; }
+.panneau--clair .parcours::before{ background:var(--touche-trait); }
+#lieu .infos li,
+#lieu .infos li:last-child{ border-color:var(--touche-trait); }
+
+/* --- L'entrée du contenu ---
+   Courte et d'un bloc. Le contenu a été révélé un moment ligne à ligne :
+   c'était joli à la première ouverture, long dès la deuxième. Il monte
+   maintenant d'un souffle, le temps que le disque du panneau finisse de
+   s'ouvrir — assez pour que rien n'apparaisse d'un coup sec, trop peu pour
+   qu'on ait à l'attendre. */
+.feuille{
+  max-width:34rem; margin-inline:auto;
+  opacity:0; transform:translateY(10px);
+  transition:opacity .18s var(--ease), transform .26s var(--ease-out);
+}
+.panneau.ouvert .feuille{ opacity:1; transform:none; }
+
+
+/* Deux classes, et non `.sur-titre` seul : le sur-titre est un `<p>` dans
+   `.feuille`, et `.feuille p` (une classe + un élément) l'emportait sur
+   une classe unique. Sa couleur retombait donc sur celle du texte
+   courant — il n'a jamais été à l'ocre annoncé. */
+/* Plancher typographique : rien sous 12 px sur le site. Les sur-titres, les
+   en-têtes du tableau et les prix barrés descendaient à 10,2 px — lisibles
+   pour qui les a écrits, beaucoup moins pour une clientèle qui n'a pas
+   vingt ans. Les capitales espacées paraissent plus grandes qu'elles ne
+   sont, ce qui les avait fait passer inaperçues. */
+.feuille .sur-titre{
+  font-size:.78rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--teinte-t,var(--accent)); margin-bottom:.7rem;
+}
+.feuille h2{
+  font-family:var(--police-titre);
+  font-size:clamp(1.7rem,5.5vw,2.5rem);
+  font-weight:600; line-height:1.06; letter-spacing:-.03em;
+  color:var(--ink); margin-bottom:1.1rem;
+}
+.chapo{ font-size:1.02rem; color:var(--ink); }
+.feuille p{ color:var(--ink-soft); }
+.feuille p + p{ margin-top:.8rem; }
+.chapo + p{ margin-top:1rem; }
+
+/* Le M du logo, en très grand derrière chaque panneau. C'est un masque et
+   non une image : un seul fichier d'un kilo-octet, net à toutes les tailles,
+   et la couleur reste pilotée par le CSS.
+
+   Le tracé vient du logo officiel, détouré de son disque par
+   tools-logo-officiel.py — celui de la V1 avait les jambages droits et les
+   têtes plus grandes, ce n'était pas le même dessin.
+
+   La teinte est fixe et ne suit pas la rubrique. Il ne reste que sur les
+   Massages : les quatre autres rubriques ont leur texture, qui en tient lieu. À 6 % il ne se lit pas comme un motif — on
+   voit une page habitée plutôt qu'un aplat, ce qui est tout ce qu'on lui
+   demande, et le contraste du texte n'en souffre pas. */
+.filigrane{
+  position:absolute; z-index:0; pointer-events:none;
+  right:-8%; top:clamp(4rem,14vh,9rem);
+  width:min(80%,440px); aspect-ratio:627/593;
+  background:var(--filigrane);
+  opacity:.06;
+  -webkit-mask:url('../img/logo-m.svg') center/contain no-repeat;
+          mask:url('../img/logo-m.svg') center/contain no-repeat;
+}
+
+/* --- Le panneau « Moi » ---
+   Le plus intime du site, et celui qui décide : la barrière de confiance
+   est plus haute ici que pour n'importe quel autre service local. D'où le
+   parcours de formation, le déroulé d'une séance, et le cadre posé — ce
+   que c'est, ce que ce n'est pas. */
+.moi__h{
+  font-size:1.05rem; font-weight:600; color:var(--ink);
+  margin:2rem 0 .7rem;
+}
+
+/* Chaque ligne : l'intitulé en tête, l'école et l'année en dessous. C'est
+   la lecture en diagonale qui compte — on cherche « est-ce qu'elle a
+   appris », pas le détail. */
+/* Le titre des sections de « Moi ». Le panneau enchaînait des paragraphes
+   sans jamais dire qu'on changeait de sujet. */
+/* Le parcours. C'étaient six cartes en relief : sur ce site, le relief
+   annonce quelque chose qu'on touche — les bulles, les boutons — et ces
+   cartes-là ne faisaient rien. Une liste séparée de filets fins se lit pour
+   ce qu'elle est, une suite de qualifications, et n'invite pas au doigt.
+
+   La seconde ligne est facultative : une formation dont on ne cite pas
+   l'école s'affiche seule, sans trou ni tiret. C'est ce qui permet de
+   compléter le bloc au fil de l'eau sans qu'il ait l'air inachevé. */
+.parcours{ display:grid; margin-top:.9rem; }
+.parcours li{ padding:.7rem 0; }
+.parcours li + li{ border-top:1px solid var(--line); }
+.parcours b{
+  display:block; font-weight:600; font-size:.95rem; color:var(--ink);
+}
+.parcours span{
+  display:block; margin-top:.15rem;
+  font-size:.82rem; color:var(--ink-soft);
+}
+
+/* Le seul bloc du panneau qui écarte des gens : il doit se lire avant
+   qu'on ait fini de décider, donc il est en relief et non en creux comme
+   le cadre légal plus bas. */
+.moi__reserve{
+  display:flex; flex-direction:column; gap:.15rem;
+  margin-top:1.6rem; padding:.85rem 1.1rem; border-radius:14px;
+  background:color-mix(in srgb, var(--teinte,var(--accent)) 13%, var(--card));
+}
+.moi__reserve b{
+  font-weight:600; font-size:.95rem; color:var(--teinte-t,var(--accent));
+}
+.moi__reserve span{ font-size:.84rem; color:var(--ink-soft); }
+.etiquette b{ font-weight:600; font-size:.95rem; }
+.etiquette span{ font-size:.84rem; }
+
+/* Deux clichés côte à côte, en portrait : ce sont des photos verticales,
+   les forcer en 4/3 les recadrerait sur le mur plutôt que sur les mains.
+   Le rapport est posé sur le conteneur autant que sur l'image, pour que la
+   grille garde sa hauteur avant même que les fichiers soient arrivés. */
+.cliches{
+  display:grid; grid-template-columns:repeat(2,1fr); gap:.6rem;
+  margin-top:1.6rem;
+}
+.cliches li{ border-radius:16px; overflow:hidden; box-shadow:var(--nm-out); }
+/* `height:auto` n'est pas décoratif : les balises portent `width` et
+   `height` pour réserver la place avant chargement, et cet attribut pose une
+   hauteur en dur. `aspect-ratio` ne s'applique que si l'une des deux
+   dimensions est libre — sans ça les images sortaient à 827 px de haut dans
+   un cadre de 173 px de large. */
+.cliches img{ width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; }
+
+/* La mention de bien-être. Elle était creusée dans la page — or sur ce
+   site un creux, c'est un bouton enfoncé. Un filet au-dessus suffit à la
+   détacher du texte courant sans lui donner l'air d'un élément actif. */
+.moi__cadre{
+  margin-top:2rem; padding-top:1.1rem; border-top:1px solid var(--line);
+  font-size:.84rem; color:var(--ink-soft);
+}
+.moi__liens{
+  display:flex; flex-wrap:wrap; align-items:center; gap:.5rem 1.2rem;
+  margin-top:1.8rem; font-size:.84rem;
+}
+.moi__anciennete{ font-weight:600; color:var(--ink); }
+.moi__liens a{
+  color:var(--teinte-t,var(--accent));
+  border-bottom:1px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+
+/* --- La pièce de massage ---
+   Une seule image pour tout le panneau, carrée et à pleine largeur. Trois
+   petits cadres tenaient une série ; un seul cadre de la même taille se
+   serait noyé au milieu du texte.
+
+   Le rapport n'est pas déclaré ici : le fichier est découpé au carré par
+   `tools-photos.py`, et `height:auto` laisse l'image le porter elle-même —
+   une hauteur en dur dans la balise, posée pour réserver la place avant
+   chargement, l'emporterait sinon. */
+.piece{
+  /* Bornée à 30 rem et non à la largeur de la feuille : au-delà, l'arche
+     devient plus haute que la fenêtre d'un ordinateur portable et l'on ne
+     voit plus la pièce d'un seul regard. En dessous — c'était 24 rem — elle
+     occupait sur grand écran une part plus petite que sur téléphone, ce qui
+     est exactement l'inverse de la mettre en valeur. */
+  margin:1.8rem auto 0; width:100%; max-width:30rem;
+  border-radius:var(--r-lg);
+  overflow:hidden; box-shadow:var(--nm-out-lg);
+}
+.piece img{ width:100%; height:auto; display:block; }
+/* La phrase qui suit l'image lui sert de légende : elle est centrée sous
+   le cadre et non calée à gauche comme le reste du texte. */
+.piece__mot{
+  margin-top:1.1rem; text-align:center;
+  color:var(--ink-soft); text-wrap:balance;
+}
+
+/* --- Les cartes de soins ---
+   Les cartes de la planche de Marie, revenues. Elles ne se retournent plus
+   sur place : toucher une carte ouvre sa fiche, qui prend le panneau et se
+   referme par la flèche du haut. Le retournement montrait la description
+   mais pas le prix, et il fallait retourner quatre cartes pour comparer
+   deux chiffres.
+
+   Les couleurs et les monogrammes sont relevés sur la planche par
+   `tools-cartes.py`, jamais saisis à la main. Le monogramme est posé en
+   **masque** : le fichier SVG ne porte aucune couleur, c'est le CSS qui
+   la donne — une teinte se change donc ici, sans retoucher les dessins. */
+/* La grille des cartes prend plus de largeur qu'une ligne de lecture ; le
+   texte au-dessus garde la sienne. */
+.feuille--soins{ max-width:min(46rem,100%); }
+.feuille--soins > :not(.soins){ max-width:34rem; }
+
+.soins{
+  margin-top:1.8rem;
+  display:grid; gap:clamp(.55rem,2.4vw,.9rem);
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+/* Deux colonnes sur téléphone — le deep tissus seul sur la dernière ligne,
+   à la même taille que les autres. Sur écran large, les cinq en ligne. */
+@media (min-width:620px){ .soins{ grid-template-columns:repeat(5,minmax(0,1fr)); } }
+
+/* 9:16, le format des cartes dessinées par Marie (900 × 1600). L'image
+   remplit la carte ; le nom et « Voir » se posent en bas, en blanc.
+
+   `background` porte la teinte médiane de la carte : c'est ce qu'on voit
+   le temps que l'image arrive, au lieu d'un trou crème. */
+.soin__carte{
+  position:relative; isolation:isolate; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:flex-end; width:100%;
+  aspect-ratio:9/16; padding:clamp(.75rem,3vw,1rem);
+  border-radius:16px;
+  background:var(--fond); color:#FFF;
+  box-shadow:0 14px 28px -20px rgba(42,35,32,.6);
+  transition:transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
+}
+.soin__img{
+  position:absolute; inset:0; z-index:-2;
+  width:100%; height:100%; object-fit:cover;
+}
+/* Le voile sous le texte. Le blanc tient sur le framboise et le brun, pas
+   sur les taches de lumière du sauge et du doré : un dégradé sombre, borné
+   au tiers bas de la carte, lui donne un fond sûr partout. Il reste sous
+   le monogramme, qui s'arrête à 58 % de la hauteur. */
+.soin__carte::after{
+  content:''; position:absolute; inset:auto 0 0 0; height:42%; z-index:-1;
+  background:linear-gradient(to top,
+    rgba(20,13,11,.62) 0%, rgba(20,13,11,.45) 45%, rgba(20,13,11,0) 100%);
+  pointer-events:none;
+}
+.soin__nom{
+  font-size:clamp(.88rem,3.4vw,1rem); font-weight:600;
+  letter-spacing:-.01em; line-height:1.2; text-align:left;
+  text-shadow:0 1px 8px rgba(20,13,11,.35);
+}
+/* Le seul mot qui dit que la carte s'ouvre. Sans lui, quatre aplats colorés
+   ne se distinguent pas d'une illustration — c'est le reproche qu'on
+   faisait déjà aux cartes qui se retournaient. */
+/* .76rem et non .74 : le plancher de lisibilité du site est à 12 px, et
+   .74rem tombait à 11,8 — mesuré. */
+.soin__voir{
+  margin-top:.15rem; font-size:.76rem; font-weight:500; letter-spacing:.06em;
+  text-transform:uppercase; text-align:left;
+  color:rgba(255,255,255,.86);
+}
+@media (hover:hover) and (pointer:fine){
+  .soin__carte:hover{
+    transform:translateY(-5px);
+    box-shadow:0 22px 34px -20px rgba(42,35,32,.62);
+  }
+}
+.soin__carte:active{ transform:translateY(0) scale(.975); }
+
+/* Le deep tissus, « bientôt ». À moitié grisé — on devine encore le
+   doré — et sans aucun des gestes d'une carte qu'on touche : ni
+   soulèvement au survol, ni enfoncement à l'appui. Ce n'est pas un bouton. */
+.soin--bientot .soin__carte{ box-shadow:none; }
+.soin--bientot .soin__img{ filter:grayscale(.7) brightness(1.04); opacity:.78; }
+.soin--bientot .soin__carte:hover,
+.soin--bientot .soin__carte:active{ transform:none; }
+
+/* --- La fiche d'un soin ---
+   Elle remplace la planche dans le panneau plutôt que de s'ouvrir par
+   dessus : un second voile au-dessus d'un panneau déjà ouvert donnait deux
+   fermetures à l'écran, et on ne savait plus laquelle ramenait où. */
+.fiche{
+  max-width:34rem; margin-inline:auto;
+  animation:fiche-entre .34s var(--ease-out) both;
+}
+@keyframes fiche-entre{
+  from{ opacity:0; transform:translateY(14px); }
+  to  { opacity:1; transform:none; }
+}
+/* La flèche de retour. Posée dans le flux et non fixée : la croix de
+   fermeture occupe déjà l'angle opposé, et deux boutons flottants aux deux
+   coins se lisent comme un choix entre deux sorties. */
+.fiche__retour{
+  display:inline-flex; align-items:center; gap:.4rem;
+  min-height:44px; padding:.4rem .8rem .4rem .5rem; margin-left:-.5rem;
+  border-radius:999px; font-size:.86rem; font-weight:500;
+  color:var(--teinte-t,var(--accent));
+  transition:background .25s var(--ease);
+}
+.fiche__retour svg{
+  width:18px; height:18px; fill:none; stroke:currentColor;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+@media (hover:hover) and (pointer:fine){
+  .fiche__retour:hover{ background:color-mix(in srgb, var(--accent) 8%, transparent); }
+}
+
+/* La carte du soin en bandeau, recadrée autour de son monogramme : c'est
+   ce qui relie la fiche à la carte qu'on vient de toucher. 16:9 et non
+   plus 2,4:1 — la lettre occupe 40 % de la hauteur de la carte, et un
+   bandeau plus allongé la coupait. */
+.fiche__blason{
+  margin-top:1.2rem; border-radius:20px; overflow:hidden;
+  background:var(--fond);
+  aspect-ratio:16/9;
+}
+.fiche__img{ width:100%; height:100%; object-fit:cover; }
+.fiche__nom{
+  margin-top:1.4rem; font-size:clamp(1.5rem,6vw,2rem); font-weight:600;
+  letter-spacing:-.025em; line-height:1.1;
+}
+.fiche__sous{
+  margin-top:.25rem; font-size:.94rem; color:var(--teinte-t,var(--accent));
+  font-weight:500;
+}
+.fiche__desc{ margin-top:1.1rem; color:var(--ink-soft); }
+
+/* Les prix, recopiés du tableau. Deux blocs au plus : la séance et le
+   forfait — le second n'apparaît pas quand le soin n'en a pas. */
+.fiche__prix{ display:grid; gap:.9rem; margin-top:1.8rem; }
+.fiche__bloc{
+  padding:.9rem 1.1rem; border-radius:14px;
+  /* La texture de la carte, sans sa lettre — la même lumière que le bandeau
+     au-dessus — sous un voile de sa propre couleur. Le voile ne se voit pas
+     comme tel : il resserre l'écart entre les taches claires et les ombres
+     de la texture, assez pour que le texte tienne partout. Son dosage est
+     mesuré au pixel, soin par soin. `--prix-fond` reste en dessous, pour le
+     temps que l'image arrive. */
+  background:
+    linear-gradient(var(--prix-voile, transparent), var(--prix-voile, transparent)),
+    var(--prix-texture, none) center / cover no-repeat,
+    var(--prix-fond, color-mix(in srgb, var(--teinte,var(--accent)) 10%, var(--card)));
+  color:var(--prix-encre, var(--ink));
+}
+/* Tout le texte de l'encadré prend son encre : les libellés, les durées,
+   les prix et le « au lieu de », qui avaient chacun leur gris sur le
+   crème. */
+.fiche__bloc h4,
+.fiche__bloc .t-l__nom,
+.fiche__bloc .t-l__prix,
+.fiche__bloc .t-avant,
+.fiche__bloc .t-l--vide{ color:var(--prix-encre, inherit); }
+/* .76rem (12,2 px) et l'encre foncée des bandeaux : à .72rem et avec
+   `--teinte-t`, ces deux libellés tombaient à 11,5 px et 4,19:1 — sous les
+   deux planchers du site. `--teinte-t` est calculée sur le crème nu, or ce
+   bloc est teinté ; c'est `--teinte-h`, calculée sur un fond lavé, qu'il
+   lui faut. */
+.fiche__bloc h4{
+  font-size:.76rem; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--prix-encre, var(--teinte-h,var(--accent)));
+  margin-bottom:.45rem;
+}
+.fiche__bloc .t-l{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem; }
+.fiche__bloc .t-l__nom{ flex:1; }
+/* En relief mais pas en bordeaux : l'aplat bordeaux plein ne sert qu'à
+   réserver, sur tout le site. Un second bouton de cette couleur au bas
+   d'une fiche mettait « voir les autres massages » au même rang que
+   « prendre rendez-vous ». Le relief suffit à dire qu'on peut appuyer —
+   c'est la règle du site. */
+.fiche__autres{
+  margin-top:2rem; width:100%; min-height:48px;
+  padding:.8rem 1.2rem; border-radius:999px;
+  background:var(--card); box-shadow:var(--nm-out);
+  color:var(--ink); font-weight:500;
+  transition:box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+@media (hover:hover) and (pointer:fine){
+  .fiche__autres:hover{ box-shadow:var(--nm-out-lg); }
+}
+.fiche__autres:active{ box-shadow:var(--nm-in); transform:scale(.99); }
+
+@media (prefers-reduced-motion:reduce){
+  .fiche{ animation:none; }
+}
+
+/* --- La carte qui devient fiche ---
+   La carte touchée et le bandeau de la fiche portent le même nom le temps
+   du passage (voir v2.js), et le navigateur anime l'un vers l'autre. Les
+   deux n'ont pas le même format — 9:16 pour la carte, 16:9 pour le
+   bandeau — donc les deux captures sont recadrées comme les images
+   d'origine (`object-fit:cover`) dans un cadre qui garde ses coins
+   arrondis : on voit la carte s'élargir, pas s'écraser. */
+::view-transition-group(carte-soin){
+  animation-duration:.48s;
+  animation-timing-function:cubic-bezier(.22,.68,.28,1);
+  border-radius:18px; overflow:hidden;
+}
+::view-transition-old(carte-soin),
+::view-transition-new(carte-soin){
+  width:100%; height:100%; object-fit:cover;
+  animation-duration:.48s;
+}
+/* Le reste de la page passe en deux temps, plus vite que la carte ne
+   voyage : l'ancienne s'efface d'abord, la nouvelle vient ensuite. Un
+   fondu croisé montrait les deux textes l'un sur l'autre pendant un
+   instant — la liste et la fiche mêlées. On doit voir la carte arriver
+   sur une page déjà en place. */
+@keyframes vt-sort{ to{ opacity:0 } }
+@keyframes vt-entre{ from{ opacity:0 } }
+::view-transition-old(root){ animation:vt-sort .12s var(--ease) both; }
+::view-transition-new(root){ animation:vt-entre .22s var(--ease) .1s both; }
+/* Entre les deux, le fond de page — le même, calé comme `.texture-fond` :
+   sans lui, l'instant où les deux pages sont transparentes laissait passer
+   un éclair clair. */
+::view-transition{ background:url(../img/pages/fond.webp) center / cover no-repeat; }
+/* Quand la transition fait le travail, la fiche n'a plus besoin de sa
+   propre entrée : les deux se seraient additionnées. */
+.vt .fiche{ animation:none; }
+
+/* Les cartes dessinées par Marie, et leur teinte.
+
+   `--fond` est la **médiane** de chaque texture, relevée sur les fonds sans
+   lettre qu'elle a fournis : la couleur d'ensemble qu'on perçoit, pas celle
+   d'une tache de lumière. Elle sert d'attente pendant le chargement.
+
+   Ces valeurs remplacent celles de l'ancienne planche : les couleurs ont
+   changé avec les nouvelles cartes (le kobido est passé du bordeaux au
+   framboise, le drainage du rose au brun rosé). Les monogrammes vectoriels
+   de `img/soins/` ne servent plus au site. */
+.soin--kobido     { --fond:#6B0D24; --carte:url(../img/cartes/kobido.webp);
+                    --prix-fond:#6B0D24; --prix-encre:#FFECEC;
+                    --prix-texture:url(../img/cartes/kobido-texture.webp); --prix-voile:rgba(80,8,28,.49); }
+.soin--relaxant   { --fond:#909A80; --carte:url(../img/cartes/relaxant.webp);
+                    --prix-fond:#909A80; --prix-encre:#262812;
+                    --prix-texture:url(../img/cartes/relaxant-texture.webp); --prix-voile:rgba(196,202,178,.62); }
+.soin--madero     { --fond:#C85327; --carte:url(../img/cartes/madero.webp);
+                    --prix-fond:#BF4E24; --prix-encre:#FFFFFF;
+                    --prix-texture:url(../img/cartes/madero-texture.webp); --prix-voile:rgba(140,48,16,.73); }
+.soin--drainage   { --fond:#8F5442; --carte:url(../img/cartes/drainage.webp);
+                    --prix-fond:#8F5442; --prix-encre:#FFFFFF;
+                    --prix-texture:url(../img/cartes/drainage-texture.webp); --prix-voile:rgba(90,44,32,.65); }
+/* `--prix-voile` : le voile posé sur la texture des encadrés. Son opacité
+   est le minimum calculé sur toute la bande de texture pour que le pire
+   pixel reste à 4,6:1 sous le texte, arrondi un peu au-dessus. La couleur du
+   voile est un ton plus sombre que la carte pour les textes blancs, plus
+   clair pour le texte olive : c'est ce qui permet le voile le plus léger.
+
+   `--prix-fond` et `--prix-encre` : les encadrés de prix de la fiche, dans
+   la couleur de la carte. L'encre est choisie pour demander le voile le
+   plus léger, donc laisser voir le plus de texture : un blanc rosé sur le
+   framboise (le rose de la lettre du kobido exigeait un voile à 77 %, qui
+   noyait la texture ; le blanc rosé se contente de 47 %), l'olive de la
+   lettre du relaxant, assombri, et du blanc sur le madéro et le drainage,
+   dont les lettres ne se lisaient pas en petit texte. */
+.soin--deep-tissus{ --fond:#A27529; --carte:url(../img/cartes/deep-tissus.webp); }
+
+/* Le titre d'une section, dans un bandeau à la teinte de sa rubrique.
+
+   Les sections s'enchaînaient sans rien pour les séparer : « Mon parcours »
+   et « Les tarifs » avaient le poids d'un paragraphe en gras, et on ne
+   voyait pas qu'on changeait de sujet. Le bandeau reprend la couleur que la
+   rubrique porte déjà partout — sa bulle, son panneau — donc il signale sans
+   introduire une couleur de plus.
+
+   L'encre est la valeur `-t` de la teinte : celle qui a été calculée pour
+   rester au-dessus de 4,5:1 sur un fond lavé de cette même teinte. */
+.bloc-h{
+  display:block; margin:2.6rem 0 1rem;
+  padding:.6rem .95rem; border-radius:12px;
+  background:color-mix(in srgb, var(--teinte,var(--accent)) 20%, var(--card));
+  color:var(--teinte-h,var(--accent));
+  font-size:1.02rem; font-weight:600; letter-spacing:-.01em;
+  /* Un filet plein de la teinte, à gauche. Le lavis seul ressemblait au
+     bloc « réservé aux femmes », qui porte la même couleur à 13 % : deux
+     pavés teintés l'un sous l'autre, et la hiérarchie se perdait. Le filet
+     n'appartient qu'aux titres de section — on les repère sans les lire. */
+  border-left:4px solid var(--teinte,var(--accent));
+  border-top-left-radius:4px; border-bottom-left-radius:4px;
+}
+
+/* Une ligne de prix : la durée (ou le nombre de séances) et le prix. Elles
+   sont écrites dans le tableau caché des tarifs, qui n'est qu'une source, et
+   recopiées telles quelles dans les encadrés de la fiche d'un massage. */
+/* Le prix se cale à droite, à toutes les largeurs : posé à la suite du
+   libellé, « 1 h 60 € » et « 1 h 30 90 € » ne tombaient pas au même endroit,
+   et une liste de prix se lit en colonne. */
+.t-l{
+  display:flex; align-items:baseline; flex-wrap:wrap;
+  justify-content:space-between; gap:.15rem .6rem;
+}
+.t-l + .t-l{ margin-top:.55rem; }
+.t-l__nom { color:var(--ink-soft); white-space:nowrap; }
+.t-l__prix{ font-weight:600; color:var(--ink); white-space:nowrap; }
+.t-avant{
+  flex-basis:100%; text-align:right;
+  font-style:normal; font-size:.95em; color:var(--ink-soft);
+}
+.t-avant:empty{ display:none; }
+.t-l--vide{ color:var(--ink-soft); }
+
+/* Une hauteur commune aux lignes de prix : le forfait porte une seconde
+   ligne (« au lieu de … ») que la séance n'a pas. */
+@media (min-width:621px){
+  .t-l{ min-height:2.5em; }
+  .t-l + .t-l{ margin-top:.35rem; }
+}
+
+
+/* --- Les avis ---
+   La synthèse dans la touche terracotta de la page — le chiffre en grand, les
+   étoiles, le compte —, puis les avis en liste, séparés d'un filet terracotta :
+   pas de cartes, comme « Sur place » du Lieu. Sur ordinateur, deux
+   colonnes. Les étoiles sont un dessin : leur sens est dit par
+   `aria-label`. */
+.resume{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center;
+  column-gap:clamp(1.2rem,5vw,2.4rem); row-gap:.8rem;
+  width:100%; max-width:30rem; margin-top:1.6rem; padding:1.2rem 1.4rem 1.3rem;
+  border-radius:18px; box-shadow:0 14px 30px -22px rgba(40,20,10,.6);
+}
+.resume__titre{ grid-column:1 / -1; font-size:1.05rem; font-weight:600; }
+.resume__titre small{ display:block; font-size:.82rem; font-weight:500; }
+.resume__barres{ list-style:none; padding:0; margin:0; display:grid; gap:.3rem; }
+.resume__barres li{ display:grid; grid-template-columns:.9rem 1fr; align-items:center; gap:.6rem; }
+.resume__n{ font-size:.85rem; font-weight:600; text-align:center; }
+.resume__barre{
+  height:.55rem; border-radius:999px; overflow:hidden;
+  background:color-mix(in srgb, currentColor 24%, transparent);
+}
+/* Les barres se remplissent à l'ouverture de la page, une fois le panneau
+   en place : réglées au chargement, elles s'animaient quand personne ne
+   les voyait. Pas de transition au retour à zéro — à la fermeture, elles
+   se vident d'un coup, cachées. `--part` est posée par le script. */
+.resume__barre > span{
+  display:block; height:100%; width:0; border-radius:inherit; background:currentColor;
+}
+.panneau.ouvert .resume__barre > span{
+  width:var(--part, 0%);
+  transition:width .8s var(--ease-out) .35s;
+}
+/* Quittée pour une autre rubrique, la page reste un instant sous la
+   nouvelle : ses barres restent pleines, sinon on les voyait se vider. */
+.panneau.sortant .resume__barre > span{ width:var(--part, 0%); }
+.resume__note{ display:flex; flex-direction:column; align-items:center; gap:.2rem; }
+.resume__note b{ font-size:clamp(3rem,13vw,3.8rem); font-weight:500; line-height:.95; letter-spacing:-.04em; }
+.resume__etoiles{ font-size:1rem; letter-spacing:.1em; }
+.resume__note small{ font-size:.88rem; }
+/* Lu par les lecteurs d'écran, invisible à l'œil : les barres n'ont pas
+   de texte, leur compte est dit ici. */
+.lecteur{
+  position:absolute; width:1px; height:1px; overflow:hidden;
+  clip-path:inset(50%); white-space:nowrap;
+}
+
+#avis .avis__source{ margin-top:.9rem; font-size:.85rem; }
+.avis{ display:grid; }
+.avis li{
+  display:flex; flex-direction:column; gap:.55rem;
+  padding:1.5rem 0; border-top:1px solid var(--touche-trait, var(--line));
+  break-inside:avoid;
+}
+.avis li:last-child{ border-bottom:1px solid var(--touche-trait, var(--line)); }
+.avis__etoiles{ color:#924A31; font-size:1rem; letter-spacing:.14em; line-height:1; }
+.avis q{ display:block; font-size:1.02rem; line-height:1.6; color:var(--ink); quotes:'«\00a0' '\00a0»'; }
+.avis cite{ font-style:normal; font-size:.86rem; color:var(--ink); }
+.avis cite b{ font-weight:600; }
+
+/* --- Le rendez-vous : trois temps, puis deux boutons ---
+   Les étapes sur une ligne, comme le parcours de Moi : des pastilles
+   terracotta numérotées, reliées par un filet. Les boutons viennent après,
+   pleine largeur : réserver en ligne (plein, l'action principale) et
+   envoyer un message (en creux). Le numéro reste écrit dessous. */
+.etapes{ position:relative; display:grid; gap:2.2rem; list-style:none; padding:0; margin:0; }
+.etapes li{ position:relative; display:flex; gap:1.1rem; align-items:flex-start; }
+/* Le filet part de chaque pastille et rejoint la suivante : tiré d'un bout
+   à l'autre de la liste, il dépassait sous la dernière, le long de son
+   texte. */
+.etapes li:not(:last-child)::before{
+  content:''; position:absolute; left:21px; top:44px; bottom:-2.2rem; width:2px;
+  background:var(--touche-trait);
+}
+.etapes__n{
+  flex:none; display:grid; place-items:center; width:44px; height:44px; border-radius:50%;
+  background:var(--touche) center / cover no-repeat, var(--touche-fond);
+  color:var(--touche-encre); font-weight:600; font-size:1.05rem;
+  box-shadow:0 10px 20px -12px rgba(60,20,10,.7);
+}
+.etapes__texte{ display:flex; flex-direction:column; gap:.25rem; padding-top:.55rem; }
+.etapes__texte b{ font-size:1.1rem; font-weight:600; }
+.etapes__texte > span{ font-size:.94rem; line-height:1.55; }
+
+.lien-fort{
+  font-weight:600; text-decoration:underline; text-decoration-thickness:1.5px;
+  text-underline-offset:.25em; text-decoration-color:var(--touche-trait);
+}
+.reserver{ display:grid; gap:.75rem; }
+.reserver__btn{
+  display:flex; align-items:center; justify-content:center; gap:.6rem;
+  min-height:56px; padding:.8rem 1.4rem; border-radius:999px;
+  font-size:1rem; font-weight:600; color:var(--ink);
+  box-shadow:inset 0 0 0 1.5px var(--ink);
+  transition:background-color .25s var(--ease), transform .2s var(--ease);
+}
+.reserver__btn svg{
+  width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.reserver__btn--plein{ background:var(--ink); color:#F6EDE2; box-shadow:0 16px 30px -20px rgba(20,12,10,.7); }
+.reserver__btn:active{ transform:scale(.98); }
+@media (hover:hover) and (pointer:fine){
+  .reserver__btn:hover{ background-color:color-mix(in srgb, var(--ink) 8%, transparent); }
+  .reserver__btn--plein:hover{ background-color:#3A3430; }
+}
+.reserver__secours{
+  font-size:.92rem; line-height:1.6; text-align:center;
+  padding:.9rem 1rem; border-radius:16px;
+  background:color-mix(in srgb, var(--touche-trait) 18%, transparent);
+}
+.reserver__secours b{ white-space:nowrap; }
+.reserver__copier{
+  display:inline-flex; align-items:center; min-height:44px; margin-left:.4rem;
+  padding:0 1rem; border-radius:999px; font:inherit; font-weight:600;
+  color:var(--ink); background:none; box-shadow:inset 0 0 0 1.5px var(--ink); cursor:pointer;
+}
+.reserver__secours[hidden]{ display:none; }
+@media (min-width:640px){ .reserver__secours{ grid-column:1 / -1; } }
+.reserver__mot{ margin-top:.6rem; font-size:.92rem; line-height:1.6; text-align:center; }
+.reserver__mot a{ white-space:nowrap; }
+@media (min-width:640px){
+  .reserver{ grid-template-columns:1fr 1fr; }
+  .reserver__mot{ grid-column:1 / -1; }
+}
+
+/* Le bouton du 404. */
+.appel{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:52px; padding:.9rem 2.2rem; border-radius:999px;
+  background:var(--accent); color:var(--white); font-weight:500;
+  transition:background .25s var(--ease), transform .2s var(--ease);
+}
+.appel:hover{ background:var(--accent-d); }
+.appel:active{ transform:scale(.98); }
+
+/* ---------- 5 bis. LES PAGES ANNEXES ----------
+   Mentions légales et 404 partagent cette feuille, mais n'ont ni bulles ni
+   panneaux : sans styles à eux, le seul `*{margin:0;padding:0}` du socle
+   les réduisait à un mur de texte sans respiration, et les liens, privés
+   de soulignement par `a{text-decoration:none}`, ne se voyaient plus. */
+.annexe{
+  flex:1; position:relative; z-index:1;
+  width:100%; max-width:44rem; margin-inline:auto;
+  padding:clamp(2.5rem,8vh,5rem) var(--pad) clamp(2rem,5vh,3rem);
+}
+.annexe h1{
+  font-size:clamp(1.9rem,6vw,2.8rem);
+  font-weight:600; line-height:1.06; letter-spacing:-.03em;
+  color:var(--ink); margin-bottom:1.4rem;
+}
+.annexe h2{
+  font-size:1.05rem; font-weight:600; color:var(--ink);
+  margin:2.2rem 0 .5rem;
+}
+/* Le sur-titre et le chapô sont définis dans `.feuille`, qui n'existe que
+   dans les panneaux : sur ces pages-ci ils retombaient au texte courant —
+   « Erreur 404 » s'affichait en noir, à la taille du corps. */
+.annexe .sur-titre{
+  font-size:.78rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:.7rem;
+}
+.annexe p{ color:var(--ink-soft); }
+.annexe .chapo{ font-size:1.02rem; color:var(--ink); }
+.annexe p + p{ margin-top:.7rem; }
+.annexe code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.86em; color:var(--accent);
+}
+.annexe a:not(.appel){ color:var(--accent); border-bottom:1px solid var(--line); }
+.annexe ul{ margin-top:.6rem; padding-left:1.1rem; list-style:disc; }
+.annexe li{ color:var(--ink-soft); margin-top:.3rem; }
+.annexe--404{ text-align:center; max-width:34rem; }
+.annexe--404 .chapo{ margin-bottom:2rem; }
+
+/* ---------- 5 bis. DÉTAIL DU RENDEZ-VOUS ---------- */
+/* L'école des formations, dite une fois au-dessus de la liste. L'agrément
+   FFMBE y est en gras : c'est le seul label vérifiable du site. */
+.parcours__ecole{
+  margin-top:.9rem; font-size:.88rem; color:var(--ink-soft);
+}
+.parcours__ecole b{ font-weight:600; color:var(--ink); }
+
+/* Les liens de contact sont des cibles, pas des mots dans un paragraphe :
+   le numéro, les deux adresses et le lien Instagram tenaient sur 16 à 39 px
+   de haut. Ils reçoivent un rembourrage vertical compensé par une marge
+   négative — la zone qui répond au doigt grandit, la mise en page ne bouge
+   pas. Le lien des mentions légales, secondaire, vise le plancher de 24 px
+   plutôt que celui de 44 : l'amener à 44 aurait doublé la hauteur du pied
+   de page pour la ligne la moins touchée du site. */
+.lien-fort, .reserver__mot a, .moi__liens a{
+  display:inline-flex; align-items:center; min-height:44px;
+}
+.lien-fort, .reserver__mot a, .moi__liens a{ padding-block:.35rem; margin-block:-.35rem; }
+.pied a{
+  display:inline-flex; align-items:center; min-height:24px;
+  padding-block:.25rem; margin-block:-.25rem;
+}
+
+/* ---------- 6. PIED DE PAGE ---------- */
+.pied{
+  padding:0 var(--pad) clamp(.9rem,2.5vh,1.4rem);
+  text-align:center; font-size:.76rem; color:var(--ink-soft);
+}
+.pied a{ border-bottom:1px solid var(--line); }
+.pied a:hover{ color:var(--accent); border-bottom-color:var(--accent); }
+/* Ni `opacity` ici : à .7 la mention « soins de bien-être, non
+   thérapeutiques » tombait à 3,1:1 pour 11 px — or c'est la phrase qui
+   distingue une pratique de bien-être d'un acte médical. */
+.pied__note{ margin-top:.2rem; }
+
+/* ---------- 7. ÉCRANS COURTS ----------
+   Un écran d'accueil sans défilement doit tenir partout : sur un
+   téléphone couché, la hauteur fond. Le portrait cède le premier. */
+/* Un petit téléphone debout (320 × 568) : le texte, les bulles et le pied
+   de page ne rétrécissent pas avec la hauteur, seul le portrait le peut.
+   À 34 vh il faisait déborder l'écran de 19 px — et comme rien ne défile
+   ici, ces 19 px étaient perdus, pas repoussés. */
+/* Écrans courts. La photo étant maintenant pilotée par sa **largeur**, sa
+   seconde borne l'est aussi : `min(100%, Nvh)` fixe la largeur, la hauteur
+   suit le rapport. Reprendre ici une contrainte de hauteur la faisait
+   s'écraser à 92 px sur un téléphone couché. */
+/* Écran court. La photo étant maintenant étirée à la hauteur de la colonne,
+   c'est **la colonne** qu'il faut réduire, pas la photo : la rétrécir en
+   largeur pendant que sa hauteur restait celle des bulles la transformait en
+   bandeau vertical — jusqu'à 1/2,3 sur un 320 × 568. */
+@media (max-height:700px){
+  .scene{ row-gap:clamp(.4rem,1.2vh,1rem); }
+  .logo{ width:clamp(28px,5vh,44px); margin-bottom:0; }
+  .bulle{ width:clamp(56px,16vw,72px); }
+  .bulle__rond{ width:clamp(42px,12vw,60px); }
+  .bulle__nom{ font-size:clamp(.7rem,1.9vw,.76rem); }
+}
+@media (max-height:520px){
+  /* Le nom est à côté du rond, au milieu de la barre : la bande du fondu
+     reprend toute sa hauteur. */
+  .bulles::before{ inset:-1rem 0 calc(-1 * var(--pied)) 0; height:auto; }
+  /* Téléphone couché : la colonne devient courte et large, et la photo
+     étirée dessus donnerait un bandeau. Elle reprend ici son rapport
+     d'arche et se cale en bas, contre le nom. */
+  /* 31 vh et non 34 : le plancher typographique a fait grandir les faits
+     et les libellés des bulles, et l'accueil dépassait de 6 px sur un
+     téléphone couché — six pixels perdus, puisque rien ne défile ici.
+     C'est la photo qui cède, comme chaque fois que la hauteur manque. */
+  .portrait{ width:min(100%, 31vh); aspect-ratio:1/1.34; align-self:end; }
+  .logo{ width:clamp(22px,3.6vh,34px); }
+  .titre{ font-size:clamp(1.5rem,4.2vh,2.4rem); }
+  .accroche{ display:none; }
+  /* Téléphone couché : la hauteur manque, la largeur abonde. Le libellé
+     passe **à côté** du rond au lieu de dessous — la colonne perd un tiers
+     de sa hauteur et gagne une largeur dont on dispose. */
+  /* Couché, la hauteur manque et la largeur abonde : le libellé passe à
+     côté du rond au lieu de dessous, et la barre perd un tiers de sa
+     hauteur — celle-là même qui manque au reste de l'écran. */
+  .bulle{
+    flex-direction:row-reverse; align-items:center;
+    width:auto; gap:.45rem;
+  }
+  /* 44 px est le plancher tactile, pas une préférence : à 36 px la cible
+     descendait sous le minimum recommandé, et c'est en tenant son téléphone
+     couché qu'on vise le plus mal. */
+  .bulle__rond{ width:clamp(44px,8vh,48px); }
+  .bulle__nom{ text-align:right; }
+}
+
+/* ---------- 7 bis. TÉLÉPHONE DEBOUT : LA PHOTO PREND L'ÉCRAN ----------
+   La composition retenue avec Marie. La photo quitte son arche et occupe
+   la fenêtre entière ; le nom, la promesse et les bulles se posent en bas,
+   sur un voile.
+
+   Ce bloc arrive **après** tout le reste, y compris les écrans courts :
+   à spécificité égale c'est la dernière déclaration qui l'emporte, et les
+   réglages du petit téléphone reprenaient sinon le dessus.
+
+   Il ne vise que le téléphone **debout**. Couché, la fenêtre est deux fois
+   plus large que haute : une photo verticale n'y garderait qu'un bandeau
+   horizontal de 41 % de sa hauteur, coupé au niveau des bras. L'arche de
+   la composition d'origine y reste la bonne réponse. */
+@media (max-width:699px) and (orientation:portrait){
+  /* La grille n'a plus de photo à placer : une colonne suffit. Le logo est
+     poussé en haut par sa marge automatique, tout le reste tombe en bas. */
+  .scene{
+    display:flex; flex-direction:column; justify-content:flex-end;
+    gap:clamp(.5rem,1.5vh,.9rem);
+    padding-bottom:clamp(.4rem,1.2vh,.8rem);
+  }
+
+  /* --- Le texte prend le même ancrage que la barre ---
+     La photo, le voile, la barre de bulles et le pied de page sont tous en
+     position fixe. Le nom et l'accroche, eux, restaient dans le flux, au
+     bas d'une scène haute de `100svh` — et la place de la barre leur était
+     laissée par le `padding-bottom` du `body`. Deux repères différents
+     pour des éléments qui se touchent : tant que les deux coïncident, le
+     texte s'arrête à huit pixels des bulles et tout va bien.
+
+     Ils ne coïncident pas partout. Dans le navigateur interne d'Instagram,
+     la barre d'outils du bas rogne la fenêtre visible — celle qui sert de
+     repère aux éléments fixes — sans changer celle qui sert à la mise en
+     page. La barre de bulles remontait donc de sa hauteur, le texte non,
+     et les bulles se posaient en travers du nom.
+
+     Le texte passe au même ancrage : il ne peut plus dériver par rapport à
+     ce qu'il doit éviter, quelle que soit la façon dont le navigateur
+     compte sa fenêtre. */
+  .mot{
+    position:fixed; left:0; right:0; z-index:1;
+    bottom:calc(var(--pied,34px) + var(--barre,96px) + clamp(.4rem,1.2vh,.8rem));
+    padding-inline:var(--pad);
+  }
+  .logo{
+    margin-bottom:auto;
+    /* Le pictogramme se pose sur la photo, pas sur le crème : sans cette
+       ombre portée il disparaît dès que le rideau est clair derrière lui. */
+    filter:drop-shadow(0 2px 10px rgba(30,24,21,.5));
+  }
+  .scene .filigrane-fond{ display:none; }
+
+  .portrait{
+    position:fixed; inset:0; z-index:0;
+    width:auto; height:auto; align-self:auto;
+    border-radius:0; box-shadow:none;
+    /* Ni respiration ni glissement : les deux déplacent la photo de
+       quelques pixels, ce qui découvrirait le bord de l'écran. Elle paraît
+       simplement. */
+    animation:parait-fond .9s var(--ease-out) both;
+  }
+  .portrait picture{ height:100%; }
+
+  /* Deux couches, dans cet ordre : un flou qui calme les plis du rideau,
+     puis un dégradé sombre qui porte le contraste. Le flou seul ne
+     suffirait pas à tenir du texte clair ; le dégradé seul poserait les
+     lettres sur une image nette et agitée.
+
+     Le flou est en `::before` placé **derrière** le fond de son parent
+     (`z-index:-1`) : posé devant, il aurait troublé le dégradé lui-même au
+     lieu de la seule photographie. */
+  /* La hauteur est en pixels, pas en `vh`. Le bloc qu'elle doit couvrir —
+     nom, promesse, faits, bulles, pied de page — mesure à peu près la même
+     chose sur tous les téléphones : le haut du nom se tient entre 256 et
+     298 px du bas de l'écran, de 320 × 653 à 430 × 932. Réglé en `vh`, le
+     voile suivait la fenêtre et non le texte : sur un petit écran son bord
+     transparent tombait pile sur le nom, à 1,45:1. */
+  .voile{
+    display:block; position:fixed; inset:auto 0 0 0; z-index:0;
+    height:min(72vh, 480px); pointer-events:none;
+    background:linear-gradient(to top,
+      rgba(30,24,21,.93)  0%, rgba(30,24,21,.90) 30%, rgba(30,24,21,.86) 55%,
+      rgba(30,24,21,.80) 67%, rgba(30,24,21,.52) 80%, rgba(30,24,21,.24) 90%,
+      rgba(30,24,21,0)  100%);
+  }
+  .voile::before{
+    content:''; position:absolute; inset:0; z-index:-1;
+    -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+    /* Le masque éteint le flou vers le haut : sans lui, la couche s'arrête
+       net et la coupure se voit comme une barre en travers de la photo. */
+    -webkit-mask-image:linear-gradient(to top, #000 34%, rgba(0,0,0,.45) 68%, transparent 100%);
+            mask-image:linear-gradient(to top, #000 34%, rgba(0,0,0,.45) 68%, transparent 100%);
+  }
+
+  /* Le texte passe en clair. Ces valeurs sont relevées sur le rendu et non
+     choisies : le pire pixel sous chaque bloc est mesuré sur la photo
+     floutée telle qu'elle s'affiche. */
+  .titre   { color:#FDF6EE; }
+  .accroche{ color:#E4D8CC; max-width:none; }
+  .faits span{ background:rgba(253,246,238,.14); box-shadow:none; color:#F3E8DC; }
+
+  /* Les cinq bulles se partagent la largeur au lieu d'en réclamer une
+     chacune : à 320 px, cinq largeurs assez grandes pour « Rendez-vous »
+     sur une ligne faisaient 345 px, et la dernière sortait de l'écran. Le
+     libellé passe sur deux lignes plutôt que la bulle hors du cadre. */
+  /* La barre resserre ses marges latérales : à la marge courante, chaque
+     bulle ne disposait que de 68 px et « Rendez-vous » se coupait en deux
+     dès 390 px — la rangée perdait son alignement pour un seul mot. Les
+     bulles y gagnent huit pixels chacune. */
+  .bulles{ justify-content:space-between; gap:.2rem; padding-inline:.55rem; }
+  .bulle{ flex:1 1 0; width:auto; min-width:0; }
+  .bulle__rond{ width:min(100%, clamp(46px,15vw,64px)); }
+
+  /* La barre a deux peaux, parce qu'elle a deux fonds. Sur l'accueil elle
+     repose sur le voile sombre de la photo : disques clairs, libellés
+     clairs, pas de relief — un relief doux suppose une surface de la
+     couleur du fond, et il n'y en a pas ici. Dès qu'un panneau s'ouvre, la
+     barre retrouve son socle crème et son relief : c'est la règle générale
+     qui reprend, et il n'y a rien à défaire. */
+  html:not(.a-panneau) .bulle{ color:#E4D8CC; }
+  html:not(.a-panneau) .bulle__rond{
+    background:rgba(253,246,238,.93); box-shadow:none;
+  }
+  @media (hover:hover) and (pointer:fine){
+    html:not(.a-panneau) .bulle:hover{ color:#FDF6EE; }
+    html:not(.a-panneau) .bulle:hover .bulle__rond{
+      box-shadow:none; transform:translateY(-3px);
+    }
+  }
+
+  .pied{ color:#CFC1B4; }
+  .pied a{ border-bottom-color:rgba(253,246,238,.32); }
+  .pied a:hover{ color:#FDF6EE; border-bottom-color:#FDF6EE; }
+}
+/* L'état d'arrivée est écrit, pas déduit : la photo part d'un `opacity:0`
+   déclaré dans ses propres styles, et une image-clé qui ne dirait que
+   `from` la laisserait retomber dessus à la fin — la photo restait alors
+   invisible et l'accueil s'affichait sur le crème nu. */
+@keyframes parait-fond{ from{ opacity:0 } to{ opacity:1 } }
+
+/* La place que la barre occupe, réservée partout où du contenu pourrait
+   passer dessous. `--barre` est mesurée par le script au chargement et à
+   chaque redimensionnement ; la valeur écrite ici n'est qu'un premier jet,
+   utilisé le temps que le script s'exécute. */
+:root{ --barre:96px; --pied:34px; }
+body{ padding-bottom:calc(var(--barre) + var(--pied)); }
+/* Le pied de page ferme l'écran, sous la barre — c'est l'ordre de la
+   maquette retenue. Fixé comme elle, sinon il resterait dans le flux
+   au-dessus d'elle. Son plan est sous celui des panneaux : une rubrique
+   ouverte le recouvre, la mention légale n'a rien à faire par-dessus. */
+.pied{ position:fixed; inset:auto 0 0 0; z-index:40; }
+/* Un souffle en plus de la hauteur de la barre : sans lui, le bouton de
+   relance venait toucher les bulles en bas de course. */
+.panneau{ padding-bottom:calc(var(--barre) + var(--pied) + .9rem); }
+/* Les pages annexes (mentions légales) n'ont pas de barre : leur pied de
+   page reprend sa place à la fin du texte. Fixé comme sur l'accueil, sans
+   fond, il flottait par-dessus les paragraphes qu'on lisait. */
+.annexe ~ .pied{ position:static; padding-top:1rem; color:var(--ink-soft); }
+/* …et la couleur du texte de la page : le clair de l'accueil, fait pour
+   la photo sombre, disparaissait sur le crème. */
+.annexe ~ .pied a{ border-bottom-color:var(--line); }
+body:has(> .annexe){ padding-bottom:0; }
+
+/* Donnée d'exemple dans les mentions légales, à remplacer avant la mise
+   en ligne : encadrée, pour qu'on ne la laisse pas passer à la relecture.
+   `tools-publier.py` refuse de publier tant qu'il en reste une. */
+.fictif{ outline:1.5px dashed #924A31; outline-offset:2px; border-radius:3px; }
+
+/* ---------- 7 bis. GRAND ÉCRAN ----------
+   Sur ordinateur, le site gardait ses mesures de téléphone : une colonne
+   de 34 rem au milieu d'un écran de 1440 px, du texte à 16 px, des photos
+   de vignette. Au-delà de 1024 px, tout grandit et les pages passent sur
+   deux colonnes.
+
+   **Tout grandit avec la largeur** : la taille de base suit l'écran, de
+   16 px à 1024 px jusqu'à 21 px vers 2000 px. Presque tout le site est
+   en rem — textes, marges, cartes —, donc tout suit d'un seul réglage, et
+   les proportions validées sur téléphone restent les mêmes.
+
+   **Deux colonnes** : le texte d'un côté, l'image ou l'action de l'autre.
+   Une ligne de lecture reste une ligne de lecture (une demi-page, pas une
+   page entière), et l'image, qui défilait loin sous le texte, reste à
+   côté de lui : elle est collante, et suit tant que la colonne de texte
+   défile. */
+@media (min-width:1024px) and (min-height:600px){
+  html{ font-size:clamp(16px, calc(.55vw + 10px), 21px); }
+
+  /* --- L'accueil --- */
+  .scene{ max-width:min(1800px, 92vw); column-gap:clamp(3rem,7vw,8rem); }
+  .portrait{ height:clamp(300px,60vh,780px); }
+  /* Un seul mot de treize signes. Sa colonne est ce que laisse la photo :
+     à 5,4 vw il y tient de 1024 à 2560 px de large (mesuré), au-delà il se
+     coupait en « marieemassa / ge ». */
+  .titre{ font-size:clamp(3.4rem,5.4vw,7.4rem); white-space:nowrap; }
+  .accroche{ font-size:clamp(1.15rem,1.5vw,1.7rem); max-width:30ch; }
+  .faits{ font-size:clamp(.9rem,1vw,1.15rem); gap:.6rem; }
+  .mot{ gap:clamp(1rem,2.4vh,1.8rem); }
+
+  /* --- La barre de navigation ---
+   Sur ordinateur, les bulles deviennent une vraie barre d'en-tête : la
+   marque à gauche (logo et nom, alignés), les rubriques en liens texte à
+   droite, et « Rendez-vous » en bouton — c'est l'action du site. Un fond
+   crème un peu transparent, flouté, et un filet dessous : le contenu
+   défile derrière sans jamais gêner la lecture des liens. La rubrique
+   ouverte est soulignée de terracotta. Ce sont les mêmes boutons que sur
+   téléphone : mêmes gestes, même ordre au clavier. */
+  .bulles{
+    inset:0 0 auto 0; justify-content:flex-end; align-items:center;
+    gap:clamp(1.4rem,2.6vw,2.8rem);
+    padding:clamp(.8rem,1.6vh,1.1rem) clamp(2rem,5vw,6rem);
+    background:color-mix(in srgb, #F6ECDF 86%, transparent);
+    -webkit-backdrop-filter:blur(14px) saturate(1.1);
+            backdrop-filter:blur(14px) saturate(1.1);
+    border-bottom:1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+  .bulles::before{ display:none; }
+  /* Passage carte → fiche : l'en-tête est à part, il ne clignote pas
+     avec la page qui s'efface et revient. */
+  .bulles{ view-transition-name:entete; }
+  /* En haut, elle s'efface vers le haut. */
+  .barre-cachee .bulles{ transform:translateY(calc(-100% - 16px)); }
+  /* La fiche garde l'en-tête : en haut, il ne gêne pas la lecture. */
+  .en-fiche .bulles{ transform:none; opacity:1; pointer-events:auto; visibility:visible; }
+  .en-fiche.barre-cachee .bulles{ transform:translateY(calc(-100% - 16px)); opacity:0; pointer-events:none; }
+  .en-fiche #massages{ padding-bottom:calc(var(--pied) + clamp(2rem,6vh,4rem)); }
+  .entete__marque{
+    display:flex; align-items:center; gap:.75rem; margin-right:auto;
+    font-size:1.35rem; font-weight:600; letter-spacing:-.035em; color:var(--ink);
+  }
+  .entete__marque img{ width:2.6rem; height:2.6rem; }
+  .bulle{
+    position:relative; width:auto; flex-direction:row; gap:0;
+    padding:.55rem 0; color:var(--ink);
+  }
+  .bulle__rond{ display:none; }
+  .bulle__nom{ font-size:1.02rem; font-weight:500; letter-spacing:0; }
+  .bulle::after{
+    content:''; position:absolute; left:0; right:0; bottom:.2rem; height:2px;
+    border-radius:2px; background:#C7805F;
+    transform:scaleX(0); transform-origin:left;
+    transition:transform .3s var(--ease-out);
+  }
+  .bulle[aria-expanded="true"]::after{ transform:scaleX(1); }
+  .a-panneau .bulle, .a-panneau .bulle[aria-expanded="true"]{ color:var(--ink); }
+  @media (hover:hover) and (pointer:fine){
+    .bulle:hover::after{ transform:scaleX(1); }
+  }
+  /* Rendez-vous, en bouton. */
+  html .bulles .bulle[data-ouvre="rdv"]{
+    margin-left:.4rem; padding:.7rem 1.5rem; border-radius:999px;
+    background:var(--ink); color:#F6EDE2;
+    box-shadow:0 10px 24px -16px rgba(20,12,10,.8);
+    transition:background-color .25s var(--ease), transform .2s var(--ease);
+  }
+  html .bulles .bulle[data-ouvre="rdv"]::after{ display:none; }
+  @media (hover:hover) and (pointer:fine){
+    html .bulles .bulle[data-ouvre="rdv"]:hover{ background:#3A3430; transform:translateY(-1px); }
+  }
+  html .bulles .bulle[data-ouvre="rdv"][aria-expanded="true"]{ background:#924A31; }
+  /* Le logo de l'accueil ferait doublon avec celui de la barre. */
+  .scene .logo{ display:none; }
+  body{ padding-top:var(--barre); padding-bottom:var(--pied); }
+  .panneau{
+    padding-top:calc(var(--barre) + clamp(1.5rem,5vh,3.5rem));
+    padding-bottom:calc(var(--pied) + clamp(2rem,6vh,4rem));
+  }
+  /* La croix, juste sous la barre, à droite : à sa hauteur, elle passait
+     sous la barre et son fondu, qui sont au-dessus des panneaux. */
+  .fermer{ top:calc(var(--barre) + .6rem); right:clamp(1.2rem,3vw,3rem); width:48px; height:48px; }
+
+  /* --- L'ouverture, sur ordinateur ---
+     Un fondu, et la page monte d'un souffle (`.feuille`, plus haut). Le
+     disque partait du lien, dans la barre d'en-tête, qui passe au-dessus
+     des panneaux : le premier tiers de l'animation se jouait caché sous
+     elle, puis la page surgissait d'un coup. Seule l'opacité est animée,
+     pas de `transform` sur le panneau : il ferait de lui le repère des
+     éléments fixes qu'il contient (le fond, la croix). */
+  .panneau{
+    clip-path:none; opacity:0;
+    transition:opacity .3s var(--ease), visibility 0s linear .3s;
+  }
+  .panneau.ouvert{
+    clip-path:none; opacity:1;
+    transition:opacity .3s var(--ease), visibility 0s;
+  }
+  .panneau.sortant{ opacity:1; }
+  /* D'une rubrique à l'autre, le fond est le même : il ne bouge pas, et
+     seul le contenu change — l'ancien s'efface vite, le nouveau monte.
+     En fondu enchaîné, les deux textes se superposaient à mi-course. */
+  .panneau.sortant .feuille{ opacity:0; transform:none; transition:opacity .14s var(--ease); }
+  .feuille{ transform:translateY(16px); transition:opacity .3s var(--ease), transform .45s var(--ease-out); }
+
+  /* --- Les pages : une feuille pleine largeur, en deux colonnes --- */
+  .panneau{ padding-inline:clamp(2rem,5vw,6rem); }
+  /* En rem, pas en px : la feuille s'élargit avec le texte, et un grand
+     écran ne se retrouve pas avec des marges vides de chaque côté. */
+  .feuille, .feuille--soins, .fiche{ max-width:76rem; }
+  #moi .feuille, #lieu .feuille, #rdv .feuille{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    column-gap:clamp(3rem,6vw,7rem); row-gap:clamp(3rem,8vh,5rem);
+    align-items:start;
+  }
+  /* L'image suit le texte : collante sous le haut du panneau. */
+  #moi .cliches, #lieu .piece{
+    grid-column:2; grid-row:1 / span 3;
+    position:sticky; top:calc(var(--barre) + 1.5rem);
+    margin:0; max-width:none; width:100%;
+  }
+  #moi .feuille > .bloc, #lieu .feuille > .bloc{ grid-column:1; }
+  .panneau--clair .feuille h2{ font-size:clamp(2.8rem,4.4vw,4.8rem); }
+  .panneau--clair .chapo{ font-size:1.2rem; }
+  .parcours__carte{ width:58px; }
+  .panneau--clair .parcours::before{ left:28px; }
+  .cliches img{ aspect-ratio:4/5; }
+
+  /* Massages : les cinq cartes sur toute la largeur. */
+  .feuille--soins > :not(.soins){ max-width:44rem; }
+  .soins{ gap:clamp(.9rem,1.6vw,1.6rem); margin-top:2.6rem; }
+
+  /* La fiche : le bandeau à gauche, collant ; le soin et ses prix à droite. */
+  /* `:not([hidden])` : une fiche fermée porte `hidden`, et un `display`
+     posé ici l'emportait — son bouton de retour s'affichait sous les
+     cartes. */
+  .fiche:not([hidden]){
+    display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
+    column-gap:clamp(2.5rem,5vw,6rem); align-items:start;
+  }
+  .fiche > *{ grid-column:2; }
+  .fiche__retour{ grid-column:1 / -1; }
+  .fiche__blason{
+    grid-column:1; grid-row:2 / span 6;
+    position:sticky; top:calc(var(--barre) + 1.5rem); margin:0;
+  }
+  .fiche__nom{ font-size:clamp(2.2rem,3.4vw,3.4rem); margin-top:0; }
+
+  /* Avis : le titre et la provenance à gauche, le résumé à droite, qui
+     tient toute la hauteur de l'en-tête. Le résumé commençait sous le
+     sur-titre et la provenance passait dessous : la colonne de droite
+     descendait deux fois plus bas que le titre, et laissait un grand vide
+     à gauche avant les avis. */
+  #avis .bloc{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    column-gap:clamp(3rem,6vw,7rem); align-items:start;
+  }
+  #avis .bloc > *{ grid-column:1; }
+  #avis .bloc > .sur-titre{ grid-row:1; }
+  #avis .bloc > h2{ grid-row:2; }
+  #avis .bloc > .avis__source{ grid-row:3; max-width:26rem; }
+  /* Descendu d'un cran : en haut de colonne, sur les écrans étroits, la
+     croix de fermeture mordait son coin. */
+  #avis .bloc > .resume{ grid-column:2; grid-row:1 / span 3; align-self:start; margin-top:2.2rem; }
+  /* Les avis, sur deux colonnes : chacun reste entier dans la sienne. */
+  .avis{ display:block; columns:2; column-gap:clamp(3rem,6vw,7rem); }
+  .avis li:last-child{ border-bottom:0; }
+
+  /* Rendez-vous : les trois temps à gauche, les boutons à droite. */
+  #rdv .feuille > .bloc, .etapes{ grid-column:1; }
+  .reserver{
+    grid-column:2; grid-row:1 / span 2; align-self:center;
+    grid-template-columns:1fr;
+  }
+  .reserver__mot, .reserver__secours{ grid-column:auto; }
+  .etapes__texte b{ font-size:1.25rem; }
+  .etapes__texte > span{ font-size:1.05rem; }
+  .reserver__btn{ min-height:64px; font-size:1.1rem; }
+}
+
+/* ---------- 8. MOUVEMENT RÉDUIT ---------- */
+/* Très court : un téléphone couché de 360 px de haut. La photo cède encore,
+   et la scène resserre ses marges — mais aucun texte ne rétrécit : le
+   plancher de 12 px vaut pour toutes les tailles d'écran, c'est justement
+   là qu'on lit le plus mal. */
+@media (max-height:400px){
+  .scene{ padding-block:.5rem; }
+  .portrait{ width:min(100%, 26vh); }
+  .logo{ width:clamp(20px,3.2vh,30px); }
+}
+
+@media (prefers-reduced-motion:reduce){
+  /* Le délai autant que la durée : le déroulé du contenu tient son état de
+     départ — invisible — pendant son délai, qui monte à près d'une seconde
+     sur le dernier bloc. Neutraliser la seule durée laissait donc la page
+     vide tout ce temps pour qui demande moins de mouvement. */
+  *,*::before,*::after{
+    animation-duration:.01ms !important; animation-delay:0s !important;
+    transition-duration:.01ms !important; transition-delay:0s !important;
+  }
+  .logo, .portrait, .titre, .accroche, .faits, .bulle{ opacity:1; }
+  .portrait{ animation:none; }
+}
