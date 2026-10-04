@@ -83,7 +83,15 @@
 
   --ease:       cubic-bezier(.22,.68,.28,1);
   --ease-out:   cubic-bezier(.16,1,.3,1);
-  --pad:        clamp(1.1rem,4vw,3rem);
+  /* Jamais moins que l'encoche, quand le téléphone est couché : le site
+     passe sous les bords de l'écran (`viewport-fit=cover`, voir index). */
+  --pad:        max(clamp(1.1rem,4vw,3rem), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+  /* Sur iPhone, ce que couvrent l'heure en haut et la barre d'accueil en
+     bas. Le site passe dessous — sinon Safari peignait là deux bandes
+     crème au-dessus et au-dessous de la photo — et ce qui doit rester
+     lisible ou touchable s'en écarte d'autant. Nuls ailleurs. */
+  --haut:       env(safe-area-inset-top, 0px);
+  --bas:        env(safe-area-inset-bottom, 0px);
 }
 
 /* ---------- 2. SOCLE ---------- */
@@ -136,11 +144,13 @@ body::after{
 }
 
 .evitement{
-  position:fixed; top:.6rem; left:.6rem; z-index:99;
+  position:fixed; top:calc(.6rem + var(--haut)); left:.6rem; z-index:99;
   background:var(--accent); color:var(--white);
   padding:.7rem 1.1rem; border-radius:999px; min-height:44px;
   display:inline-flex; align-items:center;
-  transform:translateY(-200%); transition:transform .3s var(--ease);
+  /* Remonté de toute sa hauteur plus sa distance au bord : avec la marge
+     de l'encoche, -200 % ne suffisait plus et le lien dépassait en haut. */
+  transform:translateY(calc(-100% - .6rem - var(--haut) - 8px)); transition:transform .3s var(--ease);
 }
 .evitement:focus{ transform:none; }
 :focus-visible{ outline:2.5px solid var(--accent); outline-offset:4px; border-radius:6px; }
@@ -170,7 +180,7 @@ body::after{
   align-content:center; justify-items:start;
   column-gap:clamp(.7rem,3vw,1.2rem);
   row-gap:clamp(.6rem,1.8vh,1.2rem);
-  padding:clamp(1rem,3vh,2rem) var(--pad);
+  padding:calc(clamp(1rem,3vh,2rem) + var(--haut)) var(--pad) clamp(1rem,3vh,2rem);
   text-align:left;
   position:relative;
   width:100%; max-width:1180px; margin-inline:auto;
@@ -334,7 +344,8 @@ body::after{
   position:fixed; inset:auto 0 var(--pied) 0; z-index:60;
   display:flex; align-items:flex-start; justify-content:center;
   gap:clamp(.3rem,2.6vw,1.5rem);
-  padding:.5rem var(--pad) calc(.5rem + env(safe-area-inset-bottom, 0px));
+  /* La barre d'accueil de l'iPhone est gardée par le pied de page, dessous. */
+  padding:.5rem var(--pad);
 }
 /* Pendant la lecture d'une rubrique, la barre glisse hors de l'écran (le
    script pose `.barre-cachee`, voir « La barre qui s'efface »). Elle
@@ -395,7 +406,7 @@ body::after{
      l'agrandissement du grand écran. */
   content:''; position:absolute; z-index:-1;
   inset:auto 0 calc(-1 * var(--pied)) 0;
-  height:calc(var(--pied) + .5rem + env(safe-area-inset-bottom, 0px) + .95rem + 60px);
+  height:calc(var(--pied) + .5rem + .95rem + 60px);
   pointer-events:none;
   /* Le fondu est fait de la texture de la page, pas d'un aplat : un aplat
      de sa couleur moyenne dessinait une bande lisse sur un fond granuleux.
@@ -548,7 +559,7 @@ body::after{
      recadrage règle le problème. Ici c'est le panneau lui-même qui
      recadre : rien n'a jamais à défiler latéralement dedans. */
   overflow:hidden auto; overscroll-behavior:contain;
-  padding:clamp(3.6rem,9vh,5.5rem) var(--pad) clamp(2rem,6vh,4rem);
+  padding:calc(clamp(3.6rem,9vh,5.5rem) + var(--haut)) var(--pad) clamp(2rem,6vh,4rem);
   /* Fermé : réduit au disque de la bulle d'origine, donc invisible.
      Les coordonnées sont posées par le JS au moment du clic. */
   clip-path:circle(0 at var(--x,50%) var(--y,90%));
@@ -609,7 +620,7 @@ body::after{
 .panneau > *:not(:where(.filigrane-fond, .texture-fond)){ position:relative; z-index:1; }
 
 .fermer{
-  position:fixed; top:clamp(.9rem,2.5vh,1.6rem); right:var(--pad); z-index:2;
+  position:fixed; top:calc(clamp(.9rem,2.5vh,1.6rem) + var(--haut)); right:var(--pad); z-index:2;
   width:44px; height:44px; border-radius:50%;
   display:grid; place-items:center;
   /* L'ombre des bulles, sans lumière blanche : posée sur une texture, la
@@ -1408,7 +1419,7 @@ body::after{
 .annexe{
   flex:1; position:relative; z-index:1;
   width:100%; max-width:44rem; margin-inline:auto;
-  padding:clamp(2.5rem,8vh,5rem) var(--pad) clamp(2rem,5vh,3rem);
+  padding:calc(clamp(2.5rem,8vh,5rem) + var(--haut)) var(--pad) clamp(2rem,5vh,3rem);
 }
 .annexe h1{
   font-size:clamp(1.9rem,6vw,2.8rem);
@@ -1445,7 +1456,8 @@ body::after{
 .merci{
   position:relative; z-index:1; min-height:100svh;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:1rem; padding:clamp(2.5rem,8vh,4rem) var(--pad); text-align:center;
+  gap:1rem; padding:calc(clamp(2.5rem,8vh,4rem) + var(--haut)) var(--pad) calc(clamp(2.5rem,8vh,4rem) + var(--bas));
+  text-align:center;
 }
 .merci__logo{ width:64px; height:64px; margin-bottom:.4rem; }
 .merci .sur-titre{ letter-spacing:.2em; text-transform:uppercase; font-size:.72rem; color:var(--accent); }
@@ -1488,7 +1500,7 @@ body::after{
 
 /* ---------- 6. PIED DE PAGE ---------- */
 .pied{
-  padding:0 var(--pad) clamp(.9rem,2.5vh,1.4rem);
+  padding:0 var(--pad) calc(clamp(.9rem,2.5vh,1.4rem) + var(--bas));
   text-align:center; font-size:.76rem; color:var(--ink-soft);
 }
 .pied a{ border-bottom:1px solid var(--line); }
