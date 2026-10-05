@@ -110,6 +110,14 @@
     });
   }
 
+  // Statistiques (Umami, voir les mentions légales) : la rubrique ouverte
+  // et le massage consulté. Les rubriques s'ouvrent sur place, sans changer
+  // de page : sans ces événements, toute la visite compterait pour une seule
+  // page vue. Sans Umami (bloqueur, aperçu), rien ne se passe.
+  const compte = (evenement, donnees) => {
+    try { if (window.umami) umami.track(evenement, donnees); } catch (e) { /* sans gravité */ }
+  };
+
   function ouvrir(id, bulle) {
     const p = document.getElementById(id);
     // Seuls les panneaux s'ouvrent. Sans ce filtre, une adresse pointant
@@ -117,6 +125,7 @@
     // d'évitement — arrivait ici, ne trouvait pas de bouton de fermeture,
     // et l'erreur emportait tout le reste du script.
     if (!p || !p.classList.contains('panneau') || ouvert === p) return;
+    compte('Rubrique', { rubrique: { moi: 'À propos', lieu: 'Le lieu', massages: 'Massages', avis: 'Avis', rdv: 'Rendez-vous' }[id] || id });
     // Passer d'une rubrique à l'autre ne doit pas empiler une entrée de
     // plus : avec une barre toujours là, on en change souvent, et le bouton
     // « retour » aurait rejoué la visite rubrique par rubrique au lieu de
@@ -598,6 +607,7 @@
 
   function montreVue(cle, pousse) {
     if (!remplitFiche(cle)) return;
+    compte('Massage', { massage: ($('.fiche__nom', laFiche) || {}).textContent || cle });
     const carte = $(`button.soin__carte[data-soin="${cle}"]`);
     if (vueCle === null) defilePlanche = panneauSoins.scrollTop;
     vueCle = cle;

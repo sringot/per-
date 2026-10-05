@@ -55,6 +55,10 @@
     "sameAs": ["https://www.instagram.com/marieemassage/"]
   }
   </script>
+  <!-- Mesure d'audience : Umami, sans cookie ni donnée personnelle (voir
+       les mentions légales). `data-domains` : seules les visites du vrai
+       site comptent, pas l'aperçu ni les essais en local. -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="faaa10ee-f019-45cb-a098-148fd44e9926" data-domains="marieemassage.com,www.marieemassage.com"></script>
 </head>
 <body>
 
@@ -232,7 +236,7 @@
     </p>
 
     <p class="moi__liens">
-      <a href="https://www.instagram.com/marieemassage/" rel="me noopener" target="_blank">
+      <a data-umami-event="Instagram" href="https://www.instagram.com/marieemassage/" rel="me noopener" target="_blank">
         @marieemassage sur Instagram
       </a>
     </p>
@@ -609,10 +613,10 @@
       <!-- Lien fourni par Marie. `target="_blank"` : le planning Treatwell
            est un parcours de réservation à lui seul, on ne quitte pas le
            site en plein milieu pour y entrer. `rel="noopener"` va avec. -->
-      <a class="reserver__btn reserver__btn--plein" href="https://widget.treatwell.fr/salon/marieemassge/"
+      <a class="reserver__btn reserver__btn--plein" data-umami-event="Réserver en ligne" href="https://widget.treatwell.fr/salon/marieemassge/"
          target="_blank" rel="noopener">Réserver en ligne
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-      <a class="reserver__btn" href="sms:+33631183481" data-secours="secours-sms">Envoyer un message</a>
+      <a class="reserver__btn" data-umami-event="Envoyer un message" href="sms:+33631183481" data-secours="secours-sms">Envoyer un message</a>
       <!-- Si l'appareil n'ouvre pas les messages — un ordinateur, l'aperçu
            d'une application qui bloque ces liens —, le bouton ne doit pas
            avoir l'air cassé : le numéro apparaît ici, prêt à copier. -->
@@ -625,9 +629,9 @@
            n'est pas un horaire d'ouverture mais le moment où elle répond.
            L'adresse contact@mariemassage.fr reste retirée : Marie ne l'a pas
            reconnue, et une boîte que personne ne relève avale les messages. -->
-      <p class="reserver__mot">Au <a href="tel:+33631183481">06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</a>,
+      <p class="reserver__mot">Au <a data-umami-event="Appeler" href="tel:+33631183481">06&nbsp;31&nbsp;18&nbsp;34&nbsp;81</a>,
         je réponds dès que je suis disponible.
-        Et sur Instagram, <a class="lien-fort" href="https://www.instagram.com/marieemassage/"
+        Et sur Instagram, <a class="lien-fort" data-umami-event="Instagram" href="https://www.instagram.com/marieemassage/"
         target="_blank" rel="noopener">@marieemassage</a>.</p>
     </div>
   </div>
