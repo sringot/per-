@@ -1794,7 +1794,7 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
    page entière), et l'image, qui défilait loin sous le texte, reste à
    côté de lui : elle est collante, et suit tant que la colonne de texte
    défile. */
-@media (min-width:1024px) and (min-height:600px){
+@media (min-width:1024px) and (min-height:460px){
   html{ font-size:clamp(16px, calc(.55vw + 10px), 21px); }
 
   /* --- L'accueil --- */
@@ -2049,7 +2049,7 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
    droite la photo, sur toute la hauteur et jusqu'au bord ; à gauche, sur
    le fond texturé des rubriques, le nom, la promesse, les faits et les
    deux actions du site. */
-@media (min-width:1024px) and (min-height:600px){
+@media (min-width:1024px) and (min-height:460px){
   body{ background:var(--card) url(../img/pages/fond.webp) center / cover fixed; padding-bottom:0; }
   /* Le « m » gravé : dans la moitié texturée, coupé par le bord de la
      photo, à la hauteur qu'il avait. Il reprend la texture même du fond
@@ -2073,7 +2073,7 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
     /* Exactement la hauteur de la fenêtre sous la barre. `flex:none` et la
        rangée `minmax(0,1fr)` : sans eux, la photo imposait sa hauteur
        naturelle (1 286 px sur un écran de 1 080) et l'accueil défilait. */
-    flex:none; height:calc(100svh - var(--barre)); min-height:30rem;
+    flex:none; height:calc(100svh - var(--barre)); min-height:22rem;
     grid-template-rows:minmax(0,1fr); align-items:stretch;
   }
   .portrait{
@@ -2091,7 +2091,9 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
     text-transform:uppercase; color:var(--accent);
   }
   .titre{ font-size:clamp(3.4rem,5.4vw,6.4rem); }
-  .accroche{ font-size:clamp(1.2rem,1.6vw,1.6rem); max-width:24ch; }
+  /* `display` rétabli : la règle des écrans très bas (téléphone couché)
+     la masquait aussi sur un ordinateur zoomé à 150 %. */
+  .accroche{ display:block; font-size:clamp(1.2rem,1.6vw,1.6rem); max-width:24ch; }
   .actions{ display:flex; flex-wrap:wrap; gap:.8rem; margin-top:.6rem; }
   .action{
     display:inline-flex; align-items:center; min-height:56px; padding:0 1.8rem;

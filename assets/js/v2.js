@@ -558,7 +558,7 @@
   // carte au titre de la fiche. `titres` : [départ, arrivée], ou rien.
   const NOM_TITRE = 'carte-titre';
   // Le même seuil que le bloc « grand écran » de la feuille de style.
-  const ecranLarge = matchMedia('(min-width:1024px) and (min-height:600px)');
+  const ecranLarge = matchMedia('(min-width:1024px) and (min-height:460px)');
   function passe(depart, arrivee, changer, image, titres = []) {
     if (!transitions) { changer(); return; }
     const [titreDepart, titreArrivee] = depart && arrivee ? titres : [];
