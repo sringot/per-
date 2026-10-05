@@ -2051,7 +2051,21 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
    deux actions du site. */
 @media (min-width:1024px) and (min-height:600px){
   body{ background:var(--card) url(../img/pages/fond.webp) center / cover fixed; padding-bottom:0; }
-  .filigrane-fond{ display:none; }
+  /* Le « m » gravé : dans la moitié texturée, coupé par le bord de la
+     photo, à la hauteur qu'il avait. Il reprend la texture même du fond
+     (fixée à la fenêtre, comme celle de la page : les grains coïncident),
+     un ton plus sombre, avec un liseré clair sous ses bords — une lettre
+     pressée dans le papier plutôt que posée dessus. Le liseré est porté
+     par le conteneur : sur l'élément masqué, le masque l'aurait coupé. */
+  .filigrane-fond{
+    display:block; right:50%;
+    filter:drop-shadow(0 1.5px 0 rgba(255,255,255,.55)) drop-shadow(0 -1px 0 rgba(70,45,30,.10));
+  }
+  .filigrane{
+    right:-14%; top:clamp(6rem,15vh,10rem); width:min(62%,30rem); opacity:1;
+    background:linear-gradient(rgba(112,82,62,.12), rgba(112,82,62,.12)),
+               url(../img/pages/fond.webp) center / cover fixed;
+  }
   .scene{
     max-width:none; width:100%; margin:0; padding:0;
     grid-template-columns:minmax(0,1fr) minmax(0,1fr);
