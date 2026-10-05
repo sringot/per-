@@ -471,7 +471,13 @@
     // l'outil d'aperçu, qui les embarque, les trouve.
     const img = $('.fiche__img', laFiche);
     const carte = $(`button.soin__carte[data-soin="${cle}"]`);
-    if (img && carte && carte.dataset.bandeau) {
+    const vignetteCarte = carte && $('.soin__img', carte);
+    if (img && ecranLarge.matches && vignetteCarte) {
+      // Sur grand écran, la fiche montre la carte entière, debout : c'est
+      // elle qui grandit jusqu'à la page. Même image, même forme — pas de
+      // bandeau à attendre ni de recadrage pendant le passage.
+      img.src = vignetteCarte.currentSrc || vignetteCarte.src || vignetteCarte.dataset.src;
+    } else if (img && carte && carte.dataset.bandeau) {
       const url = carte.dataset.bandeau;
       prechargeBandeaux();
       const bandeau = bandeaux.get(url);
@@ -548,13 +554,25 @@
   const NOM_CARTE = 'carte-soin';
   const attend = ms => new Promise(r => setTimeout(r, ms));
 
-  function passe(depart, arrivee, changer, image) {
+  // Sur grand écran, le nom du soin voyage aussi : de l'étiquette de la
+  // carte au titre de la fiche. `titres` : [départ, arrivée], ou rien.
+  const NOM_TITRE = 'carte-titre';
+  // Le même seuil que le bloc « grand écran » de la feuille de style.
+  const ecranLarge = matchMedia('(min-width:1024px) and (min-height:600px)');
+  function passe(depart, arrivee, changer, image, titres = []) {
     if (!transitions) { changer(); return; }
+    const [titreDepart, titreArrivee] = depart && arrivee ? titres : [];
+    // La carte vole sans son « Voir » : il grandissait avec elle.
+    const cartes = [depart, arrivee].filter(e => e && e.classList.contains('soin__carte'));
+    cartes.forEach(c => c.classList.add('en-vol'));
     if (depart) depart.style.viewTransitionName = NOM_CARTE;
+    if (titreDepart) titreDepart.style.viewTransitionName = NOM_TITRE;
     const t = document.startViewTransition(async () => {
       if (depart) depart.style.viewTransitionName = '';
+      if (titreDepart) titreDepart.style.viewTransitionName = '';
       changer();
       if (arrivee) arrivee.style.viewTransitionName = NOM_CARTE;
+      if (titreArrivee) titreArrivee.style.viewTransitionName = NOM_TITRE;
       // Le bandeau doit être décodé avant la capture de l'état d'arrivée :
       // sans cette attente, la carte grandissait vers un cadre vide et
       // l'image surgissait après coup. Plafonnée court : l'image est d'ordinaire
@@ -562,7 +580,11 @@
       // connexion lente, attendre davantage laissait l'appui sans réponse.
       if (image) await Promise.race([image.decode().catch(() => {}), attend(150)]);
     });
-    t.finished.finally(() => { if (arrivee) arrivee.style.viewTransitionName = ''; });
+    t.finished.finally(() => {
+      cartes.forEach(c => c.classList.remove('en-vol'));
+      if (arrivee) arrivee.style.viewTransitionName = '';
+      if (titreArrivee) titreArrivee.style.viewTransitionName = '';
+    });
   }
 
   // Où l'on en était dans la planche. Le retour y ramène : c'est là que la
@@ -594,7 +616,8 @@
         // croix est celle du panneau.
         focusApres($('.fiche__retour', laFiche));
       },
-      $('.fiche__img', laFiche));
+      $('.fiche__img', laFiche),
+      ecranLarge.matches ? [$('.soin__nom', carte), $('.fiche__nom', laFiche)] : []);
     if (pousse) memorise({ panneau: 'massages', vue: cle, profondeur: profondeur() + 1 }, '#massages');
   }
 
@@ -619,7 +642,9 @@
         montreBarre();
         // Le focus retourne sur ce qui a ouvert la vue, pas en tête de page.
         focusApres(carte);
-      });
+      },
+      null,
+      ecranLarge.matches ? [$('.fiche__nom', laFiche), $('.soin__nom', carte)] : []);
   }
 
   // Remise à zéro silencieuse, appelée quand le panneau se referme : ni

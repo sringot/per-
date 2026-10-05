@@ -319,6 +319,9 @@ body::after{
    Ailleurs la photo garde son arche et rien ne se pose dessus. */
 .voile{ display:none; }
 .teinte{ display:none; }
+/* La ligne de métier et les deux boutons de l'accueil : grand écran
+   seulement (bloc « Accueil partagé », en fin de feuille). */
+.sur-ligne, .actions{ display:none; }
 
 /* ---------- 4. LES BULLES ---------- */
 
@@ -1166,6 +1169,15 @@ body::after{
    bandeau — donc les deux captures sont recadrées comme les images
    d'origine (`object-fit:cover`) dans un cadre qui garde ses coins
    arrondis : on voit la carte s'élargir, pas s'écraser. */
+/* Le nom du soin, de l'étiquette de la carte au titre de la fiche (grand
+   écran) : même durée, même courbe que la carte qu'il accompagne. */
+::view-transition-group(carte-titre){
+  animation-duration:.48s;
+  animation-timing-function:cubic-bezier(.22,.68,.28,1);
+}
+.en-vol .soin__voir{ visibility:hidden; }
+::view-transition-old(carte-titre),
+::view-transition-new(carte-titre){ height:100%; width:auto; }
 ::view-transition-group(carte-soin){
   animation-duration:.48s;
   animation-timing-function:cubic-bezier(.22,.68,.28,1);
@@ -1804,14 +1816,19 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
    défile derrière sans jamais gêner la lecture des liens. La rubrique
    ouverte est soulignée de terracotta. Ce sont les mêmes boutons que sur
    téléphone : mêmes gestes, même ordre au clavier. */
+  /* Ses bords suivent ceux du contenu des rubriques (76rem au plus,
+     centré) : sur un grand écran, le logo s'alignait sur le bord de la
+     fenêtre et le texte, 80 px plus loin. Une ombre douce plutôt qu'un
+     filet : la barre flotte au-dessus de la page au lieu de la couper. */
   .bulles{
     inset:0 0 auto 0; justify-content:flex-end; align-items:center;
-    gap:clamp(1.4rem,2.6vw,2.8rem);
-    padding:clamp(.8rem,1.6vh,1.1rem) clamp(2rem,5vw,6rem);
-    background:color-mix(in srgb, #F6ECDF 86%, transparent);
-    -webkit-backdrop-filter:blur(14px) saturate(1.1);
-            backdrop-filter:blur(14px) saturate(1.1);
-    border-bottom:1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+    gap:clamp(1.6rem,2.4vw,2.6rem);
+    padding:clamp(.85rem,1.6vh,1.1rem) max(clamp(2rem,5vw,6rem), calc((100vw - 76rem) / 2));
+    background:color-mix(in srgb, #F6ECDF 80%, transparent);
+    -webkit-backdrop-filter:blur(18px) saturate(1.15);
+            backdrop-filter:blur(18px) saturate(1.15);
+    box-shadow:0 1px 0 color-mix(in srgb, var(--ink) 6%, transparent),
+               0 12px 32px -26px rgba(42,35,32,.45);
   }
   .bulles::before{ display:none; }
   /* Passage carte → fiche : l'en-tête est à part, il ne clignote pas
@@ -1824,37 +1841,50 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
   .en-fiche.barre-cachee .bulles{ transform:translateY(calc(-100% - 16px)); opacity:0; pointer-events:none; }
   .en-fiche #massages{ padding-bottom:calc(var(--pied) + clamp(2rem,6vh,4rem)); }
   .entete__marque{
-    display:flex; align-items:center; gap:.75rem; margin-right:auto;
-    font-size:1.35rem; font-weight:600; letter-spacing:-.035em; color:var(--ink);
+    display:flex; align-items:center; gap:.7rem; margin-right:auto;
+    font-size:1.3rem; font-weight:600; letter-spacing:-.035em; color:var(--ink);
+    transition:opacity .25s var(--ease);
   }
-  .entete__marque img{ width:2.6rem; height:2.6rem; }
+  .entete__marque img{ width:2.5rem; height:2.5rem; transition:transform .35s var(--ease-out); }
+  @media (hover:hover) and (pointer:fine){
+    .entete__marque:hover img{ transform:rotate(-8deg) scale(1.04); }
+  }
+  /* Les liens : un gris chaud au repos, l'encre au survol et pour la
+     rubrique ouverte ; le trait terracotta se déploie depuis le centre. */
   .bulle{
     position:relative; width:auto; flex-direction:row; gap:0;
-    padding:.55rem 0; color:var(--ink);
+    padding:.55rem 0; color:var(--ink-soft);
+    transition:color .25s var(--ease);
   }
   .bulle__rond{ display:none; }
-  .bulle__nom{ font-size:1.02rem; font-weight:500; letter-spacing:0; }
+  .bulle__nom{ font-size:1rem; font-weight:500; letter-spacing:.005em; }
   .bulle::after{
-    content:''; position:absolute; left:0; right:0; bottom:.2rem; height:2px;
+    content:''; position:absolute; left:0; right:0; bottom:.15rem; height:2px;
     border-radius:2px; background:#C7805F;
-    transform:scaleX(0); transform-origin:left;
-    transition:transform .3s var(--ease-out);
+    transform:scaleX(0); transform-origin:center;
+    transition:transform .35s var(--ease-out);
   }
+  .bulle[aria-expanded="true"]{ color:var(--ink); }
   .bulle[aria-expanded="true"]::after{ transform:scaleX(1); }
-  .a-panneau .bulle, .a-panneau .bulle[aria-expanded="true"]{ color:var(--ink); }
+  .a-panneau .bulle{ color:var(--ink-soft); }
+  .a-panneau .bulle[aria-expanded="true"]{ color:var(--ink); }
   @media (hover:hover) and (pointer:fine){
+    .bulle:hover{ color:var(--ink); }
     .bulle:hover::after{ transform:scaleX(1); }
   }
   /* Rendez-vous, en bouton. */
   html .bulles .bulle[data-ouvre="rdv"]{
-    margin-left:.4rem; padding:.7rem 1.5rem; border-radius:999px;
+    margin-left:.6rem; padding:.72rem 1.55rem; border-radius:999px;
     background:var(--ink); color:#F6EDE2;
-    box-shadow:0 10px 24px -16px rgba(20,12,10,.8);
-    transition:background-color .25s var(--ease), transform .2s var(--ease);
+    box-shadow:0 10px 24px -16px rgba(20,12,10,.8), inset 0 1px 0 rgba(255,255,255,.08);
+    transition:background-color .25s var(--ease), transform .2s var(--ease), box-shadow .25s var(--ease);
   }
   html .bulles .bulle[data-ouvre="rdv"]::after{ display:none; }
   @media (hover:hover) and (pointer:fine){
-    html .bulles .bulle[data-ouvre="rdv"]:hover{ background:#3A3430; transform:translateY(-1px); }
+    html .bulles .bulle[data-ouvre="rdv"]:hover{
+      background:#924A31; transform:translateY(-1px);
+      box-shadow:0 14px 26px -16px rgba(146,74,49,.75), inset 0 1px 0 rgba(255,255,255,.1);
+    }
   }
   html .bulles .bulle[data-ouvre="rdv"][aria-expanded="true"]{ background:#924A31; }
   /* Le logo de l'accueil ferait doublon avec celui de la barre. */
@@ -1867,6 +1897,10 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
   /* La croix, juste sous la barre, à droite : à sa hauteur, elle passait
      sous la barre et son fondu, qui sont au-dessus des panneaux. */
   .fermer{ top:calc(var(--barre) + .6rem); right:clamp(1.2rem,3vw,3rem); width:48px; height:48px; }
+  /* Pas de croix dans les rubriques : la barre de navigation est là, le
+     logo ramène à l'accueil et Échap ferme. Sur ordinateur elle flottait,
+     en doublon. Les mentions légales, sans barre, gardent la leur. */
+  .panneau .fermer{ display:none; }
 
   /* --- L'ouverture, sur ordinateur ---
      Un fondu, et la page monte d'un souffle (`.feuille`, plus haut). Le
@@ -1917,21 +1951,28 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
   .feuille--soins > :not(.soins){ max-width:44rem; }
   .soins{ gap:clamp(.9rem,1.6vw,1.6rem); margin-top:2.6rem; }
 
-  /* La fiche : le bandeau à gauche, collant ; le soin et ses prix à droite. */
-  /* `:not([hidden])` : une fiche fermée porte `hidden`, et un `display`
+  /* La fiche : la carte du soin, debout, à gauche ; le soin et ses prix à
+     droite. La carte est **la même** que celle de la planche, en grand : au
+     clic, elle grandit jusqu'ici (transition `carte-soin`), et son nom part
+     de l'étiquette pour devenir le titre (`carte-titre`). Même forme au
+     départ et à l'arrivée : rien ne se recadre pendant le passage.
+     Sa taille suit la hauteur de l'écran, pour tenir entière sous l'en-tête.
+     `:not([hidden])` : une fiche fermée porte `hidden`, et un `display`
      posé ici l'emportait — son bouton de retour s'affichait sous les
      cartes. */
   .fiche:not([hidden]){
-    display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
-    column-gap:clamp(2.5rem,5vw,6rem); align-items:start;
+    display:grid; grid-template-columns:auto minmax(0,1fr);
+    column-gap:clamp(3rem,6vw,7rem); align-items:start;
   }
   .fiche > *{ grid-column:2; }
   .fiche__retour{ grid-column:1 / -1; }
   .fiche__blason{
     grid-column:1; grid-row:2 / span 6;
     position:sticky; top:calc(var(--barre) + 1.5rem); margin:0;
+    aspect-ratio:9/16; width:min(30rem, calc((100svh - var(--barre) - 8rem) * 9 / 16));
+    border-radius:18px; box-shadow:0 30px 60px -34px rgba(42,35,32,.65);
   }
-  .fiche__nom{ font-size:clamp(2.2rem,3.4vw,3.4rem); margin-top:0; }
+  .fiche__nom{ font-size:clamp(2.6rem,4vw,4.4rem); margin-top:.4rem; }
 
   /* Avis : le titre et la provenance à gauche, le résumé à droite, qui
      tient toute la hauteur de l'en-tête. Le résumé commençait sous le
@@ -1953,11 +1994,20 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
   .avis{ display:block; columns:2; column-gap:clamp(3rem,6vw,7rem); }
   .avis li:last-child{ border-bottom:0; }
 
-  /* Rendez-vous : les trois temps à gauche, les boutons à droite. */
+  /* Rendez-vous : les trois temps à gauche ; à droite, les boutons dans un
+     encadré, en face des étapes et à leur hauteur. Ils flottaient seuls au
+     milieu de la colonne, sans lien visible avec ce qu'ils concluent. */
   #rdv .feuille > .bloc, .etapes{ grid-column:1; }
   .reserver{
-    grid-column:2; grid-row:1 / span 2; align-self:center;
-    grid-template-columns:1fr;
+    grid-column:2; grid-row:2; align-self:start;
+    grid-template-columns:1fr; gap:.9rem;
+    padding:clamp(1.8rem,2.6vw,2.6rem); border-radius:24px;
+    background:color-mix(in srgb, #FDF8F1 72%, transparent);
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 30px 60px -40px rgba(42,35,32,.45);
+  }
+  .reserver::before{
+    content:'Votre rendez-vous'; margin-bottom:.4rem;
+    font-size:.78rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--accent);
   }
   .reserver__mot, .reserver__secours{ grid-column:auto; }
   .etapes__texte b{ font-size:1.25rem; }
@@ -1987,4 +2037,62 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
   }
   .logo, .portrait, .titre, .accroche, .faits, .bulle{ opacity:1; }
   .portrait{ animation:none; }
+}
+
+
+/* ---------- 9. ACCUEIL PARTAGÉ (grand écran) ----------
+   Sur téléphone, l'accueil est une photo plein écran : c'est ce qui fait
+   son effet. Sur ordinateur, il était une version agrandie du téléphone —
+   une petite arche, un grand vide, un « m » en filigrane coupé par le bord,
+   et aucun bouton. Les photos sont toutes en hauteur : étirée sur toute la
+   largeur, la photo serait floue et rognée. L'écran est donc partagé : à
+   droite la photo, sur toute la hauteur et jusqu'au bord ; à gauche, sur
+   le fond texturé des rubriques, le nom, la promesse, les faits et les
+   deux actions du site. */
+@media (min-width:1024px) and (min-height:600px){
+  body{ background:var(--card) url(../img/pages/fond.webp) center / cover fixed; padding-bottom:0; }
+  .filigrane-fond{ display:none; }
+  .scene{
+    max-width:none; width:100%; margin:0; padding:0;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-areas:"mot photo"; column-gap:0;
+    /* Exactement la hauteur de la fenêtre sous la barre. `flex:none` et la
+       rangée `minmax(0,1fr)` : sans eux, la photo imposait sa hauteur
+       naturelle (1 286 px sur un écran de 1 080) et l'accueil défilait. */
+    flex:none; height:calc(100svh - var(--barre)); min-height:30rem;
+    grid-template-rows:minmax(0,1fr); align-items:stretch;
+  }
+  .portrait{
+    grid-area:photo; width:100%; height:auto; max-height:none; min-height:0; align-self:stretch;
+    border-radius:0; box-shadow:none; animation:parait-fond .9s var(--ease-out) both;
+  }
+  .portrait img{ object-position:50% 30%; }
+  .mot{
+    grid-area:mot; align-self:center; justify-self:start;
+    padding:0 clamp(3rem,6vw,8rem) clamp(3rem,6vh,4rem) max(clamp(2rem,5vw,6rem), calc((100vw - 76rem) / 2));
+    gap:clamp(1.2rem,2.4vh,1.7rem);
+  }
+  .sur-ligne{
+    display:block; font-size:.78rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent);
+  }
+  .titre{ font-size:clamp(3.4rem,5.4vw,6.4rem); }
+  .accroche{ font-size:clamp(1.2rem,1.6vw,1.6rem); max-width:24ch; }
+  .actions{ display:flex; flex-wrap:wrap; gap:.8rem; margin-top:.6rem; }
+  .action{
+    display:inline-flex; align-items:center; min-height:56px; padding:0 1.8rem;
+    border-radius:999px; font-weight:600; font-size:1.02rem; color:var(--ink);
+    box-shadow:inset 0 0 0 1.5px var(--ink);
+    transition:background-color .25s var(--ease), transform .2s var(--ease), box-shadow .25s var(--ease);
+  }
+  .action--plein{
+    background:var(--ink); color:#F6EDE2;
+    box-shadow:0 16px 30px -20px rgba(20,12,10,.7), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  @media (hover:hover) and (pointer:fine){
+    .action:hover{ background:color-mix(in srgb, var(--ink) 7%, transparent); transform:translateY(-1px); }
+    .action--plein:hover{ background:#924A31; box-shadow:0 18px 30px -18px rgba(146,74,49,.75); }
+  }
+  /* Le pied de page reste sous le texte, pas en travers de la photo. */
+  .pied{ right:50%; }
 }
