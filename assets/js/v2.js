@@ -411,8 +411,12 @@
      passée dessous. */
   const bas = [['--barre', $('.bulles')], ['--pied', $('.pied')]].filter(x => x[1]);
   if (bas.length) {
+    // Une barre posée en haut (ordinateur : la capsule, détachée du bord)
+    // réserve sa hauteur **et** son écart au bord ; `offsetTop`, que les
+    // transformations n'affectent pas, vaut aussi barre masquée.
+    const place = el => (el.offsetTop < innerHeight / 2 ? el.offsetTop : 0) + el.offsetHeight;
     const mesure = () => bas.forEach(([nom, el]) => racine.style.setProperty(
-      nom, `${Math.round(el.getBoundingClientRect().height)}px`));
+      nom, `${Math.round(place(el))}px`));
     mesure();
     if (window.ResizeObserver) {
       const o = new ResizeObserver(mesure);

@@ -1816,36 +1816,44 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
    défile derrière sans jamais gêner la lecture des liens. La rubrique
    ouverte est soulignée de terracotta. Ce sont les mêmes boutons que sur
    téléphone : mêmes gestes, même ordre au clavier. */
-  /* Ses bords suivent ceux du contenu des rubriques (76rem au plus,
-     centré) : sur un grand écran, le logo s'alignait sur le bord de la
-     fenêtre et le texte, 80 px plus loin. Une ombre douce plutôt qu'un
-     filet : la barre flotte au-dessus de la page au lieu de la couper. */
+  /* --- La capsule ---
+     La barre flotte : une capsule arrondie, détachée du haut et des côtés,
+     en verre dépoli sur la texture. Le script réserve sa hauteur et son
+     écart au bord (`--barre`). Ses bords suivent ceux du contenu (78rem au
+     plus, centré). */
   .bulles{
-    inset:0 0 auto 0; justify-content:flex-end; align-items:center;
-    gap:clamp(1.6rem,2.4vw,2.6rem);
-    padding:clamp(.85rem,1.6vh,1.1rem) max(clamp(2rem,5vw,6rem), calc((100vw - 76rem) / 2));
-    background:color-mix(in srgb, #F6ECDF 80%, transparent);
-    -webkit-backdrop-filter:blur(18px) saturate(1.15);
-            backdrop-filter:blur(18px) saturate(1.15);
-    box-shadow:0 1px 0 color-mix(in srgb, var(--ink) 6%, transparent),
-               0 12px 32px -26px rgba(42,35,32,.45);
+    inset:14px max(1.25rem, calc((100vw - 78rem) / 2)) auto;
+    justify-content:flex-end; align-items:center;
+    gap:clamp(1.5rem,2.2vw,2.4rem);
+    padding:.5rem .5rem .5rem 1.1rem; border-radius:999px;
+    background:color-mix(in srgb, #FBF6EF 84%, transparent);
+    -webkit-backdrop-filter:blur(20px) saturate(1.2);
+            backdrop-filter:blur(20px) saturate(1.2);
+    box-shadow:0 0 0 1px rgba(42,35,32,.07),
+               inset 0 1px 0 rgba(255,255,255,.75),
+               0 18px 40px -26px rgba(42,35,32,.55);
+    will-change:auto;
   }
+  /* Les rubriques au centre de la capsule, la marque et le bouton aux
+     extrémités. */
+  .bulle[data-ouvre="moi"]{ margin-left:auto; }
+  html .bulles .bulle[data-ouvre="rdv"]{ margin-left:auto !important; }
   .bulles::before{ display:none; }
   /* Passage carte → fiche : l'en-tête est à part, il ne clignote pas
      avec la page qui s'efface et revient. */
   .bulles{ view-transition-name:entete; }
   /* En haut, elle s'efface vers le haut. */
-  .barre-cachee .bulles{ transform:translateY(calc(-100% - 16px)); }
+  .barre-cachee .bulles{ transform:translateY(calc(-100% - 30px)); }
   /* La fiche garde l'en-tête : en haut, il ne gêne pas la lecture. */
   .en-fiche .bulles{ transform:none; opacity:1; pointer-events:auto; visibility:visible; }
-  .en-fiche.barre-cachee .bulles{ transform:translateY(calc(-100% - 16px)); opacity:0; pointer-events:none; }
+  .en-fiche.barre-cachee .bulles{ transform:translateY(calc(-100% - 30px)); opacity:0; pointer-events:none; }
   .en-fiche #massages{ padding-bottom:calc(var(--pied) + clamp(2rem,6vh,4rem)); }
   .entete__marque{
-    display:flex; align-items:center; gap:.7rem; margin-right:auto;
-    font-size:1.3rem; font-weight:600; letter-spacing:-.035em; color:var(--ink);
+    display:flex; align-items:center; gap:.65rem;
+    font-size:1.2rem; font-weight:600; letter-spacing:-.035em; color:var(--ink);
     transition:opacity .25s var(--ease);
   }
-  .entete__marque img{ width:2.5rem; height:2.5rem; transition:transform .35s var(--ease-out); }
+  .entete__marque img{ width:2.3rem; height:2.3rem; transition:transform .35s var(--ease-out); }
   @media (hover:hover) and (pointer:fine){
     .entete__marque:hover img{ transform:rotate(-8deg) scale(1.04); }
   }
@@ -1857,7 +1865,7 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
     transition:color .25s var(--ease);
   }
   .bulle__rond{ display:none; }
-  .bulle__nom{ font-size:1rem; font-weight:500; letter-spacing:.005em; }
+  .bulle__nom{ font-size:.97rem; font-weight:500; letter-spacing:.005em; }
   .bulle::after{
     content:''; position:absolute; left:0; right:0; bottom:.15rem; height:2px;
     border-radius:2px; background:#C7805F;
@@ -1874,7 +1882,7 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
   }
   /* Rendez-vous, en bouton. */
   html .bulles .bulle[data-ouvre="rdv"]{
-    margin-left:.6rem; padding:.72rem 1.55rem; border-radius:999px;
+    padding:.68rem 1.45rem; border-radius:999px;
     background:var(--ink); color:#F6EDE2;
     box-shadow:0 10px 24px -16px rgba(20,12,10,.8), inset 0 1px 0 rgba(255,255,255,.08);
     transition:background-color .25s var(--ease), transform .2s var(--ease), box-shadow .25s var(--ease);
