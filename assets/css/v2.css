@@ -2040,64 +2040,54 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
 }
 
 
-/* ---------- 9. ACCUEIL PARTAGÉ (grand écran) ----------
-   Sur téléphone, l'accueil est une photo plein écran : c'est ce qui fait
-   son effet. Sur ordinateur, il était une version agrandie du téléphone —
-   une petite arche, un grand vide, un « m » en filigrane coupé par le bord,
-   et aucun bouton. Les photos sont toutes en hauteur : étirée sur toute la
-   largeur, la photo serait floue et rognée. L'écran est donc partagé : à
-   droite la photo, sur toute la hauteur et jusqu'au bord ; à gauche, sur
-   le fond texturé des rubriques, le nom, la promesse, les faits et les
-   deux actions du site. */
+/* ---------- 9. ACCUEIL (grand écran) ----------
+   La composition d'origine — l'arche à gauche, le nom à droite, le grand
+   « m » coupé par le bord droit — sur le fond texturé des rubriques, avec
+   une ligne de métier et les deux actions du site sous le texte (il n'y
+   avait aucun bouton). Un écran partagé, photo pleine hauteur, a été
+   essayé puis écarté : c'est l'arche qui fait l'identité du site. */
 @media (min-width:1024px) and (min-height:460px){
-  body{ background:var(--card) url(../img/pages/fond.webp) center / cover fixed; padding-bottom:0; }
-  /* Le « m » gravé : dans la moitié texturée, coupé par le bord de la
-     photo, à la hauteur qu'il avait. Il reprend la texture même du fond
-     (fixée à la fenêtre, comme celle de la page : les grains coïncident),
+  body{ background:var(--card) url(../img/pages/fond.webp) center / cover fixed; }
+  /* Le « m », gravé : à sa place, mais il reprend la texture même du fond
+     (fixée à la fenêtre comme celle de la page : les grains coïncident),
      un ton plus sombre, avec un liseré clair sous ses bords — une lettre
-     pressée dans le papier plutôt que posée dessus. Le liseré est porté
-     par le conteneur : sur l'élément masqué, le masque l'aurait coupé. */
+     pressée dans le papier plutôt qu'un aplat posé dessus. Le liseré est
+     porté par le conteneur : sur l'élément masqué, le masque l'aurait
+     coupé. */
   .filigrane-fond{
-    display:block; right:50%;
     filter:drop-shadow(0 1.5px 0 rgba(255,255,255,.55)) drop-shadow(0 -1px 0 rgba(70,45,30,.10));
   }
   .filigrane{
-    right:-14%; top:clamp(6rem,15vh,10rem); width:min(62%,30rem); opacity:1;
+    opacity:1;
     background:linear-gradient(rgba(112,82,62,.12), rgba(112,82,62,.12)),
                url(../img/pages/fond.webp) center / cover fixed;
   }
+  /* L'arche et le texte côte à côte, quelle que soit la hauteur : sur un
+     ordinateur zoomé (fenêtre de 550 px de haut), les règles des écrans
+     bas empilaient la photo au-dessus du nom et le pied passait dessus.
+     La photo prend la hauteur disponible, bornée, et le reste suit. */
   .scene{
-    max-width:none; width:100%; margin:0; padding:0;
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-    grid-template-areas:"mot photo"; column-gap:0;
-    /* Exactement la hauteur de la fenêtre sous la barre. `flex:none` et la
-       rangée `minmax(0,1fr)` : sans eux, la photo imposait sa hauteur
-       naturelle (1 286 px sur un écran de 1 080) et l'accueil défilait. */
-    flex:none; height:calc(100svh - var(--barre)); min-height:22rem;
-    grid-template-rows:minmax(0,1fr); align-items:stretch;
+    grid-template-columns:auto minmax(0,1fr); grid-template-areas:"photo mot";
+    align-content:center; align-items:center; row-gap:0;
+    min-height:calc(100svh - var(--barre) - var(--pied));
+    padding-block:clamp(1rem,3vh,2rem);
   }
   .portrait{
-    grid-area:photo; width:100%; height:auto; max-height:none; min-height:0; align-self:stretch;
-    border-radius:0; box-shadow:none; animation:parait-fond .9s var(--ease-out) both;
+    grid-area:photo; align-self:center; width:auto; aspect-ratio:1/1.34;
+    height:min(clamp(260px,60vh,780px), calc(100svh - var(--barre) - var(--pied) - 3rem));
   }
-  .portrait img{ object-position:50% 30%; }
-  .mot{
-    grid-area:mot; align-self:center; justify-self:start;
-    padding:0 clamp(3rem,6vw,8rem) clamp(3rem,6vh,4rem) max(clamp(2rem,5vw,6rem), calc((100vw - 76rem) / 2));
-    gap:clamp(1.2rem,2.4vh,1.7rem);
-  }
+  .mot{ grid-area:mot; }
   .sur-ligne{
     display:block; font-size:.78rem; font-weight:500; letter-spacing:.22em;
     text-transform:uppercase; color:var(--accent);
   }
-  .titre{ font-size:clamp(3.4rem,5.4vw,6.4rem); }
   /* `display` rétabli : la règle des écrans très bas (téléphone couché)
      la masquait aussi sur un ordinateur zoomé à 150 %. */
-  .accroche{ display:block; font-size:clamp(1.2rem,1.6vw,1.6rem); max-width:24ch; }
-  .actions{ display:flex; flex-wrap:wrap; gap:.8rem; margin-top:.6rem; }
+  .accroche{ display:block; }
+  .actions{ display:flex; flex-wrap:wrap; gap:.8rem; margin-top:.4rem; }
   .action{
-    display:inline-flex; align-items:center; min-height:56px; padding:0 1.8rem;
-    border-radius:999px; font-weight:600; font-size:1.02rem; color:var(--ink);
+    display:inline-flex; align-items:center; min-height:54px; padding:0 1.7rem;
+    border-radius:999px; font-weight:600; font-size:1rem; color:var(--ink);
     box-shadow:inset 0 0 0 1.5px var(--ink);
     transition:background-color .25s var(--ease), transform .2s var(--ease), box-shadow .25s var(--ease);
   }
@@ -2109,6 +2099,4 @@ body:has(> .annexe), body:has(> .merci){ padding-bottom:0; }
     .action:hover{ background:color-mix(in srgb, var(--ink) 7%, transparent); transform:translateY(-1px); }
     .action--plein:hover{ background:#924A31; box-shadow:0 18px 30px -18px rgba(146,74,49,.75); }
   }
-  /* Le pied de page reste sous le texte, pas en travers de la photo. */
-  .pied{ right:50%; }
 }
