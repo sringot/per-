@@ -581,6 +581,15 @@ body::after{
   visibility:visible;
   transition:clip-path .38s var(--ease-out), visibility 0s;
 }
+/* Une fois ouverte, la rubrique perd sa découpe (`.pose`, posée par le
+   script à la fin de l'ouverture). Sur iPhone, Safari ne faisait pas
+   défiler au doigt une page restée découpée par `clip-path` : le geste
+   passait à la page de derrière, et seule sa barre d'adresse bougeait. */
+.panneau.ouvert.pose{ clip-path:none; transition:none; }
+/* Une rubrique ouverte couvre l'écran : la page de derrière ne défile
+   plus. Sur iPhone, si elle pouvait encore défiler — ne serait-ce que
+   d'un pixel —, Safari lui donnait le geste au lieu de la rubrique. */
+html.a-panneau, html.a-panneau body{ overflow:hidden; overscroll-behavior:none; }
 /* La rubrique qu'on quitte pour une autre : elle reste entière, telle
    quelle, **sous** celle qui s'ouvre, et le script la retire une fois
    l'ouverture finie. Sans elle, elle se refermait pendant que l'autre

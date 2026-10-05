@@ -162,7 +162,12 @@
     chargeImages(p);
 
     p.removeAttribute('inert');
+    p.classList.remove('pose');
+    clearTimeout(p._pose);
     p.classList.add('ouvert');
+    // Ouverture finie : la découpe circulaire n'a plus lieu d'être (voir
+    // `.pose` dans la feuille de style — le défilement au doigt sur iPhone).
+    p._pose = setTimeout(() => { if (ouvert === p) p.classList.add('pose'); }, DUREE_OUVERTURE);
     fond.forEach(e => e.setAttribute('inert', ''));
     ouvert = p;
     declencheur = bulle || null;
@@ -191,6 +196,13 @@
 
   function fermer(opts = {}) {
     if (!ouvert) return;
+    // La découpe revient d'abord, pleine, pour que la fermeture se rejoue
+    // depuis elle : de « aucune découpe » à un cercle, rien ne s'anime.
+    clearTimeout(ouvert._pose);
+    if (ouvert.classList.contains('pose')) {
+      ouvert.classList.remove('pose');
+      void ouvert.offsetWidth;
+    }
     ouvert.classList.remove('ouvert');
     ouvert.setAttribute('inert', '');
     // Le fond redevient atteignable **avant** qu'on y remette le focus.
